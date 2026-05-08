@@ -6,15 +6,21 @@ The app is **party-first**: party is highlighted visually, while candidate names
 
 ## Open the app
 
-Open:
+For the generated CSV to auto-load, serve the folder locally:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then open:
 
 ```text
-index.html
+http://localhost:8000/
 ```
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
-The app has a few sample districts built in so it works immediately.
+The app auto-loads `data/vic_2022_preferences_long.csv` when present, keeps manual CSV upload as a fallback, and has sample districts built in if the generated CSV is not available.
 
 ## Folder structure
 
@@ -72,7 +78,15 @@ data/vic_2022_preferences_long.csv
 data/vic_2022_district_summary.csv
 ```
 
-Then open `index.html` and upload `data/vic_2022_preferences_long.csv`.
+If any districts fail, the scraper also writes:
+
+```text
+data/vic_2022_scrape_errors.csv
+```
+
+If there are no failures, no scrape error CSV is kept.
+
+Then serve the folder locally and open `http://localhost:8000/`. The dashboard should auto-load `data/vic_2022_preferences_long.csv`.
 
 ## Easier GitHub option
 
@@ -81,15 +95,14 @@ After uploading this repo to GitHub:
 1. Go to **Actions**
 2. Run **Scrape VEC 2022 data**
 3. Download the generated artifact
-4. Put the CSV into `data/` or upload it manually in the app
+4. Put the CSV into `data/` so the app can auto-load it, or upload it manually in the app
 
 ## Current status
 
-This is a clean repo prototype. It is not yet a finished full data product.
+This is a static end-to-end prototype with a scraper, validator, generated long CSV, and dashboard auto-load.
 
 Best next improvements:
 
-- make the app auto-load `data/vic_2022_preferences_long.csv`
 - add district search
 - add party filters
 - add a map after the data is stable

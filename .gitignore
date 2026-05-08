@@ -3,9 +3,8 @@
 __pycache__/
 *.pyc
 
-# generated scrape output
-data/vic_2022_preferences_long.csv
-data/vic_2022_district_summary.csv
+# generated scrape error output
+data/vic_2022_scrape_errors.csv
 data/scrape_errors.csv
 
 # OS/editor

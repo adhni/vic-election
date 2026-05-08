@@ -1148,7 +1148,7 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
       return rows.map(r => Object.fromEntries(headers.map((h, i) => [h, (r[i] || "").trim()])));
     }
 
-    function buildDistrictsFromRows(rows) {
+    function buildDistrictsFromRows(rows, source = "Uploaded CSV") {
       const groups = new Map();
       for (const row of rows) {
         const district = row.district;
@@ -1162,7 +1162,7 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
         const firstRow = entries[0];
         const d = {
           district,
-          source: "Uploaded CSV",
+          source,
           elected_member: firstRow.elected_member || "",
           elected_party: firstRow.elected_party || "Independent",
           enrolment: Number(firstRow.enrolment || 0),
@@ -1201,19 +1201,34 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
       return out;
     }
 
+    function loadRows(rows, source) {
+      const loaded = buildDistrictsFromRows(rows, source);
+      if (!loaded.length) throw new Error("No valid district rows found.");
+      districts = loaded;
+      activeDistrict = districts[0];
+      focusRound = "all";
+      populateControls();
+      render();
+    }
+
+    async function autoLoadCSV() {
+      try {
+        const response = await fetch("data/vic_2022_preferences_long.csv", { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const rows = parseCSV(await response.text());
+        loadRows(rows, "VEC 2022 CSV");
+      } catch (err) {
+        console.info("Using embedded sample data; generated CSV was not auto-loaded.", err);
+      }
+    }
+
     async function handleUpload(event) {
       const file = event.target.files?.[0];
       if (!file) return;
       const text = await file.text();
       try {
         const rows = parseCSV(text);
-        const uploaded = buildDistrictsFromRows(rows);
-        if (!uploaded.length) throw new Error("No valid district rows found.");
-        districts = uploaded;
-        activeDistrict = districts[0];
-        focusRound = "all";
-        populateControls();
-        render();
+        loadRows(rows, "Uploaded CSV");
       } catch (err) {
         alert("Could not parse CSV: " + err.message);
       }
@@ -1265,6 +1280,7 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
 
     populateControls();
     render();
+    autoLoadCSV();
   </script>
 </body>
 </html>

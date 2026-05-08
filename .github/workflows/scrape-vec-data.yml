@@ -44,5 +44,5 @@ jobs:
           path: |
             data/vic_2022_preferences_long.csv
             data/vic_2022_district_summary.csv
-            data/scrape_errors.csv
+            data/vic_2022_scrape_errors.csv
           if-no-files-found: ignore
