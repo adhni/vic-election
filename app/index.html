@@ -107,7 +107,10 @@
       letter-spacing: .06em;
     }
 
-    select, input[type="file"], button {
+    select,
+    input[type="file"],
+    input[type="search"],
+    button {
       width: 100%;
       padding: 12px 13px;
       border-radius: 14px;
@@ -130,6 +133,75 @@
     button:hover { transform: translateY(-1px); }
     button.secondary { background: #fff; color: var(--ink); border-color: var(--line); }
 
+    button.compact {
+      width: auto;
+      padding: 9px 12px;
+      font-size: 12px;
+    }
+
+    .controls {
+      grid-template-columns: minmax(220px, 1.1fr) minmax(220px, 1.15fr) minmax(160px, .8fr) auto;
+    }
+
+    .control-stack {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .check input {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .upload-control {
+      opacity: .82;
+    }
+
+    .data-status {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      margin: -6px 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.68);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .status-strong {
+      color: var(--ink);
+      font-weight: 900;
+    }
+
     .hero-card, .card {
       background: rgba(255,253,249,.92);
       border: 1px solid var(--line);
@@ -139,8 +211,8 @@
     }
 
     .hero-card {
-      padding: 22px;
-      margin-bottom: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
     }
 
     .hero-top {
@@ -200,8 +272,8 @@
     }
 
     .hero-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      margin-top: 18px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-top: 12px;
     }
 
     .mini-stat, .kpi, .step {
@@ -252,7 +324,7 @@
 
     .kpis {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .card-header {
@@ -342,7 +414,13 @@
       white-space: nowrap;
     }
 
-    .round-list { display: grid; gap: 12px; }
+    .round-list {
+      display: grid;
+      gap: 10px;
+      max-height: 560px;
+      overflow: auto;
+      padding-right: 2px;
+    }
 
     .round {
       border: 1px solid var(--line);
@@ -371,6 +449,26 @@
       color: var(--muted);
       font-size: 12px;
       margin-top: 4px;
+    }
+
+    .round-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .mini-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.64);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
     }
 
     .transfer-list { display: grid; gap: 8px; }
@@ -412,6 +510,7 @@
       border-radius: 18px;
       background: var(--panel-soft);
       padding: 10px;
+      max-height: 560px;
     }
 
     .legend {
@@ -489,6 +588,21 @@
 
     .small { font-size: 12px; }
     .right { text-align: right; }
+    .hidden { display: none; }
+    .utility-card { margin-top: 12px; }
+
+    details.utility-card {
+      padding: 0;
+    }
+
+    details.utility-card summary {
+      cursor: pointer;
+      padding: 14px 18px;
+      font-weight: 900;
+      list-style: none;
+    }
+
+    details.utility-card summary::-webkit-details-marker { display: none; }
 
     @media (max-width: 980px) {
       .controls,
@@ -513,9 +627,6 @@
       .bar-value { text-align: left; }
       th { top: 0; }
     }
-  
-/* --- v3 compact overrides --- */
-header{padding-top:14px!important;padding-bottom:4px!important}h1{font-size:clamp(24px,4vw,38px)!important;margin:8px 0 4px!important;line-height:1!important}.intro{font-size:13px!important;margin:0!important}.eyebrow{padding:6px 10px!important;font-size:11px!important}.controls{padding:10px!important;margin:10px 0!important;gap:8px!important;grid-template-columns:1.4fr 1.1fr 1fr auto!important;border-radius:18px!important}label{font-size:10px!important;margin-bottom:4px!important}select,input[type="file"],button{padding:9px 10px!important;border-radius:12px!important;font-size:13px!important}.notice,.explainer-grid,#kpis,.card-subtitle{display:none!important}.hero-card{padding:12px!important;margin-bottom:10px!important;border-radius:18px!important}.hero-left h2{font-size:28px!important;margin:0!important}.hero-left p{display:none!important}.hero-badges{margin-top:8px!important;gap:6px!important}.badge,.party-chip,.pill{padding:5px 9px!important;font-size:11px!important}.hero-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;margin-top:10px!important}.mini-stat{padding:10px!important;border-radius:14px!important}.mini-stat .label,.kpi .label{font-size:10px!important;margin-bottom:4px!important}.mini-stat .value,.kpi .value{font-size:18px!important}.mini-stat .note,.kpi .note{font-size:11px!important;margin-top:4px!important}.two-col,.grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}.card{border-radius:18px!important}.card-header{padding:12px 12px 6px!important;align-items:center!important}.card h2{font-size:17px!important}.content{padding:0 12px 12px!important}.bars{gap:7px!important}.bar-row{grid-template-columns:minmax(130px,205px) 1fr auto!important;gap:9px!important}.party-line{font-size:13px!important}.candidate-line{font-size:11px!important}.track{height:11px!important}.mini-track{height:8px!important}.bar-value{font-size:11px!important}.round-list{gap:8px!important;max-height:470px!important;overflow:auto!important;padding-right:2px!important}.round{padding:10px!important;border-radius:14px!important}.round-top,.round-title{margin-bottom:8px!important}.round-title{font-size:13px!important}.round-subtitle{font-size:11px!important}.transfer-list{gap:6px!important}.transfer-row{grid-template-columns:minmax(130px,200px) 1fr auto!important;gap:8px!important}.svg-wrap{max-height:470px!important;overflow:auto!important;border-radius:14px!important;padding:8px!important}.legend{gap:6px!important;margin-bottom:8px!important}main>section.card[style*="margin-top:16px"]{display:none!important}@media(max-width:980px){.controls,.hero-grid,.two-col,.grid{grid-template-columns:1fr!important}.controls{position:static!important}.round-list,.svg-wrap{max-height:none!important}}@media(max-width:620px){.intro{display:none!important}.bar-row,.transfer-row{grid-template-columns:1fr!important;gap:4px!important}.bar-value{text-align:left!important}}
 </style>
 </head>
 <body>
@@ -527,25 +638,36 @@ header{padding-top:14px!important;padding-bottom:4px!important}h1{font-size:clam
 
   <main>
     <section class="controls" aria-label="Controls">
-      <div>
-        <label for="districtSelect">District</label>
+      <div class="control-stack">
+        <label for="districtSearch">Find district</label>
+        <input id="districtSearch" type="search" placeholder="Search Melbourne, South-West Coast..." autocomplete="off" />
         <select id="districtSelect"></select>
       </div>
-      <div>
+      <div class="control-stack">
+        <label for="partyFilter">Filters</label>
+        <select id="partyFilter">
+          <option value="all">Any winning party</option>
+        </select>
+        <div class="filter-row">
+          <label class="check" for="changedOnly"><input id="changedOnly" type="checkbox" /> Changed result</label>
+          <label class="check" for="closeOnly"><input id="closeOnly" type="checkbox" /> Close margin</label>
+        </div>
+      </div>
+      <div class="control-stack">
         <label for="roundSelect">Show round</label>
         <select id="roundSelect"></select>
       </div>
-      <div>
+      <div class="control-stack upload-control">
         <label for="csvUpload">Upload cleaned CSV</label>
         <input id="csvUpload" type="file" accept=".csv,text/csv" />
+        <div class="filter-row">
+          <button id="resetView" class="secondary compact" type="button">Reset</button>
+          <button id="downloadSample" class="secondary compact" type="button">Sample CSV</button>
+        </div>
       </div>
-      <button id="downloadSample" class="secondary">Sample CSV</button>
     </section>
 
-    <div class="notice">
-      <strong>Note</strong>
-      <div>Sample data is built in for Melbourne, Richmond, and Brighton so you can test the UI immediately. The upload tool supports your own cleaned long-format dataset later.</div>
-    </div>
+    <div id="dataStatus" class="data-status"></div>
 
     <section class="hero-card" id="districtHero"></section>
 
@@ -622,25 +744,21 @@ header{padding-top:14px!important;padding-bottom:4px!important}h1{font-size:clam
       </article>
     </section>
 
-    <section class="card" style="margin-top:16px;">
+    <section class="card utility-card" id="rawDataSection">
       <div class="card-header">
         <div>
           <h2>Raw round table</h2>
           <p class="card-subtitle">This stays in the prototype for checking the cleaned data. Party is listed before candidate here too.</p>
         </div>
+        <button id="toggleRawData" class="secondary compact" type="button">Show raw data</button>
       </div>
-      <div class="content">
+      <div class="content hidden" id="rawDataContent">
         <div class="table-wrap" id="rawTable"></div>
       </div>
     </section>
 
-    <section class="card" style="margin-top:16px;">
-      <div class="card-header">
-        <div>
-          <h2>CSV shape for later scraping</h2>
-          <p class="card-subtitle">This keeps the current schema but adds optional party columns so the UI can stay party-first.</p>
-        </div>
-      </div>
+    <details class="card utility-card">
+      <summary>CSV schema</summary>
       <div class="content">
         <pre class="schema">district,elected_member,elected_party,enrolment,formal_votes,informal_votes,total_votes,turnout_pct,majority,round_number,row_type,excluded_candidate,excluded_party,candidate,candidate_party,votes
 Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,0,first,,,"SANDELL, Ellen",Australian Greens,15855
@@ -649,7 +767,7 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
 Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,7,final,"PALACKALODY, George",Liberal,"SANDELL, Ellen",Australian Greens,25593</pre>
         <p class="footer">If <code>candidate_party</code> or <code>excluded_party</code> are missing, the prototype will still work — it will just label those entries as unspecified or independent.</p>
       </div>
-    </section>
+    </details>
   </main>
 
   <script>
@@ -781,9 +899,15 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
       }
     ];
 
-    let districts = structuredClone(sampleDistricts);
+    let allDistricts = structuredClone(sampleDistricts);
+    let districts = [...allDistricts];
     let activeDistrict = districts[0];
     let focusRound = "all";
+    let rawDataOpen = false;
+    let datasetMeta = {
+      label: "Embedded sample data",
+      rowCount: countRowsFromDistricts(allDistricts)
+    };
 
     const fmt = new Intl.NumberFormat("en-AU");
     const pct = (n, d) => d ? ((n / d) * 100).toFixed(1) + "%" : "—";
@@ -861,26 +985,110 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
       return ranked(d.first)[0] || ["—", 0];
     }
 
+    function finalMargin(d) {
+      const [, winnerVotes] = getWinnerFromFinal(d);
+      const [, secondVotes] = getSecondFromFinal(d);
+      return Math.max(0, winnerVotes - secondVotes);
+    }
+
+    function resultChanged(d) {
+      return getFirstLeader(d)[0] !== getWinnerFromFinal(d)[0];
+    }
+
+    function winningParty(d) {
+      return partyLabel(getParty(d, getWinnerFromFinal(d)[0]));
+    }
+
     function winnerGain(d) {
       const [winner, finalVotes] = getWinnerFromFinal(d);
       const firstVotes = d.first[winner] || 0;
       return finalVotes - firstVotes;
     }
 
+    function countRowsFromDistricts(list) {
+      return list.reduce((total, d) => {
+        const firstRows = Object.keys(d.first || {}).length;
+        const roundRows = (d.rounds || []).reduce((sum, r) => sum + Object.keys(r.transfers || {}).length + Object.keys(r.totals || {}).length, 0);
+        return total + firstRows + roundRows;
+      }, 0);
+    }
+
+    function getFilterState() {
+      return {
+        query: document.getElementById("districtSearch")?.value.trim().toLowerCase() || "",
+        party: document.getElementById("partyFilter")?.value || "all",
+        changedOnly: Boolean(document.getElementById("changedOnly")?.checked),
+        closeOnly: Boolean(document.getElementById("closeOnly")?.checked)
+      };
+    }
+
+    function districtMatchesFilters(d, filters) {
+      const matchesQuery = !filters.query || d.district.toLowerCase().includes(filters.query);
+      const matchesParty = filters.party === "all" || winningParty(d) === filters.party;
+      const matchesChanged = !filters.changedOnly || resultChanged(d);
+      const matchesClose = !filters.closeOnly || (d.formal_votes && finalMargin(d) / d.formal_votes <= 0.05);
+      return matchesQuery && matchesParty && matchesChanged && matchesClose;
+    }
+
+    function filteredDistricts() {
+      const filters = getFilterState();
+      return allDistricts.filter(d => districtMatchesFilters(d, filters));
+    }
+
+    function updateDataStatus() {
+      const status = document.getElementById("dataStatus");
+      const shown = districts.length;
+      const total = allDistricts.length;
+      const rows = fmt.format(datasetMeta.rowCount || countRowsFromDistricts(allDistricts));
+      const filterText = shown === total ? "All districts shown" : `Showing ${fmt.format(shown)} of ${fmt.format(total)} districts`;
+      status.innerHTML = `
+        <span><span class="status-strong">${datasetMeta.label}</span> · ${fmt.format(total)} districts · ${rows} rows</span>
+        <span>${filterText}</span>
+      `;
+    }
+
     function populateControls() {
       const districtSelect = document.getElementById("districtSelect");
-      districtSelect.innerHTML = districts.map((d, i) => `<option value="${i}">${d.district}</option>`).join("");
+      const partyFilter = document.getElementById("partyFilter");
+      const selectedParty = partyFilter.value || "all";
+      const winningParties = [...new Set(allDistricts.map(winningParty))].sort();
+      partyFilter.innerHTML = [`<option value="all">Any winning party</option>`].concat(
+        winningParties.map(p => `<option value="${p}">${p}</option>`)
+      ).join("");
+      partyFilter.value = winningParties.includes(selectedParty) ? selectedParty : "all";
+
+      districtSelect.disabled = districts.length === 0;
+      districtSelect.innerHTML = districts.length
+        ? districts.map((d, i) => `<option value="${i}">${d.district}</option>`).join("")
+        : `<option>No matching districts</option>`;
+      if (activeDistrict) {
+        const activeIndex = districts.findIndex(d => d.district === activeDistrict.district);
+        districtSelect.value = String(Math.max(0, activeIndex));
+      }
       districtSelect.onchange = () => {
         activeDistrict = districts[Number(districtSelect.value)];
         focusRound = "all";
         render();
       };
+      document.getElementById("districtSearch").oninput = () => applyFilters();
+      partyFilter.onchange = () => applyFilters();
+      document.getElementById("changedOnly").onchange = () => applyFilters();
+      document.getElementById("closeOnly").onchange = () => applyFilters();
+      document.getElementById("resetView").onclick = resetView;
       document.getElementById("csvUpload").onchange = handleUpload;
       document.getElementById("downloadSample").onclick = downloadSchema;
+      document.getElementById("toggleRawData").onclick = toggleRawData;
+      updateDataStatus();
     }
 
     function populateRoundSelect() {
       const roundSelect = document.getElementById("roundSelect");
+      if (!activeDistrict) {
+        roundSelect.innerHTML = `<option>No rounds</option>`;
+        roundSelect.disabled = true;
+        return;
+      }
+      roundSelect.disabled = false;
       roundSelect.innerHTML = [`<option value="all">All rounds</option>`].concat(
         activeDistrict.rounds.map(r => {
           const excludedParty = partyLabel(getParty(activeDistrict, r.excluded));
@@ -894,13 +1102,64 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
       };
     }
 
+    function applyFilters() {
+      const previous = activeDistrict?.district;
+      districts = filteredDistricts();
+      activeDistrict = districts.find(d => d.district === previous) || districts[0] || null;
+      focusRound = "all";
+      populateControls();
+      render();
+    }
+
+    function resetView() {
+      document.getElementById("districtSearch").value = "";
+      document.getElementById("partyFilter").value = "all";
+      document.getElementById("changedOnly").checked = false;
+      document.getElementById("closeOnly").checked = false;
+      districts = [...allDistricts];
+      activeDistrict = districts[0] || null;
+      focusRound = "all";
+      populateControls();
+      render();
+    }
+
+    function toggleRawData() {
+      rawDataOpen = !rawDataOpen;
+      document.getElementById("rawDataContent").classList.toggle("hidden", !rawDataOpen);
+      document.getElementById("toggleRawData").textContent = rawDataOpen ? "Hide raw data" : "Show raw data";
+    }
+
+    function renderNoMatches() {
+      const roundSelect = document.getElementById("roundSelect");
+      roundSelect.innerHTML = `<option>No rounds</option>`;
+      roundSelect.disabled = true;
+      document.getElementById("districtHero").innerHTML = `
+        <div class="hero-top">
+          <div class="hero-left">
+            <h2>No matching districts</h2>
+            <p>Adjust search or filters.</p>
+          </div>
+        </div>
+      `;
+      document.getElementById("kpis").innerHTML = "";
+      document.getElementById("primaryLeaderPill").innerHTML = "";
+      document.getElementById("winnerPill").innerHTML = "";
+      document.getElementById("primaryBars").innerHTML = "";
+      document.getElementById("finalBars").innerHTML = "";
+      document.getElementById("roundList").innerHTML = "";
+      document.getElementById("chartLegend").innerHTML = "";
+      document.getElementById("progressiveChart").innerHTML = "";
+      document.getElementById("rawTable").innerHTML = "";
+      updateDataStatus();
+    }
+
     function renderHero(d) {
       const [leader, leaderVotes] = getFirstLeader(d);
       const leaderParty = getParty(d, leader);
       const [winner, finalVotes] = getWinnerFromFinal(d);
       const winnerParty = getParty(d, winner);
-      const changed = shortName(leader) === shortName(winner) ? "No" : "Yes";
-      const margin = finalVotes - getSecondFromFinal(d)[1];
+      const changed = resultChanged(d) ? "Yes" : "No";
+      const margin = finalMargin(d);
 
       document.getElementById("districtHero").innerHTML = `
         <div class="hero-top">
@@ -917,7 +1176,7 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
         </div>
         <div class="hero-grid">
           <div class="mini-stat">
-            <div class="label">Winning party</div>
+            <div class="label">Winner</div>
             <div class="value">${partyLabel(winnerParty)}</div>
             <div class="note">Candidate: ${shortName(winner)}</div>
           </div>
@@ -932,6 +1191,11 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
             <div class="note">${pct(margin, d.formal_votes)} of formal votes</div>
           </div>
           <div class="mini-stat">
+            <div class="label">Changed result?</div>
+            <div class="value">${changed}</div>
+            <div class="note">${changed === "Yes" ? "Primary leader was not final winner" : "Primary leader also won"}</div>
+          </div>
+          <div class="mini-stat">
             <div class="label">Turnout</div>
             <div class="value">${Number(d.turnout_pct).toFixed(2)}%</div>
             <div class="note">${fmt.format(d.total_votes)} total votes cast</div>
@@ -943,16 +1207,15 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
     function renderKpis(d) {
       const [leader, leaderVotes] = getFirstLeader(d);
       const [winner, finalVotes] = getWinnerFromFinal(d);
-      const [, secondVotes] = getSecondFromFinal(d);
       const gain = winnerGain(d);
-      const changed = leader === winner ? "No" : "Yes";
+      const changed = resultChanged(d) ? "Yes" : "No";
       const kpis = [
         { label: "Elected member", value: shortName(d.elected_member), note: partyLabel(d.elected_party) },
         { label: "Winner final vote", value: fmt.format(finalVotes), note: `${pct(finalVotes, d.formal_votes)} of formal votes` },
         { label: "Primary leader vote", value: fmt.format(leaderVotes), note: `${partyLabel(getParty(d, leader))} · ${pct(leaderVotes, d.formal_votes)}` },
         { label: "Did preferences change it?", value: changed, note: changed === "Yes" ? "Different final winner from first-choice leader" : "Primary leader also won" },
         { label: "Winner transfer gain", value: `+${fmt.format(gain)}`, note: `${pct(gain, finalVotes)} of winner's final total` },
-        { label: "Final gap to runner-up", value: fmt.format(finalVotes - secondVotes), note: `${pct(finalVotes - secondVotes, d.formal_votes)} of formal votes` },
+        { label: "Final gap to runner-up", value: fmt.format(finalMargin(d)), note: `${pct(finalMargin(d), d.formal_votes)} of formal votes` },
         { label: "Formal votes", value: fmt.format(d.formal_votes), note: `${fmt.format(d.informal_votes)} informal votes` },
         { label: "Majority target", value: fmt.format(d.majority), note: "Votes needed for absolute majority" }
       ];
@@ -993,12 +1256,18 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
         const max = transfers[0]?.[1] || 1;
         const total = Object.values(r.transfers).reduce((a, b) => a + Number(b || 0), 0);
         const excludedParty = getParty(d, r.excluded);
+        const [topCandidate, topVotes] = transfers[0] || ["—", 0];
+        const topParty = getParty(d, topCandidate);
         return `
           <div class="round">
             <div class="round-top">
               <div>
                 <div class="round-title">Round ${r.round} · excluded ${partyLabel(excludedParty)} · ${shortName(r.excluded)}</div>
                 <div class="round-subtitle">${fmt.format(total)} ballot papers transferred in this round.</div>
+                <div class="round-summary">
+                  <span class="mini-badge">Largest gain · ${partyLabel(topParty)} · ${fmt.format(topVotes)}</span>
+                  <span class="mini-badge">${r.final ? "Final count" : "Progressive count"}</span>
+                </div>
               </div>
               ${badgeHtml(excludedParty)}
             </div>
@@ -1034,6 +1303,9 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
       const chartH = height - top - bottom;
       const x = i => left + (snapshots.length === 1 ? 0 : i / (snapshots.length - 1) * chartW);
       const y = v => top + chartH - (v / maxVotes) * chartH;
+      const finalOrder = ranked(getFinal(d));
+      const winner = finalOrder[0]?.[0];
+      const runnerUp = finalOrder[1]?.[0];
 
       const lines = candidates.map(candidate => {
         const party = getParty(d, candidate);
@@ -1043,7 +1315,15 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
           if (value === undefined || value === null || value === "") return null;
           return `${x(i)},${y(value)}`;
         }).filter(Boolean).join(" ");
-        return { candidate, party, color, points };
+        return {
+          candidate,
+          party,
+          color,
+          points,
+          isWinner: candidate === winner,
+          isRunnerUp: candidate === runnerUp,
+          isFinalist: finalOrder.some(([name]) => name === candidate)
+        };
       }).filter(l => l.points.includes(" "));
 
       const xLabels = snapshots.map((s, i) => `<text x="${x(i)}" y="${height - 14}" text-anchor="middle" fill="#6c665d" font-size="12" font-weight="700">${s.label}</text>`).join("");
@@ -1053,19 +1333,29 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
         return `<line x1="${left}" x2="${width - right}" y1="${yy}" y2="${yy}" stroke="rgba(31,28,23,.09)"/><text x="${left - 10}" y="${yy + 4}" text-anchor="end" fill="#6c665d" font-size="11">${fmt.format(Math.round(val))}</text>`;
       }).join("");
 
-      const polylines = lines.map(line => `<polyline points="${line.points}" fill="none" stroke="${line.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><title>${partyLabel(line.party)} · ${line.candidate}</title></polyline>`).join("");
-      const labels = ranked(getFinal(d)).map(([candidate]) => {
+      const axisLabels = `
+        <text x="${left}" y="${top - 10}" fill="#6c665d" font-size="11" font-weight="800">Votes</text>
+        <text x="${left + chartW / 2}" y="${height - 2}" text-anchor="middle" fill="#6c665d" font-size="11" font-weight="800">Count stage</text>
+      `;
+      const polylines = lines.map(line => {
+        const strokeWidth = line.isWinner ? 4.5 : line.isRunnerUp ? 3.5 : 2.2;
+        const opacity = line.isWinner || line.isRunnerUp ? 1 : line.isFinalist ? .72 : .28;
+        return `<polyline points="${line.points}" fill="none" stroke="${line.color}" stroke-width="${strokeWidth}" opacity="${opacity}" stroke-linecap="round" stroke-linejoin="round"><title>${partyLabel(line.party)} · ${line.candidate}</title></polyline>`;
+      }).join("");
+      const labels = finalOrder.map(([candidate]) => {
         const line = lines.find(l => l.candidate === candidate);
         if (!line) return "";
         const pts = line.points.trim().split(" ");
         const [lx, ly] = pts[pts.length - 1].split(",").map(Number);
-        return `<text x="${Math.min(width - 8, lx + 8)}" y="${ly + 4}" fill="${line.color}" font-size="11" font-weight="800">${partyLabel(line.party)}</text>`;
+        const suffix = line.isWinner ? " winner" : line.isRunnerUp ? " runner-up" : "";
+        return `<text x="${Math.min(width - 8, lx + 8)}" y="${ly + 4}" fill="${line.color}" font-size="11" font-weight="800">${partyLabel(line.party)}${suffix}</text>`;
       }).join("");
 
-      document.getElementById("chartLegend").innerHTML = ranked(getFinal(d)).map(([candidate]) => badgeHtml(getParty(d, candidate))).join("");
+      document.getElementById("chartLegend").innerHTML = finalOrder.map(([candidate]) => badgeHtml(getParty(d, candidate))).join("");
       document.getElementById("progressiveChart").innerHTML = `
         <svg width="${width}" height="${height}" role="img" aria-label="Progressive vote totals chart">
           ${grid}
+          ${axisLabels}
           ${xLabels}
           ${polylines}
           ${labels}
@@ -1116,6 +1406,10 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
     }
 
     function render() {
+      if (!activeDistrict) {
+        renderNoMatches();
+        return;
+      }
       populateRoundSelect();
       renderHero(activeDistrict);
       renderKpis(activeDistrict);
@@ -1126,6 +1420,7 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
       renderBars("primaryBars", activeDistrict.first, activeDistrict.formal_votes, primaryLeader, activeDistrict);
       renderBars("finalBars", getFinal(activeDistrict), activeDistrict.formal_votes, winner, activeDistrict);
       renderPanelsOnly();
+      updateDataStatus();
     }
 
     function parseCSV(text) {
@@ -1204,9 +1499,15 @@ Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,
     function loadRows(rows, source) {
       const loaded = buildDistrictsFromRows(rows, source);
       if (!loaded.length) throw new Error("No valid district rows found.");
-      districts = loaded;
+      allDistricts = loaded;
+      districts = [...allDistricts];
       activeDistrict = districts[0];
+      datasetMeta = { label: source === "Uploaded CSV" ? "Loaded uploaded CSV" : `Loaded ${source}`, rowCount: rows.length };
       focusRound = "all";
+      document.getElementById("districtSearch").value = "";
+      document.getElementById("partyFilter").value = "all";
+      document.getElementById("changedOnly").checked = false;
+      document.getElementById("closeOnly").checked = false;
       populateControls();
       render();
     }
