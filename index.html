@@ -1,0 +1,1270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Victoria 2022 Preference Explorer — Compact v3</title>
+  <style>
+    :root {
+      --bg: #f4f1eb;
+      --panel: #fffdf9;
+      --panel-soft: rgba(255,255,255,.74);
+      --ink: #1f1c17;
+      --muted: #6c665d;
+      --line: #e4dbcf;
+      --accent: #2d4b73;
+      --accent-soft: rgba(45, 75, 115, 0.10);
+      --shadow: 0 18px 50px rgba(36, 27, 16, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(45, 75, 115, .12), transparent 32rem),
+        radial-gradient(circle at top right, rgba(108, 85, 50, .10), transparent 30rem),
+        var(--bg);
+      line-height: 1.5;
+    }
+
+    header, main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    header {
+      padding-top: 30px;
+      padding-bottom: 10px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.7);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    h1 {
+      margin: 14px 0 10px;
+      max-width: 930px;
+      font-size: clamp(34px, 5.8vw, 62px);
+      line-height: .95;
+      letter-spacing: -.06em;
+    }
+
+    .intro {
+      max-width: 800px;
+      color: var(--muted);
+      font-size: 17px;
+      margin: 0;
+    }
+
+    main {
+      padding-top: 8px;
+      padding-bottom: 48px;
+    }
+
+    .controls {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+      padding: 14px;
+      margin: 18px 0 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: rgba(244, 241, 235, .88);
+      backdrop-filter: blur(16px);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    select, input[type="file"], button {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 800;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      transition: transform .15s ease, opacity .15s ease;
+      white-space: nowrap;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button.secondary { background: #fff; color: var(--ink); border-color: var(--line); }
+
+    .hero-card, .card {
+      background: rgba(255,253,249,.92);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-card {
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .hero-left h2 {
+      margin: 0 0 4px;
+      font-size: clamp(26px, 4.8vw, 42px);
+      line-height: .98;
+      letter-spacing: -.05em;
+    }
+
+    .hero-left p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .badge, .party-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: .01em;
+      color: #14202a;
+      background: #edf1f4;
+      border: 1px solid rgba(0,0,0,.06);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: currentColor;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+    }
+
+    .hero-grid, .kpis, .explainer-grid, .two-col {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .mini-stat, .kpi, .step {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 15px;
+    }
+
+    .mini-stat .label,
+    .kpi .label,
+    .step .label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 8px;
+    }
+
+    .mini-stat .value,
+    .kpi .value,
+    .step h3 {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: 1.04;
+      margin: 0;
+    }
+
+    .mini-stat .note,
+    .kpi .note,
+    .step p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+
+    .explainer-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .step h3 {
+      font-size: 18px;
+    }
+
+    .kpis {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      padding: 18px 18px 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 21px;
+      letter-spacing: -.035em;
+    }
+
+    .card-subtitle {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 720px;
+    }
+
+    .content { padding: 0 18px 18px; }
+
+    .two-col {
+      grid-template-columns: 1.02fr .98fr;
+      align-items: start;
+    }
+
+    .bars { display: grid; gap: 12px; }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(160px, 240px) 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bar-label {
+      min-width: 0;
+    }
+
+    .bar-label .party-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 850;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bar-label .candidate-line {
+      margin-top: 3px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track, .mini-track {
+      width: 100%;
+      background: rgba(31, 28, 23, .08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .track { height: 14px; }
+    .mini-track { height: 10px; }
+
+    .fill, .mini-fill {
+      height: 100%;
+      border-radius: 999px;
+      min-width: 2px;
+    }
+
+    .bar-value {
+      text-align: right;
+      color: var(--muted);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .round-list { display: grid; gap: 12px; }
+
+    .round {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-soft);
+      padding: 14px;
+    }
+
+    .round-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .round-title {
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    .round-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .transfer-list { display: grid; gap: 8px; }
+
+    .transfer-row {
+      display: grid;
+      grid-template-columns: minmax(160px, 220px) 1fr auto;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .transfer-label {
+      min-width: 0;
+    }
+
+    .transfer-label .party-line {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 850;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .transfer-label .candidate-line {
+      margin-top: 2px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .svg-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-soft);
+      padding: 10px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 86px;
+      background: var(--panel);
+      color: var(--muted);
+      z-index: 4;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .table-wrap {
+      max-height: 420px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel-soft);
+    }
+
+    .schema {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      color: #3a342d;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px;
+      overflow: auto;
+    }
+
+    .notice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 14px 16px;
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.64);
+      color: var(--muted);
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    .footer {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .small { font-size: 12px; }
+    .right { text-align: right; }
+
+    @media (max-width: 980px) {
+      .controls,
+      .hero-grid,
+      .kpis,
+      .explainer-grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .controls { position: static; }
+      .bar-row,
+      .transfer-row { grid-template-columns: minmax(140px, 220px) 1fr auto; }
+    }
+
+    @media (max-width: 620px) {
+      header { padding-top: 22px; }
+      .hero-card { padding: 18px; }
+      .card-header { display: block; }
+      .bar-row,
+      .transfer-row { grid-template-columns: 1fr; gap: 6px; }
+      .bar-value { text-align: left; }
+      th { top: 0; }
+    }
+  
+/* --- v3 compact overrides --- */
+header{padding-top:14px!important;padding-bottom:4px!important}h1{font-size:clamp(24px,4vw,38px)!important;margin:8px 0 4px!important;line-height:1!important}.intro{font-size:13px!important;margin:0!important}.eyebrow{padding:6px 10px!important;font-size:11px!important}.controls{padding:10px!important;margin:10px 0!important;gap:8px!important;grid-template-columns:1.4fr 1.1fr 1fr auto!important;border-radius:18px!important}label{font-size:10px!important;margin-bottom:4px!important}select,input[type="file"],button{padding:9px 10px!important;border-radius:12px!important;font-size:13px!important}.notice,.explainer-grid,#kpis,.card-subtitle{display:none!important}.hero-card{padding:12px!important;margin-bottom:10px!important;border-radius:18px!important}.hero-left h2{font-size:28px!important;margin:0!important}.hero-left p{display:none!important}.hero-badges{margin-top:8px!important;gap:6px!important}.badge,.party-chip,.pill{padding:5px 9px!important;font-size:11px!important}.hero-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;margin-top:10px!important}.mini-stat{padding:10px!important;border-radius:14px!important}.mini-stat .label,.kpi .label{font-size:10px!important;margin-bottom:4px!important}.mini-stat .value,.kpi .value{font-size:18px!important}.mini-stat .note,.kpi .note{font-size:11px!important;margin-top:4px!important}.two-col,.grid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}.card{border-radius:18px!important}.card-header{padding:12px 12px 6px!important;align-items:center!important}.card h2{font-size:17px!important}.content{padding:0 12px 12px!important}.bars{gap:7px!important}.bar-row{grid-template-columns:minmax(130px,205px) 1fr auto!important;gap:9px!important}.party-line{font-size:13px!important}.candidate-line{font-size:11px!important}.track{height:11px!important}.mini-track{height:8px!important}.bar-value{font-size:11px!important}.round-list{gap:8px!important;max-height:470px!important;overflow:auto!important;padding-right:2px!important}.round{padding:10px!important;border-radius:14px!important}.round-top,.round-title{margin-bottom:8px!important}.round-title{font-size:13px!important}.round-subtitle{font-size:11px!important}.transfer-list{gap:6px!important}.transfer-row{grid-template-columns:minmax(130px,200px) 1fr auto!important;gap:8px!important}.svg-wrap{max-height:470px!important;overflow:auto!important;border-radius:14px!important;padding:8px!important}.legend{gap:6px!important;margin-bottom:8px!important}main>section.card[style*="margin-top:16px"]{display:none!important}@media(max-width:980px){.controls,.hero-grid,.two-col,.grid{grid-template-columns:1fr!important}.controls{position:static!important}.round-list,.svg-wrap{max-height:none!important}}@media(max-width:620px){.intro{display:none!important}.bar-row,.transfer-row{grid-template-columns:1fr!important;gap:4px!important}.bar-value{text-align:left!important}}
+</style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">Victoria 2022 · compact prototype</div>
+    <h1>District preference explorer</h1>
+    <p class="intro">Party-first view of primary vote, preference transfers, and final standing.</p>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Controls">
+      <div>
+        <label for="districtSelect">District</label>
+        <select id="districtSelect"></select>
+      </div>
+      <div>
+        <label for="roundSelect">Show round</label>
+        <select id="roundSelect"></select>
+      </div>
+      <div>
+        <label for="csvUpload">Upload cleaned CSV</label>
+        <input id="csvUpload" type="file" accept=".csv,text/csv" />
+      </div>
+      <button id="downloadSample" class="secondary">Sample CSV</button>
+    </section>
+
+    <div class="notice">
+      <strong>Note</strong>
+      <div>Sample data is built in for Melbourne, Richmond, and Brighton so you can test the UI immediately. The upload tool supports your own cleaned long-format dataset later.</div>
+    </div>
+
+    <section class="hero-card" id="districtHero"></section>
+
+    <section class="explainer-grid">
+      <div class="step">
+        <div class="label">1 · Start here</div>
+        <h3>First-choice vote</h3>
+        <p>See which <strong>party</strong> started strongest before any preferences moved.</p>
+      </div>
+      <div class="step">
+        <div class="label">2 · Then check</div>
+        <h3>Preference flows</h3>
+        <p>Each round shows whose votes were excluded and which parties benefited.</p>
+      </div>
+      <div class="step">
+        <div class="label">3 · Finish with</div>
+        <h3>Final standing</h3>
+        <p>Compare the end result against the primary vote to see whether preferences changed the story.</p>
+      </div>
+    </section>
+
+    <section class="kpis" id="kpis"></section>
+
+    <section class="two-col">
+      <article class="card">
+        <div class="card-header">
+          <div>
+            <h2>First-choice vote</h2>
+            <p class="card-subtitle">Party is shown first. Candidate names sit underneath as supporting detail.</p>
+          </div>
+          <span class="badge" id="primaryLeaderPill"></span>
+        </div>
+        <div class="content">
+          <div id="primaryBars" class="bars"></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div>
+            <h2>Final standing</h2>
+            <p class="card-subtitle">Shows the surviving candidates and highlights the winning party most clearly.</p>
+          </div>
+          <span class="badge" id="winnerPill"></span>
+        </div>
+        <div class="content">
+          <div id="finalBars" class="bars"></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div>
+            <h2>Preference rounds</h2>
+            <p class="card-subtitle">The excluded candidate is listed once at the top of each round. The rows below show which parties picked up those votes.</p>
+          </div>
+        </div>
+        <div class="content">
+          <div id="roundList" class="round-list"></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-header">
+          <div>
+            <h2>Progressive totals</h2>
+            <p class="card-subtitle">Line colours are tied to party colours so the count is easier to read at a glance.</p>
+          </div>
+        </div>
+        <div class="content">
+          <div class="legend" id="chartLegend"></div>
+          <div class="svg-wrap" id="progressiveChart"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:16px;">
+      <div class="card-header">
+        <div>
+          <h2>Raw round table</h2>
+          <p class="card-subtitle">This stays in the prototype for checking the cleaned data. Party is listed before candidate here too.</p>
+        </div>
+      </div>
+      <div class="content">
+        <div class="table-wrap" id="rawTable"></div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:16px;">
+      <div class="card-header">
+        <div>
+          <h2>CSV shape for later scraping</h2>
+          <p class="card-subtitle">This keeps the current schema but adds optional party columns so the UI can stay party-first.</p>
+        </div>
+      </div>
+      <div class="content">
+        <pre class="schema">district,elected_member,elected_party,enrolment,formal_votes,informal_votes,total_votes,turnout_pct,majority,round_number,row_type,excluded_candidate,excluded_party,candidate,candidate_party,votes
+Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,0,first,,,"SANDELL, Ellen",Australian Greens,15855
+Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,1,transfer,"AL-SAIMARY, Laylah",Independent,"SANDELL, Ellen",Australian Greens,133
+Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,1,progressive,"AL-SAIMARY, Laylah",Independent,"SANDELL, Ellen",Australian Greens,15988
+Melbourne,"SANDELL, Ellen",Australian Greens,54533,42519,1485,44004,80.69,21260,7,final,"PALACKALODY, George",Liberal,"SANDELL, Ellen",Australian Greens,25593</pre>
+        <p class="footer">If <code>candidate_party</code> or <code>excluded_party</code> are missing, the prototype will still work — it will just label those entries as unspecified or independent.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const sampleDistricts = [
+      {
+        district: "Melbourne",
+        source: "VEC Melbourne District preference distribution",
+        elected_member: "SANDELL, Ellen",
+        elected_party: "Australian Greens",
+        enrolment: 54533,
+        formal_votes: 42519,
+        informal_votes: 1485,
+        total_votes: 44004,
+        turnout_pct: 80.69,
+        majority: 21260,
+        partyMap: {
+          "PALACKALODY, George": "Liberal",
+          "SANDELL, Ellen": "Australian Greens",
+          "JANSON, Michael": "Family First Victoria",
+          "AL-SAIMARY, Laylah": "Independent",
+          "BOLGER, Colleen": "Victorian Socialists",
+          "BANGAAR, Rabin": "Animal Justice Party",
+          "SMITH, Steven J.": "Freedom Party of Victoria",
+          "THISTLETON, Rebecca": "Australian Labor Party - Victorian Branch",
+          "FOXWORTHY, Nicola": "Fiona Patten's Reason Party"
+        },
+        first: {
+          "PALACKALODY, George": 7522,
+          "SANDELL, Ellen": 15855,
+          "JANSON, Michael": 535,
+          "AL-SAIMARY, Laylah": 428,
+          "BOLGER, Colleen": 2323,
+          "BANGAAR, Rabin": 701,
+          "SMITH, Steven J.": 521,
+          "THISTLETON, Rebecca": 13033,
+          "FOXWORTHY, Nicola": 1601
+        },
+        rounds: [
+          { round: 1, excluded: "AL-SAIMARY, Laylah", transfers: {"PALACKALODY, George":33,"SANDELL, Ellen":133,"JANSON, Michael":26,"BOLGER, Colleen":94,"BANGAAR, Rabin":36,"SMITH, Steven J.":13,"THISTLETON, Rebecca":33,"FOXWORTHY, Nicola":60}, totals: {"PALACKALODY, George":7555,"SANDELL, Ellen":15988,"JANSON, Michael":561,"BOLGER, Colleen":2417,"BANGAAR, Rabin":737,"SMITH, Steven J.":534,"THISTLETON, Rebecca":13066,"FOXWORTHY, Nicola":1661} },
+          { round: 2, excluded: "SMITH, Steven J.", transfers: {"PALACKALODY, George":124,"SANDELL, Ellen":24,"JANSON, Michael":208,"BOLGER, Colleen":26,"BANGAAR, Rabin":62,"THISTLETON, Rebecca":42,"FOXWORTHY, Nicola":48}, totals: {"PALACKALODY, George":7679,"SANDELL, Ellen":16012,"JANSON, Michael":769,"BOLGER, Colleen":2443,"BANGAAR, Rabin":799,"THISTLETON, Rebecca":13108,"FOXWORTHY, Nicola":1709} },
+          { round: 3, excluded: "JANSON, Michael", transfers: {"PALACKALODY, George":409,"SANDELL, Ellen":88,"BOLGER, Colleen":69,"BANGAAR, Rabin":96,"THISTLETON, Rebecca":48,"FOXWORTHY, Nicola":59}, totals: {"PALACKALODY, George":8088,"SANDELL, Ellen":16100,"BOLGER, Colleen":2512,"BANGAAR, Rabin":895,"THISTLETON, Rebecca":13156,"FOXWORTHY, Nicola":1768} },
+          { round: 4, excluded: "BANGAAR, Rabin", transfers: {"PALACKALODY, George":94,"SANDELL, Ellen":333,"BOLGER, Colleen":173,"THISTLETON, Rebecca":132,"FOXWORTHY, Nicola":163}, totals: {"PALACKALODY, George":8182,"SANDELL, Ellen":16433,"BOLGER, Colleen":2685,"THISTLETON, Rebecca":13288,"FOXWORTHY, Nicola":1931} },
+          { round: 5, excluded: "FOXWORTHY, Nicola", transfers: {"PALACKALODY, George":203,"SANDELL, Ellen":785,"BOLGER, Colleen":487,"THISTLETON, Rebecca":456}, totals: {"PALACKALODY, George":8385,"SANDELL, Ellen":17218,"BOLGER, Colleen":3172,"THISTLETON, Rebecca":13744} },
+          { round: 6, excluded: "BOLGER, Colleen", transfers: {"PALACKALODY, George":190,"SANDELL, Ellen":2524,"THISTLETON, Rebecca":458}, totals: {"PALACKALODY, George":8575,"SANDELL, Ellen":19742,"THISTLETON, Rebecca":14202} },
+          { round: 7, excluded: "PALACKALODY, George", transfers: {"SANDELL, Ellen":5851,"THISTLETON, Rebecca":2724}, totals: {"SANDELL, Ellen":25593,"THISTLETON, Rebecca":16926}, final: true }
+        ]
+      },
+      {
+        district: "Richmond",
+        source: "VEC Richmond District preference distribution",
+        elected_member: "DE VIETRI, Gabrielle",
+        elected_party: "Australian Greens",
+        enrolment: 48305,
+        formal_votes: 39731,
+        informal_votes: 1381,
+        total_votes: 41112,
+        turnout_pct: 85.11,
+        majority: 19866,
+        partyMap: {
+          "VIGGERS, Lis": "Animal Justice Party",
+          "WARD, Roz": "Victorian Socialists",
+          "HO, Meca": "Independent",
+          "COWEN, Jeremy": "Fiona Patten's Reason Party",
+          "DE VIETRI, Gabrielle": "Australian Greens",
+          "MOON, Lucas": "Liberal",
+          "FREIVERTS, Markus": "Family First Victoria",
+          "O'DWYER, Lauren": "Australian Labor Party - Victorian Branch"
+        },
+        first: {
+          "VIGGERS, Lis": 934,
+          "WARD, Roz": 1828,
+          "HO, Meca": 417,
+          "COWEN, Jeremy": 1830,
+          "DE VIETRI, Gabrielle": 13771,
+          "MOON, Lucas": 7456,
+          "FREIVERTS, Markus": 458,
+          "O'DWYER, Lauren": 13037
+        },
+        rounds: [
+          { round: 1, excluded: "HO, Meca", transfers: {"VIGGERS, Lis":59,"WARD, Roz":55,"COWEN, Jeremy":49,"DE VIETRI, Gabrielle":34,"MOON, Lucas":101,"FREIVERTS, Markus":34,"O'DWYER, Lauren":85}, totals: {"VIGGERS, Lis":993,"WARD, Roz":1883,"COWEN, Jeremy":1879,"DE VIETRI, Gabrielle":13805,"MOON, Lucas":7557,"FREIVERTS, Markus":492,"O'DWYER, Lauren":13122} },
+          { round: 2, excluded: "FREIVERTS, Markus", transfers: {"VIGGERS, Lis":61,"WARD, Roz":27,"COWEN, Jeremy":32,"DE VIETRI, Gabrielle":27,"MOON, Lucas":283,"O'DWYER, Lauren":62}, totals: {"VIGGERS, Lis":1054,"WARD, Roz":1910,"COWEN, Jeremy":1911,"DE VIETRI, Gabrielle":13832,"MOON, Lucas":7840,"O'DWYER, Lauren":13184} },
+          { round: 3, excluded: "VIGGERS, Lis", transfers: {"WARD, Roz":390,"COWEN, Jeremy":155,"DE VIETRI, Gabrielle":289,"MOON, Lucas":95,"O'DWYER, Lauren":125}, totals: {"WARD, Roz":2300,"COWEN, Jeremy":2066,"DE VIETRI, Gabrielle":14121,"MOON, Lucas":7935,"O'DWYER, Lauren":13309} },
+          { round: 4, excluded: "COWEN, Jeremy", transfers: {"WARD, Roz":558,"DE VIETRI, Gabrielle":755,"MOON, Lucas":222,"O'DWYER, Lauren":531}, totals: {"WARD, Roz":2858,"DE VIETRI, Gabrielle":14876,"MOON, Lucas":8157,"O'DWYER, Lauren":13840} },
+          { round: 5, excluded: "WARD, Roz", transfers: {"DE VIETRI, Gabrielle":2194,"MOON, Lucas":213,"O'DWYER, Lauren":451}, totals: {"DE VIETRI, Gabrielle":17070,"MOON, Lucas":8370,"O'DWYER, Lauren":14291} },
+          { round: 6, excluded: "MOON, Lucas", transfers: {"DE VIETRI, Gabrielle":5702,"O'DWYER, Lauren":2668}, totals: {"DE VIETRI, Gabrielle":22772,"O'DWYER, Lauren":16959}, final: true }
+        ]
+      },
+      {
+        district: "Brighton",
+        source: "VEC Brighton District preference distribution",
+        elected_member: "NEWBURY, James",
+        elected_party: "Liberal",
+        enrolment: 48260,
+        formal_votes: 41196,
+        informal_votes: 1786,
+        total_votes: 42982,
+        turnout_pct: 89.06,
+        majority: 20599,
+        partyMap: {
+          "TIMMS, Allan L.": "Independent",
+          "SCIOLA, Nick": "Family First Victoria",
+          "DEKIERE, Sarah": "Australian Greens",
+          "GIBSON, Sally": "Independent",
+          "FREDERICO, Felicity": "Independent",
+          "WALKER, Alicia": "Animal Justice Party",
+          "NEWBURY, James": "Liberal",
+          "CRAWFORD, Louise": "Australian Labor Party - Victorian Branch",
+          "CASLEY, John Tiger": "Independent"
+        },
+        first: {
+          "TIMMS, Allan L.": 211,
+          "SCIOLA, Nick": 558,
+          "DEKIERE, Sarah": 5680,
+          "GIBSON, Sally": 941,
+          "FREDERICO, Felicity": 3749,
+          "WALKER, Alicia": 851,
+          "NEWBURY, James": 18791,
+          "CRAWFORD, Louise": 10164,
+          "CASLEY, John Tiger": 251
+        },
+        rounds: [
+          { round: 1, excluded: "TIMMS, Allan L.", transfers: {"SCIOLA, Nick":93,"DEKIERE, Sarah":19,"GIBSON, Sally":40,"FREDERICO, Felicity":12,"WALKER, Alicia":6,"NEWBURY, James":23,"CRAWFORD, Louise":7,"CASLEY, John Tiger":11}, totals: {"SCIOLA, Nick":651,"DEKIERE, Sarah":5699,"GIBSON, Sally":981,"FREDERICO, Felicity":3761,"WALKER, Alicia":857,"NEWBURY, James":18814,"CRAWFORD, Louise":10171,"CASLEY, John Tiger":262} },
+          { round: 2, excluded: "CASLEY, John Tiger", transfers: {"SCIOLA, Nick":50,"DEKIERE, Sarah":22,"GIBSON, Sally":37,"FREDERICO, Felicity":45,"WALKER, Alicia":26,"NEWBURY, James":53,"CRAWFORD, Louise":29}, totals: {"SCIOLA, Nick":701,"DEKIERE, Sarah":5721,"GIBSON, Sally":1018,"FREDERICO, Felicity":3806,"WALKER, Alicia":883,"NEWBURY, James":18867,"CRAWFORD, Louise":10200} },
+          { round: 3, excluded: "SCIOLA, Nick", transfers: {"DEKIERE, Sarah":164,"GIBSON, Sally":91,"FREDERICO, Felicity":64,"WALKER, Alicia":53,"NEWBURY, James":308,"CRAWFORD, Louise":21}, totals: {"DEKIERE, Sarah":5885,"GIBSON, Sally":1109,"FREDERICO, Felicity":3870,"WALKER, Alicia":936,"NEWBURY, James":19175,"CRAWFORD, Louise":10221} },
+          { round: 4, excluded: "WALKER, Alicia", transfers: {"DEKIERE, Sarah":372,"GIBSON, Sally":199,"FREDERICO, Felicity":77,"NEWBURY, James":147,"CRAWFORD, Louise":141}, totals: {"DEKIERE, Sarah":6257,"GIBSON, Sally":1308,"FREDERICO, Felicity":3947,"NEWBURY, James":19322,"CRAWFORD, Louise":10362} },
+          { round: 5, excluded: "GIBSON, Sally", transfers: {"DEKIERE, Sarah":555,"FREDERICO, Felicity":480,"NEWBURY, James":133,"CRAWFORD, Louise":140}, totals: {"DEKIERE, Sarah":6812,"FREDERICO, Felicity":4427,"NEWBURY, James":19455,"CRAWFORD, Louise":10502} },
+          { round: 6, excluded: "FREDERICO, Felicity", transfers: {"DEKIERE, Sarah":1804,"NEWBURY, James":1275,"CRAWFORD, Louise":1348}, totals: {"DEKIERE, Sarah":8616,"NEWBURY, James":20730,"CRAWFORD, Louise":11850}, final: true }
+        ]
+      }
+    ];
+
+    let districts = structuredClone(sampleDistricts);
+    let activeDistrict = districts[0];
+    let focusRound = "all";
+
+    const fmt = new Intl.NumberFormat("en-AU");
+    const pct = (n, d) => d ? ((n / d) * 100).toFixed(1) + "%" : "—";
+    const byVotesDesc = (a, b) => b[1] - a[1];
+
+    function shortName(name) {
+      if (!name) return "—";
+      const parts = name.split(",");
+      if (parts.length > 1) return `${parts[0]}, ${parts[1].trim().charAt(0)}.`;
+      return name;
+    }
+
+    function partyLabel(raw) {
+      const p = (raw || "Independent").trim();
+      if (p === "Australian Labor Party - Victorian Branch") return "Labor";
+      if (p === "Australian Greens") return "Greens";
+      if (p === "Family First Victoria") return "Family First";
+      if (p === "Fiona Patten's Reason Party") return "Reason";
+      if (p === "Animal Justice Party") return "Animal Justice";
+      if (p === "Freedom Party of Victoria") return "Freedom Party";
+      if (!p) return "Independent";
+      return p;
+    }
+
+    function partyColor(raw) {
+      const p = partyLabel(raw).toLowerCase();
+      if (p.includes("labor")) return "#d94b49";
+      if (p.includes("liberal")) return "#2f61bf";
+      if (p.includes("greens")) return "#2d8a4b";
+      if (p.includes("animal justice")) return "#7a57b8";
+      if (p.includes("socialists")) return "#ad3d6f";
+      if (p.includes("reason")) return "#2b98a3";
+      if (p.includes("family first")) return "#c27022";
+      if (p.includes("freedom")) return "#8a6a3f";
+      if (p.includes("independent")) return "#7a7f87";
+      return "#667184";
+    }
+
+    function badgeHtml(party) {
+      const label = partyLabel(party);
+      return `<span class="party-chip" style="background:${hexToRgba(partyColor(party), .12)}; color:${partyColor(party)}; border-color:${hexToRgba(partyColor(party), .18)}"><span class="dot" style="background:${partyColor(party)}"></span>${label}</span>`;
+    }
+
+    function hexToRgba(hex, alpha) {
+      const clean = hex.replace("#", "");
+      const bigint = parseInt(clean.length === 3 ? clean.split("").map(c => c + c).join("") : clean, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function ranked(obj) {
+      return Object.entries(obj || {}).sort(byVotesDesc);
+    }
+
+    function getParty(d, candidate) {
+      return d.partyMap?.[candidate] || "Independent";
+    }
+
+    function getFinal(d) {
+      const last = d.rounds[d.rounds.length - 1];
+      return last?.totals || {};
+    }
+
+    function getWinnerFromFinal(d) {
+      return ranked(getFinal(d))[0] || [d.elected_member, 0];
+    }
+
+    function getSecondFromFinal(d) {
+      return ranked(getFinal(d))[1] || ["—", 0];
+    }
+
+    function getFirstLeader(d) {
+      return ranked(d.first)[0] || ["—", 0];
+    }
+
+    function winnerGain(d) {
+      const [winner, finalVotes] = getWinnerFromFinal(d);
+      const firstVotes = d.first[winner] || 0;
+      return finalVotes - firstVotes;
+    }
+
+    function populateControls() {
+      const districtSelect = document.getElementById("districtSelect");
+      districtSelect.innerHTML = districts.map((d, i) => `<option value="${i}">${d.district}</option>`).join("");
+      districtSelect.onchange = () => {
+        activeDistrict = districts[Number(districtSelect.value)];
+        focusRound = "all";
+        render();
+      };
+      document.getElementById("csvUpload").onchange = handleUpload;
+      document.getElementById("downloadSample").onclick = downloadSchema;
+    }
+
+    function populateRoundSelect() {
+      const roundSelect = document.getElementById("roundSelect");
+      roundSelect.innerHTML = [`<option value="all">All rounds</option>`].concat(
+        activeDistrict.rounds.map(r => {
+          const excludedParty = partyLabel(getParty(activeDistrict, r.excluded));
+          return `<option value="${r.round}">Round ${r.round} · ${excludedParty} · ${shortName(r.excluded)}</option>`;
+        })
+      ).join("");
+      roundSelect.value = focusRound;
+      roundSelect.onchange = () => {
+        focusRound = roundSelect.value;
+        renderPanelsOnly();
+      };
+    }
+
+    function renderHero(d) {
+      const [leader, leaderVotes] = getFirstLeader(d);
+      const leaderParty = getParty(d, leader);
+      const [winner, finalVotes] = getWinnerFromFinal(d);
+      const winnerParty = getParty(d, winner);
+      const changed = shortName(leader) === shortName(winner) ? "No" : "Yes";
+      const margin = finalVotes - getSecondFromFinal(d)[1];
+
+      document.getElementById("districtHero").innerHTML = `
+        <div class="hero-top">
+          <div class="hero-left">
+            <h2>${d.district}</h2>
+            <p>${d.source}</p>
+            <div class="hero-badges">
+              ${badgeHtml(winnerParty)}
+              <span class="badge">Winner · ${shortName(winner)}</span>
+              <span class="badge">Primary leader · ${partyLabel(leaderParty)}</span>
+              <span class="badge">Preferences changed result? ${changed}</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-grid">
+          <div class="mini-stat">
+            <div class="label">Winning party</div>
+            <div class="value">${partyLabel(winnerParty)}</div>
+            <div class="note">Candidate: ${shortName(winner)}</div>
+          </div>
+          <div class="mini-stat">
+            <div class="label">Primary leader</div>
+            <div class="value">${partyLabel(leaderParty)}</div>
+            <div class="note">${shortName(leader)} · ${fmt.format(leaderVotes)} votes</div>
+          </div>
+          <div class="mini-stat">
+            <div class="label">Final margin</div>
+            <div class="value">${fmt.format(margin)}</div>
+            <div class="note">${pct(margin, d.formal_votes)} of formal votes</div>
+          </div>
+          <div class="mini-stat">
+            <div class="label">Turnout</div>
+            <div class="value">${Number(d.turnout_pct).toFixed(2)}%</div>
+            <div class="note">${fmt.format(d.total_votes)} total votes cast</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderKpis(d) {
+      const [leader, leaderVotes] = getFirstLeader(d);
+      const [winner, finalVotes] = getWinnerFromFinal(d);
+      const [, secondVotes] = getSecondFromFinal(d);
+      const gain = winnerGain(d);
+      const changed = leader === winner ? "No" : "Yes";
+      const kpis = [
+        { label: "Elected member", value: shortName(d.elected_member), note: partyLabel(d.elected_party) },
+        { label: "Winner final vote", value: fmt.format(finalVotes), note: `${pct(finalVotes, d.formal_votes)} of formal votes` },
+        { label: "Primary leader vote", value: fmt.format(leaderVotes), note: `${partyLabel(getParty(d, leader))} · ${pct(leaderVotes, d.formal_votes)}` },
+        { label: "Did preferences change it?", value: changed, note: changed === "Yes" ? "Different final winner from first-choice leader" : "Primary leader also won" },
+        { label: "Winner transfer gain", value: `+${fmt.format(gain)}`, note: `${pct(gain, finalVotes)} of winner's final total` },
+        { label: "Final gap to runner-up", value: fmt.format(finalVotes - secondVotes), note: `${pct(finalVotes - secondVotes, d.formal_votes)} of formal votes` },
+        { label: "Formal votes", value: fmt.format(d.formal_votes), note: `${fmt.format(d.informal_votes)} informal votes` },
+        { label: "Majority target", value: fmt.format(d.majority), note: "Votes needed for absolute majority" }
+      ];
+
+      document.getElementById("kpis").innerHTML = kpis.map(k => `
+        <div class="kpi">
+          <div class="label">${k.label}</div>
+          <div class="value">${k.value}</div>
+          <div class="note">${k.note}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderBars(target, obj, denominator, highlightName = "", d) {
+      const rows = ranked(obj);
+      const max = rows[0]?.[1] || 1;
+      document.getElementById(target).innerHTML = rows.map(([candidate, votes]) => {
+        const party = getParty(d, candidate);
+        const color = partyColor(party);
+        const isHighlight = candidate === highlightName;
+        return `
+          <div class="bar-row" title="${partyLabel(party)} · ${candidate}: ${fmt.format(votes)}">
+            <div class="bar-label">
+              <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
+              <div class="candidate-line">${shortName(candidate)}</div>
+            </div>
+            <div class="track"><div class="fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${isHighlight ? 1 : .84}; box-shadow:${isHighlight ? `0 0 0 3px ${hexToRgba(color,.16)}` : 'none'}"></div></div>
+            <div class="bar-value">${fmt.format(votes)} · ${pct(votes, denominator)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderRounds(d) {
+      const rounds = focusRound === "all" ? d.rounds : d.rounds.filter(r => String(r.round) === String(focusRound));
+      document.getElementById("roundList").innerHTML = rounds.map(r => {
+        const transfers = ranked(r.transfers);
+        const max = transfers[0]?.[1] || 1;
+        const total = Object.values(r.transfers).reduce((a, b) => a + Number(b || 0), 0);
+        const excludedParty = getParty(d, r.excluded);
+        return `
+          <div class="round">
+            <div class="round-top">
+              <div>
+                <div class="round-title">Round ${r.round} · excluded ${partyLabel(excludedParty)} · ${shortName(r.excluded)}</div>
+                <div class="round-subtitle">${fmt.format(total)} ballot papers transferred in this round.</div>
+              </div>
+              ${badgeHtml(excludedParty)}
+            </div>
+            <div class="transfer-list">
+              ${transfers.map(([candidate, votes]) => {
+                const party = getParty(d, candidate);
+                const color = partyColor(party);
+                return `
+                  <div class="transfer-row">
+                    <div class="transfer-label">
+                      <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
+                      <div class="candidate-line">${shortName(candidate)}</div>
+                    </div>
+                    <div class="mini-track"><div class="mini-fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color};"></div></div>
+                    <div class="bar-value">${fmt.format(votes)} · ${pct(votes, total)}</div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderProgressive(d) {
+      const snapshots = [{ label: "First", totals: d.first }].concat(d.rounds.map(r => ({ label: `R${r.round}`, totals: r.totals })));
+      const candidates = Object.keys(d.first);
+      const maxVotes = Math.max(...snapshots.flatMap(s => Object.values(s.totals || {}).map(Number)));
+      const width = Math.max(760, snapshots.length * 96);
+      const height = Math.max(380, candidates.length * 28 + 80);
+      const left = 110, right = 120, top = 26, bottom = 46;
+      const chartW = width - left - right;
+      const chartH = height - top - bottom;
+      const x = i => left + (snapshots.length === 1 ? 0 : i / (snapshots.length - 1) * chartW);
+      const y = v => top + chartH - (v / maxVotes) * chartH;
+
+      const lines = candidates.map(candidate => {
+        const party = getParty(d, candidate);
+        const color = partyColor(party);
+        const points = snapshots.map((s, i) => {
+          const value = s.totals[candidate];
+          if (value === undefined || value === null || value === "") return null;
+          return `${x(i)},${y(value)}`;
+        }).filter(Boolean).join(" ");
+        return { candidate, party, color, points };
+      }).filter(l => l.points.includes(" "));
+
+      const xLabels = snapshots.map((s, i) => `<text x="${x(i)}" y="${height - 14}" text-anchor="middle" fill="#6c665d" font-size="12" font-weight="700">${s.label}</text>`).join("");
+      const grid = [0, .25, .5, .75, 1].map(fr => {
+        const val = maxVotes * fr;
+        const yy = y(val);
+        return `<line x1="${left}" x2="${width - right}" y1="${yy}" y2="${yy}" stroke="rgba(31,28,23,.09)"/><text x="${left - 10}" y="${yy + 4}" text-anchor="end" fill="#6c665d" font-size="11">${fmt.format(Math.round(val))}</text>`;
+      }).join("");
+
+      const polylines = lines.map(line => `<polyline points="${line.points}" fill="none" stroke="${line.color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><title>${partyLabel(line.party)} · ${line.candidate}</title></polyline>`).join("");
+      const labels = ranked(getFinal(d)).map(([candidate]) => {
+        const line = lines.find(l => l.candidate === candidate);
+        if (!line) return "";
+        const pts = line.points.trim().split(" ");
+        const [lx, ly] = pts[pts.length - 1].split(",").map(Number);
+        return `<text x="${Math.min(width - 8, lx + 8)}" y="${ly + 4}" fill="${line.color}" font-size="11" font-weight="800">${partyLabel(line.party)}</text>`;
+      }).join("");
+
+      document.getElementById("chartLegend").innerHTML = ranked(getFinal(d)).map(([candidate]) => badgeHtml(getParty(d, candidate))).join("");
+      document.getElementById("progressiveChart").innerHTML = `
+        <svg width="${width}" height="${height}" role="img" aria-label="Progressive vote totals chart">
+          ${grid}
+          ${xLabels}
+          ${polylines}
+          ${labels}
+        </svg>
+      `;
+    }
+
+    function renderRawTable(d) {
+      const rows = [];
+      Object.entries(d.first).forEach(([candidate, votes]) => rows.push({ round: 0, row_type: "first", excluded: "", excluded_party: "", candidate, candidate_party: getParty(d, candidate), votes }));
+      d.rounds.forEach(r => {
+        Object.entries(r.transfers).forEach(([candidate, votes]) => rows.push({ round: r.round, row_type: "transfer", excluded: r.excluded, excluded_party: getParty(d, r.excluded), candidate, candidate_party: getParty(d, candidate), votes }));
+        Object.entries(r.totals).forEach(([candidate, votes]) => rows.push({ round: r.round, row_type: r.final ? "final" : "progressive", excluded: r.excluded, excluded_party: getParty(d, r.excluded), candidate, candidate_party: getParty(d, candidate), votes }));
+      });
+      document.getElementById("rawTable").innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Round</th>
+              <th>Type</th>
+              <th>Excluded party</th>
+              <th>Excluded candidate</th>
+              <th>Receiving party</th>
+              <th>Receiving candidate</th>
+              <th class="right">Votes</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.round}</td>
+                <td>${r.row_type}</td>
+                <td>${partyLabel(r.excluded_party)}</td>
+                <td>${r.excluded ? shortName(r.excluded) : "—"}</td>
+                <td>${partyLabel(r.candidate_party)}</td>
+                <td>${shortName(r.candidate)}</td>
+                <td class="right">${fmt.format(r.votes)}</td>
+              </tr>`).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderPanelsOnly() {
+      renderRounds(activeDistrict);
+      renderProgressive(activeDistrict);
+      renderRawTable(activeDistrict);
+    }
+
+    function render() {
+      populateRoundSelect();
+      renderHero(activeDistrict);
+      renderKpis(activeDistrict);
+      const [primaryLeader] = getFirstLeader(activeDistrict);
+      const [winner] = getWinnerFromFinal(activeDistrict);
+      document.getElementById("primaryLeaderPill").innerHTML = `${badgeHtml(getParty(activeDistrict, primaryLeader))} <span>Primary leader</span>`;
+      document.getElementById("winnerPill").innerHTML = `${badgeHtml(getParty(activeDistrict, winner))} <span>Winner</span>`;
+      renderBars("primaryBars", activeDistrict.first, activeDistrict.formal_votes, primaryLeader, activeDistrict);
+      renderBars("finalBars", getFinal(activeDistrict), activeDistrict.formal_votes, winner, activeDistrict);
+      renderPanelsOnly();
+    }
+
+    function parseCSV(text) {
+      const rows = [];
+      let cell = "", row = [], inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i], next = text[i + 1];
+        if (char === '"' && inQuotes && next === '"') { cell += '"'; i++; }
+        else if (char === '"') { inQuotes = !inQuotes; }
+        else if (char === ',' && !inQuotes) { row.push(cell); cell = ""; }
+        else if ((char === '\n' || char === '\r') && !inQuotes) {
+          if (char === '\r' && next === '\n') i++;
+          row.push(cell); cell = "";
+          if (row.some(v => v.trim() !== "")) rows.push(row);
+          row = [];
+        } else { cell += char; }
+      }
+      if (cell || row.length) { row.push(cell); rows.push(row); }
+      const headers = rows.shift().map(h => h.trim());
+      return rows.map(r => Object.fromEntries(headers.map((h, i) => [h, (r[i] || "").trim()])));
+    }
+
+    function buildDistrictsFromRows(rows) {
+      const groups = new Map();
+      for (const row of rows) {
+        const district = row.district;
+        if (!district) continue;
+        if (!groups.has(district)) groups.set(district, []);
+        groups.get(district).push(row);
+      }
+
+      const out = [];
+      for (const [district, entries] of groups.entries()) {
+        const firstRow = entries[0];
+        const d = {
+          district,
+          source: "Uploaded CSV",
+          elected_member: firstRow.elected_member || "",
+          elected_party: firstRow.elected_party || "Independent",
+          enrolment: Number(firstRow.enrolment || 0),
+          formal_votes: Number(firstRow.formal_votes || 0),
+          informal_votes: Number(firstRow.informal_votes || 0),
+          total_votes: Number(firstRow.total_votes || 0),
+          turnout_pct: Number(firstRow.turnout_pct || 0),
+          majority: Number(firstRow.majority || 0),
+          partyMap: {},
+          first: {},
+          rounds: []
+        };
+
+        entries.forEach(r => {
+          if (r.candidate) d.partyMap[r.candidate] = r.candidate_party || d.partyMap[r.candidate] || "Independent";
+          if (r.excluded_candidate && r.excluded_party) d.partyMap[r.excluded_candidate] = r.excluded_party || d.partyMap[r.excluded_candidate] || "Independent";
+        });
+
+        entries.filter(r => r.row_type === "first").forEach(r => {
+          d.first[r.candidate] = Number(r.votes || 0);
+          if (!d.partyMap[r.candidate]) d.partyMap[r.candidate] = r.candidate_party || "Independent";
+        });
+
+        const roundNums = [...new Set(entries.filter(r => Number(r.round_number) > 0).map(r => Number(r.round_number)))].sort((a, b) => a - b);
+        for (const n of roundNums) {
+          const rr = entries.filter(r => Number(r.round_number) === n);
+          const excluded = rr.find(r => r.excluded_candidate)?.excluded_candidate || "";
+          const transfers = {}, totals = {};
+          rr.filter(r => r.row_type === "transfer").forEach(r => transfers[r.candidate] = Number(r.votes || 0));
+          rr.filter(r => r.row_type === "progressive" || r.row_type === "final").forEach(r => totals[r.candidate] = Number(r.votes || 0));
+          const final = rr.some(r => r.row_type === "final");
+          d.rounds.push({ round: n, excluded, transfers, totals, final });
+        }
+        out.push(d);
+      }
+      return out;
+    }
+
+    async function handleUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const text = await file.text();
+      try {
+        const rows = parseCSV(text);
+        const uploaded = buildDistrictsFromRows(rows);
+        if (!uploaded.length) throw new Error("No valid district rows found.");
+        districts = uploaded;
+        activeDistrict = districts[0];
+        focusRound = "all";
+        populateControls();
+        render();
+      } catch (err) {
+        alert("Could not parse CSV: " + err.message);
+      }
+    }
+
+    function q(v) { return `"${String(v ?? "").replaceAll('"', '""')}"`; }
+
+    function csvLine(d, round, type, excluded, candidate, votes) {
+      return [
+        d.district,
+        d.elected_member,
+        d.elected_party,
+        d.enrolment,
+        d.formal_votes,
+        d.informal_votes,
+        d.total_votes,
+        d.turnout_pct,
+        d.majority,
+        round,
+        type,
+        excluded,
+        excluded ? getParty(d, excluded) : "",
+        candidate,
+        getParty(d, candidate),
+        votes
+      ].map(q).join(",");
+    }
+
+    function sampleCSV() {
+      const lines = ["district,elected_member,elected_party,enrolment,formal_votes,informal_votes,total_votes,turnout_pct,majority,round_number,row_type,excluded_candidate,excluded_party,candidate,candidate_party,votes"];
+      const d = sampleDistricts[0];
+      Object.entries(d.first).forEach(([candidate, votes]) => lines.push(csvLine(d, 0, "first", "", candidate, votes)));
+      d.rounds.forEach(r => {
+        Object.entries(r.transfers).forEach(([candidate, votes]) => lines.push(csvLine(d, r.round, "transfer", r.excluded, candidate, votes)));
+        Object.entries(r.totals).forEach(([candidate, votes]) => lines.push(csvLine(d, r.round, r.final ? "final" : "progressive", r.excluded, candidate, votes)));
+      });
+      return lines.join("\n");
+    }
+
+    function downloadSchema() {
+      const blob = new Blob([sampleCSV()], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vec_preference_distribution_party_first_sample.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    populateControls();
+    render();
+  </script>
+</body>
+</html>

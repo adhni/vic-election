@@ -1,0 +1,14 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# generated scrape output
+data/vic_2022_preferences_long.csv
+data/vic_2022_district_summary.csv
+data/scrape_errors.csv
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/

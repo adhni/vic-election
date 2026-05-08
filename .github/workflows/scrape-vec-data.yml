@@ -1,0 +1,48 @@
+name: Scrape VEC 2022 data
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Optional limit for testing. Leave empty for all districts."
+        required: false
+        default: ""
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run scraper
+        run: |
+          if [ -z "${{ github.event.inputs.limit }}" ]; then
+            python scripts/scrape_vec_2022_preferences.py --out data --keep-going
+          else
+            python scripts/scrape_vec_2022_preferences.py --out data --limit "${{ github.event.inputs.limit }}" --keep-going
+          fi
+
+      - name: Validate CSV
+        run: |
+          python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
+
+      - name: Upload generated data
+        uses: actions/upload-artifact@v4
+        with:
+          name: vec-2022-generated-data
+          path: |
+            data/vic_2022_preferences_long.csv
+            data/vic_2022_district_summary.csv
+            data/scrape_errors.csv
+          if-no-files-found: ignore

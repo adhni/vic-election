@@ -1,0 +1,486 @@
+#!/usr/bin/env python3
+"""
+Scrape 2022 Victorian state election Legislative Assembly district results
+and preference distributions from official VEC pages.
+
+Outputs:
+  data/vic_2022_preferences_long.csv
+  data/vic_2022_district_summary.csv
+
+Notes:
+- Source: Victorian Electoral Commission 2022 state election results pages.
+- The VEC pages are ordinary HTML, but table shapes can differ slightly by district.
+- This script is intentionally defensive: it logs any district it cannot parse so you can fix edge cases.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import re
+import sys
+import time
+from dataclasses import dataclass, asdict
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Tuple
+from urllib.parse import urljoin
+
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+
+BASE = "https://www.vec.vic.gov.au"
+INDEX_URL = f"{BASE}/results/state-election-results/2022-state-election-results/results-by-district"
+UA = "Mozilla/5.0 (compatible; vic-election-preference-research/0.1; +https://www.vec.vic.gov.au/)"
+
+EXPECTED_LONG_COLUMNS = [
+    "district",
+    "district_url",
+    "distribution_url",
+    "elected_member",
+    "elected_party",
+    "enrolment",
+    "formal_votes",
+    "informal_votes",
+    "total_votes",
+    "turnout_pct",
+    "majority",
+    "round_number",
+    "row_type",
+    "excluded_candidate",
+    "excluded_party",
+    "candidate",
+    "candidate_party",
+    "votes",
+]
+
+EXPECTED_SUMMARY_COLUMNS = [
+    "district",
+    "district_url",
+    "distribution_url",
+    "elected_member",
+    "elected_party",
+    "enrolment",
+    "formal_votes",
+    "informal_votes",
+    "total_votes",
+    "turnout_pct",
+    "majority",
+    "primary_leader",
+    "primary_leader_party",
+    "primary_leader_votes",
+    "winner",
+    "winner_party",
+    "winner_final_votes",
+    "runner_up",
+    "runner_up_party",
+    "runner_up_final_votes",
+    "final_margin",
+    "preference_changed_result",
+    "winner_transfer_gain",
+]
+
+
+@dataclass
+class DistrictMeta:
+    district: str
+    district_url: str
+    distribution_url: str = ""
+    elected_member: str = ""
+    elected_party: str = ""
+    enrolment: Optional[int] = None
+    formal_votes: Optional[int] = None
+    informal_votes: Optional[int] = None
+    total_votes: Optional[int] = None
+    turnout_pct: Optional[float] = None
+    majority: Optional[int] = None
+
+
+def clean_text(x: object) -> str:
+    return re.sub(r"\s+", " ", str(x or "")).strip()
+
+
+def clean_int(x: object) -> Optional[int]:
+    if x is None:
+        return None
+    s = clean_text(x)
+    if not s or s.lower() == "nan":
+        return None
+    # remove percentages, commas, spaces, footnotes
+    m = re.search(r"-?\d[\d,]*", s)
+    if not m:
+        return None
+    return int(m.group(0).replace(",", ""))
+
+
+def clean_float(x: object) -> Optional[float]:
+    if x is None:
+        return None
+    s = clean_text(x)
+    m = re.search(r"-?\d+(?:\.\d+)?", s)
+    if not m:
+        return None
+    return float(m.group(0))
+
+
+def fetch(session: requests.Session, url: str, sleep: float = 0.25) -> str:
+    time.sleep(sleep)
+    resp = session.get(url, timeout=30)
+    resp.raise_for_status()
+    return resp.text
+
+
+def make_session() -> requests.Session:
+    session = requests.Session()
+    session.headers.update({"User-Agent": UA})
+    return session
+
+
+def discover_districts(session: requests.Session, limit: Optional[int] = None) -> List[DistrictMeta]:
+    html = fetch(session, INDEX_URL, sleep=0)
+    soup = BeautifulSoup(html, "html.parser")
+    seen = set()
+    districts: List[DistrictMeta] = []
+
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        url = urljoin(BASE, href)
+        if "/results-by-district/" not in url:
+            continue
+        if not re.search(r"-district-results/?$", url):
+            continue
+        if url in seen:
+            continue
+        seen.add(url)
+        label = clean_text(a.get_text(" "))
+        # Link text is like "Melbourne District Elected member: ..."
+        district = re.sub(r"\s+District\s+Elected member:.*$", "", label).strip()
+        if not district:
+            district = url.rstrip("/").split("/")[-1].replace("-district-results", "").replace("-", " ").title()
+        districts.append(DistrictMeta(district=district, district_url=url))
+        if limit and len(districts) >= limit:
+            break
+
+    return districts
+
+
+def parse_key_numbers_from_text(text: str, meta: DistrictMeta) -> DistrictMeta:
+    # Use broad regex because VEC line breaks move around in raw text.
+    patterns = {
+        "enrolment": r"Total enrolment as at close of rolls:\s*([\d,]+)",
+        "formal_votes": r"Formal votes:\s*([\d,]+)",
+        "informal_votes": r"Informal votes:\s*([\d,]+)",
+        "total_votes": r"Total votes:\s*([\d,]+)\s*\(([-\d.]+)%",
+        "majority": r"Votes required to constitute an absolute majority:\s*([\d,]+)",
+    }
+    for attr, pat in patterns.items():
+        m = re.search(pat, text, flags=re.I)
+        if not m:
+            continue
+        if attr == "total_votes":
+            meta.total_votes = clean_int(m.group(1))
+            meta.turnout_pct = clean_float(m.group(2))
+        else:
+            setattr(meta, attr, clean_int(m.group(1)))
+    return meta
+
+
+def parse_result_page(session: requests.Session, meta: DistrictMeta) -> Tuple[DistrictMeta, Dict[str, str]]:
+    html = fetch(session, meta.district_url)
+    soup = BeautifulSoup(html, "html.parser")
+    text = soup.get_text("\n")
+    compact = clean_text(text)
+
+    # Elected member block.
+    m = re.search(r"Elected member\s+(.+?)\s+(Australian Labor Party - Victorian Branch|Australian Greens|Liberal|The Nationals|Independent|Family First Victoria|Animal Justice Party|Victorian Socialists|Fiona Patten's Reason Party|Freedom Party of Victoria)", compact)
+    if m:
+        meta.elected_member = clean_text(m.group(1))
+        meta.elected_party = clean_text(m.group(2))
+
+    meta = parse_key_numbers_from_text(compact, meta)
+
+    # Find distribution URL from district page.
+    preferred_links = []
+    fallback_links = []
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        label = clean_text(a.get_text(" ")).lower()
+        url = urljoin(BASE, href)
+        if "distribution" in url.lower() or "distribution" in label or label in {"distributions", "view indicative distributions"}:
+            if "results-distribution" in url.lower():
+                preferred_links.append(url)
+            else:
+                fallback_links.append(url)
+    if preferred_links:
+        meta.distribution_url = preferred_links[0]
+    elif fallback_links:
+        meta.distribution_url = fallback_links[0]
+    else:
+        # URL pattern is consistent for normal districts.
+        slug = meta.district_url.rstrip("/").split("/")[-1].replace("-district-results", "")
+        meta.distribution_url = f"{meta.district_url.rstrip('/')}/{slug}-results-distribution"
+
+    party_map = extract_party_map_from_result_tables(html)
+    return meta, party_map
+
+
+def extract_party_map_from_result_tables(html: str) -> Dict[str, str]:
+    party_map: Dict[str, str] = {}
+    try:
+        tables = pd.read_html(html)
+    except ValueError:
+        return party_map
+
+    for df in tables:
+        cols = [clean_text(c) for c in df.columns]
+        lower_cols = [c.lower() for c in cols]
+        if not any("candidate" == c.lower() for c in cols):
+            continue
+        if not any("party" == c.lower() for c in cols):
+            continue
+        if not any("pref" in c.lower() or "votes" in c.lower() for c in cols):
+            continue
+        df = df.copy()
+        df.columns = cols
+        if "Candidate" not in df.columns or "Party" not in df.columns:
+            # case-insensitive fallback
+            cand_col = next((c for c in df.columns if c.lower() == "candidate"), None)
+            party_col = next((c for c in df.columns if c.lower() == "party"), None)
+        else:
+            cand_col, party_col = "Candidate", "Party"
+        if not cand_col or not party_col:
+            continue
+        for _, row in df.iterrows():
+            cand = clean_text(row.get(cand_col, ""))
+            party = clean_text(row.get(party_col, "")) or "Independent"
+            if cand and cand.lower() != "nan":
+                party_map[cand] = party
+    return party_map
+
+
+def find_distribution_table(html: str) -> pd.DataFrame:
+    tables = pd.read_html(html)
+    for df in tables:
+        full = " ".join(clean_text(x) for x in df.astype(str).values.ravel())
+        if "Total first preference votes" in full and ("Transfer of" in full or "FINAL TOTAL" in full):
+            return df
+    raise ValueError("Could not find distribution table")
+
+
+def normalise_distribution_table(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    # flatten multi-index column headers if present
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [clean_text(" ".join(map(str, c))) for c in df.columns]
+    else:
+        df.columns = [clean_text(c) for c in df.columns]
+
+    # Some pages may parse the first row as data instead of header. Detect and fix if needed.
+    joined_cols = " ".join(df.columns)
+    if "Total first preference" in joined_cols or "Transfer of" in joined_cols:
+        # Read_html probably mis-read the table. Leave as-is, caller will fail loudly.
+        return df
+
+    # Remove empty duplicate columns.
+    keep = []
+    seen = {}
+    for c in df.columns:
+        base = clean_text(c)
+        if not base or base.lower().startswith("unnamed"):
+            base = "row_label" if not keep else f"blank_{len(keep)}"
+        if base in seen:
+            seen[base] += 1
+            base = f"{base}_{seen[base]}"
+        else:
+            seen[base] = 0
+        keep.append(base)
+    df.columns = keep
+    return df
+
+
+def parse_transfer_label(label: str) -> Tuple[Optional[int], str]:
+    # Example: Transfer of 428 ballot papers of AL-SAIMARY, Laylah (1st excluded candidate)
+    m = re.search(r"Transfer of\s+[\d,]+\s+ballot papers of\s+(.+?)\s*\((\d+)(?:st|nd|rd|th) excluded candidate\)", label, flags=re.I)
+    if m:
+        return int(m.group(2)), clean_text(m.group(1))
+    m = re.search(r"Transfer of\s+[\d,]+\s+ballot papers of\s+(.+)$", label, flags=re.I)
+    if m:
+        return None, clean_text(m.group(1))
+    return None, ""
+
+
+def parse_distribution_rows(meta: DistrictMeta, html: str, party_map: Dict[str, str]) -> List[dict]:
+    table = normalise_distribution_table(find_distribution_table(html))
+    if table.empty or len(table.columns) < 3:
+        raise ValueError("Distribution table is empty or malformed")
+
+    label_col = table.columns[0]
+    candidate_cols = [c for c in table.columns[1:] if clean_text(c).upper() != "TOTAL"]
+
+    rows: List[dict] = []
+    current_round = 0
+    current_excluded = ""
+
+    for _, raw in table.iterrows():
+        label = clean_text(raw.get(label_col, ""))
+        if not label or label.lower() == "nan":
+            continue
+
+        row_type: Optional[str] = None
+        excluded = current_excluded
+        round_number = current_round
+
+        if re.search(r"Total first preference votes", label, flags=re.I):
+            row_type = "first"
+            round_number = 0
+            excluded = ""
+        elif re.search(r"^Transfer of", label, flags=re.I):
+            parsed_round, parsed_excluded = parse_transfer_label(label)
+            current_round = parsed_round or (current_round + 1)
+            current_excluded = parsed_excluded
+            row_type = "transfer"
+            round_number = current_round
+            excluded = current_excluded
+        elif re.search(r"^Progressive Total", label, flags=re.I):
+            row_type = "progressive"
+            round_number = current_round
+            excluded = current_excluded
+        elif re.search(r"^FINAL TOTAL", label, flags=re.I):
+            row_type = "final"
+            round_number = current_round
+            excluded = current_excluded
+        else:
+            continue
+
+        for candidate in candidate_cols:
+            candidate_clean = clean_text(candidate)
+            if not candidate_clean or candidate_clean.lower().startswith("blank_"):
+                continue
+            votes = clean_int(raw.get(candidate))
+            if votes is None:
+                continue
+            rows.append({
+                "district": meta.district,
+                "district_url": meta.district_url,
+                "distribution_url": meta.distribution_url,
+                "elected_member": meta.elected_member,
+                "elected_party": meta.elected_party,
+                "enrolment": meta.enrolment,
+                "formal_votes": meta.formal_votes,
+                "informal_votes": meta.informal_votes,
+                "total_votes": meta.total_votes,
+                "turnout_pct": meta.turnout_pct,
+                "majority": meta.majority,
+                "round_number": round_number,
+                "row_type": row_type,
+                "excluded_candidate": excluded,
+                "excluded_party": party_map.get(excluded, "Independent") if excluded else "",
+                "candidate": candidate_clean,
+                "candidate_party": party_map.get(candidate_clean, "Independent"),
+                "votes": votes,
+            })
+    return rows
+
+
+def make_summary(long_rows: List[dict]) -> List[dict]:
+    by_district: Dict[str, List[dict]] = {}
+    for r in long_rows:
+        by_district.setdefault(r["district"], []).append(r)
+
+    summaries = []
+    for district, rows in by_district.items():
+        first_rows = [r for r in rows if r["row_type"] == "first"]
+        final_rows = [r for r in rows if r["row_type"] == "final"]
+        if not first_rows or not final_rows:
+            continue
+        primary_leader = max(first_rows, key=lambda r: r["votes"])
+        ordered_final = sorted(final_rows, key=lambda r: r["votes"], reverse=True)
+        winner = ordered_final[0]
+        runner = ordered_final[1] if len(ordered_final) > 1 else None
+        winner_first = next((r for r in first_rows if r["candidate"] == winner["candidate"]), None)
+        m = rows[0]
+        summaries.append({
+            "district": district,
+            "district_url": m["district_url"],
+            "distribution_url": m["distribution_url"],
+            "elected_member": m["elected_member"],
+            "elected_party": m["elected_party"],
+            "enrolment": m["enrolment"],
+            "formal_votes": m["formal_votes"],
+            "informal_votes": m["informal_votes"],
+            "total_votes": m["total_votes"],
+            "turnout_pct": m["turnout_pct"],
+            "majority": m["majority"],
+            "primary_leader": primary_leader["candidate"],
+            "primary_leader_party": primary_leader["candidate_party"],
+            "primary_leader_votes": primary_leader["votes"],
+            "winner": winner["candidate"],
+            "winner_party": winner["candidate_party"],
+            "winner_final_votes": winner["votes"],
+            "runner_up": runner["candidate"] if runner else "",
+            "runner_up_party": runner["candidate_party"] if runner else "",
+            "runner_up_final_votes": runner["votes"] if runner else None,
+            "final_margin": winner["votes"] - runner["votes"] if runner else None,
+            "preference_changed_result": primary_leader["candidate"] != winner["candidate"],
+            "winner_transfer_gain": winner["votes"] - (winner_first["votes"] if winner_first else 0),
+        })
+    return summaries
+
+
+def write_csv(path: Path, rows: List[dict], columns: List[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=columns, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--out", default="data", help="Output directory")
+    parser.add_argument("--limit", type=int, default=None, help="Limit districts for testing")
+    parser.add_argument("--sleep", type=float, default=0.25, help="Delay between requests")
+    parser.add_argument("--keep-going", action="store_true", help="Continue if a district fails")
+    args = parser.parse_args()
+
+    out_dir = Path(args.out)
+    session = make_session()
+    districts = discover_districts(session, limit=args.limit)
+    if not districts:
+        print("No districts discovered", file=sys.stderr)
+        return 1
+
+    all_rows: List[dict] = []
+    errors: List[dict] = []
+
+    for i, meta in enumerate(districts, start=1):
+        try:
+            print(f"[{i}/{len(districts)}] {meta.district}")
+            meta, party_map = parse_result_page(session, meta)
+            dist_html = fetch(session, meta.distribution_url, sleep=args.sleep)
+            rows = parse_distribution_rows(meta, dist_html, party_map)
+            if not rows:
+                raise ValueError("No distribution rows parsed")
+            all_rows.extend(rows)
+        except Exception as e:
+            err = {"district": meta.district, "district_url": meta.district_url, "distribution_url": meta.distribution_url, "error": repr(e)}
+            errors.append(err)
+            print(f"  ERROR: {err['error']}", file=sys.stderr)
+            if not args.keep_going:
+                raise
+
+    summary_rows = make_summary(all_rows)
+    write_csv(out_dir / "vic_2022_preferences_long.csv", all_rows, EXPECTED_LONG_COLUMNS)
+    write_csv(out_dir / "vic_2022_district_summary.csv", summary_rows, EXPECTED_SUMMARY_COLUMNS)
+    if errors:
+        write_csv(out_dir / "scrape_errors.csv", errors, ["district", "district_url", "distribution_url", "error"])
+
+    print(f"\nWrote {len(all_rows):,} long rows")
+    print(f"Wrote {len(summary_rows):,} district summaries")
+    if errors:
+        print(f"Had {len(errors):,} errors; see {out_dir / 'scrape_errors.csv'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
