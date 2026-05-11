@@ -159,22 +159,37 @@
 
     .status-em { color: var(--ink); font-weight: 600; }
 
+    details.data-tools {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid var(--line);
+    }
+
+    details.data-tools summary {
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      list-style: none;
+      width: max-content;
+    }
+
+    details.data-tools summary::-webkit-details-marker { display: none; }
+
     .upload-row {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      padding: 6px 0 0;
-      border-top: 1px solid var(--line);
-      margin-top: 8px;
+      padding: 8px 0 0;
     }
 
     .upload-label {
       font-size: 11px;
       color: var(--muted);
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .05em;
     }
 
     /* -- Map -- */
@@ -216,6 +231,13 @@
       background: var(--surface);
     }
 
+    .map-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .map-mode {
       border: 0;
       border-radius: 6px;
@@ -253,6 +275,7 @@
     }
 
     .map-wrap {
+      position: relative;
       overflow-x: auto;
       padding-bottom: 2px;
       background: #eef2ed;
@@ -265,6 +288,40 @@
       width: 100%;
       min-width: 820px;
       height: auto;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .map-tooltip {
+      position: absolute;
+      z-index: 8;
+      pointer-events: none;
+      display: none;
+      min-width: 180px;
+      max-width: 240px;
+      padding: 8px 10px;
+      border: 1px solid rgba(26,24,20,.14);
+      border-radius: 8px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 8px 22px rgba(0,0,0,.14);
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .map-tooltip strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .map-tooltip span {
+      color: var(--muted);
+    }
+
+    .geo-map.dragging {
+      cursor: grabbing;
     }
 
     .district-shape {
@@ -288,16 +345,6 @@
 
     .district-shape.muted {
       opacity: .2;
-    }
-
-    .map-label {
-      fill: var(--ink);
-      font-size: 10px;
-      font-weight: 800;
-      paint-order: stroke;
-      stroke: rgba(255,255,255,.82);
-      stroke-width: 3px;
-      pointer-events: none;
     }
 
     .map-empty {
@@ -604,6 +651,7 @@
       .bar-row, .transfer-row { grid-template-columns: 1fr auto; }
       .bar-row .track, .transfer-row .mini-track { display: none; }
       .map-toolbar { align-items: stretch; }
+      .map-actions { flex-direction: column; align-items: stretch; }
       .map-modes { width: 100%; }
       .map-mode { flex: 1; }
     }
@@ -632,9 +680,9 @@
           <select id="districtSelect"></select>
         </div>
         <div class="ctrl-group grow">
-          <label class="ctrl-label" for="partyFilter">Won by</label>
+          <label class="ctrl-label" for="partyFilter">Bloc</label>
           <select id="partyFilter">
-            <option value="all">Any party</option>
+            <option value="all">Any bloc</option>
           </select>
         </div>
         <div class="ctrl-group shrink">
@@ -647,11 +695,14 @@
         </div>
       </div>
       <div id="dataStatus" class="data-status"></div>
-      <div class="upload-row">
-        <span class="upload-label">Upload CSV</span>
-        <input id="csvUpload" type="file" accept=".csv,text/csv" style="width:auto;flex:0 1 auto;" />
-        <button id="downloadSample" type="button">Sample CSV</button>
-      </div>
+      <details class="data-tools">
+        <summary>Data tools</summary>
+        <div class="upload-row">
+          <span class="upload-label">Upload CSV</span>
+          <input id="csvUpload" type="file" accept=".csv,text/csv" style="width:auto;flex:0 1 auto;" />
+          <button id="downloadSample" type="button">Sample CSV</button>
+        </div>
+      </details>
     </nav>
 
     <section class="map-panel" aria-label="Electorate map">
@@ -660,15 +711,23 @@
           <h2 class="map-title">Map</h2>
           <p class="map-subtitle">Click an electorate to explore.</p>
         </div>
-        <div class="map-modes" role="group" aria-label="Map colour mode">
-          <button class="map-mode active" type="button" data-map-mode="party">Winner</button>
-          <button class="map-mode" type="button" data-map-mode="close">Close</button>
-          <button class="map-mode" type="button" data-map-mode="changed">Changed</button>
+        <div class="map-actions">
+          <div class="map-modes" role="group" aria-label="Map colour mode">
+            <button class="map-mode active" type="button" data-map-mode="party">Winner</button>
+            <button class="map-mode" type="button" data-map-mode="close">Close</button>
+            <button class="map-mode" type="button" data-map-mode="changed">Changed</button>
+          </div>
+          <div class="map-modes" role="group" aria-label="Map zoom">
+            <button id="mapZoomOut" class="map-mode" type="button">-</button>
+            <button id="mapZoomIn" class="map-mode" type="button">+</button>
+            <button id="mapZoomReset" class="map-mode" type="button">Reset</button>
+          </div>
         </div>
       </div>
       <div id="mapLegend" class="map-legend"></div>
       <div class="map-wrap">
         <div id="seatMap" class="map-empty">Loading map…</div>
+        <div id="mapTooltip" class="map-tooltip"></div>
       </div>
     </section>
 
@@ -853,6 +912,8 @@
     let activeTab = "overview";
     let activeMapMode = "party";
     let boundaryShapes = [];
+    let mapView = { x: 0, y: 0, w: 960, h: 560 };
+    let mapDrag = null;
     let datasetMeta = {
       label: "Embedded sample data",
       rowCount: countRowsFromDistricts(allDistricts)
@@ -881,10 +942,31 @@
       return p;
     }
 
+    function partyBloc(raw) {
+      const p = partyLabel(raw).toLowerCase();
+      if (p === "coalition") return "Coalition";
+      if (p === "other") return "Other";
+      if (p.includes("labor")) return "Labor";
+      if (p.includes("liberal") || p.includes("national")) return "Coalition";
+      if (p.includes("greens")) return "Greens";
+      if (p.includes("independent")) return "Independent";
+      return "Other";
+    }
+
+    function blocColor(raw) {
+      const bloc = partyBloc(raw);
+      if (bloc === "Labor") return "#d94b49";
+      if (bloc === "Coalition") return "#2f61bf";
+      if (bloc === "Greens") return "#2d8a4b";
+      if (bloc === "Independent") return "#667184";
+      return "#8a6a3f";
+    }
+
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
       if (p.includes("labor")) return "#d94b49";
       if (p.includes("liberal")) return "#2f61bf";
+      if (p.includes("national")) return "#25539f";
       if (p.includes("greens")) return "#2d8a4b";
       if (p.includes("animal justice")) return "#7a57b8";
       if (p.includes("socialists")) return "#ad3d6f";
@@ -893,6 +975,12 @@
       if (p.includes("freedom")) return "#8a6a3f";
       if (p.includes("independent")) return "#7a7f87";
       return "#667184";
+    }
+
+    function blocBadgeHtml(party) {
+      const label = partyBloc(party);
+      const color = blocColor(party);
+      return `<span class="party-chip" style="background:${hexToRgba(color, .12)}; color:${color}; border-color:${hexToRgba(color, .18)}"><span class="dot" style="background:${color}"></span>${label}</span>`;
     }
 
     function badgeHtml(party) {
@@ -948,6 +1036,10 @@
       return partyLabel(getParty(d, getWinnerFromFinal(d)[0]));
     }
 
+    function winningBloc(d) {
+      return partyBloc(getParty(d, getWinnerFromFinal(d)[0]));
+    }
+
     function winnerGain(d) {
       const [winner, finalVotes] = getWinnerFromFinal(d);
       const firstVotes = d.first[winner] || 0;
@@ -973,7 +1065,7 @@
 
     function districtMatchesFilters(d, filters) {
       const matchesQuery = !filters.query || d.district.toLowerCase().includes(filters.query);
-      const matchesParty = filters.party === "all" || winningParty(d) === filters.party;
+      const matchesParty = filters.party === "all" || winningBloc(d) === filters.party;
       const matchesChanged = !filters.changedOnly || resultChanged(d);
       const matchesClose = !filters.closeOnly || (d.formal_votes && finalMargin(d) / d.formal_votes <= 0.05);
       return matchesQuery && matchesParty && matchesChanged && matchesClose;
@@ -985,7 +1077,7 @@
     }
 
     function mapVisual(d) {
-      const winnerParty = winningParty(d);
+      const winnerParty = getParty(d, getWinnerFromFinal(d)[0]);
       const marginPct = d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
       if (activeMapMode === "close") {
         const color = marginPct <= .02 ? "#b94d36" : marginPct <= .05 ? "#d4872b" : "#7a7f87";
@@ -1004,12 +1096,46 @@
           label: changed ? "Changed" : "Held"
         };
       }
-      const color = partyColor(winnerParty);
+      const color = blocColor(winnerParty);
       return {
         color,
         fill: hexToRgba(color, .74),
-        label: winnerParty
+        label: partyBloc(winnerParty)
       };
+    }
+
+    function tooltipHtml(d) {
+      const [winner] = getWinnerFromFinal(d);
+      const winnerParty = getParty(d, winner);
+      return `
+        <strong>${d.district}</strong>
+        <div>${partyBloc(winnerParty)} · ${partyLabel(winnerParty)}</div>
+        <span>${shortName(winner)} · margin ${pct(finalMargin(d), d.formal_votes)}</span>
+      `;
+    }
+
+    function moveTooltip(event) {
+      const tip = document.getElementById("mapTooltip");
+      const wrap = document.querySelector(".map-wrap");
+      if (!tip || !wrap) return;
+      const rect = wrap.getBoundingClientRect();
+      const x = event.clientX - rect.left + 12;
+      const y = event.clientY - rect.top + 12;
+      tip.style.left = `${Math.min(rect.width - 250, Math.max(8, x))}px`;
+      tip.style.top = `${Math.max(8, y)}px`;
+    }
+
+    function showTooltip(event, d) {
+      const tip = document.getElementById("mapTooltip");
+      if (!tip || !d) return;
+      tip.innerHTML = tooltipHtml(d);
+      tip.style.display = "block";
+      moveTooltip(event);
+    }
+
+    function hideTooltip() {
+      const tip = document.getElementById("mapTooltip");
+      if (tip) tip.style.display = "none";
     }
 
     function renderMapLegend() {
@@ -1029,8 +1155,12 @@
         ].map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
         return;
       }
-      const parties = [...new Set(allDistricts.map(winningParty))].sort();
-      legend.innerHTML = parties.map(p => badgeHtml(p)).join("");
+      const blocs = ["Labor", "Coalition", "Greens", "Independent", "Other"]
+        .filter(bloc => allDistricts.some(d => winningBloc(d) === bloc));
+      legend.innerHTML = blocs.map(bloc => {
+        const color = blocColor(bloc);
+        return `<span class="legend-item"><span class="dot" style="background:${color}"></span>${bloc}</span>`;
+      }).join("");
     }
 
     function selectDistrictByName(name) {
@@ -1094,18 +1224,9 @@
 
       return features.map(feature => {
         const name = feature.properties?.district || feature.properties?.district2 || feature.properties?.DISTRICT;
-        let sx = 0, sy = 0, count = 0;
-        walkCoordinates(feature.geometry?.coordinates, (lon, lat) => {
-          const [x, y] = project([lon, lat]);
-          sx += x;
-          sy += y;
-          count += 1;
-        });
         return {
           district: name,
-          path: geometryPath(feature.geometry),
-          labelX: count ? sx / count : width / 2,
-          labelY: count ? sy / count : height / 2
+          path: geometryPath(feature.geometry)
         };
       });
     }
@@ -1128,39 +1249,83 @@
         const isActive = activeDistrict?.district === d.district;
         const isMuted = !shown.has(d.district);
         const [winner] = getWinnerFromFinal(d);
+        const winnerParty = getParty(d, winner);
+        const mapTitle = `${d.district} · ${partyBloc(winnerParty)} · ${partyLabel(winnerParty)} · ${shortName(winner)}`;
         return `
           <path
             class="district-shape${isActive ? " active" : ""}${isMuted ? " muted" : ""}"
             data-district="${d.district}"
             d="${shape.path}"
             fill="${visual.fill}"
-            title="${d.district} · ${winningParty(d)} · ${shortName(winner)}"
-            role="button"
-            tabindex="0">
-            <title>${d.district} · ${winningParty(d)} · ${shortName(winner)}</title>
+            title="${mapTitle}">
+            <title>${mapTitle}</title>
           </path>
         `;
       }).join("");
-      const labels = boundaryShapes.filter(shape => {
-        const d = byName.get(shape.district);
-        return d && (activeDistrict?.district === d.district || resultChanged(d) || finalMargin(d) / (d.formal_votes || 1) <= .02);
-      }).map(shape => `<text class="map-label" x="${shape.labelX.toFixed(1)}" y="${shape.labelY.toFixed(1)}" text-anchor="middle">${shape.district}</text>`).join("");
       target.className = "geo-map";
       target.innerHTML = `
-        <svg class="geo-map" viewBox="0 0 960 560" role="img" aria-label="Victoria 2022 district boundary map">
+        <svg class="geo-map" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" role="img" aria-label="Victoria 2022 district boundary map">
           <rect x="0" y="0" width="960" height="560" fill="#eef2ed"></rect>
           ${shapes}
-          ${labels}
         </svg>
       `;
+      const svg = target.querySelector("svg");
+      svg.addEventListener("wheel", event => {
+        event.preventDefault();
+        hideTooltip();
+        zoomMap(event.deltaY > 0 ? 1.18 : 0.84, svgPointFromEvent(svg, event));
+      }, { passive: false });
+      svg.addEventListener("pointerdown", event => {
+        hideTooltip();
+        svg.setPointerCapture(event.pointerId);
+        svg.classList.add("dragging");
+        mapDrag = {
+          id: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          district: event.target?.dataset?.district || "",
+          view: { ...mapView },
+          moved: false
+        };
+      });
+      svg.addEventListener("pointermove", event => {
+        if (!mapDrag || mapDrag.id !== event.pointerId) return;
+        const rect = svg.getBoundingClientRect();
+        const dx = (event.clientX - mapDrag.startX) / rect.width * mapDrag.view.w;
+        const dy = (event.clientY - mapDrag.startY) / rect.height * mapDrag.view.h;
+        if (Math.abs(event.clientX - mapDrag.startX) + Math.abs(event.clientY - mapDrag.startY) > 3) {
+          mapDrag.moved = true;
+        }
+        mapView = {
+          x: mapDrag.view.x - dx,
+          y: mapDrag.view.y - dy,
+          w: mapDrag.view.w,
+          h: mapDrag.view.h
+        };
+        clampMapView();
+        svg.setAttribute("viewBox", `${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}`);
+      });
+      svg.addEventListener("pointerup", event => {
+        if (!mapDrag || mapDrag.id !== event.pointerId) return;
+        svg.classList.remove("dragging");
+        if (mapDrag.moved) {
+          setTimeout(() => { mapDrag = null; }, 0);
+          return;
+        }
+        if (mapDrag.district) {
+          const district = mapDrag.district;
+          mapDrag = null;
+          hideTooltip();
+          selectDistrictByName(district);
+          return;
+        }
+        setTimeout(() => { mapDrag = null; }, 0);
+      });
       target.querySelectorAll(".district-shape").forEach(shape => {
-        shape.addEventListener("click", () => selectDistrictByName(shape.dataset.district));
-        shape.addEventListener("keydown", event => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            selectDistrictByName(shape.dataset.district);
-          }
-        });
+        const d = byName.get(shape.dataset.district);
+        shape.addEventListener("pointerenter", event => showTooltip(event, d));
+        shape.addEventListener("pointermove", moveTooltip);
+        shape.addEventListener("pointerleave", hideTooltip);
       });
     }
 
@@ -1177,11 +1342,12 @@
       const districtSelect = document.getElementById("districtSelect");
       const partyFilter = document.getElementById("partyFilter");
       const selectedParty = partyFilter.value || "all";
-      const winningParties = [...new Set(allDistricts.map(winningParty))].sort();
-      partyFilter.innerHTML = [`<option value="all">Any party</option>`].concat(
-        winningParties.map(p => `<option value="${p}">${p}</option>`)
+      const blocOrder = ["Labor", "Coalition", "Greens", "Independent", "Other"];
+      const winningBlocs = blocOrder.filter(bloc => allDistricts.some(d => winningBloc(d) === bloc));
+      partyFilter.innerHTML = [`<option value="all">Any bloc</option>`].concat(
+        winningBlocs.map(p => `<option value="${p}">${p}</option>`)
       ).join("");
-      partyFilter.value = winningParties.includes(selectedParty) ? selectedParty : "all";
+      partyFilter.value = winningBlocs.includes(selectedParty) ? selectedParty : "all";
 
       districtSelect.disabled = districts.length === 0;
       districtSelect.innerHTML = districts.length
@@ -1274,15 +1440,60 @@
     }
 
     function setupMapModes() {
-      document.querySelectorAll(".map-mode").forEach(btn => {
+      document.querySelectorAll("[data-map-mode]").forEach(btn => {
         btn.addEventListener("click", () => {
           activeMapMode = btn.dataset.mapMode;
-          document.querySelectorAll(".map-mode").forEach(b => {
+          document.querySelectorAll("[data-map-mode]").forEach(b => {
             b.classList.toggle("active", b.dataset.mapMode === activeMapMode);
           });
           renderSeatMap();
         });
       });
+    }
+
+    function clampMapView() {
+      const base = { x: 0, y: 0, w: 960, h: 560 };
+      mapView.w = Math.max(120, Math.min(base.w, mapView.w));
+      mapView.h = mapView.w * base.h / base.w;
+      if (mapView.h > base.h) {
+        mapView.h = base.h;
+        mapView.w = mapView.h * base.w / base.h;
+      }
+      mapView.x = Math.max(base.x, Math.min(base.x + base.w - mapView.w, mapView.x));
+      mapView.y = Math.max(base.y, Math.min(base.y + base.h - mapView.h, mapView.y));
+    }
+
+    function zoomMap(factor, center = null) {
+      const cx = center?.x ?? mapView.x + mapView.w / 2;
+      const cy = center?.y ?? mapView.y + mapView.h / 2;
+      const nextW = mapView.w * factor;
+      const nextH = mapView.h * factor;
+      mapView.x = cx - (cx - mapView.x) * (nextW / mapView.w);
+      mapView.y = cy - (cy - mapView.y) * (nextH / mapView.h);
+      mapView.w = nextW;
+      mapView.h = nextH;
+      clampMapView();
+      renderSeatMap();
+    }
+
+    function resetMapZoom() {
+      mapView = { x: 0, y: 0, w: 960, h: 560 };
+      hideTooltip();
+      renderSeatMap();
+    }
+
+    function svgPointFromEvent(svg, event) {
+      const rect = svg.getBoundingClientRect();
+      return {
+        x: mapView.x + ((event.clientX - rect.left) / rect.width) * mapView.w,
+        y: mapView.y + ((event.clientY - rect.top) / rect.height) * mapView.h
+      };
+    }
+
+    function setupMapZoom() {
+      document.getElementById("mapZoomOut").onclick = () => zoomMap(1.35);
+      document.getElementById("mapZoomIn").onclick = () => zoomMap(0.72);
+      document.getElementById("mapZoomReset").onclick = resetMapZoom;
     }
 
     function renderNoMatches() {
@@ -1308,10 +1519,10 @@
       // Preference impact line
       let impactLine = "";
       if (changed) {
-        impactLine = `Preferences overturned the primary vote — <strong>${partyLabel(leaderParty)}</strong> led first preferences but <strong>${partyLabel(winnerParty)}</strong> won on preferences.`;
+        impactLine = `Preferences overturned the primary vote — <strong>${partyBloc(leaderParty)}</strong> led first preferences but <strong>${partyBloc(winnerParty)}</strong> won on preferences.`;
       } else {
         const gain = winnerGain(d);
-        impactLine = `<strong>${partyLabel(winnerParty)}</strong> led on primary votes and held on. Preferences added <strong>${fmt.format(gain)}</strong> votes to the winner.`;
+        impactLine = `<strong>${partyBloc(winnerParty)}</strong> led on primary votes and held on. Preferences added <strong>${fmt.format(gain)}</strong> votes to the winner.`;
       }
 
       document.getElementById("districtSummary").innerHTML = `
@@ -1319,6 +1530,10 @@
         <div class="result-facts">
           <div class="fact-item">
             <span class="fact-label">Winner</span>
+            <span class="fact-value">${blocBadgeHtml(winnerParty)}</span>
+          </div>
+          <div class="fact-item">
+            <span class="fact-label">Party</span>
             <span class="fact-value">${badgeHtml(winnerParty)}</span>
           </div>
           <div class="fact-item">
@@ -1327,7 +1542,7 @@
           </div>
           <div class="fact-item">
             <span class="fact-label">Primary leader</span>
-            <span class="fact-value">${badgeHtml(leaderParty)}</span>
+            <span class="fact-value">${blocBadgeHtml(leaderParty)}</span>
           </div>
           <div class="fact-item">
             <span class="fact-label">Final margin</span>
@@ -1338,8 +1553,8 @@
             <span class="fact-value">${Number(d.turnout_pct).toFixed(1)}%</span>
           </div>
           <div class="fact-item">
-            <span class="fact-label">Prefs changed result?</span>
-            <span class="fact-value">${changed ? "Yes" : "No"}</span>
+            <span class="fact-label">Preference result</span>
+            <span class="fact-value">${changed ? "Changed winner" : "Leader held"}</span>
           </div>
         </div>
         <p class="pref-impact">${impactLine}</p>
@@ -1708,6 +1923,7 @@
 
     setupTabs();
     setupMapModes();
+    setupMapZoom();
     populateControls();
     render();
     autoLoadBoundaries();
