@@ -177,6 +177,136 @@
       letter-spacing: .05em;
     }
 
+    /* -- Map -- */
+    .map-panel {
+      padding: 14px 0 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .map-toolbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .map-title {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+    }
+
+    .map-subtitle {
+      margin: 1px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .map-modes {
+      display: inline-flex;
+      gap: 2px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 2px;
+      background: var(--surface);
+    }
+
+    .map-mode {
+      border: 0;
+      border-radius: 6px;
+      padding: 6px 9px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .map-mode.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .map-legend {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      min-height: 24px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 3px 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      white-space: nowrap;
+    }
+
+    .map-wrap {
+      overflow-x: auto;
+      padding-bottom: 2px;
+      background: #eef2ed;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .geo-map {
+      display: block;
+      width: 100%;
+      min-width: 820px;
+      height: auto;
+    }
+
+    .district-shape {
+      stroke: rgba(26,24,20,.56);
+      stroke-width: .65;
+      vector-effect: non-scaling-stroke;
+      cursor: pointer;
+      transition: opacity .08s ease, fill .08s ease;
+    }
+
+    .district-shape:hover {
+      opacity: 1;
+      stroke: var(--ink);
+      stroke-width: 1.4;
+    }
+
+    .district-shape.active {
+      stroke: var(--ink);
+      stroke-width: 2;
+    }
+
+    .district-shape.muted {
+      opacity: .2;
+    }
+
+    .map-label {
+      fill: var(--ink);
+      font-size: 10px;
+      font-weight: 800;
+      paint-order: stroke;
+      stroke: rgba(255,255,255,.82);
+      stroke-width: 3px;
+      pointer-events: none;
+    }
+
+    .map-empty {
+      color: var(--muted);
+      padding: 20px;
+      margin: 0;
+    }
+
+
     /* ── Result summary ── */
     .result-summary {
       padding: 18px 0 14px;
@@ -473,6 +603,9 @@
       .controls-inner { flex-direction: column; align-items: stretch; }
       .bar-row, .transfer-row { grid-template-columns: 1fr auto; }
       .bar-row .track, .transfer-row .mini-track { display: none; }
+      .map-toolbar { align-items: stretch; }
+      .map-modes { width: 100%; }
+      .map-mode { flex: 1; }
     }
 
     @media (max-width: 480px) {
@@ -520,6 +653,24 @@
         <button id="downloadSample" type="button">Sample CSV</button>
       </div>
     </nav>
+
+    <section class="map-panel" aria-label="Electorate map">
+      <div class="map-toolbar">
+        <div>
+          <h2 class="map-title">Map</h2>
+          <p class="map-subtitle">Click an electorate to explore.</p>
+        </div>
+        <div class="map-modes" role="group" aria-label="Map colour mode">
+          <button class="map-mode active" type="button" data-map-mode="party">Winner</button>
+          <button class="map-mode" type="button" data-map-mode="close">Close</button>
+          <button class="map-mode" type="button" data-map-mode="changed">Changed</button>
+        </div>
+      </div>
+      <div id="mapLegend" class="map-legend"></div>
+      <div class="map-wrap">
+        <div id="seatMap" class="map-empty">Loading map…</div>
+      </div>
+    </section>
 
     <section class="result-summary" id="districtSummary"></section>
 
@@ -700,6 +851,8 @@
     let activeDistrict = districts[0];
     let focusRound = 1;
     let activeTab = "overview";
+    let activeMapMode = "party";
+    let boundaryShapes = [];
     let datasetMeta = {
       label: "Embedded sample data",
       rowCount: countRowsFromDistricts(allDistricts)
@@ -831,6 +984,186 @@
       return allDistricts.filter(d => districtMatchesFilters(d, filters));
     }
 
+    function mapVisual(d) {
+      const winnerParty = winningParty(d);
+      const marginPct = d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
+      if (activeMapMode === "close") {
+        const color = marginPct <= .02 ? "#b94d36" : marginPct <= .05 ? "#d4872b" : "#7a7f87";
+        return {
+          color,
+          fill: hexToRgba(color, marginPct <= .05 ? .72 : .34),
+          label: pct(finalMargin(d), d.formal_votes)
+        };
+      }
+      if (activeMapMode === "changed") {
+        const changed = resultChanged(d);
+        const color = changed ? "#2b98a3" : "#7a7f87";
+        return {
+          color,
+          fill: hexToRgba(color, changed ? .75 : .28),
+          label: changed ? "Changed" : "Held"
+        };
+      }
+      const color = partyColor(winnerParty);
+      return {
+        color,
+        fill: hexToRgba(color, .74),
+        label: winnerParty
+      };
+    }
+
+    function renderMapLegend() {
+      const legend = document.getElementById("mapLegend");
+      if (activeMapMode === "close") {
+        legend.innerHTML = [
+          ["#b94d36", "Under 2%"],
+          ["#d4872b", "Under 5%"],
+          ["#7a7f87", "Other"]
+        ].map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
+        return;
+      }
+      if (activeMapMode === "changed") {
+        legend.innerHTML = [
+          ["#2b98a3", "Changed result"],
+          ["#7a7f87", "Primary leader held"]
+        ].map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
+        return;
+      }
+      const parties = [...new Set(allDistricts.map(winningParty))].sort();
+      legend.innerHTML = parties.map(p => badgeHtml(p)).join("");
+    }
+
+    function selectDistrictByName(name) {
+      const selected = allDistricts.find(d => d.district === name);
+      if (!selected) return;
+      if (!districtMatchesFilters(selected, getFilterState())) {
+        document.getElementById("districtSearch").value = "";
+        document.getElementById("partyFilter").value = "all";
+        document.getElementById("changedOnly").checked = false;
+        document.getElementById("closeOnly").checked = false;
+        districts = [...allDistricts];
+      }
+      activeDistrict = selected;
+      focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+      populateControls();
+      render();
+    }
+
+    function walkCoordinates(coords, visit) {
+      if (typeof coords?.[0] === "number") {
+        visit(coords[0], coords[1]);
+        return;
+      }
+      (coords || []).forEach(part => walkCoordinates(part, visit));
+    }
+
+    function makeBoundaryShapes(features) {
+      let minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+      features.forEach(feature => {
+        walkCoordinates(feature.geometry?.coordinates, (lon, lat) => {
+          minLon = Math.min(minLon, lon);
+          maxLon = Math.max(maxLon, lon);
+          minLat = Math.min(minLat, lat);
+          maxLat = Math.max(maxLat, lat);
+        });
+      });
+
+      const width = 960;
+      const height = 560;
+      const pad = 14;
+      const scale = Math.min((width - pad * 2) / (maxLon - minLon), (height - pad * 2) / (maxLat - minLat));
+      const mapW = (maxLon - minLon) * scale;
+      const mapH = (maxLat - minLat) * scale;
+      const offsetX = (width - mapW) / 2;
+      const offsetY = (height - mapH) / 2;
+      const project = ([lon, lat]) => [
+        offsetX + (lon - minLon) * scale,
+        offsetY + (maxLat - lat) * scale
+      ];
+      const ringPath = ring => ring.map((point, i) => {
+        const [x, y] = project(point);
+        return `${i ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join("") + "Z";
+      const polygonPath = polygon => polygon.map(ringPath).join("");
+      const geometryPath = geometry => {
+        if (!geometry) return "";
+        if (geometry.type === "Polygon") return polygonPath(geometry.coordinates);
+        if (geometry.type === "MultiPolygon") return geometry.coordinates.map(polygonPath).join("");
+        return "";
+      };
+
+      return features.map(feature => {
+        const name = feature.properties?.district || feature.properties?.district2 || feature.properties?.DISTRICT;
+        let sx = 0, sy = 0, count = 0;
+        walkCoordinates(feature.geometry?.coordinates, (lon, lat) => {
+          const [x, y] = project([lon, lat]);
+          sx += x;
+          sy += y;
+          count += 1;
+        });
+        return {
+          district: name,
+          path: geometryPath(feature.geometry),
+          labelX: count ? sx / count : width / 2,
+          labelY: count ? sy / count : height / 2
+        };
+      });
+    }
+
+    function renderSeatMap() {
+      const target = document.getElementById("seatMap");
+      if (!target) return;
+      renderMapLegend();
+      if (!boundaryShapes.length) {
+        target.className = "map-empty";
+        target.innerHTML = "Loading map…";
+        return;
+      }
+      const byName = new Map(allDistricts.map(d => [d.district, d]));
+      const shown = new Set(districts.map(d => d.district));
+      const shapes = boundaryShapes.map(shape => {
+        const d = byName.get(shape.district);
+        if (!d) return "";
+        const visual = mapVisual(d);
+        const isActive = activeDistrict?.district === d.district;
+        const isMuted = !shown.has(d.district);
+        const [winner] = getWinnerFromFinal(d);
+        return `
+          <path
+            class="district-shape${isActive ? " active" : ""}${isMuted ? " muted" : ""}"
+            data-district="${d.district}"
+            d="${shape.path}"
+            fill="${visual.fill}"
+            title="${d.district} · ${winningParty(d)} · ${shortName(winner)}"
+            role="button"
+            tabindex="0">
+            <title>${d.district} · ${winningParty(d)} · ${shortName(winner)}</title>
+          </path>
+        `;
+      }).join("");
+      const labels = boundaryShapes.filter(shape => {
+        const d = byName.get(shape.district);
+        return d && (activeDistrict?.district === d.district || resultChanged(d) || finalMargin(d) / (d.formal_votes || 1) <= .02);
+      }).map(shape => `<text class="map-label" x="${shape.labelX.toFixed(1)}" y="${shape.labelY.toFixed(1)}" text-anchor="middle">${shape.district}</text>`).join("");
+      target.className = "geo-map";
+      target.innerHTML = `
+        <svg class="geo-map" viewBox="0 0 960 560" role="img" aria-label="Victoria 2022 district boundary map">
+          <rect x="0" y="0" width="960" height="560" fill="#eef2ed"></rect>
+          ${shapes}
+          ${labels}
+        </svg>
+      `;
+      target.querySelectorAll(".district-shape").forEach(shape => {
+        shape.addEventListener("click", () => selectDistrictByName(shape.dataset.district));
+        shape.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            selectDistrictByName(shape.dataset.district);
+          }
+        });
+      });
+    }
+
     function updateDataStatus() {
       const status = document.getElementById("dataStatus");
       const shown = districts.length;
@@ -940,6 +1273,18 @@
       });
     }
 
+    function setupMapModes() {
+      document.querySelectorAll(".map-mode").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeMapMode = btn.dataset.mapMode;
+          document.querySelectorAll(".map-mode").forEach(b => {
+            b.classList.toggle("active", b.dataset.mapMode === activeMapMode);
+          });
+          renderSeatMap();
+        });
+      });
+    }
+
     function renderNoMatches() {
       document.getElementById("districtSummary").innerHTML = `<p style="color:var(--muted);margin:0;">No districts match the current filters. Try adjusting your search.</p>`;
       document.getElementById("primaryBars").innerHTML = "";
@@ -948,6 +1293,7 @@
       document.getElementById("chartLegend").innerHTML = "";
       document.getElementById("progressiveChart").innerHTML = "";
       document.getElementById("rawTable").innerHTML = "";
+      renderSeatMap();
       updateDataStatus();
     }
 
@@ -1187,6 +1533,7 @@
       renderRound();
       if (activeTab === "chart") renderProgressive(activeDistrict);
       if (activeTab === "raw") renderRawTable(activeDistrict);
+      renderSeatMap();
       updateDataStatus();
     }
 
@@ -1290,6 +1637,19 @@
       }
     }
 
+    async function autoLoadBoundaries() {
+      try {
+        const response = await fetch("data/vic_2022_district_boundaries.geojson", { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const geojson = await response.json();
+        boundaryShapes = makeBoundaryShapes(geojson.features || []);
+        renderSeatMap();
+      } catch (err) {
+        document.getElementById("seatMap").innerHTML = "Map unavailable.";
+        console.info("District boundary map was not auto-loaded.", err);
+      }
+    }
+
     async function handleUpload(event) {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -1347,8 +1707,10 @@
     }
 
     setupTabs();
+    setupMapModes();
     populateControls();
     render();
+    autoLoadBoundaries();
     autoLoadCSV();
   </script>
 </body>
