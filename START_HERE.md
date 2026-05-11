@@ -1,32 +1,58 @@
 # START HERE
 
-This repo is ready to upload to GitHub.
+Bismillah, this repo is ready to run locally or publish with GitHub Pages.
 
-## Just open the prototype
+## Run The App
 
-Open this file in your browser:
+Use a local server so the CSV and map boundary files load correctly:
 
-```text
-index.html
+```bash
+python3 -m http.server 8000
 ```
 
-It already has sample districts inside the app, so you can test the dashboard immediately.
+Open:
 
-## What the repo does
+```text
+http://localhost:8000/
+```
 
-- Shows a compact party-first dashboard for Victorian district preference counts.
-- Lets you upload a cleaned CSV later.
-- Includes a scraper script for official VEC 2022 district preference distribution pages.
-- Includes a validator script to check the scraped CSV.
+Opening `index.html` directly may fall back to embedded sample data because browsers usually block local `fetch()` calls.
 
-## The simple workflow
+## What The App Does
 
-1. Open `index.html` and check the prototype.
-2. Run the scraper to create the full CSV.
-3. Upload the generated CSV inside the app.
-4. Later, ask Codex to make the app auto-load the CSV instead of manual upload.
+- Shows a real 2022 Victorian district boundary map.
+- Colours winners by bloc: Labor, Coalition, Greens, Independent, Other.
+- Lets you zoom, pan, hover, and click electorates.
+- Lets you search districts and filter by bloc, close margin, or preference-changed result.
+- Shows first preferences, preference rounds, progressive totals, and raw rows.
+- Keeps exact party names in district details and raw data.
 
-## Commands
+## Data Included
+
+```text
+data/vic_2022_preferences_long.csv
+data/vic_2022_district_summary.csv
+data/vic_2022_district_boundaries.geojson
+```
+
+The app auto-loads the preference CSV and boundary GeoJSON. Manual CSV upload is under **Data tools**.
+
+## Validate Data
+
+```bash
+python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
+```
+
+Expected current result:
+
+```text
+Rows: 6082
+Districts: 87
+Missing vote rows: 0
+Districts with final rows: 87
+```
+
+## Rebuild VEC Data
 
 ```bash
 python -m venv .venv
@@ -43,8 +69,14 @@ On Windows, activation is:
 .venv\Scripts\activate
 ```
 
-## Quick test
+Quick scraper test:
 
 ```bash
 python scripts/scrape_vec_2022_preferences.py --out data --limit 3 --keep-going
 ```
+
+## Next Good Improvements
+
+- Add shareable URLs like `?district=Richmond&mode=changed`.
+- Add a compact statewide summary strip.
+- Run a GitHub Pages smoke test after publishing.

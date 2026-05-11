@@ -2,7 +2,7 @@
 
 Source target: Victorian Electoral Commission 2022 State Election results pages.
 
-This repo is built around two levels of data:
+This repo is built around three levels of data:
 
 ## 1. District-level result metadata
 
@@ -26,6 +26,16 @@ Important row types:
 - `progressive`: progressive total after a round
 - `final`: final standing after distribution
 
+## 3. District boundary polygons
+
+The map uses:
+
+```text
+data/vic_2022_district_boundaries.geojson
+```
+
+Boundary source: Wikimedia Commons map data derived from Electoral Boundaries Commission Victoria 2022 boundaries, licensed CC-BY-4.0.
+
 ## Why long format?
 
 The VEC pages are visually wide tables. Long format is better for:
@@ -33,4 +43,5 @@ The VEC pages are visually wide tables. Long format is better for:
 - filtering by district
 - drawing bar charts
 - tracking progressive totals
-- later making a map or summaries
+- map-linked district drilldowns
+- summary calculations

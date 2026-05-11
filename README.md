@@ -1,12 +1,20 @@
 # Victoria 2022 Preference Explorer
 
-A compact interactive HTML prototype for exploring how Victorian Legislative Assembly districts voted in the 2022 state election.
+A static HTML data app for exploring Victorian Legislative Assembly preference counts from the 2022 state election.
 
-The app is **party-first**: party is highlighted visually, while candidate names are kept as secondary detail.
+The app is map-first and party/bloc-first:
+
+- winner map with Labor, Coalition, Greens, Independent, and Other grouping
+- zoomable/pannable 2022 district boundary map
+- district search, district picker, bloc filter, close-seat filter, and preference-changed filter
+- first preference, transfer round, progressive chart, and raw row views
+- exact party and candidate detail preserved inside each district
+
+No build step is needed. It is plain HTML/CSS/JavaScript.
 
 ## Open the app
 
-For the generated CSV to auto-load, serve the folder locally:
+Serve the folder locally so the CSV and GeoJSON files can auto-load:
 
 ```bash
 python3 -m http.server 8000
@@ -18,34 +26,51 @@ Then open:
 http://localhost:8000/
 ```
 
-No build step is needed. It is plain HTML/CSS/JavaScript.
+The app auto-loads:
 
-The app auto-loads `data/vic_2022_preferences_long.csv` when present, keeps manual CSV upload as a fallback, and has sample districts built in if the generated CSV is not available.
+```text
+data/vic_2022_preferences_long.csv
+data/vic_2022_district_boundaries.geojson
+```
 
-## Folder structure
+If the generated CSV is unavailable, embedded sample districts are used. Manual CSV upload is available under **Data tools**.
+
+## Data Files
+
+```text
+data/vic_2022_preferences_long.csv        # long preference-count rows, 87 districts
+data/vic_2022_district_summary.csv        # district-level result summary
+data/vic_2022_district_boundaries.geojson # 2022 district boundary polygons
+data/sample_melbourne_preferences_long.csv
+```
+
+Boundary data is from Wikimedia Commons map data derived from Electoral Boundaries Commission Victoria 2022 boundaries, licensed CC-BY-4.0.
+
+## Folder Structure
 
 ```text
 .
-├── index.html                         # open this first
+├── index.html
 ├── app/
-│   └── index.html                     # same app, kept for cleaner repo structure
+│   └── index.html
 ├── data/
-│   └── sample_melbourne_preferences_long.csv
 ├── scripts/
-│   ├── scrape_vec_2022_preferences.py # official VEC scraper
-│   └── validate_vec_csv.py            # CSV checker
+│   ├── scrape_vec_2022_preferences.py
+│   └── validate_vec_csv.py
 ├── docs/
 │   └── data_notes.md
 ├── .github/workflows/
-│   └── scrape-vec-data.yml            # optional manual GitHub Action
+│   └── scrape-vec-data.yml
 ├── requirements.txt
 ├── START_HERE.md
 └── codex_prompt.md
 ```
 
-## What data format does the app expect?
+`index.html` and `app/index.html` are kept in sync.
 
-Long CSV:
+## CSV Format
+
+The app expects long CSV rows:
 
 ```csv
 district,elected_member,elected_party,enrolment,formal_votes,informal_votes,total_votes,turnout_pct,majority,round_number,row_type,excluded_candidate,excluded_party,candidate,candidate_party,votes
@@ -60,7 +85,7 @@ progressive
 final
 ```
 
-## Run the scraper
+## Run The Scraper
 
 ```bash
 python -m venv .venv
@@ -71,7 +96,7 @@ python scripts/scrape_vec_2022_preferences.py --out data --keep-going
 python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
 ```
 
-This should create:
+This writes:
 
 ```text
 data/vic_2022_preferences_long.csv
@@ -84,25 +109,17 @@ If any districts fail, the scraper also writes:
 data/vic_2022_scrape_errors.csv
 ```
 
-If there are no failures, no scrape error CSV is kept.
+## Current Status
 
-Then serve the folder locally and open `http://localhost:8000/`. The dashboard should auto-load `data/vic_2022_preferences_long.csv`.
+The app currently validates against:
 
-## Easier GitHub option
-
-After uploading this repo to GitHub:
-
-1. Go to **Actions**
-2. Run **Scrape VEC 2022 data**
-3. Download the generated artifact
-4. Put the CSV into `data/` so the app can auto-load it, or upload it manually in the app
-
-## Current status
-
-This is a static end-to-end prototype with a scraper, validator, generated long CSV, and dashboard auto-load.
+- 6,082 preference rows
+- 87 districts
+- 87 boundary features
+- no missing vote rows
 
 Best next improvements:
 
-- add district search
-- add party filters
-- add a map after the data is stable
+- URL sharing for selected district and map mode
+- compact statewide summary strip
+- GitHub Pages smoke test after each release
