@@ -914,6 +914,7 @@
     let boundaryShapes = [];
     let mapView = { x: 0, y: 0, w: 960, h: 560 };
     let mapDrag = null;
+    let suppressUrlUpdate = false;
     let datasetMeta = {
       label: "Embedded sample data",
       rowCount: countRowsFromDistricts(allDistricts)
@@ -1076,6 +1077,58 @@
       return allDistricts.filter(d => districtMatchesFilters(d, filters));
     }
 
+    function readUrlState() {
+      const params = new URLSearchParams(window.location.search);
+      const mode = params.get("mode");
+      return {
+        district: params.get("district") || "",
+        mode: ["party", "close", "changed"].includes(mode) ? mode : ""
+      };
+    }
+
+    function updateUrlState(replace = false) {
+      if (suppressUrlUpdate) return;
+      const params = new URLSearchParams(window.location.search);
+      params.delete("v");
+      if (activeDistrict?.district) params.set("district", activeDistrict.district);
+      else params.delete("district");
+      if (activeMapMode && activeMapMode !== "party") params.set("mode", activeMapMode);
+      else params.delete("mode");
+      const query = params.toString();
+      const next = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
+      const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      if (next !== current) {
+        history[replace ? "replaceState" : "pushState"](null, "", next);
+      }
+    }
+
+    function applyUrlState(replace = true) {
+      const state = readUrlState();
+      suppressUrlUpdate = true;
+      if (state.mode) {
+        activeMapMode = state.mode;
+        document.querySelectorAll("[data-map-mode]").forEach(b => {
+          b.classList.toggle("active", b.dataset.mapMode === activeMapMode);
+        });
+      }
+      if (state.district) {
+        const selected = allDistricts.find(d => d.district.toLowerCase() === state.district.toLowerCase());
+        if (selected) {
+          document.getElementById("districtSearch").value = "";
+          document.getElementById("partyFilter").value = "all";
+          document.getElementById("changedOnly").checked = false;
+          document.getElementById("closeOnly").checked = false;
+          districts = [...allDistricts];
+          activeDistrict = selected;
+          focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+        }
+      }
+      suppressUrlUpdate = false;
+      populateControls();
+      render();
+      updateUrlState(replace);
+    }
+
     function mapVisual(d) {
       const winnerParty = getParty(d, getWinnerFromFinal(d)[0]);
       const marginPct = d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
@@ -1177,6 +1230,7 @@
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       populateControls();
       render();
+      updateUrlState();
     }
 
     function walkCoordinates(coords, visit) {
@@ -1361,6 +1415,7 @@
         activeDistrict = districts[Number(districtSelect.value)];
         focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
         render();
+        updateUrlState();
       };
       document.getElementById("districtSearch").oninput = () => applyFilters();
       partyFilter.onchange = () => applyFilters();
@@ -1406,6 +1461,7 @@
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       populateControls();
       render();
+      updateUrlState();
     }
 
     function resetView() {
@@ -1418,6 +1474,7 @@
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       populateControls();
       render();
+      updateUrlState();
     }
 
     // Tab switching
@@ -1447,6 +1504,7 @@
             b.classList.toggle("active", b.dataset.mapMode === activeMapMode);
           });
           renderSeatMap();
+          updateUrlState();
         });
       });
     }
@@ -1837,8 +1895,7 @@
       document.getElementById("partyFilter").value = "all";
       document.getElementById("changedOnly").checked = false;
       document.getElementById("closeOnly").checked = false;
-      populateControls();
-      render();
+      applyUrlState(true);
     }
 
     async function autoLoadCSV() {
@@ -1925,7 +1982,7 @@
     setupMapModes();
     setupMapZoom();
     populateControls();
-    render();
+    applyUrlState(true);
     autoLoadBoundaries();
     autoLoadCSV();
   </script>
