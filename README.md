@@ -14,6 +14,12 @@ No build step is needed. It is plain HTML/CSS/JavaScript.
 
 ## Open the app
 
+Live site:
+
+```text
+https://adhni.github.io/vic-election/
+```
+
 Serve the folder locally so the CSV and GeoJSON files can auto-load:
 
 ```bash
