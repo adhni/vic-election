@@ -590,7 +590,7 @@
 
     .transfer-label { min-width: 0; }
 
-    /* ── Chart tab ── */
+    /* ── Round totals tab ── */
     .svg-wrap {
       width: 100%;
       overflow-x: auto;
@@ -598,6 +598,70 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 10px;
+    }
+
+    .story-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      max-width: 860px;
+    }
+
+    .story-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .story-nav button { flex: 0 0 auto; }
+
+    .story-count {
+      flex: 1;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .story-sentence {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .story-sentence strong { font-weight: 800; }
+
+    .story-standings {
+      display: grid;
+      gap: 8px;
+    }
+
+    .story-row {
+      display: grid;
+      grid-template-columns: minmax(130px, 210px) 1fr 76px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .story-row .track { height: 10px; }
+
+    .story-row.leader .party-line { font-weight: 900; }
+    .story-row.eliminated { opacity: .38; }
+
+    .story-total {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ink);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .story-eliminated {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
     }
 
     .legend {
@@ -648,7 +712,9 @@
       .overview-cols { grid-template-columns: 1fr; }
       .controls-inner { flex-direction: column; align-items: stretch; }
       .bar-row, .transfer-row { grid-template-columns: 1fr auto; }
+      .story-row { grid-template-columns: 1fr auto; }
       .bar-row .track, .transfer-row .mini-track { display: none; }
+      .story-row .track { display: none; }
       .map-toolbar { align-items: stretch; }
       .map-actions { flex-direction: column; align-items: stretch; }
       .map-modes { width: 100%; }
@@ -735,7 +801,7 @@
     <div class="tabs" role="tablist" aria-label="District data views">
       <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="overview">Overview</button>
       <button class="tab-btn"        role="tab" aria-selected="false" data-tab="rounds">Preference rounds</button>
-      <button class="tab-btn"        role="tab" aria-selected="false" data-tab="chart">Progressive chart</button>
+      <button class="tab-btn"        role="tab" aria-selected="false" data-tab="chart">Round totals</button>
       <button class="tab-btn"        role="tab" aria-selected="false" data-tab="raw">Raw data</button>
     </div>
 
@@ -763,10 +829,9 @@
       <div id="roundDisplay"></div>
     </div>
 
-    <!-- Chart tab -->
+    <!-- Round totals tab -->
     <div class="tab-panel hidden" id="tab-chart" role="tabpanel">
-      <div class="legend" id="chartLegend"></div>
-      <div class="svg-wrap" id="progressiveChart"></div>
+      <div id="preferenceStory"></div>
     </div>
 
     <!-- Raw data tab -->
@@ -908,6 +973,7 @@
     let districts = [...allDistricts];
     let activeDistrict = districts[0];
     let focusRound = 1;
+    let storyStep = 0;
     let activeTab = "overview";
     let activeMapMode = "party";
     let boundaryShapes = [];
@@ -1227,6 +1293,7 @@
       }
       activeDistrict = selected;
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+      storyStep = 0;
       populateControls();
       render();
       updateUrlState();
@@ -1450,15 +1517,16 @@
       roundSelect.value = String(focusRound);
       roundSelect.onchange = () => {
         focusRound = Number(roundSelect.value);
+        storyStep = activeDistrict.rounds.findIndex(r => r.round === focusRound) + 1;
         renderRound();
       };
       document.getElementById("prevRound").onclick = () => {
         const idx = activeDistrict.rounds.findIndex(r => r.round === focusRound);
-        if (idx > 0) { focusRound = activeDistrict.rounds[idx - 1].round; populateRoundSelect(); renderRound(); }
+        if (idx > 0) { focusRound = activeDistrict.rounds[idx - 1].round; storyStep = idx; populateRoundSelect(); renderRound(); }
       };
       document.getElementById("nextRound").onclick = () => {
         const idx = activeDistrict.rounds.findIndex(r => r.round === focusRound);
-        if (idx < activeDistrict.rounds.length - 1) { focusRound = activeDistrict.rounds[idx + 1].round; populateRoundSelect(); renderRound(); }
+        if (idx < activeDistrict.rounds.length - 1) { focusRound = activeDistrict.rounds[idx + 1].round; storyStep = idx + 2; populateRoundSelect(); renderRound(); }
       };
     }
 
@@ -1467,6 +1535,7 @@
       districts = filteredDistricts();
       activeDistrict = districts.find(d => d.district === previous) || districts[0] || null;
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+      storyStep = 0;
       populateControls();
       render();
       updateUrlState();
@@ -1480,6 +1549,7 @@
       districts = [...allDistricts];
       activeDistrict = districts[0] || null;
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+      storyStep = 0;
       populateControls();
       render();
       updateUrlState();
@@ -1498,7 +1568,7 @@
             p.classList.toggle("hidden", p.id !== `tab-${activeTab}`);
           });
           if (activeTab === "rounds") { populateRoundSelect(); renderRound(); }
-          if (activeTab === "chart") renderProgressive(activeDistrict);
+          if (activeTab === "chart") renderPreferenceStory(activeDistrict);
           if (activeTab === "raw") renderRawTable(activeDistrict);
         });
       });
@@ -1567,8 +1637,7 @@
       document.getElementById("primaryBars").innerHTML = "";
       document.getElementById("finalBars").innerHTML = "";
       document.getElementById("roundDisplay").innerHTML = "";
-      document.getElementById("chartLegend").innerHTML = "";
-      document.getElementById("progressiveChart").innerHTML = "";
+      document.getElementById("preferenceStory").innerHTML = "";
       document.getElementById("rawTable").innerHTML = "";
       renderSeatMap();
       updateDataStatus();
@@ -1692,75 +1761,93 @@
       `;
     }
 
-    function renderProgressive(d) {
-      if (!d) return;
-      const snapshots = [{ label: "First", totals: d.first }].concat(d.rounds.map(r => ({ label: `R${r.round}`, totals: r.totals })));
-      const candidates = Object.keys(d.first);
-      const maxVotes = Math.max(...snapshots.flatMap(s => Object.values(s.totals || {}).map(Number)));
-      const width = Math.max(700, snapshots.length * 90);
-      const height = Math.max(340, candidates.length * 24 + 80);
-      const left = 80, right = 110, top = 24, bottom = 42;
-      const chartW = width - left - right;
-      const chartH = height - top - bottom;
-      const x = i => left + (snapshots.length === 1 ? 0 : i / (snapshots.length - 1) * chartW);
-      const y = v => top + chartH - (v / maxVotes) * chartH;
-      const finalOrder = ranked(getFinal(d));
-      const winner = finalOrder[0]?.[0];
-      const runnerUp = finalOrder[1]?.[0];
-
-      const lines = candidates.map(candidate => {
-        const party = getParty(d, candidate);
-        const color = partyColor(party);
-        const points = snapshots.map((s, i) => {
-          const value = s.totals[candidate];
-          if (value === undefined || value === null || value === "") return null;
-          return `${x(i)},${y(value)}`;
-        }).filter(Boolean).join(" ");
-        return {
-          candidate, party, color, points,
-          isWinner: candidate === winner,
-          isRunnerUp: candidate === runnerUp,
-          isFinalist: finalOrder.some(([name]) => name === candidate)
-        };
-      }).filter(l => l.points.includes(" "));
-
-      // Draw minor lines first, then prominent ones on top
-      const sortedLines = [...lines].sort((a, b) => {
-        const rank = l => l.isWinner ? 3 : l.isRunnerUp ? 2 : l.isFinalist ? 1 : 0;
-        return rank(a) - rank(b);
-      });
-
-      const xLabels = snapshots.map((s, i) => `<text x="${x(i)}" y="${height - 10}" text-anchor="middle" fill="#888" font-size="11" font-weight="600">${s.label}</text>`).join("");
-      const grid = [0, .25, .5, .75, 1].map(fr => {
-        const val = maxVotes * fr;
-        const yy = y(val);
-        return `<line x1="${left}" x2="${width - right}" y1="${yy}" y2="${yy}" stroke="rgba(0,0,0,.07)"/><text x="${left - 6}" y="${yy + 4}" text-anchor="end" fill="#888" font-size="10">${fmt.format(Math.round(val))}</text>`;
-      }).join("");
-
-      const polylines = sortedLines.map(line => {
-        const sw = line.isWinner ? 4 : line.isRunnerUp ? 3 : 1.5;
-        const op = line.isWinner || line.isRunnerUp ? 1 : line.isFinalist ? .6 : .22;
-        return `<polyline points="${line.points}" fill="none" stroke="${line.color}" stroke-width="${sw}" opacity="${op}" stroke-linecap="round" stroke-linejoin="round"><title>${partyLabel(line.party)} · ${line.candidate}</title></polyline>`;
-      }).join("");
-
-      const labels = finalOrder.map(([candidate]) => {
-        const line = lines.find(l => l.candidate === candidate);
-        if (!line) return "";
-        const pts = line.points.trim().split(" ");
-        const [lx, ly] = pts[pts.length - 1].split(",").map(Number);
-        const suffix = line.isWinner ? " ★" : "";
-        return `<text x="${Math.min(width - 6, lx + 7)}" y="${ly + 4}" fill="${line.color}" font-size="10" font-weight="700">${partyLabel(line.party)}${suffix}</text>`;
-      }).join("");
-
-      document.getElementById("chartLegend").innerHTML = finalOrder.map(([candidate]) => badgeHtml(getParty(d, candidate))).join("");
-      document.getElementById("progressiveChart").innerHTML = `
-        <svg width="${width}" height="${height}" role="img" aria-label="Progressive vote totals chart">
-          ${grid}
-          ${xLabels}
-          ${polylines}
-          ${labels}
-        </svg>
+    function storyRow(d, candidate, votes, max, denominator, options = {}) {
+      const party = getParty(d, candidate);
+      const color = partyColor(party);
+      const classes = ["story-row"];
+      if (options.leader) classes.push("leader");
+      if (options.eliminated) classes.push("eliminated");
+      return `
+        <div class="${classes.join(" ")}" title="${partyLabel(party)} · ${candidate}: ${fmt.format(votes)}">
+          <div class="bar-label">
+            <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
+            <div class="candidate-line">${shortName(candidate)}</div>
+          </div>
+          <div class="track"><div class="fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${options.leader ? 1 : .72};"></div></div>
+          <div class="story-total">${fmt.format(votes)}<br><span style="font-size:10px;color:var(--muted);font-weight:600">${pct(votes, denominator)}</span></div>
+        </div>
       `;
+    }
+
+    function renderPreferenceStory(d) {
+      if (!d) return;
+      const target = document.getElementById("preferenceStory");
+      const steps = [{ label: "First preferences", totals: d.first, excluded: "" }]
+        .concat(d.rounds.map(r => ({
+          label: r.final ? `Final count (R${r.round})` : `After round ${r.round}`,
+          totals: r.totals,
+          excluded: r.excluded,
+          final: Boolean(r.final)
+        })));
+      storyStep = Math.max(0, Math.min(storyStep, steps.length - 1));
+      const step = steps[storyStep];
+      const rows = ranked(step.totals);
+      const max = rows[0]?.[1] || 1;
+      const [leader, leaderVotes] = rows[0] || ["", 0];
+      const [second, secondVotes] = rows[1] || ["", 0];
+      const leaderParty = leader ? getParty(d, leader) : "";
+      const secondParty = second ? getParty(d, second) : "";
+      const previousRows = storyStep > 0 ? ranked(steps[storyStep - 1].totals) : [];
+      const previousLeader = previousRows[0]?.[0] || "";
+      const eliminated = d.rounds.slice(0, Math.max(0, storyStep)).map(r => r.excluded).filter(Boolean);
+      const leadText = second
+        ? `${partyLabel(leaderParty)} leads ${partyLabel(secondParty)} by ${fmt.format(leaderVotes - secondVotes)} votes.`
+        : `${partyLabel(leaderParty)} is the only candidate remaining.`;
+      const movementText = storyStep === 0
+        ? "This is the first-preference scoreboard."
+        : previousLeader && previousLeader !== leader
+          ? `${partyLabel(leaderParty)} took the lead at this count.`
+          : `${partyLabel(leaderParty)} remained ahead.`;
+      const excludedText = step.excluded
+        ? ` After ${partyLabel(getParty(d, step.excluded))} ${shortName(step.excluded)} was excluded.`
+        : "";
+
+      target.innerHTML = `
+        <div class="story-panel">
+          <div class="section-title">${step.label}</div>
+          <p class="story-sentence">
+            <strong>${leadText}</strong> ${movementText}${excludedText}
+          </p>
+          <div class="story-nav">
+            <button id="storyPrevRound" type="button"${storyStep <= 0 ? " disabled" : ""}>Prev</button>
+            <div class="story-count">${storyStep === 0 ? "First preferences" : `${storyStep} of ${steps.length - 1}`}</div>
+            <button id="storyNextRound" type="button"${storyStep >= steps.length - 1 ? " disabled" : ""}>Next</button>
+          </div>
+          <div class="story-standings">
+            ${rows.map(([candidate, votes], i) => storyRow(d, candidate, votes, max, d.formal_votes, { leader: i === 0 })).join("")}
+          </div>
+          ${eliminated.length ? `<div class="story-eliminated">Eliminated: ${eliminated.map(name => `${partyLabel(getParty(d, name))} ${shortName(name)}`).join(", ")}</div>` : ""}
+        </div>
+      `;
+
+      document.getElementById("storyPrevRound").onclick = () => {
+        if (storyStep > 0) {
+          storyStep -= 1;
+          focusRound = d.rounds[Math.max(0, storyStep - 1)]?.round ?? d.rounds[0]?.round ?? 1;
+          populateRoundSelect();
+          renderRound();
+          renderPreferenceStory(d);
+        }
+      };
+      document.getElementById("storyNextRound").onclick = () => {
+        if (storyStep < steps.length - 1) {
+          storyStep += 1;
+          focusRound = d.rounds[Math.max(0, storyStep - 1)]?.round ?? d.rounds[0]?.round ?? 1;
+          populateRoundSelect();
+          renderRound();
+          renderPreferenceStory(d);
+        }
+      };
     }
 
     function renderRawTable(d) {
@@ -1812,7 +1899,7 @@
       renderBars("finalBars", getFinal(activeDistrict), activeDistrict.formal_votes, winner, activeDistrict);
       populateRoundSelect();
       renderRound();
-      if (activeTab === "chart") renderProgressive(activeDistrict);
+      if (activeTab === "chart") renderPreferenceStory(activeDistrict);
       if (activeTab === "raw") renderRawTable(activeDistrict);
       renderSeatMap();
       updateDataStatus();
@@ -1899,6 +1986,7 @@
       activeDistrict = districts[0];
       datasetMeta = { label: source === "Uploaded CSV" ? "Loaded uploaded CSV" : `Loaded ${source}`, rowCount: rows.length };
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+      storyStep = 0;
       document.getElementById("districtSearch").value = "";
       document.getElementById("partyFilter").value = "all";
       document.getElementById("changedOnly").checked = false;
