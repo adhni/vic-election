@@ -1001,6 +1001,7 @@
     let mapView = { x: 0, y: 0, w: 960, h: 560 };
     let mapDrag = null;
     let suppressUrlUpdate = false;
+    let electionLoadId = 0;
     let datasetMeta = {
       label: "Embedded sample data",
       rowCount: countRowsFromDistricts(allDistricts)
@@ -2011,7 +2012,8 @@
       return out;
     }
 
-    function loadRows(rows, source) {
+    function loadRows(rows, source, options = {}) {
+      const { applyState = true } = options;
       const loaded = buildDistrictsFromRows(rows, source);
       if (!loaded.length) throw new Error("No valid district rows found.");
       allDistricts = loaded;
@@ -2024,17 +2026,29 @@
       document.getElementById("partyFilter").value = "all";
       document.getElementById("changedOnly").checked = false;
       document.getElementById("closeOnly").checked = false;
-      applyUrlState(true);
+      if (applyState) {
+        applyUrlState(true);
+      } else {
+        populateControls();
+        render();
+      }
     }
 
-    async function autoLoadCSV(year = activeElectionYear) {
+    function isCurrentElectionLoad(year, loadId) {
+      return loadId === electionLoadId && year === activeElectionYear;
+    }
+
+    async function autoLoadCSV(year = activeElectionYear, loadId = electionLoadId, options = {}) {
       const election = electionYears[year] || electionYears["2022"];
       try {
         const response = await fetch(election.csv, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const rows = parseCSV(await response.text());
-        loadRows(rows, `VEC ${election.label} CSV`);
+        if (!isCurrentElectionLoad(year, loadId)) return false;
+        loadRows(rows, `VEC ${election.label} CSV`, options);
+        return true;
       } catch (err) {
+        if (!isCurrentElectionLoad(year, loadId)) return false;
         if (year === "2022") {
           console.info("Using embedded sample data; generated CSV was not auto-loaded.", err);
         } else {
@@ -2046,32 +2060,39 @@
           render();
           console.info(`${election.label} CSV was not auto-loaded.`, err);
         }
+        return false;
       }
     }
 
-    async function autoLoadBoundaries(year = activeElectionYear) {
+    async function autoLoadBoundaries(year = activeElectionYear, loadId = electionLoadId) {
       const election = electionYears[year] || electionYears["2022"];
       try {
         const response = await fetch(election.boundaries, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const geojson = await response.json();
+        if (!isCurrentElectionLoad(year, loadId)) return false;
         boundaryShapes = makeBoundaryShapes(geojson.features || []);
         renderSeatMap();
+        return true;
       } catch (err) {
+        if (!isCurrentElectionLoad(year, loadId)) return false;
         boundaryShapes = [];
         document.getElementById("seatMap").innerHTML = "Map unavailable.";
         console.info("District boundary map was not auto-loaded.", err);
+        return false;
       }
     }
 
     async function loadElection(year, replaceUrl = false) {
-      activeElectionYear = electionYears[year] ? year : "2022";
+      const requestedYear = electionYears[year] ? year : "2022";
+      const loadId = ++electionLoadId;
+      activeElectionYear = requestedYear;
       boundaryShapes = [];
       resetMapZoom();
       document.getElementById("electionYear").value = activeElectionYear;
-      await autoLoadCSV(activeElectionYear);
-      await autoLoadBoundaries(activeElectionYear);
-      updateUrlState(replaceUrl);
+      await autoLoadCSV(requestedYear, loadId, { applyState: replaceUrl });
+      await autoLoadBoundaries(requestedYear, loadId);
+      if (isCurrentElectionLoad(requestedYear, loadId)) updateUrlState(replaceUrl);
     }
 
     async function handleUpload(event) {
