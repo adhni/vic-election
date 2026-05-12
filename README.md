@@ -62,6 +62,8 @@ data/sample_melbourne_preferences_long.csv
 
 Boundary data is election-year-specific. The 2022 election used boundaries from the 2020-2021 redivision, so earlier elections such as 2018 need their own boundary file.
 
+2018 boundary data is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. It is licensed under Creative Commons Attribution 4.0.
+
 ## Folder Structure
 
 ```text

@@ -42,6 +42,8 @@ data/vic_2018_district_boundaries.geojson
 
 Do not reuse 2022 boundaries for 2018. The 2022 election used boundaries from the 2020-2021 redivision, while 2018 used the previous electoral boundaries.
 
+The 2018 boundary file is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. The source is licensed CC-BY-4.0 and the repo file keeps the 88 Legislative Assembly district polygons that match the 2018 preference CSV.
+
 ## Why long format?
 
 The VEC pages are visually wide tables. Long format is better for:
