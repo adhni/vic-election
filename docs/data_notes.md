@@ -1,6 +1,6 @@
 # Data notes
 
-Source target: Victorian Electoral Commission 2022 State Election results pages.
+Source target: Victorian Electoral Commission State Election results pages.
 
 This repo is built around three levels of data:
 
@@ -28,13 +28,19 @@ Important row types:
 
 ## 3. District boundary polygons
 
-The map uses:
+The map uses an election-year-specific boundary file:
 
 ```text
 data/vic_2022_district_boundaries.geojson
 ```
 
-Boundary source: Wikimedia Commons map data derived from Electoral Boundaries Commission Victoria 2022 boundaries, licensed CC-BY-4.0.
+For earlier elections, use a matching file such as:
+
+```text
+data/vic_2018_district_boundaries.geojson
+```
+
+Do not reuse 2022 boundaries for 2018. The 2022 election used boundaries from the 2020-2021 redivision, while 2018 used the previous electoral boundaries.
 
 ## Why long format?
 

@@ -20,7 +20,7 @@ Opening `index.html` directly may fall back to embedded sample data because brow
 
 ## What The App Does
 
-- Shows a real 2022 Victorian district boundary map.
+- Shows a real Victorian district boundary map for the selected election year.
 - Colours winners by bloc: Labor, Coalition, Greens, Independent, Other.
 - Lets you zoom, pan, hover, and click electorates.
 - Lets you search districts and filter by bloc, close margin, or preference-changed result.
@@ -34,6 +34,16 @@ data/vic_2022_preferences_long.csv
 data/vic_2022_district_summary.csv
 data/vic_2022_district_boundaries.geojson
 ```
+
+The 2018 experiment uses matching year-specific files:
+
+```text
+data/vic_2018_preferences_long.csv
+data/vic_2018_district_summary.csv
+data/vic_2018_district_boundaries.geojson
+```
+
+Use a separate boundary file for 2018 because the 2022 election used redistributed boundaries.
 
 The app auto-loads the preference CSV and boundary GeoJSON. Manual CSV upload is under **Data tools**.
 
@@ -59,7 +69,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-python scripts/scrape_vec_2022_preferences.py --out data --keep-going
+python scripts/scrape_vec_2022_preferences.py --year 2022 --out data --keep-going
 python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
 ```
 
@@ -72,7 +82,7 @@ On Windows, activation is:
 Quick scraper test:
 
 ```bash
-python scripts/scrape_vec_2022_preferences.py --out data --limit 3 --keep-going
+python scripts/scrape_vec_2022_preferences.py --year 2022 --out data --limit 3 --keep-going
 ```
 
 ## Next Good Improvements

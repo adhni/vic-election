@@ -1,11 +1,11 @@
-# Victoria 2022 Preference Explorer
+# Victoria Election Preference Explorer
 
-A static HTML data app for exploring Victorian Legislative Assembly preference counts from the 2022 state election.
+A static HTML data app for exploring Victorian Legislative Assembly preference counts from Victorian state elections.
 
 The app is map-first and party/bloc-first:
 
 - winner map with Labor, Coalition, Greens, Independent, and Other grouping
-- zoomable/pannable 2022 district boundary map
+- zoomable/pannable district boundary map for the selected election year
 - district search, district picker, bloc filter, close-seat filter, and preference-changed filter
 - first preference, transfer round, progressive chart, and raw row views
 - exact party and candidate detail preserved inside each district
@@ -32,11 +32,18 @@ Then open:
 http://localhost:8000/
 ```
 
-The app auto-loads:
+The app auto-loads the selected election year:
 
 ```text
 data/vic_2022_preferences_long.csv
 data/vic_2022_district_boundaries.geojson
+```
+
+The 2018 experiment expects the same naming pattern:
+
+```text
+data/vic_2018_preferences_long.csv
+data/vic_2018_district_boundaries.geojson
 ```
 
 If the generated CSV is unavailable, embedded sample districts are used. Manual CSV upload is available under **Data tools**.
@@ -47,10 +54,13 @@ If the generated CSV is unavailable, embedded sample districts are used. Manual 
 data/vic_2022_preferences_long.csv        # long preference-count rows, 87 districts
 data/vic_2022_district_summary.csv        # district-level result summary
 data/vic_2022_district_boundaries.geojson # 2022 district boundary polygons
+data/vic_2018_preferences_long.csv        # optional 2018 long preference-count rows
+data/vic_2018_district_summary.csv        # optional 2018 district-level result summary
+data/vic_2018_district_boundaries.geojson # optional 2018 district boundary polygons
 data/sample_melbourne_preferences_long.csv
 ```
 
-Boundary data is from Wikimedia Commons map data derived from Electoral Boundaries Commission Victoria 2022 boundaries, licensed CC-BY-4.0.
+Boundary data is election-year-specific. The 2022 election used boundaries from the 2020-2021 redivision, so earlier elections such as 2018 need their own boundary file.
 
 ## Folder Structure
 
@@ -98,8 +108,15 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-python scripts/scrape_vec_2022_preferences.py --out data --keep-going
+python scripts/scrape_vec_2022_preferences.py --year 2022 --out data --keep-going
 python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
+```
+
+For the 2018 experiment:
+
+```bash
+python scripts/scrape_vec_2022_preferences.py --year 2018 --out data --keep-going
+python scripts/validate_vec_csv.py data/vic_2018_preferences_long.csv
 ```
 
 This writes:
