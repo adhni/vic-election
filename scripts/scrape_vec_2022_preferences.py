@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Scrape 2022 Victorian state election Legislative Assembly district results
+Scrape Victorian state election Legislative Assembly district results
 and preference distributions from official VEC pages.
 
 Outputs:
-  data/vic_2022_preferences_long.csv
-  data/vic_2022_district_summary.csv
+  data/vic_<year>_preferences_long.csv
+  data/vic_<year>_district_summary.csv
 
 Notes:
-- Source: Victorian Electoral Commission 2022 state election results pages.
+- Source: Victorian Electoral Commission state election results pages.
 - The VEC pages are ordinary HTML, but table shapes can differ slightly by district.
 - This script is intentionally defensive: it logs any district it cannot parse so you can fix edge cases.
 """
@@ -31,7 +31,7 @@ import requests
 from bs4 import BeautifulSoup
 
 BASE = "https://www.vec.vic.gov.au"
-INDEX_URL = f"{BASE}/results/state-election-results/2022-state-election-results/results-by-district"
+HISTORICAL_RESULTS_BASE = "https://itsitecoreblobvecprd01.blob.core.windows.net/public-files/historical-results"
 INDICATIVE_URL = f"{BASE}/voting/electoral-statistics/state-election-statistics/full-preference-distributions"
 UA = "Mozilla/5.0 (compatible; vic-election-preference-research/0.1; +https://www.vec.vic.gov.au/)"
 
@@ -175,8 +175,19 @@ def get_indicative_distribution_links(session: requests.Session) -> Dict[str, st
     return links
 
 
-def discover_districts(session: requests.Session, limit: Optional[int] = None) -> List[DistrictMeta]:
-    html = fetch(session, INDEX_URL, sleep=0)
+def election_index_url(year: int) -> str:
+    return f"{BASE}/results/state-election-results/{year}-state-election-results/results-by-district"
+
+
+def historical_summary_url(year: int) -> str:
+    return f"{HISTORICAL_RESULTS_BASE}/state{year}/summary.html"
+
+
+def discover_districts(session: requests.Session, year: int, limit: Optional[int] = None) -> List[DistrictMeta]:
+    if year < 2022:
+        return discover_historical_districts(session, year, limit=limit)
+
+    html = fetch(session, election_index_url(year), sleep=0)
     soup = BeautifulSoup(html, "html.parser")
     seen = set()
     districts: List[DistrictMeta] = []
@@ -196,6 +207,32 @@ def discover_districts(session: requests.Session, limit: Optional[int] = None) -
         district = re.sub(r"\s+District\s+Elected member:.*$", "", label).strip()
         if not district:
             district = url.rstrip("/").split("/")[-1].replace("-district-results", "").replace("-", " ").title()
+        districts.append(DistrictMeta(district=district, district_url=url))
+        if limit and len(districts) >= limit:
+            break
+
+    return districts
+
+
+def discover_historical_districts(session: requests.Session, year: int, limit: Optional[int] = None) -> List[DistrictMeta]:
+    summary_url = historical_summary_url(year)
+    html = fetch(session, summary_url, sleep=0)
+    soup = BeautifulSoup(html, "html.parser")
+    districts: List[DistrictMeta] = []
+    seen = set()
+
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        label = clean_text(a.get_text(" "))
+        if not re.search(r"district\.html$", href, flags=re.I):
+            continue
+        if not label.endswith("District"):
+            continue
+        url = urljoin(summary_url, href)
+        if url in seen:
+            continue
+        seen.add(url)
+        district = re.sub(r"\s+District$", "", label).strip()
         districts.append(DistrictMeta(district=district, district_url=url))
         if limit and len(districts) >= limit:
             break
@@ -235,6 +272,14 @@ def parse_result_page(session: requests.Session, meta: DistrictMeta) -> Tuple[Di
     if m:
         meta.elected_member = clean_text(m.group(1))
         meta.elected_party = clean_text(m.group(2))
+    else:
+        elected_table = soup.find("table", attrs={"title": re.compile(r"Elected member", re.I)})
+        if elected_table:
+            member_span = elected_table.find(class_=re.compile(r"bold-text", re.I))
+            party_span = elected_table.find(class_=re.compile(r"italic", re.I))
+            if member_span and party_span:
+                meta.elected_member = clean_text(member_span.get_text(" "))
+                meta.elected_party = clean_text(party_span.get_text(" "))
 
     meta = parse_key_numbers_from_text(compact, meta)
 
@@ -244,7 +289,7 @@ def parse_result_page(session: requests.Session, meta: DistrictMeta) -> Tuple[Di
     for a in soup.find_all("a", href=True):
         href = a["href"]
         label = clean_text(a.get_text(" ")).lower()
-        url = urljoin(BASE, href)
+        url = urljoin(meta.district_url, href)
         if "distribution" in url.lower() or "distribution" in label or label in {"distributions", "view indicative distributions"}:
             if "results-distribution" in url.lower():
                 preferred_links.append(url)
@@ -253,12 +298,16 @@ def parse_result_page(session: requests.Session, meta: DistrictMeta) -> Tuple[Di
     if preferred_links:
         meta.distribution_url = preferred_links[0]
     elif fallback_links:
-        indicative_links = get_indicative_distribution_links(session)
-        meta.distribution_url = indicative_links.get(meta.district, fallback_links[0])
+        if HISTORICAL_RESULTS_BASE in meta.district_url:
+            meta.distribution_url = fallback_links[0]
+        else:
+            indicative_links = get_indicative_distribution_links(session)
+            meta.distribution_url = indicative_links.get(meta.district, fallback_links[0])
     else:
-        # URL pattern is consistent for normal districts.
-        slug = meta.district_url.rstrip("/").split("/")[-1].replace("-district-results", "")
-        meta.distribution_url = f"{meta.district_url.rstrip('/')}/{slug}-results-distribution"
+        if HISTORICAL_RESULTS_BASE not in meta.district_url:
+            # URL pattern is consistent for normal 2022 districts.
+            slug = meta.district_url.rstrip("/").split("/")[-1].replace("-district-results", "")
+            meta.distribution_url = f"{meta.district_url.rstrip('/')}/{slug}-results-distribution"
 
     party_map = extract_party_map_from_result_tables(html)
     return meta, party_map
@@ -510,6 +559,44 @@ def parse_excel_distribution_rows(meta: DistrictMeta, content: bytes, party_map:
     return rows
 
 
+def parse_historical_result_rows(meta: DistrictMeta, html: str, party_map: Dict[str, str]) -> List[dict]:
+    rows: List[dict] = []
+    tables = read_html_tables(html)
+
+    for df in tables:
+        cols = [clean_text(c) for c in df.columns]
+        df = df.copy()
+        df.columns = cols
+
+        cand_col = next((c for c in cols if c.lower() == "candidate"), None)
+        party_col = next((c for c in cols if c.lower() == "party"), None)
+        first_col = next((c for c in cols if "1st pref votes" in c.lower()), None)
+        final_col = next((c for c in cols if "votes after distribution" in c.lower() or "preferred votes" in c.lower()), None)
+
+        if cand_col and party_col and first_col:
+            for _, row in df.iterrows():
+                candidate = clean_text(row.get(cand_col, ""))
+                if not candidate or candidate.lower() == "nan":
+                    continue
+                party_map[candidate] = clean_text(row.get(party_col, "")) or "Independent"
+                votes = clean_int(row.get(first_col))
+                if votes is not None:
+                    rows.append(make_long_row(meta, party_map, 0, "first", "", candidate, votes))
+            continue
+
+        if cand_col and party_col and final_col:
+            for _, row in df.iterrows():
+                candidate = clean_text(row.get(cand_col, ""))
+                if not candidate or candidate.lower() == "nan":
+                    continue
+                party_map[candidate] = clean_text(row.get(party_col, "")) or party_map.get(candidate, "Independent")
+                votes = clean_int(row.get(final_col))
+                if votes is not None:
+                    rows.append(make_long_row(meta, party_map, 1, "final", "", candidate, votes))
+
+    return rows
+
+
 def make_summary(long_rows: List[dict]) -> List[dict]:
     by_district: Dict[str, List[dict]] = {}
     for r in long_rows:
@@ -565,6 +652,7 @@ def write_csv(path: Path, rows: List[dict], columns: List[str]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--year", type=int, default=2022, help="Election year to scrape, for example 2022 or 2018")
     parser.add_argument("--out", default="data", help="Output directory")
     parser.add_argument("--limit", type=int, default=None, help="Limit districts for testing")
     parser.add_argument("--sleep", type=float, default=0.25, help="Delay between requests")
@@ -573,7 +661,7 @@ def main() -> int:
 
     out_dir = Path(args.out)
     session = make_session()
-    districts = discover_districts(session, limit=args.limit)
+    districts = discover_districts(session, year=args.year, limit=args.limit)
     if not districts:
         print("No districts discovered", file=sys.stderr)
         return 1
@@ -585,7 +673,10 @@ def main() -> int:
         try:
             print(f"[{i}/{len(districts)}] {meta.district}")
             meta, party_map = parse_result_page(session, meta)
-            if re.search(r"\.xlsx?$", meta.distribution_url, flags=re.I):
+            if not meta.distribution_url and HISTORICAL_RESULTS_BASE in meta.district_url:
+                result_html = fetch(session, meta.district_url, sleep=args.sleep)
+                rows = parse_historical_result_rows(meta, result_html, party_map)
+            elif re.search(r"\.xlsx?$", meta.distribution_url, flags=re.I):
                 dist_content = fetch_bytes(session, meta.distribution_url, sleep=args.sleep)
                 rows = parse_excel_distribution_rows(meta, dist_content, party_map)
             else:
@@ -602,9 +693,9 @@ def main() -> int:
                 raise
 
     summary_rows = make_summary(all_rows)
-    write_csv(out_dir / "vic_2022_preferences_long.csv", all_rows, EXPECTED_LONG_COLUMNS)
-    write_csv(out_dir / "vic_2022_district_summary.csv", summary_rows, EXPECTED_SUMMARY_COLUMNS)
-    error_path = out_dir / "vic_2022_scrape_errors.csv"
+    write_csv(out_dir / f"vic_{args.year}_preferences_long.csv", all_rows, EXPECTED_LONG_COLUMNS)
+    write_csv(out_dir / f"vic_{args.year}_district_summary.csv", summary_rows, EXPECTED_SUMMARY_COLUMNS)
+    error_path = out_dir / f"vic_{args.year}_scrape_errors.csv"
     if errors:
         write_csv(error_path, errors, ["district", "district_url", "distribution_url", "error"])
     else:
@@ -614,7 +705,7 @@ def main() -> int:
     print(f"\nWrote {len(all_rows):,} long rows")
     print(f"Wrote {len(summary_rows):,} district summaries")
     if errors:
-        print(f"Had {len(errors):,} errors; see {out_dir / 'vic_2022_scrape_errors.csv'}")
+        print(f"Had {len(errors):,} errors; see {error_path}")
     return 0
 
 

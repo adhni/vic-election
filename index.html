@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Victoria 2022 — District Preference Explorer</title>
+  <title>Victoria Election — District Preference Explorer</title>
   <style>
     :root {
       --bg: #f8f7f5;
@@ -730,12 +730,19 @@
 <body>
   <div class="page-wrap">
     <header class="page-header">
-      <h1>Victoria 2022 · District Preference Explorer</h1>
+      <h1>Victoria Election · District Preference Explorer</h1>
       <p>Legislative Assembly — first preferences, distribution rounds, and final result.</p>
     </header>
 
     <nav class="controls" aria-label="Controls">
       <div class="controls-inner">
+        <div class="ctrl-group shrink">
+          <label class="ctrl-label" for="electionYear">Election</label>
+          <select id="electionYear">
+            <option value="2022">2022</option>
+            <option value="2018">2018</option>
+          </select>
+        </div>
         <div class="ctrl-group grow">
           <label class="ctrl-label" for="districtSearch">Search</label>
           <input id="districtSearch" type="search" placeholder="Find a district…" autocomplete="off" />
@@ -969,6 +976,20 @@
       }
     ];
 
+    const electionYears = {
+      "2022": {
+        label: "2022",
+        csv: "data/vic_2022_preferences_long.csv",
+        boundaries: "data/vic_2022_district_boundaries.geojson"
+      },
+      "2018": {
+        label: "2018",
+        csv: "data/vic_2018_preferences_long.csv",
+        boundaries: "data/vic_2018_district_boundaries.geojson"
+      }
+    };
+
+    let activeElectionYear = "2022";
     let allDistricts = structuredClone(sampleDistricts);
     let districts = [...allDistricts];
     let activeDistrict = districts[0];
@@ -980,6 +1001,7 @@
     let mapView = { x: 0, y: 0, w: 960, h: 560 };
     let mapDrag = null;
     let suppressUrlUpdate = false;
+    let electionLoadId = 0;
     let datasetMeta = {
       label: "Embedded sample data",
       rowCount: countRowsFromDistricts(allDistricts)
@@ -1145,7 +1167,9 @@
     function readUrlState() {
       const params = new URLSearchParams(window.location.search);
       const mode = params.get("mode");
+      const year = params.get("year");
       return {
+        year: electionYears[year] ? year : "",
         district: params.get("district") || "",
         mode: ["party", "close", "changed"].includes(mode) ? mode : ""
       };
@@ -1155,6 +1179,8 @@
       if (suppressUrlUpdate) return;
       const params = new URLSearchParams(window.location.search);
       params.delete("v");
+      if (activeElectionYear !== "2022") params.set("year", activeElectionYear);
+      else params.delete("year");
       if (activeDistrict?.district) params.set("district", activeDistrict.district);
       else params.delete("district");
       if (activeMapMode && activeMapMode !== "party") params.set("mode", activeMapMode);
@@ -1170,6 +1196,11 @@
     function applyUrlState(replace = true) {
       const state = readUrlState();
       suppressUrlUpdate = true;
+      if (state.year && electionYears[state.year]) {
+        activeElectionYear = state.year;
+        const yearSelect = document.getElementById("electionYear");
+        if (yearSelect) yearSelect.value = activeElectionYear;
+      }
       if (state.mode) {
         activeMapMode = state.mode;
         document.querySelectorAll("[data-map-mode]").forEach(b => {
@@ -1392,7 +1423,7 @@
         .join("");
       target.className = "geo-map";
       target.innerHTML = `
-        <svg class="geo-map" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" role="img" aria-label="Victoria 2022 district boundary map">
+        <svg class="geo-map" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" role="img" aria-label="Victoria ${activeElectionYear} district boundary map">
           <rect x="0" y="0" width="960" height="560" fill="#f2f4f0"></rect>
           ${inactiveShapes}
           ${activeShape}
@@ -1499,6 +1530,9 @@
       document.getElementById("resetView").onclick = resetView;
       document.getElementById("csvUpload").onchange = handleUpload;
       document.getElementById("downloadSample").onclick = downloadSchema;
+      const electionYear = document.getElementById("electionYear");
+      electionYear.value = activeElectionYear;
+      electionYear.onchange = () => loadElection(electionYear.value);
       updateDataStatus();
     }
 
@@ -1978,7 +2012,8 @@
       return out;
     }
 
-    function loadRows(rows, source) {
+    function loadRows(rows, source, options = {}) {
+      const { applyState = true } = options;
       const loaded = buildDistrictsFromRows(rows, source);
       if (!loaded.length) throw new Error("No valid district rows found.");
       allDistricts = loaded;
@@ -1991,31 +2026,73 @@
       document.getElementById("partyFilter").value = "all";
       document.getElementById("changedOnly").checked = false;
       document.getElementById("closeOnly").checked = false;
-      applyUrlState(true);
+      if (applyState) {
+        applyUrlState(true);
+      } else {
+        populateControls();
+        render();
+      }
     }
 
-    async function autoLoadCSV() {
+    function isCurrentElectionLoad(year, loadId) {
+      return loadId === electionLoadId && year === activeElectionYear;
+    }
+
+    async function autoLoadCSV(year = activeElectionYear, loadId = electionLoadId, options = {}) {
+      const election = electionYears[year] || electionYears["2022"];
       try {
-        const response = await fetch("data/vic_2022_preferences_long.csv", { cache: "no-store" });
+        const response = await fetch(election.csv, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const rows = parseCSV(await response.text());
-        loadRows(rows, "VEC 2022 CSV");
+        if (!isCurrentElectionLoad(year, loadId)) return false;
+        loadRows(rows, `VEC ${election.label} CSV`, options);
+        return true;
       } catch (err) {
-        console.info("Using embedded sample data; generated CSV was not auto-loaded.", err);
+        if (!isCurrentElectionLoad(year, loadId)) return false;
+        if (year === "2022") {
+          console.info("Using embedded sample data; generated CSV was not auto-loaded.", err);
+        } else {
+          allDistricts = [];
+          districts = [];
+          activeDistrict = null;
+          datasetMeta = { label: `${election.label} CSV unavailable`, rowCount: 0 };
+          populateControls();
+          render();
+          console.info(`${election.label} CSV was not auto-loaded.`, err);
+        }
+        return false;
       }
     }
 
-    async function autoLoadBoundaries() {
+    async function autoLoadBoundaries(year = activeElectionYear, loadId = electionLoadId) {
+      const election = electionYears[year] || electionYears["2022"];
       try {
-        const response = await fetch("data/vic_2022_district_boundaries.geojson", { cache: "no-store" });
+        const response = await fetch(election.boundaries, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const geojson = await response.json();
+        if (!isCurrentElectionLoad(year, loadId)) return false;
         boundaryShapes = makeBoundaryShapes(geojson.features || []);
         renderSeatMap();
+        return true;
       } catch (err) {
+        if (!isCurrentElectionLoad(year, loadId)) return false;
+        boundaryShapes = [];
         document.getElementById("seatMap").innerHTML = "Map unavailable.";
         console.info("District boundary map was not auto-loaded.", err);
+        return false;
       }
+    }
+
+    async function loadElection(year, replaceUrl = false) {
+      const requestedYear = electionYears[year] ? year : "2022";
+      const loadId = ++electionLoadId;
+      activeElectionYear = requestedYear;
+      boundaryShapes = [];
+      resetMapZoom();
+      document.getElementById("electionYear").value = activeElectionYear;
+      await autoLoadCSV(requestedYear, loadId, { applyState: replaceUrl });
+      await autoLoadBoundaries(requestedYear, loadId);
+      if (isCurrentElectionLoad(requestedYear, loadId)) updateUrlState(replaceUrl);
     }
 
     async function handleUpload(event) {
@@ -2079,8 +2156,7 @@
     setupMapZoom();
     populateControls();
     applyUrlState(true);
-    autoLoadBoundaries();
-    autoLoadCSV();
+    loadElection(activeElectionYear, true);
   </script>
 </body>
 </html>
