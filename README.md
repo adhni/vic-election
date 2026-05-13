@@ -1,6 +1,6 @@
 # Victoria Election Preference Explorer
 
-A static HTML data app for exploring Victorian Legislative Assembly preference counts from Victorian state elections.
+A static HTML data app for exploring Victorian lower-house preference counts from state elections and the 2025 federal election in Victoria.
 
 The app is map-first and party/bloc-first:
 
@@ -32,7 +32,7 @@ Then open:
 http://localhost:8000/
 ```
 
-The app auto-loads the selected election year:
+The app auto-loads the selected election:
 
 ```text
 data/vic_2022_preferences_long.csv
@@ -46,6 +46,14 @@ data/vic_2018_preferences_long.csv
 data/vic_2018_district_boundaries.geojson
 ```
 
+The federal Victoria option uses authoritative Australian Electoral Commission 2025 House results and the AEC October 2024 Victoria federal division ESRI boundary dataset:
+
+```text
+data/federal_2025_vic_preferences_long.csv
+data/federal_2025_vic_district_summary.csv
+data/federal_2025_vic_division_boundaries.geojson
+```
+
 If the generated CSV is unavailable, embedded sample districts are used. Manual CSV upload is available under **Data tools**.
 
 ## Data Files
@@ -57,6 +65,9 @@ data/vic_2022_district_boundaries.geojson # 2022 district boundary polygons
 data/vic_2018_preferences_long.csv        # optional 2018 long preference-count rows
 data/vic_2018_district_summary.csv        # optional 2018 district-level result summary
 data/vic_2018_district_boundaries.geojson # optional 2018 district boundary polygons
+data/federal_2025_vic_preferences_long.csv        # AEC 2025 federal House preference rows, Victoria only
+data/federal_2025_vic_district_summary.csv        # AEC 2025 federal House division summary, Victoria only
+data/federal_2025_vic_division_boundaries.geojson # AEC October 2024 federal division polygons, Victoria
 data/sample_melbourne_preferences_long.csv
 ```
 
@@ -121,6 +132,14 @@ python scripts/scrape_vec_2022_preferences.py --year 2018 --out data --keep-goin
 python scripts/validate_vec_csv.py data/vic_2018_preferences_long.csv
 ```
 
+For the 2025 federal Victoria dataset, download the official AEC files listed in `scripts/build_aec_2025_vic.py` into `tmp/aec_2025_vic`, unzip the boundary ZIP there, then run:
+
+```bash
+python3 scripts/build_aec_2025_vic.py --raw-dir tmp/aec_2025_vic --out data
+python3 scripts/validate_vec_csv.py data/federal_2025_vic_preferences_long.csv
+python3 scripts/validate_federal_vic.py --aec-dop tmp/aec_2025_vic/HouseDopByDivisionDownload-31496.csv
+```
+
 This writes:
 
 ```text
@@ -142,6 +161,14 @@ The app currently validates against:
 - 87 districts
 - 87 boundary features
 - no missing vote rows
+
+The federal 2025 Victoria option validates against:
+
+- 2,056 preference rows
+- 38 federal divisions
+- 38 boundary features
+- matching AEC result and boundary names
+- no large boundary overlaps or internal gaps
 
 Best next improvements:
 
