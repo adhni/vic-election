@@ -6,6 +6,7 @@ __pycache__/
 # generated scrape error output
 data/vic_2022_scrape_errors.csv
 data/scrape_errors.csv
+tmp/
 
 # OS/editor
 .DS_Store

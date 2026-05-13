@@ -731,7 +731,7 @@
   <div class="page-wrap">
     <header class="page-header">
       <h1>Victoria Election · District Preference Explorer</h1>
-      <p>Legislative Assembly — first preferences, distribution rounds, and final result.</p>
+      <p>State and federal lower-house electorates — first preferences, distribution rounds, and final result.</p>
     </header>
 
     <nav class="controls" aria-label="Controls">
@@ -741,6 +741,7 @@
           <select id="electionYear">
             <option value="2022">2022</option>
             <option value="2018">2018</option>
+            <option value="federal-2025-vic">Federal 2025 - Victoria</option>
           </select>
         </div>
         <div class="ctrl-group grow">
@@ -979,13 +980,21 @@
     const electionYears = {
       "2022": {
         label: "2022",
+        source: "VEC",
         csv: "data/vic_2022_preferences_long.csv",
         boundaries: "data/vic_2022_district_boundaries.geojson"
       },
       "2018": {
         label: "2018",
+        source: "VEC",
         csv: "data/vic_2018_preferences_long.csv",
         boundaries: "data/vic_2018_district_boundaries.geojson"
+      },
+      "federal-2025-vic": {
+        label: "Federal 2025 - Victoria",
+        source: "AEC",
+        csv: "data/federal_2025_vic_preferences_long.csv",
+        boundaries: "data/federal_2025_vic_division_boundaries.geojson"
       }
     };
 
@@ -2045,7 +2054,7 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const rows = parseCSV(await response.text());
         if (!isCurrentElectionLoad(year, loadId)) return false;
-        loadRows(rows, `VEC ${election.label} CSV`, options);
+        loadRows(rows, `${election.source || "Election"} ${election.label} CSV`, options);
         return true;
       } catch (err) {
         if (!isCurrentElectionLoad(year, loadId)) return false;
