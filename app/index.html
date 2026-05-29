@@ -159,6 +159,34 @@
 
     .status-em { color: var(--ink); font-weight: 600; }
 
+    .state-summary {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 10px 0 0;
+      min-height: 42px;
+    }
+
+    .summary-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .summary-chip strong {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
     details.data-tools {
       margin-top: 8px;
       padding-top: 6px;
@@ -778,6 +806,8 @@
       </details>
     </nav>
 
+    <section id="stateSummary" class="state-summary" aria-label="Election summary"></section>
+
     <section class="map-panel" aria-label="Electorate map">
       <div class="map-toolbar">
         <div>
@@ -1135,6 +1165,11 @@
 
     function winningBloc(d) {
       return partyBloc(getParty(d, getWinnerFromFinal(d)[0]));
+    }
+
+    function electorateLabel(count = 0) {
+      const noun = activeElectionYear === "federal-2025-vic" ? "division" : "district";
+      return count === 1 ? noun : `${noun}s`;
     }
 
     function winnerGain(d) {
@@ -1504,7 +1539,46 @@
       const total = allDistricts.length;
       const rows = fmt.format(datasetMeta.rowCount || countRowsFromDistricts(allDistricts));
       const filterText = shown === total ? "" : ` · Showing ${fmt.format(shown)} of ${fmt.format(total)}`;
-      status.innerHTML = `<span class="status-em">${datasetMeta.label}</span> · ${fmt.format(total)} districts · ${rows} rows${filterText}`;
+      status.innerHTML = `<span class="status-em">${datasetMeta.label}</span> · ${fmt.format(total)} ${electorateLabel(total)} · ${rows} rows${filterText}`;
+    }
+
+    function renderStateSummary() {
+      const target = document.getElementById("stateSummary");
+      if (!target) return;
+      if (!allDistricts.length) {
+        target.innerHTML = "";
+        return;
+      }
+
+      const blocOrder = ["Labor", "Coalition", "Greens", "Independent", "Other"];
+      const blocCounts = new Map(blocOrder.map(bloc => [bloc, 0]));
+      let changedCount = 0;
+      let closeCount = 0;
+      let veryCloseCount = 0;
+
+      allDistricts.forEach(d => {
+        const bloc = winningBloc(d);
+        blocCounts.set(bloc, (blocCounts.get(bloc) || 0) + 1);
+        if (resultChanged(d)) changedCount += 1;
+        const marginShare = d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
+        if (marginShare <= .05) closeCount += 1;
+        if (marginShare <= .02) veryCloseCount += 1;
+      });
+
+      const chips = [
+        `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
+      ];
+      blocOrder.forEach(bloc => {
+        const count = blocCounts.get(bloc) || 0;
+        if (!count) return;
+        chips.push(`<span class="summary-chip"><span class="dot" style="background:${blocColor(bloc)}"></span>${bloc} <strong>${fmt.format(count)}</strong></span>`);
+      });
+      chips.push(`<span class="summary-chip"><strong>${fmt.format(changedCount)}</strong> changed on preferences</span>`);
+      chips.push(`<span class="summary-chip"><strong>${fmt.format(closeCount)}</strong> under 5%</span>`);
+      if (veryCloseCount) {
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(veryCloseCount)}</strong> under 2%</span>`);
+      }
+      target.innerHTML = chips.join("");
     }
 
     function populateControls() {
@@ -1684,6 +1758,7 @@
       document.getElementById("rawTable").innerHTML = "";
       renderSeatMap();
       updateDataStatus();
+      renderStateSummary();
     }
 
     function renderSummary(d) {

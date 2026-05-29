@@ -172,6 +172,6 @@ The federal 2025 Victoria option validates against:
 
 Best next improvements:
 
-- URL sharing for selected district and map mode
-- compact statewide summary strip
-- GitHub Pages smoke test after each release
+- visual regression screenshot smoke test after each release
+- scraper fixture tests for one current VEC page and one historical VEC page
+- optional 2014 election support if source pages expose enough data

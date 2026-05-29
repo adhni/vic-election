@@ -1,0 +1,34 @@
+name: Static app smoke
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Validate state and federal CSVs
+        run: |
+          python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
+          python scripts/validate_vec_csv.py data/vic_2018_preferences_long.csv
+          python scripts/validate_vec_csv.py data/federal_2025_vic_preferences_long.csv
+
+      - name: Smoke test static app
+        run: |
+          python scripts/smoke_static_app.py
