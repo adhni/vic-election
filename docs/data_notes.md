@@ -3,8 +3,8 @@
 Source targets:
 
 - Victorian Electoral Commission State Election results pages
-- Australian Electoral Commission 2025 Federal Election House of Representatives downloads for Victoria
-- Australian Electoral Commission October 2024 Victoria federal division GIS boundaries
+- Australian Electoral Commission Federal Election House of Representatives downloads for Victoria
+- Australian Electoral Commission Victoria federal division GIS boundaries
 
 This repo is built around three levels of data:
 
@@ -44,10 +44,11 @@ For earlier elections, use a matching file such as:
 data/vic_2018_district_boundaries.geojson
 ```
 
-For the 2025 federal Victoria option, use the matching AEC federal division file:
+For federal Victoria options, use the matching AEC federal division file for the election period:
 
 ```text
 data/federal_2025_vic_division_boundaries.geojson
+data/federal_2022_vic_division_boundaries.geojson
 ```
 
 Do not reuse 2022 boundaries for 2018. The 2022 election used boundaries from the 2020-2021 redivision, while 2018 used the previous electoral boundaries.
@@ -55,6 +56,8 @@ Do not reuse 2022 boundaries for 2018. The 2022 election used boundaries from th
 The 2018 boundary file is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. The source is licensed CC-BY-4.0 and the repo file keeps the 88 Legislative Assembly district polygons that match the 2018 preference CSV.
 
 The 2025 federal Victoria boundary file is adapted from the AEC `Vic-october-2024-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, filtered to `StateAb == VIC`. The AEC GIS file uses `Mcewen`; the app boundary property is normalised to the AEC result spelling `McEwen` so result rows join to the matching division.
+
+The 2022 federal Victoria boundary file is adapted from the AEC `vic-july-2021-esri.zip` superseded boundary shapefile. The result rows are generated from the AEC 2022 House of Representatives Distribution of Preferences by Division CSV, event `27966`, filtered to `StateAb == VIC`.
 
 ## Why long format?
 

@@ -770,6 +770,7 @@
             <option value="2022">2022</option>
             <option value="2018">2018</option>
             <option value="federal-2025-vic">Federal 2025 - Victoria</option>
+            <option value="federal-2022-vic">Federal 2022 - Victoria</option>
           </select>
         </div>
         <div class="ctrl-group grow">
@@ -1025,6 +1026,12 @@
         source: "AEC",
         csv: "data/federal_2025_vic_preferences_long.csv",
         boundaries: "data/federal_2025_vic_division_boundaries.geojson"
+      },
+      "federal-2022-vic": {
+        label: "Federal 2022 - Victoria",
+        source: "AEC",
+        csv: "data/federal_2022_vic_preferences_long.csv",
+        boundaries: "data/federal_2022_vic_division_boundaries.geojson"
       }
     };
 
@@ -1168,7 +1175,7 @@
     }
 
     function electorateLabel(count = 0) {
-      const noun = activeElectionYear === "federal-2025-vic" ? "division" : "district";
+      const noun = activeElectionYear.startsWith("federal-") ? "division" : "district";
       return count === 1 ? noun : `${noun}s`;
     }
 
