@@ -36,15 +36,15 @@ def load_geojson(path: Path) -> dict:
         return json.load(f)
 
 
-def validate_rows(rows: list[dict[str, str]]) -> set[str]:
+def validate_rows(rows: list[dict[str, str]], expected_divisions: int) -> set[str]:
     if not rows:
         raise SystemExit("Preference CSV is empty")
     missing = REQUIRED - set(rows[0])
     if missing:
         raise SystemExit(f"Missing columns: {sorted(missing)}")
     districts = {row["district"] for row in rows}
-    if len(districts) != 38:
-        raise SystemExit(f"Expected 38 Victorian federal divisions, found {len(districts)}")
+    if len(districts) != expected_divisions:
+        raise SystemExit(f"Expected {expected_divisions} Victorian federal divisions, found {len(districts)}")
     row_types = {row["row_type"] for row in rows}
     if not {"first", "transfer", "progressive", "final"}.issubset(row_types):
         raise SystemExit(f"Missing row types: {sorted({'first', 'transfer', 'progressive', 'final'} - row_types)}")
@@ -128,10 +128,11 @@ def main() -> None:
     parser.add_argument("--csv", type=Path, default=Path("data/federal_2025_vic_preferences_long.csv"))
     parser.add_argument("--boundaries", type=Path, default=Path("data/federal_2025_vic_division_boundaries.geojson"))
     parser.add_argument("--aec-dop", type=Path)
+    parser.add_argument("--expected-divisions", type=int, default=38)
     args = parser.parse_args()
 
     rows = read_csv(args.csv)
-    districts = validate_rows(rows)
+    districts = validate_rows(rows, args.expected_divisions)
     validate_against_aec(rows, args.aec_dop)
     validate_boundaries(args.boundaries, districts)
     print(f"Rows: {len(rows)}")
