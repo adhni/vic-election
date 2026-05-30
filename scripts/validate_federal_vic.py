@@ -36,6 +36,35 @@ def load_geojson(path: Path) -> dict:
         return json.load(f)
 
 
+def iter_positions(geometry: dict):
+    coordinates = geometry.get("coordinates", [])
+
+    def walk(value):
+        if (
+            isinstance(value, list)
+            and len(value) >= 2
+            and isinstance(value[0], (int, float))
+            and isinstance(value[1], (int, float))
+        ):
+            yield value
+            return
+        if isinstance(value, list):
+            for item in value:
+                yield from walk(item)
+
+    yield from walk(coordinates)
+
+
+def validate_lon_lat_geometry(geometry: dict, name: str) -> None:
+    seen = False
+    for lon, lat, *_ in iter_positions(geometry):
+        seen = True
+        if not (-180 <= lon <= 180 and -90 <= lat <= 90):
+            raise SystemExit(f"{name}: boundary coordinate outside lon/lat range: {lon}, {lat}")
+    if not seen:
+        raise SystemExit(f"{name}: boundary geometry has no coordinates")
+
+
 def validate_rows(rows: list[dict[str, str]], expected_divisions: int) -> set[str]:
     if not rows:
         raise SystemExit("Preference CSV is empty")
@@ -97,6 +126,7 @@ def validate_boundaries(path: Path, districts: set[str]) -> None:
     geometries = []
     for feature in features:
         name = feature["properties"]["district"]
+        validate_lon_lat_geometry(feature["geometry"], name)
         geom = shape(feature["geometry"])
         if geom.is_empty:
             raise SystemExit(f"{name}: empty geometry")

@@ -7,6 +7,7 @@ import json
 import sys
 from collections import defaultdict
 from pathlib import Path
+from typing import Callable
 
 
 BOUNDARY_NAME_FIXES = {
@@ -15,6 +16,7 @@ BOUNDARY_NAME_FIXES = {
 }
 DIVISION_NAME_FIELDS = ("Elect_div", "ELECT_DIV")
 DIVISION_ID_FIELDS = ("E_div_numb", "DIV_NUMBER")
+CoordinateTransformer = Callable[[float, float], tuple[float, float]]
 
 
 def read_aec_csv(path: Path) -> list[dict[str, str]]:
@@ -212,8 +214,76 @@ def ring_area(points: list[list[float]]) -> float:
     ) / 2
 
 
-def shape_to_geometry(shape) -> dict[str, object]:
-    points = [[round(x, 6), round(y, 6)] for x, y in shape.points]
+def resolve_prj_path(shp_path: Path, explicit_prj_path: Path | None) -> Path | None:
+    if explicit_prj_path:
+        if not explicit_prj_path.exists():
+            raise SystemExit(f"Projection file not found: {explicit_prj_path}")
+        return explicit_prj_path
+
+    same_stem = shp_path.with_suffix(".prj")
+    if same_stem.exists():
+        return same_stem
+
+    matches = sorted(shp_path.parent.glob("*.prj"))
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        raise SystemExit(
+            f"Multiple projection files found beside {shp_path}; pass --prj explicitly"
+        )
+    return None
+
+
+def build_coordinate_transformer(prj_path: Path | None) -> CoordinateTransformer | None:
+    if not prj_path:
+        return None
+    try:
+        from pyproj import CRS, Transformer
+    except ImportError as exc:
+        raise SystemExit("Install pyproj to reproject AEC boundaries: python3 -m pip install pyproj") from exc
+
+    source_crs = CRS.from_wkt(prj_path.read_text(encoding="utf-8"))
+    target_crs = CRS.from_epsg(4326)
+    if source_crs.equals(target_crs):
+        return None
+
+    transformer = Transformer.from_crs(source_crs, target_crs, always_xy=True)
+    return transformer.transform
+
+
+def iter_positions(geometry: dict[str, object]):
+    coordinates = geometry.get("coordinates", [])
+
+    def walk(value):
+        if (
+            isinstance(value, list)
+            and len(value) >= 2
+            and isinstance(value[0], (int, float))
+            and isinstance(value[1], (int, float))
+        ):
+            yield value
+            return
+        if isinstance(value, list):
+            for item in value:
+                yield from walk(item)
+
+    yield from walk(coordinates)
+
+
+def validate_lon_lat_geometry(geometry: dict[str, object], name: str) -> None:
+    for lon, lat, *_ in iter_positions(geometry):
+        if not (-180 <= lon <= 180 and -90 <= lat <= 90):
+            raise SystemExit(
+                f"{name}: boundary coordinate outside lon/lat range after projection: {lon}, {lat}"
+            )
+
+
+def shape_to_geometry(shape, transform_point: CoordinateTransformer | None = None) -> dict[str, object]:
+    points = []
+    for x, y in shape.points:
+        if transform_point:
+            x, y = transform_point(float(x), float(y))
+        points.append([round(x, 6), round(y, 6)])
     parts = list(shape.parts) + [len(points)]
     rings = [points[parts[i]:parts[i + 1]] for i in range(len(parts) - 1)]
     polygons: list[list[list[list[float]]]] = []
@@ -231,12 +301,22 @@ def shape_to_geometry(shape) -> dict[str, object]:
     return {"type": "MultiPolygon", "coordinates": polygons}
 
 
-def build_boundaries(shp_path: Path, out_dir: Path, year: int, state: str, gis_source: str) -> Path:
+def build_boundaries(
+    shp_path: Path,
+    out_dir: Path,
+    year: int,
+    state: str,
+    gis_source: str,
+    prj_path: Path | None = None,
+) -> Path:
     sys.path.insert(0, str(Path("tmp/pydeps")))
     try:
         import shapefile
     except ImportError as exc:
         raise SystemExit("Install pyshp to generate boundaries: python3 -m pip install pyshp") from exc
+
+    projection_path = resolve_prj_path(shp_path, prj_path)
+    transform_point = build_coordinate_transformer(projection_path)
 
     reader = shapefile.Reader(str(shp_path))
     features = []
@@ -244,6 +324,8 @@ def build_boundaries(shp_path: Path, out_dir: Path, year: int, state: str, gis_s
         record = shape_record.record.as_dict()
         raw_district = str(record_value(record, DIVISION_NAME_FIELDS))
         district = BOUNDARY_NAME_FIXES.get(raw_district, raw_district)
+        geometry = shape_to_geometry(shape_record.shape, transform_point)
+        validate_lon_lat_geometry(geometry, district)
         features.append({
             "type": "Feature",
             "properties": {
@@ -252,7 +334,7 @@ def build_boundaries(shp_path: Path, out_dir: Path, year: int, state: str, gis_s
                 "state": state,
                 "source": gis_source,
             },
-            "geometry": shape_to_geometry(shape_record.shape),
+            "geometry": geometry,
         })
 
     out_path = out_dir / f"federal_{year}_{state.lower()}_division_boundaries.geojson"
@@ -278,10 +360,11 @@ def main() -> None:
         type=Path,
         default=Path("tmp/aec_2025_vic/Vic-october-2024-esri/E_VIC24_region.shp"),
     )
+    parser.add_argument("--prj", type=Path, help="Optional projection file for the shapefile")
     args = parser.parse_args()
 
     pref_path, summary_path = build_preferences(args.raw_dir, args.out, args.year, args.event_id, args.state)
-    boundary_path = build_boundaries(args.shp, args.out, args.year, args.state, args.gis_source)
+    boundary_path = build_boundaries(args.shp, args.out, args.year, args.state, args.gis_source, args.prj)
     print(f"Wrote {pref_path}")
     print(f"Wrote {summary_path}")
     print(f"Wrote {boundary_path}")
