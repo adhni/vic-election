@@ -17,21 +17,20 @@ The stronger path is to deepen Victoria first:
 
 ## Phase 1: Victorian State Depth
 
-Add `2014` Victorian Legislative Assembly support next.
+Victorian Legislative Assembly support now includes `2022`, `2018`, and `2014`.
 
-Why this comes first:
+Why this path comes first:
 
 - it reuses the existing VEC historical-results scraper path
 - it keeps the same election type as 2018 and 2022
 - it enables state-election comparisons over time
 - it avoids introducing a new electoral commission or jurisdiction
 
-Target work:
+Completed work:
 
-- confirm whether VEC 2014 historical pages expose enough first/final and distribution data
 - generate `data/vic_2014_preferences_long.csv`
 - generate `data/vic_2014_district_summary.csv`
-- source matching 2014 Legislative Assembly district boundaries
+- add matching 2014 Legislative Assembly district boundaries
 - add `2014` to the election selector
 - extend static smoke validation
 
@@ -113,14 +112,14 @@ Reasons:
 
 ## Recommended Next Concrete Task
 
-Add Victorian state election `2014`.
+Add Federal `2013 - Victoria`.
 
-Second choice: add Federal `2013 - Victoria`.
+Second choice: add Victorian state election `2010`, if source pages and boundaries are workable.
 
 Insyallah, the best sequence is:
 
-1. VIC 2014 state
-2. Federal 2013 Victoria
-3. comparison/rankings UI
-4. VIC 2010 or Federal 2010
+1. Federal 2013 Victoria
+2. comparison/rankings UI
+3. VIC 2010 or Federal 2010
+4. cleaner config-driven election definitions
 5. generalise to other states only after that

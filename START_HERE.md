@@ -35,9 +35,12 @@ data/vic_2022_district_summary.csv
 data/vic_2022_district_boundaries.geojson
 ```
 
-The 2018 experiment uses matching year-specific files:
+Historical state elections use matching year-specific files:
 
 ```text
+data/vic_2014_preferences_long.csv
+data/vic_2014_district_summary.csv
+data/vic_2014_district_boundaries.geojson
 data/vic_2018_preferences_long.csv
 data/vic_2018_district_summary.csv
 data/vic_2018_district_boundaries.geojson
@@ -56,7 +59,7 @@ data/federal_2016_vic_preferences_long.csv
 data/federal_2016_vic_division_boundaries.geojson
 ```
 
-Use a separate boundary file for 2018 because the 2022 election used redistributed boundaries. The 2018 boundary file is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au.
+Use separate boundary files for 2014 and 2018 because the 2022 election used redistributed boundaries. The 2014 and 2018 boundary files are adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au.
 
 The app auto-loads the preference CSV and boundary GeoJSON. Manual CSV upload is under **Data tools**.
 
@@ -101,5 +104,5 @@ python scripts/scrape_vec_2022_preferences.py --year 2022 --out data --limit 3 -
 ## Next Good Improvements
 
 - Add shareable URLs like `?district=Richmond&mode=changed`.
-- Add a compact statewide summary strip.
+- Add comparison and rankings views.
 - Run a GitHub Pages smoke test after publishing.

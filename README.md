@@ -39,9 +39,11 @@ data/vic_2022_preferences_long.csv
 data/vic_2022_district_boundaries.geojson
 ```
 
-The 2018 experiment expects the same naming pattern:
+The historical state election options expect the same naming pattern:
 
 ```text
+data/vic_2014_preferences_long.csv
+data/vic_2014_district_boundaries.geojson
 data/vic_2018_preferences_long.csv
 data/vic_2018_district_boundaries.geojson
 ```
@@ -71,9 +73,12 @@ If the generated CSV is unavailable, embedded sample districts are used. Manual 
 data/vic_2022_preferences_long.csv        # long preference-count rows, 87 districts
 data/vic_2022_district_summary.csv        # district-level result summary
 data/vic_2022_district_boundaries.geojson # 2022 district boundary polygons
-data/vic_2018_preferences_long.csv        # optional 2018 long preference-count rows
-data/vic_2018_district_summary.csv        # optional 2018 district-level result summary
-data/vic_2018_district_boundaries.geojson # optional 2018 district boundary polygons
+data/vic_2018_preferences_long.csv        # 2018 long preference-count rows
+data/vic_2018_district_summary.csv        # 2018 district-level result summary
+data/vic_2018_district_boundaries.geojson # 2018 district boundary polygons
+data/vic_2014_preferences_long.csv        # 2014 long preference-count rows
+data/vic_2014_district_summary.csv        # 2014 district-level result summary
+data/vic_2014_district_boundaries.geojson # 2014 district boundary polygons
 data/federal_2025_vic_preferences_long.csv        # AEC 2025 federal House preference rows, Victoria only
 data/federal_2025_vic_district_summary.csv        # AEC 2025 federal House division summary, Victoria only
 data/federal_2025_vic_division_boundaries.geojson # AEC October 2024 federal division polygons, Victoria
@@ -89,9 +94,9 @@ data/federal_2016_vic_division_boundaries.geojson # AEC December 2010 federal di
 data/sample_melbourne_preferences_long.csv
 ```
 
-Boundary data is election-year-specific. The 2022 election used boundaries from the 2020-2021 redivision, so earlier elections such as 2018 need their own boundary file.
+Boundary data is election-year-specific. The 2022 election used boundaries from the 2020-2021 redivision, so earlier elections such as 2014 and 2018 need their own boundary file.
 
-2018 boundary data is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. It is licensed under Creative Commons Attribution 4.0.
+2014 and 2018 boundary data is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. It is licensed under Creative Commons Attribution 4.0. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
 
 ## Folder Structure
 
@@ -143,9 +148,11 @@ python scripts/scrape_vec_2022_preferences.py --year 2022 --out data --keep-goin
 python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
 ```
 
-For the 2018 experiment:
+For historical state elections:
 
 ```bash
+python scripts/scrape_vec_2022_preferences.py --year 2014 --out data --keep-going
+python scripts/validate_vec_csv.py data/vic_2014_preferences_long.csv
 python scripts/scrape_vec_2022_preferences.py --year 2018 --out data --keep-going
 python scripts/validate_vec_csv.py data/vic_2018_preferences_long.csv
 ```

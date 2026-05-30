@@ -35,6 +35,7 @@ jobs:
         run: |
           python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
           python scripts/validate_vec_csv.py data/vic_2018_preferences_long.csv
+          python scripts/validate_vec_csv.py data/vic_2014_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2025_vic_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2022_vic_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2019_vic_preferences_long.csv
