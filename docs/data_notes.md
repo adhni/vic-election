@@ -50,6 +50,7 @@ For federal Victoria options, use the matching AEC federal division file for the
 data/federal_2025_vic_division_boundaries.geojson
 data/federal_2022_vic_division_boundaries.geojson
 data/federal_2019_vic_division_boundaries.geojson
+data/federal_2016_vic_division_boundaries.geojson
 ```
 
 Do not reuse 2022 boundaries for 2018. The 2022 election used boundaries from the 2020-2021 redivision, while 2018 used the previous electoral boundaries.
@@ -61,6 +62,8 @@ The 2025 federal Victoria boundary file is adapted from the AEC `Vic-october-202
 The 2022 federal Victoria boundary file is adapted from the AEC `vic-july-2021-esri.zip` superseded boundary shapefile. The result rows are generated from the AEC 2022 House of Representatives Distribution of Preferences by Division CSV, event `27966`, filtered to `StateAb == VIC`.
 
 The 2019 federal Victoria boundary file is adapted from the AEC `vic-july-2018-esri.zip` redistribution boundary shapefile. The result rows are generated from the AEC 2019 House of Representatives Distribution of Preferences by Division CSV, event `24310`, filtered to `StateAb == VIC`.
+
+The 2016 federal Victoria boundary file is adapted from the AEC `vic-esri-24122010.zip` superseded boundary shapefile. The result rows are generated from the AEC 2016 House of Representatives Distribution of Preferences by Division CSV, event `20499`, filtered to `StateAb == VIC`. The older GIS file uses legacy field names and the boundary property spelling `Mcmillan`, which the builder normalises to the AEC result spelling `McMillan`.
 
 ## Why long format?
 

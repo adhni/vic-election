@@ -58,6 +58,9 @@ data/federal_2022_vic_division_boundaries.geojson
 data/federal_2019_vic_preferences_long.csv
 data/federal_2019_vic_district_summary.csv
 data/federal_2019_vic_division_boundaries.geojson
+data/federal_2016_vic_preferences_long.csv
+data/federal_2016_vic_district_summary.csv
+data/federal_2016_vic_division_boundaries.geojson
 ```
 
 If the generated CSV is unavailable, embedded sample districts are used. Manual CSV upload is available under **Data tools**.
@@ -80,6 +83,9 @@ data/federal_2022_vic_division_boundaries.geojson # AEC July 2021 federal divisi
 data/federal_2019_vic_preferences_long.csv        # AEC 2019 federal House preference rows, Victoria only
 data/federal_2019_vic_district_summary.csv        # AEC 2019 federal House division summary, Victoria only
 data/federal_2019_vic_division_boundaries.geojson # AEC July 2018 federal division polygons, Victoria
+data/federal_2016_vic_preferences_long.csv        # AEC 2016 federal House preference rows, Victoria only
+data/federal_2016_vic_district_summary.csv        # AEC 2016 federal House division summary, Victoria only
+data/federal_2016_vic_division_boundaries.geojson # AEC December 2010 federal division polygons, Victoria
 data/sample_melbourne_preferences_long.csv
 ```
 
@@ -168,6 +174,14 @@ python3 scripts/validate_vec_csv.py data/federal_2019_vic_preferences_long.csv
 python3 scripts/validate_federal_vic.py --csv data/federal_2019_vic_preferences_long.csv --boundaries data/federal_2019_vic_division_boundaries.geojson --aec-dop tmp/aec_2019_vic/HouseDopByDivisionDownload-24310.csv --expected-divisions 38
 ```
 
+For the 2016 federal Victoria dataset, download the official AEC files for event `20499` into `tmp/aec_2016_vic`, unzip `vic-esri-24122010.zip` there, then run:
+
+```bash
+python3 scripts/build_aec_vic.py --year 2016 --event-id 20499 --raw-dir tmp/aec_2016_vic --out data --shp "tmp/aec_2016_vic/vic-esri-24122010/vic 24122010.shp" --gis-source https://www.aec.gov.au/Electorates/gis/files/vic-esri-24122010.zip
+python3 scripts/validate_vec_csv.py data/federal_2016_vic_preferences_long.csv
+python3 scripts/validate_federal_vic.py --csv data/federal_2016_vic_preferences_long.csv --boundaries data/federal_2016_vic_division_boundaries.geojson --aec-dop tmp/aec_2016_vic/HouseDopByDivisionDownload-20499.csv --expected-divisions 37
+```
+
 The VEC scraper writes:
 
 ```text
@@ -211,6 +225,14 @@ The federal 2019 Victoria option validates against:
 - 1,804 preference rows
 - 38 federal divisions
 - 38 boundary features
+- matching AEC result and boundary names
+- no large boundary overlaps or internal gaps
+
+The federal 2016 Victoria option validates against:
+
+- 1,921 preference rows
+- 37 federal divisions
+- 37 boundary features
 - matching AEC result and boundary names
 - no large boundary overlaps or internal gaps
 

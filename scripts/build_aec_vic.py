@@ -11,7 +11,10 @@ from pathlib import Path
 
 BOUNDARY_NAME_FIXES = {
     "Mcewen": "McEwen",
+    "Mcmillan": "McMillan",
 }
+DIVISION_NAME_FIELDS = ("Elect_div", "ELECT_DIV")
+DIVISION_ID_FIELDS = ("E_div_numb", "DIV_NUMBER")
 
 
 def read_aec_csv(path: Path) -> list[dict[str, str]]:
@@ -34,6 +37,13 @@ def int_value(value: str | float | int | None) -> int:
     if value in (None, ""):
         return 0
     return int(round(float(value)))
+
+
+def record_value(record: dict[str, object], fields: tuple[str, ...]) -> object:
+    for field in fields:
+        if field in record:
+            return record[field]
+    raise KeyError(f"Missing boundary field; expected one of {fields}")
 
 
 def load_lookup(rows: list[dict[str, str]], state: str, key: str = "DivisionNm") -> dict[str, dict[str, str]]:
@@ -232,12 +242,13 @@ def build_boundaries(shp_path: Path, out_dir: Path, year: int, state: str, gis_s
     features = []
     for shape_record in reader.iterShapeRecords():
         record = shape_record.record.as_dict()
-        district = BOUNDARY_NAME_FIXES.get(record["Elect_div"], record["Elect_div"])
+        raw_district = str(record_value(record, DIVISION_NAME_FIELDS))
+        district = BOUNDARY_NAME_FIXES.get(raw_district, raw_district)
         features.append({
             "type": "Feature",
             "properties": {
                 "district": district,
-                "division_id": record["E_div_numb"],
+                "division_id": record_value(record, DIVISION_ID_FIELDS),
                 "state": state,
                 "source": gis_source,
             },
