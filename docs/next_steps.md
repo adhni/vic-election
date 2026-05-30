@@ -39,15 +39,15 @@ After 2014, consider `2010` if the historical pages and boundary data are workab
 
 ## Phase 2: Federal Victoria Depth
 
-Federal Victoria now has `2025` and `2022`.
+Federal Victoria now has `2025`, `2022`, and `2019`.
 
 Next federal target:
 
-- add Federal `2019 - Victoria`
+- add Federal `2016 - Victoria`
 
 Potential later federal target:
 
-- add Federal `2016 - Victoria`
+- add Federal `2013 - Victoria`, if source data and boundaries are workable
 
 Why this is valuable:
 
@@ -115,12 +115,12 @@ Reasons:
 
 Add Victorian state election `2014`.
 
-Second choice: add Federal `2019 - Victoria`.
+Second choice: add Federal `2016 - Victoria`.
 
 Insyallah, the best sequence is:
 
 1. VIC 2014 state
-2. Federal 2019 Victoria
+2. Federal 2016 Victoria
 3. comparison/rankings UI
-4. VIC 2010 or Federal 2016
+4. VIC 2010 or Federal 2013
 5. generalise to other states only after that

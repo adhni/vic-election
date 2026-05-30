@@ -18,6 +18,10 @@ ELECTIONS = {
         "data/federal_2022_vic_preferences_long.csv",
         "data/federal_2022_vic_division_boundaries.geojson",
     ),
+    "federal-2019-vic": (
+        "data/federal_2019_vic_preferences_long.csv",
+        "data/federal_2019_vic_division_boundaries.geojson",
+    ),
 }
 
 
