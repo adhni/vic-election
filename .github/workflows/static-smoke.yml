@@ -31,6 +31,8 @@ jobs:
           curl --fail --location --retry 3 https://results.aec.gov.au/24310/Website/Downloads/HouseDopByDivisionDownload-24310.csv --output tmp/aec_ci/HouseDopByDivisionDownload-24310.csv
           curl --fail --location --retry 3 https://results.aec.gov.au/20499/Website/Downloads/HouseDopByDivisionDownload-20499.csv --output tmp/aec_ci/HouseDopByDivisionDownload-20499.csv
           curl --fail --location --retry 3 https://results.aec.gov.au/17496/Website/Downloads/HouseDopByDivisionDownload-17496.csv --output tmp/aec_ci/HouseDopByDivisionDownload-17496.csv
+          curl --fail --location --retry 3 https://results.aec.gov.au/15508/Website/Downloads/HouseDopByDivisionDownload-15508.csv --output tmp/aec_ci/HouseDopByDivisionDownload-15508.csv
+          curl --fail --location --retry 3 https://results.aec.gov.au/13745/Website/Downloads/HouseDopByDivisionDownload-13745.csv --output tmp/aec_ci/HouseDopByDivisionDownload-13745.csv
 
       - name: Validate state and federal CSVs
         run: |
@@ -42,11 +44,15 @@ jobs:
           python scripts/validate_vec_csv.py data/federal_2019_vic_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2016_vic_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2013_vic_preferences_long.csv
+          python scripts/validate_vec_csv.py data/federal_2010_vic_preferences_long.csv
+          python scripts/validate_vec_csv.py data/federal_2007_vic_preferences_long.csv
           python scripts/validate_federal_vic.py --csv data/federal_2025_vic_preferences_long.csv --boundaries data/federal_2025_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-31496.csv --expected-divisions 38
           python scripts/validate_federal_vic.py --csv data/federal_2022_vic_preferences_long.csv --boundaries data/federal_2022_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-27966.csv --expected-divisions 39
           python scripts/validate_federal_vic.py --csv data/federal_2019_vic_preferences_long.csv --boundaries data/federal_2019_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-24310.csv --expected-divisions 38
           python scripts/validate_federal_vic.py --csv data/federal_2016_vic_preferences_long.csv --boundaries data/federal_2016_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-20499.csv --expected-divisions 37
           python scripts/validate_federal_vic.py --csv data/federal_2013_vic_preferences_long.csv --boundaries data/federal_2013_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-17496.csv --expected-divisions 37
+          python scripts/validate_federal_vic.py --csv data/federal_2010_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-15508.csv --expected-divisions 37
+          python scripts/validate_federal_vic.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2007_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-13745.csv --expected-divisions 37
 
       - name: Smoke test static app
         run: |
