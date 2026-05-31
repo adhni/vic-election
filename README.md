@@ -66,6 +66,9 @@ data/federal_2016_vic_division_boundaries.geojson
 data/federal_2013_vic_preferences_long.csv
 data/federal_2013_vic_district_summary.csv
 data/federal_2013_vic_division_boundaries.geojson
+data/federal_2010_vic_preferences_long.csv
+data/federal_2010_vic_district_summary.csv
+data/federal_2010_vic_division_boundaries.geojson
 ```
 
 If the generated CSV is unavailable, embedded sample districts are used. Manual CSV upload is available under **Data tools**.
@@ -97,6 +100,9 @@ data/federal_2016_vic_division_boundaries.geojson # AEC December 2010 federal di
 data/federal_2013_vic_preferences_long.csv        # AEC 2013 federal House preference rows, Victoria only
 data/federal_2013_vic_district_summary.csv        # AEC 2013 federal House division summary, Victoria only
 data/federal_2013_vic_division_boundaries.geojson # AEC December 2010 federal division polygons, Victoria
+data/federal_2010_vic_preferences_long.csv        # AEC 2010 federal House preference rows, Victoria only
+data/federal_2010_vic_district_summary.csv        # AEC 2010 federal House division summary, Victoria only
+data/federal_2010_vic_division_boundaries.geojson # AEC 2010 national federal division polygons, Victoria features
 data/sample_melbourne_preferences_long.csv
 ```
 
@@ -203,6 +209,14 @@ python3 scripts/validate_vec_csv.py data/federal_2013_vic_preferences_long.csv
 python3 scripts/validate_federal_vic.py --csv data/federal_2013_vic_preferences_long.csv --boundaries data/federal_2013_vic_division_boundaries.geojson --aec-dop tmp/aec_2013_vic/HouseDopByDivisionDownload-17496.csv --expected-divisions 37
 ```
 
+For the 2010 federal Victoria dataset, download the official AEC files for event `15508` into `tmp/aec_2010_vic`, unzip the AEC `national-esri-2010.zip` boundary shapefile, then run:
+
+```bash
+python3 scripts/build_aec_vic.py --year 2010 --event-id 15508 --raw-dir tmp/aec_2010_vic --out data --shp tmp/aec_2010_vic/national-esri-2010/COM_ELB_2010_region.shp --gis-source https://www.aec.gov.au/Electorates/gis/files/national-esri-2010.zip
+python3 scripts/validate_vec_csv.py data/federal_2010_vic_preferences_long.csv
+python3 scripts/validate_federal_vic.py --csv data/federal_2010_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_2010_vic/HouseDopByDivisionDownload-15508.csv --expected-divisions 37
+```
+
 The VEC scraper writes:
 
 ```text
@@ -257,8 +271,24 @@ The federal 2016 Victoria option validates against:
 - matching AEC result and boundary names
 - no large boundary overlaps or internal gaps
 
+The federal 2013 Victoria option validates against:
+
+- 3,303 preference rows
+- 37 federal divisions
+- 37 boundary features
+- matching AEC result and boundary names
+- no large boundary overlaps or internal gaps
+
+The federal 2010 Victoria option validates against:
+
+- 1,008 preference rows
+- 37 federal divisions
+- 37 boundary features
+- matching AEC result and boundary names
+- no large boundary overlaps or internal gaps
+
 Best next improvements:
 
 - visual regression screenshot smoke test after each release
 - scraper fixture tests for one current VEC page and one historical VEC page
-- optional 2014 election support if source pages expose enough data
+- optional VIC 2010 state election support if source pages and boundaries are workable

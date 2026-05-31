@@ -16,6 +16,7 @@ BOUNDARY_NAME_FIXES = {
 }
 DIVISION_NAME_FIELDS = ("Elect_div", "ELECT_DIV")
 DIVISION_ID_FIELDS = ("E_div_numb", "DIV_NUMBER")
+STATE_FIELDS = ("STATE", "STATE_AB", "StateAb")
 CoordinateTransformer = Callable[[float, float], tuple[float, float]]
 
 
@@ -46,6 +47,20 @@ def record_value(record: dict[str, object], fields: tuple[str, ...]) -> object:
         if field in record:
             return record[field]
     raise KeyError(f"Missing boundary field; expected one of {fields}")
+
+
+def optional_record_value(record: dict[str, object], fields: tuple[str, ...]) -> object:
+    for field in fields:
+        if field in record:
+            return record[field]
+    return ""
+
+
+def record_matches_state(record: dict[str, object], state: str) -> bool:
+    for field in STATE_FIELDS:
+        if field in record:
+            return str(record[field]).strip().upper() == state.upper()
+    return True
 
 
 def load_lookup(rows: list[dict[str, str]], state: str, key: str = "DivisionNm") -> dict[str, dict[str, str]]:
@@ -322,6 +337,8 @@ def build_boundaries(
     features = []
     for shape_record in reader.iterShapeRecords():
         record = shape_record.record.as_dict()
+        if not record_matches_state(record, state):
+            continue
         raw_district = str(record_value(record, DIVISION_NAME_FIELDS))
         district = BOUNDARY_NAME_FIXES.get(raw_district, raw_district)
         geometry = shape_to_geometry(shape_record.shape, transform_point)
@@ -330,7 +347,7 @@ def build_boundaries(
             "type": "Feature",
             "properties": {
                 "district": district,
-                "division_id": record_value(record, DIVISION_ID_FIELDS),
+                "division_id": optional_record_value(record, DIVISION_ID_FIELDS),
                 "state": state,
                 "source": gis_source,
             },

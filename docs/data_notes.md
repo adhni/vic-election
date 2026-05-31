@@ -53,6 +53,7 @@ data/federal_2022_vic_division_boundaries.geojson
 data/federal_2019_vic_division_boundaries.geojson
 data/federal_2016_vic_division_boundaries.geojson
 data/federal_2013_vic_division_boundaries.geojson
+data/federal_2010_vic_division_boundaries.geojson
 ```
 
 Do not reuse 2022 boundaries for 2014 or 2018. The 2022 election used boundaries from the 2020-2021 redivision, while 2014 and 2018 used the previous electoral boundaries.
@@ -68,6 +69,8 @@ The 2019 federal Victoria boundary file is adapted from the AEC `vic-july-2018-e
 The 2016 federal Victoria boundary file is adapted from the AEC `vic-esri-24122010.zip` superseded boundary shapefile. The result rows are generated from the AEC 2016 House of Representatives Distribution of Preferences by Division CSV, event `20499`, filtered to `StateAb == VIC`. The older GIS file uses VicGrid projected metres, legacy field names, and the boundary property spelling `Mcmillan`; the builder reprojects the coordinates to WGS84 lon/lat and normalises the district spelling to the AEC result spelling `McMillan`.
 
 The 2013 federal Victoria boundary file uses the same AEC `vic-esri-24122010.zip` shapefile because those Victorian federal divisions were gazetted on 24 December 2010 and applied to the 2013 federal election. The result rows are generated from the AEC 2013 House of Representatives Distribution of Preferences by Division CSV, event `17496`, filtered to `StateAb == VIC`.
+
+The 2010 federal Victoria boundary file is adapted from the AEC `national-esri-2010.zip` shapefile because the AEC states the 2010 federal election in Victoria ran on the same boundaries as the 2007 election while the 2010 Victorian redistribution was still underway. The result rows are generated from the AEC 2010 House of Representatives Distribution of Preferences by Division CSV, event `15508`, filtered to `StateAb == VIC`. The older national GIS file provides `ELECT_DIV` and `STATE` fields but no numeric division ID, so the builder filters `STATE == VIC` and leaves `division_id` blank for this boundary source.
 
 ## Why long format?
 

@@ -59,6 +59,8 @@ data/federal_2016_vic_preferences_long.csv
 data/federal_2016_vic_division_boundaries.geojson
 data/federal_2013_vic_preferences_long.csv
 data/federal_2013_vic_division_boundaries.geojson
+data/federal_2010_vic_preferences_long.csv
+data/federal_2010_vic_division_boundaries.geojson
 ```
 
 Use separate boundary files for 2014 and 2018 because the 2022 election used redistributed boundaries. The 2014 and 2018 boundary files are adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au.
