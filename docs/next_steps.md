@@ -38,7 +38,7 @@ After 2014, consider `2010` if the historical pages and boundary data are workab
 
 ## Phase 2: Federal Victoria Depth
 
-Federal Victoria now has `2025`, `2022`, `2019`, `2016`, `2013`, and `2010`.
+Federal Victoria now has `2025`, `2022`, `2019`, `2016`, `2013`, `2010`, and `2007`.
 
 Why this is valuable:
 
@@ -47,12 +47,13 @@ Why this is valuable:
 - it lets users compare Victorian federal patterns over multiple elections
 - it supports state-vs-federal pattern exploration without adding other states yet
 
-Completed 2010 work:
+Completed 2010 and 2007 work:
 
 - reused `scripts/build_aec_vic.py` with AEC event `15508`
 - used the AEC `national-esri-2010.zip` boundary file filtered to Victoria, matching the AEC note that Victoria used 2007 boundaries at the 2010 election
 - validated 37 divisions, result/boundary names, and boundary topology
 - added app selector entries and smoke coverage
+- repeated the same pattern for Federal 2007 with AEC event `13745`
 
 ## Phase 3: Comparison And Rankings UI
 

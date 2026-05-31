@@ -54,6 +54,7 @@ data/federal_2019_vic_division_boundaries.geojson
 data/federal_2016_vic_division_boundaries.geojson
 data/federal_2013_vic_division_boundaries.geojson
 data/federal_2010_vic_division_boundaries.geojson
+data/federal_2007_vic_division_boundaries.geojson
 ```
 
 Do not reuse 2022 boundaries for 2014 or 2018. The 2022 election used boundaries from the 2020-2021 redivision, while 2014 and 2018 used the previous electoral boundaries.
@@ -71,6 +72,8 @@ The 2016 federal Victoria boundary file is adapted from the AEC `vic-esri-241220
 The 2013 federal Victoria boundary file uses the same AEC `vic-esri-24122010.zip` shapefile because those Victorian federal divisions were gazetted on 24 December 2010 and applied to the 2013 federal election. The result rows are generated from the AEC 2013 House of Representatives Distribution of Preferences by Division CSV, event `17496`, filtered to `StateAb == VIC`.
 
 The 2010 federal Victoria boundary file is adapted from the AEC `national-esri-2010.zip` shapefile because the AEC states the 2010 federal election in Victoria ran on the same boundaries as the 2007 election while the 2010 Victorian redistribution was still underway. The result rows are generated from the AEC 2010 House of Representatives Distribution of Preferences by Division CSV, event `15508`, filtered to `StateAb == VIC`. The older national GIS file provides `ELECT_DIV` and `STATE` fields but no numeric division ID, so the builder filters `STATE == VIC` and leaves `division_id` blank for this boundary source.
+
+The 2007 federal Victoria boundary file uses the same AEC `national-esri-2010.zip` shapefile filtered to Victoria because the Victorian federal division names and shapes match the 2007-era boundaries also used for the 2010 election. The result rows are generated from the AEC 2007 House of Representatives Distribution of Preferences by Division CSV, event `13745`, filtered to `StateAb == VIC`.
 
 ## Why long format?
 
