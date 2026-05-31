@@ -404,10 +404,10 @@ def normalise_distribution_table(df: pd.DataFrame) -> pd.DataFrame:
 
 def parse_transfer_label(label: str) -> Tuple[Optional[int], str]:
     # Example: Transfer of 428 ballot papers of AL-SAIMARY, Laylah (1st excluded candidate)
-    m = re.search(r"Transfer of\s+[\d,]+\s+ballot papers of\s+(.+?)\s*\((\d+)(?:st|nd|rd|th) excluded candidate\)", label, flags=re.I)
+    m = re.search(r"Transfer of\s+[\d,]+\s+ballot[- ]papers of\s+(.+?)\s*\((\d+)(?:st|nd|rd|th) excluded candidate\)", label, flags=re.I)
     if m:
         return int(m.group(2)), clean_text(m.group(1))
-    m = re.search(r"Transfer of\s+[\d,]+\s+ballot papers of\s+(.+)$", label, flags=re.I)
+    m = re.search(r"Transfer of\s+[\d,]+\s+ballot[- ]papers of\s+(.+)$", label, flags=re.I)
     if m:
         return None, clean_text(m.group(1))
     return None, ""
