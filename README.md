@@ -46,6 +46,8 @@ data/vic_2014_preferences_long.csv
 data/vic_2014_district_boundaries.geojson
 data/vic_2018_preferences_long.csv
 data/vic_2018_district_boundaries.geojson
+data/vic_2010_preferences_long.csv
+data/vic_2010_district_boundaries.geojson
 ```
 
 The federal Victoria options use authoritative Australian Electoral Commission House results and matching AEC Victoria federal division ESRI boundary datasets:
@@ -88,6 +90,9 @@ data/vic_2018_district_boundaries.geojson # 2018 district boundary polygons
 data/vic_2014_preferences_long.csv        # 2014 long preference-count rows
 data/vic_2014_district_summary.csv        # 2014 district-level result summary
 data/vic_2014_district_boundaries.geojson # 2014 district boundary polygons
+data/vic_2010_preferences_long.csv        # 2010 long preference-count rows
+data/vic_2010_district_summary.csv        # 2010 district-level result summary
+data/vic_2010_district_boundaries.geojson # 2001 state assembly district boundary polygons
 data/federal_2025_vic_preferences_long.csv        # AEC 2025 federal House preference rows, Victoria only
 data/federal_2025_vic_district_summary.csv        # AEC 2025 federal House division summary, Victoria only
 data/federal_2025_vic_division_boundaries.geojson # AEC October 2024 federal division polygons, Victoria
@@ -112,9 +117,11 @@ data/federal_2007_vic_division_boundaries.geojson # AEC 2010 national federal di
 data/sample_melbourne_preferences_long.csv
 ```
 
-Boundary data is election-year-specific. The 2022 election used boundaries from the 2020-2021 redivision, so earlier elections such as 2014 and 2018 need their own boundary file.
+Boundary data is election-year-specific. The 2022 election used boundaries from the 2020-2021 redivision, so earlier elections such as 2010, 2014, and 2018 need their own boundary file.
 
 2014 and 2018 boundary data is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. It is licensed under Creative Commons Attribution 4.0. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
+
+2010 boundary data is adapted from the Victorian Government / VEC Vicmap Admin State Assembly Polygon 2001 WFS dataset. These 88 Legislative Assembly districts are the pre-2014 boundaries used for the 2010 State election.
 
 ## Folder Structure
 
@@ -173,6 +180,9 @@ python scripts/scrape_vec_2022_preferences.py --year 2014 --out data --keep-goin
 python scripts/validate_vec_csv.py data/vic_2014_preferences_long.csv
 python scripts/scrape_vec_2022_preferences.py --year 2018 --out data --keep-going
 python scripts/validate_vec_csv.py data/vic_2018_preferences_long.csv
+python scripts/scrape_vec_2022_preferences.py --year 2010 --out data --keep-going
+python scripts/build_vic_2010_boundaries.py --out data/vic_2010_district_boundaries.geojson
+python scripts/validate_state_vic.py --csv data/vic_2010_preferences_long.csv --boundaries data/vic_2010_district_boundaries.geojson --expected-districts 88
 ```
 
 For the 2025 federal Victoria dataset, download the official AEC event `31496` files into `tmp/aec_2025_vic`, unzip the boundary ZIP there, then run:
@@ -309,8 +319,15 @@ The federal 2007 Victoria option validates against:
 - matching AEC result and boundary names
 - no large boundary overlaps or internal gaps
 
+The Victorian state 2010 option validates against:
+
+- 2,002 preference rows
+- 88 Legislative Assembly districts
+- 88 boundary features
+- matching result and boundary names
+- no large boundary overlaps or internal gaps
+
 Best next improvements:
 
 - visual regression screenshot smoke test after each release
 - scraper fixture tests for one current VEC page and one historical VEC page
-- optional VIC 2010 state election support if source pages and boundaries are workable
