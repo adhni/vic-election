@@ -7,45 +7,34 @@ import re
 from pathlib import Path
 
 
-ELECTIONS = {
-    "2022": ("data/vic_2022_preferences_long.csv", "data/vic_2022_district_boundaries.geojson"),
-    "2018": ("data/vic_2018_preferences_long.csv", "data/vic_2018_district_boundaries.geojson"),
-    "2014": ("data/vic_2014_preferences_long.csv", "data/vic_2014_district_boundaries.geojson"),
-    "2010": ("data/vic_2010_preferences_long.csv", "data/vic_2010_district_boundaries.geojson"),
-    "federal-2025-vic": (
-        "data/federal_2025_vic_preferences_long.csv",
-        "data/federal_2025_vic_division_boundaries.geojson",
-    ),
-    "federal-2022-vic": (
-        "data/federal_2022_vic_preferences_long.csv",
-        "data/federal_2022_vic_division_boundaries.geojson",
-    ),
-    "federal-2019-vic": (
-        "data/federal_2019_vic_preferences_long.csv",
-        "data/federal_2019_vic_division_boundaries.geojson",
-    ),
-    "federal-2016-vic": (
-        "data/federal_2016_vic_preferences_long.csv",
-        "data/federal_2016_vic_division_boundaries.geojson",
-    ),
-    "federal-2013-vic": (
-        "data/federal_2013_vic_preferences_long.csv",
-        "data/federal_2013_vic_division_boundaries.geojson",
-    ),
-    "federal-2010-vic": (
-        "data/federal_2010_vic_preferences_long.csv",
-        "data/federal_2010_vic_division_boundaries.geojson",
-    ),
-    "federal-2007-vic": (
-        "data/federal_2007_vic_preferences_long.csv",
-        "data/federal_2007_vic_division_boundaries.geojson",
-    ),
-}
+REQUIRED_ELECTION_FIELDS = {"key", "label", "type", "jurisdiction", "year", "source", "csv", "boundaries"}
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8-sig") as f:
         return list(csv.DictReader(f))
+
+
+def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
+    html = html_file.read_text(encoding="utf-8")
+    if '<select id="electionYear"></select>' not in html:
+        raise SystemExit(f"{html_file}: election selector should be generated from config")
+    match = re.search(r"const electionDefinitions = (\[.*?\]);", html, flags=re.S)
+    if not match:
+        raise SystemExit(f"{html_file}: missing electionDefinitions config")
+    definitions = json.loads(match.group(1))
+    if not definitions:
+        raise SystemExit(f"{html_file}: electionDefinitions is empty")
+    seen = set()
+    for election in definitions:
+        missing = REQUIRED_ELECTION_FIELDS - set(election)
+        if missing:
+            raise SystemExit(f"{html_file}: {election.get('key', '<missing key>')}: missing {sorted(missing)}")
+        key = str(election["key"])
+        if key in seen:
+            raise SystemExit(f"{html_file}: duplicate election key {key}")
+        seen.add(key)
+    return definitions
 
 
 def walk_coordinates(coords, visit) -> None:
@@ -113,13 +102,14 @@ def smoke_election(key: str, csv_path: Path, boundary_path: Path) -> None:
 
 def main() -> None:
     html_files = [Path("index.html"), Path("app/index.html")]
-    for html_file in html_files:
-        html = html_file.read_text(encoding="utf-8")
-        for key in ELECTIONS:
-            if not re.search(rf'<option value="{re.escape(key)}"', html) or key not in html:
-                raise SystemExit(f"{html_file}: missing election option/config for {key}")
-    for key, (csv_file, boundary_file) in ELECTIONS.items():
-        smoke_election(key, Path(csv_file), Path(boundary_file))
+    definitions_by_file = {html_file: load_election_definitions(html_file) for html_file in html_files}
+    first = definitions_by_file[html_files[0]]
+    for html_file, definitions in definitions_by_file.items():
+        if definitions != first:
+            raise SystemExit(f"{html_file}: electionDefinitions does not match {html_files[0]}")
+
+    for election in first:
+        smoke_election(str(election["key"]), Path(str(election["csv"])), Path(str(election["boundaries"])))
     print("Static app smoke passed")
 
 

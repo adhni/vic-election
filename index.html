@@ -766,19 +766,7 @@
       <div class="controls-inner">
         <div class="ctrl-group shrink">
           <label class="ctrl-label" for="electionYear">Election</label>
-          <select id="electionYear">
-            <option value="2022">2022</option>
-            <option value="2018">2018</option>
-            <option value="2014">2014</option>
-            <option value="2010">2010</option>
-            <option value="federal-2025-vic">Federal 2025 - Victoria</option>
-            <option value="federal-2022-vic">Federal 2022 - Victoria</option>
-            <option value="federal-2019-vic">Federal 2019 - Victoria</option>
-            <option value="federal-2016-vic">Federal 2016 - Victoria</option>
-            <option value="federal-2013-vic">Federal 2013 - Victoria</option>
-            <option value="federal-2010-vic">Federal 2010 - Victoria</option>
-            <option value="federal-2007-vic">Federal 2007 - Victoria</option>
-          </select>
+          <select id="electionYear"></select>
         </div>
         <div class="ctrl-group grow">
           <label class="ctrl-label" for="districtSearch">Search</label>
@@ -1015,74 +1003,120 @@
       }
     ];
 
-    const electionYears = {
-      "2022": {
-        label: "2022",
-        source: "VEC",
-        csv: "data/vic_2022_preferences_long.csv",
-        boundaries: "data/vic_2022_district_boundaries.geojson"
+    const electionDefinitions = [
+      {
+        "key": "2022",
+        "label": "2022",
+        "type": "state",
+        "jurisdiction": "Victoria",
+        "year": 2022,
+        "source": "VEC",
+        "csv": "data/vic_2022_preferences_long.csv",
+        "boundaries": "data/vic_2022_district_boundaries.geojson"
       },
-      "2018": {
-        label: "2018",
-        source: "VEC",
-        csv: "data/vic_2018_preferences_long.csv",
-        boundaries: "data/vic_2018_district_boundaries.geojson"
+      {
+        "key": "2018",
+        "label": "2018",
+        "type": "state",
+        "jurisdiction": "Victoria",
+        "year": 2018,
+        "source": "VEC",
+        "csv": "data/vic_2018_preferences_long.csv",
+        "boundaries": "data/vic_2018_district_boundaries.geojson"
       },
-      "2014": {
-        label: "2014",
-        source: "VEC",
-        csv: "data/vic_2014_preferences_long.csv",
-        boundaries: "data/vic_2014_district_boundaries.geojson"
+      {
+        "key": "2014",
+        "label": "2014",
+        "type": "state",
+        "jurisdiction": "Victoria",
+        "year": 2014,
+        "source": "VEC",
+        "csv": "data/vic_2014_preferences_long.csv",
+        "boundaries": "data/vic_2014_district_boundaries.geojson"
       },
-      "2010": {
-        label: "2010",
-        source: "VEC",
-        csv: "data/vic_2010_preferences_long.csv",
-        boundaries: "data/vic_2010_district_boundaries.geojson"
+      {
+        "key": "2010",
+        "label": "2010",
+        "type": "state",
+        "jurisdiction": "Victoria",
+        "year": 2010,
+        "source": "VEC",
+        "csv": "data/vic_2010_preferences_long.csv",
+        "boundaries": "data/vic_2010_district_boundaries.geojson"
       },
-      "federal-2025-vic": {
-        label: "Federal 2025 - Victoria",
-        source: "AEC",
-        csv: "data/federal_2025_vic_preferences_long.csv",
-        boundaries: "data/federal_2025_vic_division_boundaries.geojson"
+      {
+        "key": "federal-2025-vic",
+        "label": "Federal 2025 - Victoria",
+        "type": "federal",
+        "jurisdiction": "Victoria",
+        "year": 2025,
+        "source": "AEC",
+        "csv": "data/federal_2025_vic_preferences_long.csv",
+        "boundaries": "data/federal_2025_vic_division_boundaries.geojson"
       },
-      "federal-2022-vic": {
-        label: "Federal 2022 - Victoria",
-        source: "AEC",
-        csv: "data/federal_2022_vic_preferences_long.csv",
-        boundaries: "data/federal_2022_vic_division_boundaries.geojson"
+      {
+        "key": "federal-2022-vic",
+        "label": "Federal 2022 - Victoria",
+        "type": "federal",
+        "jurisdiction": "Victoria",
+        "year": 2022,
+        "source": "AEC",
+        "csv": "data/federal_2022_vic_preferences_long.csv",
+        "boundaries": "data/federal_2022_vic_division_boundaries.geojson"
       },
-      "federal-2019-vic": {
-        label: "Federal 2019 - Victoria",
-        source: "AEC",
-        csv: "data/federal_2019_vic_preferences_long.csv",
-        boundaries: "data/federal_2019_vic_division_boundaries.geojson"
+      {
+        "key": "federal-2019-vic",
+        "label": "Federal 2019 - Victoria",
+        "type": "federal",
+        "jurisdiction": "Victoria",
+        "year": 2019,
+        "source": "AEC",
+        "csv": "data/federal_2019_vic_preferences_long.csv",
+        "boundaries": "data/federal_2019_vic_division_boundaries.geojson"
       },
-      "federal-2016-vic": {
-        label: "Federal 2016 - Victoria",
-        source: "AEC",
-        csv: "data/federal_2016_vic_preferences_long.csv",
-        boundaries: "data/federal_2016_vic_division_boundaries.geojson"
+      {
+        "key": "federal-2016-vic",
+        "label": "Federal 2016 - Victoria",
+        "type": "federal",
+        "jurisdiction": "Victoria",
+        "year": 2016,
+        "source": "AEC",
+        "csv": "data/federal_2016_vic_preferences_long.csv",
+        "boundaries": "data/federal_2016_vic_division_boundaries.geojson"
       },
-      "federal-2013-vic": {
-        label: "Federal 2013 - Victoria",
-        source: "AEC",
-        csv: "data/federal_2013_vic_preferences_long.csv",
-        boundaries: "data/federal_2013_vic_division_boundaries.geojson"
+      {
+        "key": "federal-2013-vic",
+        "label": "Federal 2013 - Victoria",
+        "type": "federal",
+        "jurisdiction": "Victoria",
+        "year": 2013,
+        "source": "AEC",
+        "csv": "data/federal_2013_vic_preferences_long.csv",
+        "boundaries": "data/federal_2013_vic_division_boundaries.geojson"
       },
-      "federal-2010-vic": {
-        label: "Federal 2010 - Victoria",
-        source: "AEC",
-        csv: "data/federal_2010_vic_preferences_long.csv",
-        boundaries: "data/federal_2010_vic_division_boundaries.geojson"
+      {
+        "key": "federal-2010-vic",
+        "label": "Federal 2010 - Victoria",
+        "type": "federal",
+        "jurisdiction": "Victoria",
+        "year": 2010,
+        "source": "AEC",
+        "csv": "data/federal_2010_vic_preferences_long.csv",
+        "boundaries": "data/federal_2010_vic_division_boundaries.geojson"
       },
-      "federal-2007-vic": {
-        label: "Federal 2007 - Victoria",
-        source: "AEC",
-        csv: "data/federal_2007_vic_preferences_long.csv",
-        boundaries: "data/federal_2007_vic_division_boundaries.geojson"
+      {
+        "key": "federal-2007-vic",
+        "label": "Federal 2007 - Victoria",
+        "type": "federal",
+        "jurisdiction": "Victoria",
+        "year": 2007,
+        "source": "AEC",
+        "csv": "data/federal_2007_vic_preferences_long.csv",
+        "boundaries": "data/federal_2007_vic_division_boundaries.geojson"
       }
-    };
+    ];
+
+    const electionYears = Object.fromEntries(electionDefinitions.map(election => [election.key, election]));
 
     let activeElectionYear = "2022";
     let allDistricts = structuredClone(sampleDistricts);
@@ -1640,6 +1674,15 @@
         chips.push(`<span class="summary-chip"><strong>${fmt.format(veryCloseCount)}</strong> under 2%</span>`);
       }
       target.innerHTML = chips.join("");
+    }
+
+    function populateElectionSelect() {
+      const electionYear = document.getElementById("electionYear");
+      if (!electionYear) return;
+      electionYear.innerHTML = electionDefinitions
+        .map(election => `<option value="${election.key}">${election.label}</option>`)
+        .join("");
+      electionYear.value = activeElectionYear;
     }
 
     function populateControls() {
@@ -2299,6 +2342,7 @@
     setupTabs();
     setupMapModes();
     setupMapZoom();
+    populateElectionSelect();
     populateControls();
     applyUrlState(true);
     loadElection(activeElectionYear, true);
