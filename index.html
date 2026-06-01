@@ -1115,8 +1115,13 @@
 
     function partyLabel(raw) {
       const p = (raw || "Independent").trim();
+      const upper = p.toUpperCase();
+      if (upper === "ALP") return "Labor";
       if (p === "Australian Labor Party - Victorian Branch") return "Labor";
+      if (upper === "GREENS") return "Greens";
       if (p === "Australian Greens") return "Greens";
+      if (upper === "LIBERAL") return "Liberal";
+      if (upper === "NATIONALS") return "Nationals";
       if (p === "Family First Victoria") return "Family First";
       if (p === "Fiona Patten's Reason Party") return "Reason";
       if (p === "Animal Justice Party") return "Animal Justice";
