@@ -180,6 +180,8 @@ def election_index_url(year: int) -> str:
 
 
 def historical_summary_url(year: int) -> str:
+    if year == 2010:
+        return f"{HISTORICAL_RESULTS_BASE}/state2010/state2010resultsummary.html"
     return f"{HISTORICAL_RESULTS_BASE}/state{year}/summary.html"
 
 
@@ -268,18 +270,19 @@ def parse_result_page(session: requests.Session, meta: DistrictMeta) -> Tuple[Di
     compact = clean_text(text)
 
     # Elected member block.
-    m = re.search(r"Elected member\s+(.+?)\s+(Australian Labor Party - Victorian Branch|Australian Greens|Liberal|The Nationals|Independent|Family First Victoria|Animal Justice Party|Victorian Socialists|Fiona Patten's Reason Party|Freedom Party of Victoria)", compact)
-    if m:
-        meta.elected_member = clean_text(m.group(1))
-        meta.elected_party = clean_text(m.group(2))
-    else:
-        elected_table = soup.find("table", attrs={"title": re.compile(r"Elected member", re.I)})
-        if elected_table:
-            member_span = elected_table.find(class_=re.compile(r"bold-text", re.I))
-            party_span = elected_table.find(class_=re.compile(r"italic", re.I))
-            if member_span and party_span:
-                meta.elected_member = clean_text(member_span.get_text(" "))
-                meta.elected_party = clean_text(party_span.get_text(" "))
+    elected_table = soup.find("table", attrs={"title": re.compile(r"Elected member", re.I)})
+    if elected_table:
+        member_span = elected_table.find(class_=re.compile(r"bold-text", re.I))
+        party_span = elected_table.find(class_=re.compile(r"italic", re.I))
+        if member_span:
+            meta.elected_member = clean_text(member_span.get_text(" "))
+        if party_span:
+            meta.elected_party = clean_text(party_span.get_text(" "))
+    if not meta.elected_member:
+        m = re.search(r"Elected member\s+(.+?)\s+(Australian Labor Party - Victorian Branch|Australian Greens|Liberal|The Nationals|Independent|Family First Victoria|Animal Justice Party|Victorian Socialists|Fiona Patten's Reason Party|Freedom Party of Victoria)", compact)
+        if m:
+            meta.elected_member = clean_text(m.group(1))
+            meta.elected_party = clean_text(m.group(2))
 
     meta = parse_key_numbers_from_text(compact, meta)
 
@@ -356,6 +359,18 @@ def find_distribution_table(html: str) -> pd.DataFrame:
     raise ValueError("Could not find distribution table")
 
 
+def find_distribution_table_tag(html: str):
+    soup = BeautifulSoup(html, "html.parser")
+    for table in soup.find_all("table"):
+        title = clean_text(table.get("title", ""))
+        full = clean_text(table.get_text(" "))
+        if "Distribution of preference votes" in title:
+            return table
+        if "Total first preference votes" in full and ("Transfer of" in full or "FINAL TOTAL" in full):
+            return table
+    raise ValueError("Could not find distribution table")
+
+
 def normalise_distribution_table(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     # flatten multi-index column headers if present
@@ -389,10 +404,10 @@ def normalise_distribution_table(df: pd.DataFrame) -> pd.DataFrame:
 
 def parse_transfer_label(label: str) -> Tuple[Optional[int], str]:
     # Example: Transfer of 428 ballot papers of AL-SAIMARY, Laylah (1st excluded candidate)
-    m = re.search(r"Transfer of\s+[\d,]+\s+ballot papers of\s+(.+?)\s*\((\d+)(?:st|nd|rd|th) excluded candidate\)", label, flags=re.I)
+    m = re.search(r"Transfer of\s+[\d,]+\s+ballot[- ]papers of\s+(.+?)\s*\((\d+)(?:st|nd|rd|th) excluded candidate\)", label, flags=re.I)
     if m:
         return int(m.group(2)), clean_text(m.group(1))
-    m = re.search(r"Transfer of\s+[\d,]+\s+ballot papers of\s+(.+)$", label, flags=re.I)
+    m = re.search(r"Transfer of\s+[\d,]+\s+ballot[- ]papers of\s+(.+)$", label, flags=re.I)
     if m:
         return None, clean_text(m.group(1))
     return None, ""
@@ -430,6 +445,9 @@ def make_long_row(
 
 
 def parse_distribution_rows(meta: DistrictMeta, html: str, party_map: Dict[str, str]) -> List[dict]:
+    if "state2010" in meta.distribution_url:
+        return parse_legacy_html_distribution_rows(meta, html, party_map)
+
     table = normalise_distribution_table(find_distribution_table(html))
     if table.empty or len(table.columns) < 3:
         raise ValueError("Distribution table is empty or malformed")
@@ -480,6 +498,82 @@ def parse_distribution_rows(meta: DistrictMeta, html: str, party_map: Dict[str, 
             if votes is None:
                 continue
             rows.append(make_long_row(meta, party_map, round_number, row_type, excluded, candidate_clean, votes))
+    return rows
+
+
+def parse_legacy_html_distribution_rows(meta: DistrictMeta, html: str, party_map: Dict[str, str]) -> List[dict]:
+    table = find_distribution_table_tag(html)
+    header = table.find("thead")
+    header_cells = header.find_all(["th", "td"]) if header else []
+    candidates = [clean_text(cell.get_text(" ")) for cell in header_cells[1:]]
+    candidates = [c for c in candidates if c and c.upper() != "TOTAL"]
+    if not candidates:
+        raise ValueError("Could not find legacy distribution candidate headers")
+
+    rows: List[dict] = []
+    current_round = 0
+    current_excluded = ""
+
+    tbody = table.find("tbody") or table
+    for tr in tbody.find_all("tr"):
+        label_cell = tr.find(["th", "td"])
+        if not label_cell:
+            continue
+        label = clean_text(label_cell.get_text(" "))
+        if not label:
+            continue
+
+        row_type: Optional[str] = None
+        excluded = current_excluded
+        round_number = current_round
+
+        if re.search(r"Total first preference votes", label, flags=re.I):
+            row_type = "first"
+            round_number = 0
+            excluded = ""
+        elif re.search(r"^Transfer of", label, flags=re.I):
+            parsed_round, parsed_excluded = parse_transfer_label(label)
+            current_round = parsed_round or (current_round + 1)
+            current_excluded = parsed_excluded
+            row_type = "transfer"
+            round_number = current_round
+            excluded = current_excluded
+        elif re.search(r"^Progressive Total", label, flags=re.I):
+            row_type = "progressive"
+            round_number = current_round
+            excluded = current_excluded
+        elif re.search(r"^FINAL TOTAL", label, flags=re.I):
+            row_type = "final"
+            round_number = current_round
+            excluded = current_excluded
+        else:
+            continue
+
+        candidate_index = 0
+        candidate_values: List[Tuple[str, int]] = []
+        total_value: Optional[int] = None
+        for cell in tr.find_all(["td"]):
+            value = clean_int(cell.get_text(" "))
+
+            if value is None:
+                # The 2010 VEC pages use large colspan values as visual blanks
+                # for candidates already excluded. Treat any blank span as one
+                # skipped candidate slot.
+                candidate_index += 1
+                continue
+
+            if candidate_index >= len(candidates):
+                if total_value is None:
+                    total_value = value
+                continue
+            candidate_values.append((candidates[candidate_index], value))
+            candidate_index += 1
+
+        if row_type == "first" and total_value is not None:
+            meta.formal_votes = total_value
+        for candidate, value in candidate_values:
+            rows.append(make_long_row(meta, party_map, round_number, row_type, excluded, candidate, value))
+
     return rows
 
 
@@ -560,6 +654,9 @@ def parse_excel_distribution_rows(meta: DistrictMeta, content: bytes, party_map:
 
 
 def parse_historical_result_rows(meta: DistrictMeta, html: str, party_map: Dict[str, str]) -> List[dict]:
+    if "state2010" in meta.district_url:
+        return parse_legacy_historical_result_rows(meta, html, party_map)
+
     rows: List[dict] = []
     tables = read_html_tables(html)
 
@@ -593,6 +690,63 @@ def parse_historical_result_rows(meta: DistrictMeta, html: str, party_map: Dict[
                 votes = clean_int(row.get(final_col))
                 if votes is not None:
                     rows.append(make_long_row(meta, party_map, 1, "final", "", candidate, votes))
+
+    return rows
+
+
+def first_integer_cell(cells: List[str]) -> Optional[int]:
+    for cell in cells:
+        if "%" in cell:
+            continue
+        value = clean_int(cell)
+        if value is not None:
+            return value
+    return None
+
+
+def party_from_cells(cells: List[str]) -> str:
+    if not cells:
+        return "Independent"
+    party = cells[0]
+    if not party or "%" in party or clean_int(party) is not None:
+        return "Independent"
+    return party
+
+
+def parse_legacy_historical_result_rows(meta: DistrictMeta, html: str, party_map: Dict[str, str]) -> List[dict]:
+    soup = BeautifulSoup(html, "html.parser")
+    rows: List[dict] = []
+
+    for table in soup.find_all("table"):
+        title = clean_text(table.get("title", ""))
+        if title == "First preference votes":
+            row_type = "first"
+            round_number = 0
+        elif title == "Two candidate preferred vote":
+            row_type = "final"
+            round_number = 1
+        else:
+            continue
+
+        for tr in table.find_all("tr"):
+            cells = [clean_text(cell.get_text(" ")) for cell in tr.find_all("td")]
+            if len(cells) < 2:
+                continue
+            candidate = cells[0]
+            if not candidate or "voting centre" in candidate.lower():
+                continue
+            party = party_from_cells(cells[1:])
+            value = first_integer_cell(cells[2:] if party != "Independent" else cells[1:])
+            if value is None:
+                continue
+            party_map[candidate] = party
+            rows.append(make_long_row(meta, party_map, round_number, row_type, "", candidate, value))
+
+    first_total = sum(r["votes"] for r in rows if r["row_type"] == "first")
+    if first_total:
+        meta.formal_votes = first_total
+        for row in rows:
+            row["formal_votes"] = first_total
 
     return rows
 

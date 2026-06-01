@@ -17,7 +17,7 @@ The stronger path is to deepen Victoria first:
 
 ## Phase 1: Victorian State Depth
 
-Victorian Legislative Assembly support now includes `2022`, `2018`, and `2014`.
+Victorian Legislative Assembly support now includes `2022`, `2018`, `2014`, and `2010`.
 
 Why this path comes first:
 
@@ -33,8 +33,11 @@ Completed work:
 - add matching 2014 Legislative Assembly district boundaries
 - add `2014` to the election selector
 - extend static smoke validation
-
-After 2014, consider `2010` if the historical pages and boundary data are workable.
+- generate `data/vic_2010_preferences_long.csv`
+- generate `data/vic_2010_district_summary.csv`
+- add matching 2001 Legislative Assembly district boundaries for 2010
+- add `2010` to the election selector
+- add state-specific 2010 result/boundary validation
 
 ## Phase 2: Federal Victoria Depth
 
@@ -107,11 +110,9 @@ Reasons:
 
 Add comparison/rankings UI.
 
-Second choice: add Victorian state election `2010`, if source pages and boundaries are workable.
-
 Insyallah, the best sequence is:
 
 1. comparison/rankings UI
-2. VIC 2010, if source pages and boundaries are workable
-3. cleaner config-driven election definitions
+2. cleaner config-driven election definitions
+3. consider earlier Victorian state elections if VEC archive pages and boundaries are workable
 4. generalise to other states only after that

@@ -11,6 +11,7 @@ ELECTIONS = {
     "2022": ("data/vic_2022_preferences_long.csv", "data/vic_2022_district_boundaries.geojson"),
     "2018": ("data/vic_2018_preferences_long.csv", "data/vic_2018_district_boundaries.geojson"),
     "2014": ("data/vic_2014_preferences_long.csv", "data/vic_2014_district_boundaries.geojson"),
+    "2010": ("data/vic_2010_preferences_long.csv", "data/vic_2010_district_boundaries.geojson"),
     "federal-2025-vic": (
         "data/federal_2025_vic_preferences_long.csv",
         "data/federal_2025_vic_division_boundaries.geojson",
