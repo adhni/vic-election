@@ -77,6 +77,18 @@ This should be compact and data-first, not a broad dashboard.
 
 Only after the Victoria state/federal model is strong, consider other states.
 
+Before adding other states, keep improving config-driven election definitions so future election additions are less repetitive.
+
+Completed small config cleanup:
+
+- kept election definitions inside the existing app JavaScript
+- added a richer election definition object with `type`, `jurisdiction`, `year`, `source`, `label`, `csv`, and `boundaries`
+- generated the election selector from those definitions instead of hand-maintaining duplicate option lists
+- kept `index.html` and `app/index.html` behaviour identical
+- updated `scripts/smoke_static_app.py` so it validates the same definitions and data files
+
+Do not move to external JSON yet. A separate `data/elections.json` can wait until the app is ready to support multiple states or a larger election catalogue.
+
 Possible later targets:
 
 - NSW lower-house elections
@@ -84,7 +96,7 @@ Possible later targets:
 
 Likely prerequisite work:
 
-- config-driven election definitions
+- config-driven election definitions, starting with the small in-JS cleanup above
 - cleaner source/type/year labels
 - less VEC-specific naming in shared code
 - broader party normalisation

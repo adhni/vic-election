@@ -111,6 +111,14 @@ Quick scraper test:
 python scripts/scrape_vec_2022_preferences.py --year 2022 --out data --limit 3 --keep-going
 ```
 
+## Add Another Election
+
+Election options are generated from the `electionDefinitions` list in both `index.html` and `app/index.html`. Add the new CSV and boundary files, add one definition with its `key`, `label`, `type`, `jurisdiction`, `year`, `source`, `csv`, and `boundaries`, then run:
+
+```bash
+python scripts/smoke_static_app.py
+```
+
 ## Next Good Improvements
 
 - Add shareable URLs like `?district=Richmond&mode=changed`.

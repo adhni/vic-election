@@ -145,6 +145,18 @@ Boundary data is election-year-specific. The 2022 election used boundaries from 
 
 `index.html` and `app/index.html` are kept in sync.
 
+## Election Definitions
+
+Election options are driven by the in-app `electionDefinitions` list in `index.html` and `app/index.html`. Each entry defines the key, label, election type, jurisdiction, year, source, preference CSV, and boundary GeoJSON. The election selector is generated from this list.
+
+When adding an election, add the data files, add one election definition to both HTML entry points, then run:
+
+```bash
+python scripts/smoke_static_app.py
+```
+
+The smoke test reads `electionDefinitions` from the HTML files and validates that the configured CSV and boundary files exist, load, and match by district name.
+
 ## CSV Format
 
 The app expects long CSV rows:
