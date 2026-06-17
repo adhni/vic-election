@@ -44,6 +44,7 @@ For earlier elections, use a matching file such as:
 data/vic_2014_district_boundaries.geojson
 data/vic_2018_district_boundaries.geojson
 data/vic_2010_district_boundaries.geojson
+data/vic_2006_district_boundaries.geojson
 ```
 
 For federal Victoria options, use the matching AEC federal division file for the election period:
@@ -58,13 +59,15 @@ data/federal_2010_vic_division_boundaries.geojson
 data/federal_2007_vic_division_boundaries.geojson
 ```
 
-Do not reuse 2022 boundaries for earlier elections. The 2022 election used boundaries from the 2020-2021 redivision, 2014 and 2018 used the 2012-2013 redivision, and 2010 used the earlier 2001 Legislative Assembly boundaries.
+Do not reuse 2022 boundaries for earlier elections. The 2022 election used boundaries from the 2020-2021 redivision, 2014 and 2018 used the 2012-2013 redivision, and 2006 and 2010 used the earlier 2001 Legislative Assembly boundaries.
 
 The 2014 and 2018 boundary files are adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. The source is licensed CC-BY-4.0 and the repo files keep the 88 Legislative Assembly district polygons that match the preference CSVs. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
 
-The 2010 state boundary file is adapted from the Victorian Government / VEC Vicmap Admin State Assembly Polygon 2001 WFS dataset, `open-data-platform:state_assembly_2001`. The repo file keeps the 88 Legislative Assembly district polygons and normalises `district_label` values such as `Gippsland East District` to the app's `district` property.
+The 2006 and 2010 state boundary files are adapted from the Victorian Government / VEC Vicmap Admin State Assembly Polygon 2001 WFS dataset, `open-data-platform:state_assembly_2001`. The repo files keep the 88 Legislative Assembly district polygons and normalise `district_label` values such as `Gippsland East District` to the app's `district` property.
 
 The Victorian state 2010 result rows are generated from the VEC historical archive under `state2010/state2010resultsummary.html`. The 2010 pages use two source shapes: 44 districts expose full distribution pages, while 44 districts expose first preference plus two-candidate-preferred result tables on the district page. The scraper preserves full transfer/progressive rows where VEC published them and uses the district page's final preferred table where a full distribution page is not linked.
+
+The Victorian state 2006 result rows are generated from the VEC historical archive under `state2006/state2006resultsummary.html`. The 2006 pages use the same legacy HTML shape as 2010: 49 districts expose full distribution pages, while 39 districts expose result-page-only tables. Some full distributions stop when a candidate reaches an absolute majority, so final rows may include more than two candidates. Gippsland East follows the archived HTML standard distribution; the later VEC report describes an extra statistical distribution.
 
 The 2025 federal Victoria boundary file is adapted from the AEC `Vic-october-2024-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, filtered to `StateAb == VIC`. The AEC GIS file uses `Mcewen`; the app boundary property is normalised to the AEC result spelling `McEwen` so result rows join to the matching division.
 

@@ -47,6 +47,9 @@ data/vic_2018_district_boundaries.geojson
 data/vic_2010_preferences_long.csv
 data/vic_2010_district_summary.csv
 data/vic_2010_district_boundaries.geojson
+data/vic_2006_preferences_long.csv
+data/vic_2006_district_summary.csv
+data/vic_2006_district_boundaries.geojson
 ```
 
 Federal Victoria options use matching AEC result and boundary files:
@@ -68,7 +71,7 @@ data/federal_2007_vic_preferences_long.csv
 data/federal_2007_vic_division_boundaries.geojson
 ```
 
-Use separate boundary files for 2010, 2014, and 2018 because the 2022 election used redistributed boundaries. The 2014 and 2018 boundary files are adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au. The 2010 boundary file is adapted from the Victorian Government / VEC Vicmap Admin State Assembly Polygon 2001 WFS dataset.
+Use separate boundary files for 2006, 2010, 2014, and 2018 because the 2022 election used redistributed boundaries. The 2014 and 2018 boundary files are adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au. The 2006 and 2010 boundary files are adapted from the Victorian Government / VEC Vicmap Admin State Assembly Polygon 2001 WFS dataset.
 
 The app auto-loads the preference CSV and boundary GeoJSON. Manual CSV upload is under **Data tools**.
 
@@ -76,7 +79,9 @@ The app auto-loads the preference CSV and boundary GeoJSON. Manual CSV upload is
 
 ```bash
 python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
+python scripts/validate_vec_csv.py data/vic_2006_preferences_long.csv
 python scripts/validate_state_vic.py --csv data/vic_2010_preferences_long.csv --boundaries data/vic_2010_district_boundaries.geojson --expected-districts 88
+python scripts/validate_state_vic.py --csv data/vic_2006_preferences_long.csv --boundaries data/vic_2006_district_boundaries.geojson --expected-districts 88
 ```
 
 Expected current result:
