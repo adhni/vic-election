@@ -40,6 +40,7 @@ jobs:
           python scripts/validate_vec_csv.py data/vic_2018_preferences_long.csv
           python scripts/validate_vec_csv.py data/vic_2014_preferences_long.csv
           python scripts/validate_vec_csv.py data/vic_2010_preferences_long.csv
+          python scripts/validate_vec_csv.py data/vic_2006_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2025_vic_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2022_vic_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2019_vic_preferences_long.csv
@@ -55,6 +56,7 @@ jobs:
           python scripts/validate_federal_vic.py --csv data/federal_2010_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-15508.csv --expected-divisions 37
           python scripts/validate_federal_vic.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2007_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-13745.csv --expected-divisions 37
           python scripts/validate_state_vic.py --csv data/vic_2010_preferences_long.csv --boundaries data/vic_2010_district_boundaries.geojson --expected-districts 88
+          python scripts/validate_state_vic.py --csv data/vic_2006_preferences_long.csv --boundaries data/vic_2006_district_boundaries.geojson --expected-districts 88
 
       - name: Smoke test static app
         run: |

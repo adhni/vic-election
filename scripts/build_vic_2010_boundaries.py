@@ -34,7 +34,7 @@ def load_source(path: Path | None, url: str) -> dict:
     return response.json()
 
 
-def build_boundaries(source: dict, source_url: str) -> dict:
+def build_boundaries(source: dict, source_url: str, year: int) -> dict:
     features = []
     for feature in source.get("features") or []:
         properties = feature.get("properties") or {}
@@ -57,7 +57,7 @@ def build_boundaries(source: dict, source_url: str) -> dict:
     features.sort(key=lambda f: f["properties"]["district"])
     return {
         "type": "FeatureCollection",
-        "name": "vic_2010_district_boundaries",
+        "name": f"vic_{year}_district_boundaries",
         "source": source_url,
         "features": features,
     }
@@ -65,21 +65,23 @@ def build_boundaries(source: dict, source_url: str) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--year", type=int, default=2010)
     parser.add_argument("--source", type=Path, help="Optional downloaded WFS GeoJSON source")
     parser.add_argument("--url", default=DEFAULT_WFS_URL)
-    parser.add_argument("--out", type=Path, default=Path("data/vic_2010_district_boundaries.geojson"))
+    parser.add_argument("--out", type=Path, help="Output GeoJSON path")
     args = parser.parse_args()
+    out_path = args.out or Path(f"data/vic_{args.year}_district_boundaries.geojson")
 
     source = load_source(args.source, args.url)
-    out = build_boundaries(source, args.url)
+    out = build_boundaries(source, args.url, args.year)
     if len(out["features"]) != 88:
         raise SystemExit(f"Expected 88 district boundary features, found {len(out['features'])}")
 
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    with args.out.open("w", encoding="utf-8") as f:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with out_path.open("w", encoding="utf-8") as f:
         json.dump(out, f, separators=(",", ":"))
         f.write("\n")
-    print(f"Wrote {args.out} ({len(out['features'])} features)")
+    print(f"Wrote {out_path} ({len(out['features'])} features)")
 
 
 if __name__ == "__main__":

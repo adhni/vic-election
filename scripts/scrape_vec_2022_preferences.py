@@ -180,8 +180,8 @@ def election_index_url(year: int) -> str:
 
 
 def historical_summary_url(year: int) -> str:
-    if year == 2010:
-        return f"{HISTORICAL_RESULTS_BASE}/state2010/state2010resultsummary.html"
+    if year in {2006, 2010}:
+        return f"{HISTORICAL_RESULTS_BASE}/state{year}/state{year}resultsummary.html"
     return f"{HISTORICAL_RESULTS_BASE}/state{year}/summary.html"
 
 
@@ -245,7 +245,7 @@ def discover_historical_districts(session: requests.Session, year: int, limit: O
 def parse_key_numbers_from_text(text: str, meta: DistrictMeta) -> DistrictMeta:
     # Use broad regex because VEC line breaks move around in raw text.
     patterns = {
-        "enrolment": r"Total enrolment as at close of rolls:\s*([\d,]+)",
+        "enrolment": r"Total enrolment(?:\s+as at close of rolls)?:\s*([\d,]+)",
         "formal_votes": r"Formal votes:\s*([\d,]+)",
         "informal_votes": r"Informal votes:\s*([\d,]+)",
         "total_votes": r"Total votes:\s*([\d,]+)\s*\(([-\d.]+)%",
@@ -444,8 +444,12 @@ def make_long_row(
     }
 
 
+def is_legacy_state_archive(url: str) -> bool:
+    return bool(re.search(r"state(?:2006|2010)", url))
+
+
 def parse_distribution_rows(meta: DistrictMeta, html: str, party_map: Dict[str, str]) -> List[dict]:
-    if "state2010" in meta.distribution_url:
+    if is_legacy_state_archive(meta.distribution_url):
         return parse_legacy_html_distribution_rows(meta, html, party_map)
 
     table = normalise_distribution_table(find_distribution_table(html))
@@ -654,7 +658,7 @@ def parse_excel_distribution_rows(meta: DistrictMeta, content: bytes, party_map:
 
 
 def parse_historical_result_rows(meta: DistrictMeta, html: str, party_map: Dict[str, str]) -> List[dict]:
-    if "state2010" in meta.district_url:
+    if is_legacy_state_archive(meta.district_url):
         return parse_legacy_historical_result_rows(meta, html, party_map)
 
     rows: List[dict] = []
