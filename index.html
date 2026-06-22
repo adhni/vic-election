@@ -187,6 +187,88 @@
       font-weight: 800;
     }
 
+    .rankings-panel {
+      padding: 14px 0 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .rankings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .ranking-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 12px;
+      min-width: 0;
+    }
+
+    .ranking-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .ranking-row {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      padding: 8px 9px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .ranking-row:hover { background: #f5f1eb; }
+
+    .ranking-row.active {
+      border-color: rgba(44, 74, 110, .36);
+      background: #eef2f7;
+    }
+
+    .ranking-main {
+      display: block;
+      min-width: 0;
+    }
+
+    .ranking-seat {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ranking-detail {
+      display: block;
+      margin-top: 2px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .ranking-metric {
+      text-align: right;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .ranking-empty {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     details.data-tools {
       margin-top: 8px;
       padding-top: 6px;
@@ -804,6 +886,16 @@
 
     <section id="stateSummary" class="state-summary" aria-label="Election summary"></section>
 
+    <section class="rankings-panel" aria-label="Election rankings">
+      <div class="map-toolbar">
+        <div>
+          <h2 class="map-title">Rankings</h2>
+          <p class="map-subtitle">Election-wide leaderboards for the selected election. Click a row to open that district or division.</p>
+        </div>
+      </div>
+      <div id="rankingsPanel" class="rankings-grid"></div>
+    </section>
+
     <section class="map-panel" aria-label="Electorate map">
       <div class="map-toolbar">
         <div>
@@ -1260,6 +1352,10 @@
       return Math.max(0, winnerVotes - secondVotes);
     }
 
+    function finalMarginShare(d) {
+      return d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
+    }
+
     function resultChanged(d) {
       return getFirstLeader(d)[0] !== getWinnerFromFinal(d)[0];
     }
@@ -1686,6 +1782,104 @@
       target.innerHTML = chips.join("");
     }
 
+    function rankingsListHtml(items, detailHtml, metricHtml, emptyText) {
+      if (!items.length) return `<p class="ranking-empty">${emptyText}</p>`;
+      return `<div class="ranking-list">${items.map(d => `
+        <button class="ranking-row${d.district === activeDistrict?.district ? " active" : ""}" type="button" data-district="${d.district}">
+          <span class="ranking-main">
+            <span class="ranking-seat">${d.district}</span>
+            <span class="ranking-detail">${detailHtml(d)}</span>
+          </span>
+          <span class="ranking-metric">${metricHtml(d)}</span>
+        </button>
+      `).join("")}</div>`;
+    }
+
+    function renderRankings() {
+      const target = document.getElementById("rankingsPanel");
+      if (!target) return;
+      if (!allDistricts.length) {
+        target.innerHTML = `<div class="ranking-card"><p class="ranking-empty">No election rows loaded.</p></div>`;
+        return;
+      }
+
+      const topCount = Math.min(5, allDistricts.length);
+      const byClosest = [...allDistricts]
+        .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || finalMargin(a) - finalMargin(b) || a.district.localeCompare(b.district))
+        .slice(0, topCount);
+      const byLargest = [...allDistricts]
+        .sort((a, b) => finalMarginShare(b) - finalMarginShare(a) || finalMargin(b) - finalMargin(a) || a.district.localeCompare(b.district))
+        .slice(0, topCount);
+      const byChanged = [...allDistricts]
+        .filter(d => resultChanged(d))
+        .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || finalMargin(a) - finalMargin(b) || a.district.localeCompare(b.district))
+        .slice(0, topCount);
+      const byTransferGain = [...allDistricts]
+        .sort((a, b) => winnerGain(b) - winnerGain(a) || finalMarginShare(a) - finalMarginShare(b) || a.district.localeCompare(b.district))
+        .slice(0, topCount);
+
+      const cards = [
+        {
+          title: `Closest ${electorateLabel(2)}`,
+          rows: rankingsListHtml(
+            byClosest,
+            d => {
+              const [winner] = getWinnerFromFinal(d);
+              const [runnerUp] = getSecondFromFinal(d);
+              return `${shortName(winner)} over ${shortName(runnerUp)}`;
+            },
+            d => pct(finalMargin(d), d.formal_votes),
+            `No ${electorateLabel(2)} loaded.`
+          )
+        },
+        {
+          title: "Largest winning margins",
+          rows: rankingsListHtml(
+            byLargest,
+            d => {
+              const [winner] = getWinnerFromFinal(d);
+              const [runnerUp] = getSecondFromFinal(d);
+              return `${shortName(winner)} over ${shortName(runnerUp)}`;
+            },
+            d => pct(finalMargin(d), d.formal_votes),
+            `No ${electorateLabel(2)} loaded.`
+          )
+        },
+        {
+          title: "Changed on preferences",
+          rows: rankingsListHtml(
+            byChanged,
+            d => {
+              const [leader] = getFirstLeader(d);
+              const [winner] = getWinnerFromFinal(d);
+              return `${shortName(leader)} led first, ${shortName(winner)} won`;
+            },
+            d => pct(finalMargin(d), d.formal_votes),
+            `No ${electorateLabel(2)} changed on preferences.`
+          )
+        },
+        {
+          title: "Biggest winner transfer gains",
+          rows: rankingsListHtml(
+            byTransferGain,
+            d => {
+              const [winner] = getWinnerFromFinal(d);
+              return `${shortName(winner)} gained ${fmt.format(winnerGain(d))} votes`;
+            },
+            d => pct(winnerGain(d), d.formal_votes),
+            `No winner transfer gains available.`
+          )
+        }
+      ];
+
+      target.innerHTML = cards.map(card => `
+        <section class="ranking-card">
+          <div class="section-title">${card.title}</div>
+          ${card.rows}
+        </section>
+      `).join("");
+    }
+
     function populateElectionSelect() {
       const electionYear = document.getElementById("electionYear");
       if (!electionYear) return;
@@ -1818,6 +2012,16 @@
       });
     }
 
+    function setupRankings() {
+      const panel = document.getElementById("rankingsPanel");
+      if (!panel) return;
+      panel.addEventListener("click", event => {
+        const row = event.target.closest(".ranking-row");
+        if (!row) return;
+        selectDistrictByName(row.dataset.district);
+      });
+    }
+
     function clampMapView() {
       const base = { x: 0, y: 0, w: 960, h: 560 };
       mapView.w = Math.max(120, Math.min(base.w, mapView.w));
@@ -1870,6 +2074,7 @@
       document.getElementById("roundDisplay").innerHTML = "";
       document.getElementById("preferenceStory").innerHTML = "";
       document.getElementById("rawTable").innerHTML = "";
+      renderRankings();
       renderSeatMap();
       updateDataStatus();
       renderStateSummary();
@@ -2124,6 +2329,7 @@
         renderNoMatches();
         return;
       }
+      renderRankings();
       renderSummary(activeDistrict);
       const [primaryLeader] = getFirstLeader(activeDistrict);
       const [winner] = getWinnerFromFinal(activeDistrict);
@@ -2351,6 +2557,7 @@
 
     setupTabs();
     setupMapModes();
+    setupRankings();
     setupMapZoom();
     populateElectionSelect();
     populateControls();

@@ -6,6 +6,7 @@ The app is map-first and party/bloc-first:
 
 - winner map with Labor, Coalition, Greens, Independent, and Other grouping
 - zoomable/pannable district boundary map for the selected election year
+- election-wide rankings for closest seats, largest margins, changed results, and winner transfer gains
 - district search, district picker, bloc filter, close-seat filter, and preference-changed filter
 - first preference, transfer round, progressive chart, and raw row views
 - exact party and candidate detail preserved inside each district
@@ -79,6 +80,8 @@ data/federal_2007_vic_division_boundaries.geojson
 ```
 
 If the generated CSV is unavailable, embedded sample districts are used. Manual CSV upload is available under **Data tools**.
+
+The rankings panel is election-scoped rather than filter-scoped. It updates when the election selector changes, and clicking any ranking row opens that district or division in the existing detail view.
 
 ## Data Files
 
@@ -161,6 +164,7 @@ python scripts/smoke_static_app.py
 ```
 
 The smoke test reads `electionDefinitions` from the HTML files and validates that the configured CSV and boundary files exist, load, and match by district name.
+It also checks that the compact rankings UI markers are present in both HTML entry points.
 
 ## CSV Format
 
