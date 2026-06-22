@@ -8,6 +8,13 @@ from pathlib import Path
 
 
 REQUIRED_ELECTION_FIELDS = {"key", "label", "type", "jurisdiction", "year", "source", "csv", "boundaries"}
+REQUIRED_RANKINGS_MARKERS = (
+    'id="rankingsPanel"',
+    "Closest ${electorateLabel(2)}",
+    "Largest winning margins",
+    "Changed on preferences",
+    "Biggest winner transfer gains",
+)
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -19,6 +26,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     html = html_file.read_text(encoding="utf-8")
     if '<select id="electionYear"></select>' not in html:
         raise SystemExit(f"{html_file}: election selector should be generated from config")
+    for marker in REQUIRED_RANKINGS_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing rankings UI marker {marker!r}")
     match = re.search(r"const electionDefinitions = (\[.*?\]);", html, flags=re.S)
     if not match:
         raise SystemExit(f"{html_file}: missing electionDefinitions config")

@@ -21,6 +21,7 @@ Opening `index.html` directly may fall back to embedded sample data because brow
 ## What The App Does
 
 - Shows a real Victorian district boundary map for the selected election year.
+- Shows election-wide rankings for closest seats, largest margins, changed-on-preferences results, and winner transfer gains.
 - Colours winners by bloc: Labor, Coalition, Greens, Independent, Other.
 - Lets you zoom, pan, hover, and click electorates.
 - Lets you search districts and filter by bloc, close margin, or preference-changed result.
@@ -127,5 +128,5 @@ python scripts/smoke_static_app.py
 ## Next Good Improvements
 
 - Add shareable URLs like `?district=Richmond&mode=changed`.
-- Add comparison and rankings views.
+- Add cross-election comparison views.
 - Run a GitHub Pages smoke test after publishing.

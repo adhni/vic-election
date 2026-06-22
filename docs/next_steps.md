@@ -67,12 +67,17 @@ Completed 2010 and 2007 work:
 
 Before adding other states, improve analysis inside the existing Victoria dataset.
 
-Useful views:
+Completed single-election rankings work:
 
 - closest seats/divisions
+- largest winning margins
 - changed-on-preferences seats
 - biggest winner transfer gains
-- bloc totals by election
+- click-through from ranking rows into the existing district/division view
+- compact smoke-covered UI in both `index.html` and `app/index.html`
+
+Still useful next views:
+
 - side-by-side election comparison where district/division names match
 - state election vs federal election comparison for Victoria
 
@@ -125,10 +130,10 @@ Reasons:
 
 ## Recommended Next Concrete Task
 
-Add comparison/rankings UI.
+Add comparison UI only.
 
 Insyallah, the best sequence is:
 
-1. comparison/rankings UI
+1. comparison UI for matching district/division names
 2. consider earlier Victorian state elections if VEC archive pages and boundaries are workable
 3. generalise to other states only after that
