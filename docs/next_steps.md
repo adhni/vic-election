@@ -44,9 +44,10 @@ Completed work:
 - add `2006` to the election selector
 - add state-specific 2006 result/boundary validation
 
-## Phase 2: Federal Victoria Depth
+## Phase 2: Federal Federal-House Depth
 
 Federal Victoria now has `2025`, `2022`, `2019`, `2016`, `2013`, `2010`, and `2007`.
+Australia-wide federal coverage now also includes `2025` and `2022`.
 
 Why this is valuable:
 
@@ -62,6 +63,13 @@ Completed 2010 and 2007 work:
 - validated 37 divisions, result/boundary names, and boundary topology
 - added app selector entries and smoke coverage
 - repeated the same pattern for Federal 2007 with AEC event `13745`
+
+Completed Australia-wide 2025 and 2022 work:
+
+- generalised the AEC federal builder and validator so they can run for `au` or a state scope
+- added `Federal 2025 - Australia` and `Federal 2022 - Australia` selector entries
+- generated national long CSV, summary CSV, and boundary GeoJSON files for both years
+- generalised the app branding and seat wording so the mixed Victoria-state and Australia-federal scope is explicit
 
 ## Phase 3: Comparison And Rankings UI
 

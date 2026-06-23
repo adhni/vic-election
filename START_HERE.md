@@ -20,11 +20,11 @@ Opening `index.html` directly may fall back to embedded sample data because brow
 
 ## What The App Does
 
-- Shows a real Victorian district boundary map for the selected election year.
+- Shows real Victorian district maps and Australia-wide federal House division maps for the selected election.
 - Shows election-wide rankings for closest seats, largest margins, changed-on-preferences results, and winner transfer gains.
 - Colours winners by bloc: Labor, Coalition, Greens, Independent, Other.
-- Lets you zoom, pan, hover, and click electorates.
-- Lets you search districts and filter by bloc, close margin, or preference-changed result.
+- Lets you zoom, pan, hover, and click seats.
+- Lets you search seats and filter by bloc, close margin, or preference-changed result.
 - Shows first preferences, preference rounds, progressive totals, and raw rows.
 - Keeps exact party names in district details and raw data.
 
@@ -53,7 +53,16 @@ data/vic_2006_district_summary.csv
 data/vic_2006_district_boundaries.geojson
 ```
 
-Federal Victoria options use matching AEC result and boundary files:
+Australia-wide federal options use matching AEC result and boundary files:
+
+```text
+data/federal_2025_au_preferences_long.csv
+data/federal_2025_au_division_boundaries.geojson
+data/federal_2022_au_preferences_long.csv
+data/federal_2022_au_division_boundaries.geojson
+```
+
+Federal Victoria options remain available too:
 
 ```text
 data/federal_2025_vic_preferences_long.csv
