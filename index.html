@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Victoria Election — District Preference Explorer</title>
+  <title>Australian Election Preference Explorer</title>
   <style>
     :root {
       --bg: #f8f7f5;
@@ -840,8 +840,8 @@
 <body>
   <div class="page-wrap">
     <header class="page-header">
-      <h1>Victoria Election · District Preference Explorer</h1>
-      <p>State and federal lower-house electorates — first preferences, distribution rounds, and final result.</p>
+      <h1>Australian Election · Preference Explorer</h1>
+      <p>Victorian state districts and Australian federal House divisions — first preferences, distribution rounds, and final result.</p>
     </header>
 
     <nav class="controls" aria-label="Controls">
@@ -852,10 +852,10 @@
         </div>
         <div class="ctrl-group grow">
           <label class="ctrl-label" for="districtSearch">Search</label>
-          <input id="districtSearch" type="search" placeholder="Find a district…" autocomplete="off" />
+          <input id="districtSearch" type="search" placeholder="Find a district or division…" autocomplete="off" />
         </div>
         <div class="ctrl-group grow">
-          <label class="ctrl-label" for="districtSelect">District</label>
+          <label class="ctrl-label" for="districtSelect">Seat</label>
           <select id="districtSelect"></select>
         </div>
         <div class="ctrl-group grow">
@@ -896,11 +896,11 @@
       <div id="rankingsPanel" class="rankings-grid"></div>
     </section>
 
-    <section class="map-panel" aria-label="Electorate map">
+    <section class="map-panel" aria-label="Seat map">
       <div class="map-toolbar">
         <div>
           <h2 class="map-title">Map</h2>
-          <p class="map-subtitle">Click an electorate to explore.</p>
+          <p class="map-subtitle">Click a seat to explore.</p>
         </div>
         <div class="map-actions">
           <div class="map-modes" role="group" aria-label="Map colour mode">
@@ -924,7 +924,7 @@
 
     <section class="result-summary" id="districtSummary"></section>
 
-    <div class="tabs" role="tablist" aria-label="District data views">
+    <div class="tabs" role="tablist" aria-label="Seat data views">
       <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="overview">Overview</button>
       <button class="tab-btn"        role="tab" aria-selected="false" data-tab="rounds">Preference rounds</button>
       <button class="tab-btn"        role="tab" aria-selected="false" data-tab="chart">Round totals</button>
@@ -1098,7 +1098,7 @@
     const electionDefinitions = [
       {
         "key": "2022",
-        "label": "2022",
+        "label": "Victorian State 2022",
         "type": "state",
         "jurisdiction": "Victoria",
         "year": 2022,
@@ -1108,7 +1108,7 @@
       },
       {
         "key": "2018",
-        "label": "2018",
+        "label": "Victorian State 2018",
         "type": "state",
         "jurisdiction": "Victoria",
         "year": 2018,
@@ -1118,7 +1118,7 @@
       },
       {
         "key": "2014",
-        "label": "2014",
+        "label": "Victorian State 2014",
         "type": "state",
         "jurisdiction": "Victoria",
         "year": 2014,
@@ -1128,7 +1128,7 @@
       },
       {
         "key": "2010",
-        "label": "2010",
+        "label": "Victorian State 2010",
         "type": "state",
         "jurisdiction": "Victoria",
         "year": 2010,
@@ -1138,13 +1138,23 @@
       },
       {
         "key": "2006",
-        "label": "2006",
+        "label": "Victorian State 2006",
         "type": "state",
         "jurisdiction": "Victoria",
         "year": 2006,
         "source": "VEC",
         "csv": "data/vic_2006_preferences_long.csv",
         "boundaries": "data/vic_2006_district_boundaries.geojson"
+      },
+      {
+        "key": "federal-2025-au",
+        "label": "Federal 2025 - Australia",
+        "type": "federal",
+        "jurisdiction": "Australia",
+        "year": 2025,
+        "source": "AEC",
+        "csv": "data/federal_2025_au_preferences_long.csv",
+        "boundaries": "data/federal_2025_au_division_boundaries.geojson"
       },
       {
         "key": "federal-2025-vic",
@@ -1155,6 +1165,16 @@
         "source": "AEC",
         "csv": "data/federal_2025_vic_preferences_long.csv",
         "boundaries": "data/federal_2025_vic_division_boundaries.geojson"
+      },
+      {
+        "key": "federal-2022-au",
+        "label": "Federal 2022 - Australia",
+        "type": "federal",
+        "jurisdiction": "Australia",
+        "year": 2022,
+        "source": "AEC",
+        "csv": "data/federal_2022_au_preferences_long.csv",
+        "boundaries": "data/federal_2022_au_division_boundaries.geojson"
       },
       {
         "key": "federal-2022-vic",
@@ -1219,6 +1239,7 @@
     ];
 
     const electionYears = Object.fromEntries(electionDefinitions.map(election => [election.key, election]));
+    const activeElection = () => electionYears[activeElectionYear] || electionYears["2022"];
 
     let activeElectionYear = "2022";
     let allDistricts = structuredClone(sampleDistricts);
@@ -1668,7 +1689,7 @@
         .join("");
       target.className = "geo-map";
       target.innerHTML = `
-        <svg class="geo-map" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" role="img" aria-label="Victoria ${activeElectionYear} district boundary map">
+        <svg class="geo-map" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" role="img" aria-label="${activeElection().label} seat map">
           <rect x="0" y="0" width="960" height="560" fill="#f2f4f0"></rect>
           ${inactiveShapes}
           ${activeShape}
@@ -1903,7 +1924,7 @@
       districtSelect.disabled = districts.length === 0;
       districtSelect.innerHTML = districts.length
         ? districts.map((d, i) => `<option value="${i}">${d.district}</option>`).join("")
-        : `<option>No matching districts</option>`;
+        : `<option>No matching seats</option>`;
       if (activeDistrict) {
         const activeIndex = districts.findIndex(d => d.district === activeDistrict.district);
         districtSelect.value = String(Math.max(0, activeIndex));
@@ -2068,7 +2089,7 @@
     }
 
     function renderNoMatches() {
-      document.getElementById("districtSummary").innerHTML = `<p style="color:var(--muted);margin:0;">No districts match the current filters. Try adjusting your search.</p>`;
+      document.getElementById("districtSummary").innerHTML = `<p style="color:var(--muted);margin:0;">No seats match the current filters. Try adjusting your search.</p>`;
       document.getElementById("primaryBars").innerHTML = "";
       document.getElementById("finalBars").innerHTML = "";
       document.getElementById("roundDisplay").innerHTML = "";

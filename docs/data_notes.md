@@ -3,8 +3,8 @@
 Source targets:
 
 - Victorian Electoral Commission State Election results pages
-- Australian Electoral Commission Federal Election House of Representatives downloads for Victoria
-- Australian Electoral Commission Victoria federal division GIS boundaries
+- Australian Electoral Commission Federal Election House of Representatives downloads
+- Australian Electoral Commission federal division GIS boundaries
 
 This repo is built around three levels of data:
 
@@ -47,7 +47,14 @@ data/vic_2010_district_boundaries.geojson
 data/vic_2006_district_boundaries.geojson
 ```
 
-For federal Victoria options, use the matching AEC federal division file for the election period:
+For Australia-wide federal options, use the matching national AEC federal division file for the election period:
+
+```text
+data/federal_2025_au_division_boundaries.geojson
+data/federal_2022_au_division_boundaries.geojson
+```
+
+For federal Victoria options, use the matching AEC Victoria federal division file for the election period:
 
 ```text
 data/federal_2025_vic_division_boundaries.geojson
@@ -69,7 +76,11 @@ The Victorian state 2010 result rows are generated from the VEC historical archi
 
 The Victorian state 2006 result rows are generated from the VEC historical archive under `state2006/state2006resultsummary.html`. The 2006 pages use the same legacy HTML shape as 2010: 49 districts expose full distribution pages, while 39 districts expose result-page-only tables. Some full distributions stop when a candidate reaches an absolute majority, so final rows may include more than two candidates. Gippsland East follows the archived HTML standard distribution; the later VEC report describes an extra statistical distribution.
 
+The 2025 federal Australia boundary file is adapted from the AEC `AUS-March-2025-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, with no `StateAb` filtering.
+
 The 2025 federal Victoria boundary file is adapted from the AEC `Vic-october-2024-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, filtered to `StateAb == VIC`. The AEC GIS file uses `Mcewen`; the app boundary property is normalised to the AEC result spelling `McEwen` so result rows join to the matching division.
+
+The 2022 federal Australia boundary file is adapted from the AEC `2021-Cwlth_electoral_boundaries_ESRI.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2022 House of Representatives Distribution of Preferences by Division CSV, event `27966`, with no `StateAb` filtering.
 
 The 2022 federal Victoria boundary file is adapted from the AEC `vic-july-2021-esri.zip` superseded boundary shapefile. The result rows are generated from the AEC 2022 House of Representatives Distribution of Preferences by Division CSV, event `27966`, filtered to `StateAb == VIC`.
 

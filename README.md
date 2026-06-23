@@ -1,15 +1,15 @@
-# Victoria Election Preference Explorer
+# Australian Election Preference Explorer
 
-A static HTML data app for exploring Victorian lower-house preference counts from state elections and federal elections in Victoria.
+A static HTML data app for exploring Victorian lower-house preference counts from state elections and Australian federal House elections.
 
 The app is map-first and party/bloc-first:
 
 - winner map with Labor, Coalition, Greens, Independent, and Other grouping
-- zoomable/pannable district boundary map for the selected election year
+- zoomable/pannable seat boundary map for the selected election year
 - election-wide rankings for closest seats, largest margins, changed results, and winner transfer gains
-- district search, district picker, bloc filter, close-seat filter, and preference-changed filter
+- seat search, seat picker, bloc filter, close-seat filter, and preference-changed filter
 - first preference, transfer round, progressive chart, and raw row views
-- exact party and candidate detail preserved inside each district
+- exact party and candidate detail preserved inside each seat
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -40,7 +40,7 @@ data/vic_2022_preferences_long.csv
 data/vic_2022_district_boundaries.geojson
 ```
 
-The historical state election options expect the same naming pattern:
+Victorian state election options use the same naming pattern:
 
 ```text
 data/vic_2014_preferences_long.csv
@@ -53,7 +53,18 @@ data/vic_2006_preferences_long.csv
 data/vic_2006_district_boundaries.geojson
 ```
 
-The federal Victoria options use authoritative Australian Electoral Commission House results and matching AEC Victoria federal division ESRI boundary datasets:
+Australia-wide federal `2025` and `2022` options use authoritative Australian Electoral Commission House results and matching national AEC federal division ESRI boundary datasets:
+
+```text
+data/federal_2025_au_preferences_long.csv
+data/federal_2025_au_district_summary.csv
+data/federal_2025_au_division_boundaries.geojson
+data/federal_2022_au_preferences_long.csv
+data/federal_2022_au_district_summary.csv
+data/federal_2022_au_division_boundaries.geojson
+```
+
+Victoria-only federal options remain available for `2025`, `2022`, `2019`, `2016`, `2013`, `2010`, and `2007`:
 
 ```text
 data/federal_2025_vic_preferences_long.csv
@@ -101,9 +112,15 @@ data/vic_2010_district_boundaries.geojson # 2001 state assembly district boundar
 data/vic_2006_preferences_long.csv        # 2006 long preference-count rows
 data/vic_2006_district_summary.csv        # 2006 district-level result summary
 data/vic_2006_district_boundaries.geojson # 2001 state assembly district boundary polygons
+data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
+data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
+data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
 data/federal_2025_vic_preferences_long.csv        # AEC 2025 federal House preference rows, Victoria only
 data/federal_2025_vic_district_summary.csv        # AEC 2025 federal House division summary, Victoria only
 data/federal_2025_vic_division_boundaries.geojson # AEC October 2024 federal division polygons, Victoria
+data/federal_2022_au_preferences_long.csv         # AEC 2022 federal House preference rows, Australia-wide
+data/federal_2022_au_district_summary.csv         # AEC 2022 federal House division summary, Australia-wide
+data/federal_2022_au_division_boundaries.geojson  # AEC 2021 national federal division polygons used at 2022 election
 data/federal_2022_vic_preferences_long.csv        # AEC 2022 federal House preference rows, Victoria only
 data/federal_2022_vic_district_summary.csv        # AEC 2022 federal House division summary, Victoria only
 data/federal_2022_vic_division_boundaries.geojson # AEC July 2021 federal division polygons, Victoria
@@ -140,7 +157,9 @@ Boundary data is election-year-specific. The 2022 election used boundaries from 
 │   └── index.html
 ├── data/
 ├── scripts/
+│   ├── build_aec_federal.py
 │   ├── scrape_vec_2022_preferences.py
+│   ├── validate_federal.py
 │   └── validate_vec_csv.py
 ├── docs/
 │   └── data_notes.md
@@ -209,12 +228,28 @@ python scripts/build_vic_2010_boundaries.py --year 2006 --out data/vic_2006_dist
 python scripts/validate_state_vic.py --csv data/vic_2006_preferences_long.csv --boundaries data/vic_2006_district_boundaries.geojson --expected-districts 88
 ```
 
+For the 2025 Australia-wide federal dataset, download the official AEC event `31496` files into `tmp/aec_2025_au`, unzip the national boundary ZIP there, then run:
+
+```bash
+python3 scripts/build_aec_federal.py --year 2025 --event-id 31496 --scope au --raw-dir tmp/aec_2025_au --out data --shp tmp/aec_2025_au/AUS_ELB_region.shp --gis-source https://www.aec.gov.au/Electorates/files/2025/AUS-March-2025-esri.zip
+python3 scripts/validate_vec_csv.py data/federal_2025_au_preferences_long.csv
+python3 scripts/validate_federal.py --csv data/federal_2025_au_preferences_long.csv --boundaries data/federal_2025_au_division_boundaries.geojson --aec-dop tmp/aec_2025_au/HouseDopByDivisionDownload-31496.csv --expected-divisions 150 --scope au
+```
+
 For the 2025 federal Victoria dataset, download the official AEC event `31496` files into `tmp/aec_2025_vic`, unzip the boundary ZIP there, then run:
 
 ```bash
 python3 scripts/build_aec_vic.py --year 2025 --event-id 31496 --raw-dir tmp/aec_2025_vic --out data --shp tmp/aec_2025_vic/Vic-october-2024-esri/E_VIC24_region.shp --gis-source https://www.aec.gov.au/Electorates/gis/files/Vic-october-2024-esri.zip
 python3 scripts/validate_vec_csv.py data/federal_2025_vic_preferences_long.csv
-python3 scripts/validate_federal_vic.py --aec-dop tmp/aec_2025_vic/HouseDopByDivisionDownload-31496.csv --expected-divisions 38
+python3 scripts/validate_federal.py --csv data/federal_2025_vic_preferences_long.csv --boundaries data/federal_2025_vic_division_boundaries.geojson --aec-dop tmp/aec_2025_vic/HouseDopByDivisionDownload-31496.csv --expected-divisions 38 --scope vic
+```
+
+For the 2022 Australia-wide federal dataset, download the official AEC files for event `27966` into `tmp/aec_2022_au`, unzip the national boundary ZIP there, then run:
+
+```bash
+python3 scripts/build_aec_federal.py --year 2022 --event-id 27966 --scope au --raw-dir tmp/aec_2022_au --out data --shp tmp/aec_2022_au/2021_ELB_region.shp --gis-source https://www.aec.gov.au/Electorates/gis/files/2021-Cwlth_electoral_boundaries_ESRI.zip
+python3 scripts/validate_vec_csv.py data/federal_2022_au_preferences_long.csv
+python3 scripts/validate_federal.py --csv data/federal_2022_au_preferences_long.csv --boundaries data/federal_2022_au_division_boundaries.geojson --aec-dop tmp/aec_2022_au/HouseDopByDivisionDownload-27966.csv --expected-divisions 151 --scope au
 ```
 
 For the 2022 federal Victoria dataset, download the official AEC files for event `27966` into `tmp/aec_2022_vic`, unzip `vic-july-2021-esri.zip` there, then run:
@@ -222,7 +257,7 @@ For the 2022 federal Victoria dataset, download the official AEC files for event
 ```bash
 python3 scripts/build_aec_vic.py --year 2022 --event-id 27966 --raw-dir tmp/aec_2022_vic --out data --shp tmp/aec_2022_vic/vic-july-2021-esri/E_VIC21_region.shp --gis-source https://www.aec.gov.au/Electorates/gis/files/vic-july-2021-esri.zip
 python3 scripts/validate_vec_csv.py data/federal_2022_vic_preferences_long.csv
-python3 scripts/validate_federal_vic.py --csv data/federal_2022_vic_preferences_long.csv --boundaries data/federal_2022_vic_division_boundaries.geojson --aec-dop tmp/aec_2022_vic/HouseDopByDivisionDownload-27966.csv --expected-divisions 39
+python3 scripts/validate_federal.py --csv data/federal_2022_vic_preferences_long.csv --boundaries data/federal_2022_vic_division_boundaries.geojson --aec-dop tmp/aec_2022_vic/HouseDopByDivisionDownload-27966.csv --expected-divisions 39 --scope vic
 ```
 
 For the 2019 federal Victoria dataset, download the official AEC files for event `24310` into `tmp/aec_2019_vic`, unzip `vic-july-2018-esri.zip` there, then run:
@@ -230,7 +265,7 @@ For the 2019 federal Victoria dataset, download the official AEC files for event
 ```bash
 python3 scripts/build_aec_vic.py --year 2019 --event-id 24310 --raw-dir tmp/aec_2019_vic --out data --shp tmp/aec_2019_vic/vic-july-2018-esri/E_AUGFN3_region.shp --gis-source https://emailfooter.aec.gov.au/Electorates/gis/files/vic-july-2018-esri.zip
 python3 scripts/validate_vec_csv.py data/federal_2019_vic_preferences_long.csv
-python3 scripts/validate_federal_vic.py --csv data/federal_2019_vic_preferences_long.csv --boundaries data/federal_2019_vic_division_boundaries.geojson --aec-dop tmp/aec_2019_vic/HouseDopByDivisionDownload-24310.csv --expected-divisions 38
+python3 scripts/validate_federal.py --csv data/federal_2019_vic_preferences_long.csv --boundaries data/federal_2019_vic_division_boundaries.geojson --aec-dop tmp/aec_2019_vic/HouseDopByDivisionDownload-24310.csv --expected-divisions 38 --scope vic
 ```
 
 For the 2016 federal Victoria dataset, download the official AEC files for event `20499` into `tmp/aec_2016_vic`, unzip `vic-esri-24122010.zip` there, then run:
@@ -238,7 +273,7 @@ For the 2016 federal Victoria dataset, download the official AEC files for event
 ```bash
 python3 scripts/build_aec_vic.py --year 2016 --event-id 20499 --raw-dir tmp/aec_2016_vic --out data --shp "tmp/aec_2016_vic/vic-esri-24122010/vic 24122010.shp" --prj tmp/aec_2016_vic/vic-esri-24122010/vic24122010.prj --gis-source https://www.aec.gov.au/Electorates/gis/files/vic-esri-24122010.zip
 python3 scripts/validate_vec_csv.py data/federal_2016_vic_preferences_long.csv
-python3 scripts/validate_federal_vic.py --csv data/federal_2016_vic_preferences_long.csv --boundaries data/federal_2016_vic_division_boundaries.geojson --aec-dop tmp/aec_2016_vic/HouseDopByDivisionDownload-20499.csv --expected-divisions 37
+python3 scripts/validate_federal.py --csv data/federal_2016_vic_preferences_long.csv --boundaries data/federal_2016_vic_division_boundaries.geojson --aec-dop tmp/aec_2016_vic/HouseDopByDivisionDownload-20499.csv --expected-divisions 37 --scope vic
 ```
 
 For the 2013 federal Victoria dataset, download the official AEC files for event `17496` into `tmp/aec_2013_vic`, use the AEC `vic-esri-24122010.zip` boundary shapefile, then run:
@@ -246,7 +281,7 @@ For the 2013 federal Victoria dataset, download the official AEC files for event
 ```bash
 python3 scripts/build_aec_vic.py --year 2013 --event-id 17496 --raw-dir tmp/aec_2013_vic --out data --shp "tmp/aec_2016_vic/vic-esri-24122010/vic 24122010.shp" --prj tmp/aec_2016_vic/vic-esri-24122010/vic24122010.prj --gis-source https://www.aec.gov.au/Electorates/gis/files/vic-esri-24122010.zip
 python3 scripts/validate_vec_csv.py data/federal_2013_vic_preferences_long.csv
-python3 scripts/validate_federal_vic.py --csv data/federal_2013_vic_preferences_long.csv --boundaries data/federal_2013_vic_division_boundaries.geojson --aec-dop tmp/aec_2013_vic/HouseDopByDivisionDownload-17496.csv --expected-divisions 37
+python3 scripts/validate_federal.py --csv data/federal_2013_vic_preferences_long.csv --boundaries data/federal_2013_vic_division_boundaries.geojson --aec-dop tmp/aec_2013_vic/HouseDopByDivisionDownload-17496.csv --expected-divisions 37 --scope vic
 ```
 
 For the 2010 federal Victoria dataset, download the official AEC files for event `15508` into `tmp/aec_2010_vic`, unzip the AEC `national-esri-2010.zip` boundary shapefile, then run:
@@ -254,7 +289,7 @@ For the 2010 federal Victoria dataset, download the official AEC files for event
 ```bash
 python3 scripts/build_aec_vic.py --year 2010 --event-id 15508 --raw-dir tmp/aec_2010_vic --out data --shp tmp/aec_2010_vic/national-esri-2010/COM_ELB_2010_region.shp --gis-source https://www.aec.gov.au/Electorates/gis/files/national-esri-2010.zip
 python3 scripts/validate_vec_csv.py data/federal_2010_vic_preferences_long.csv
-python3 scripts/validate_federal_vic.py --csv data/federal_2010_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_2010_vic/HouseDopByDivisionDownload-15508.csv --expected-divisions 37
+python3 scripts/validate_federal.py --csv data/federal_2010_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_2010_vic/HouseDopByDivisionDownload-15508.csv --expected-divisions 37 --scope vic
 ```
 
 For the 2007 federal Victoria dataset, download the official AEC files for event `13745` into `tmp/aec_2007_vic`, unzip the AEC `national-esri-2010.zip` boundary shapefile there, then run:
@@ -262,7 +297,7 @@ For the 2007 federal Victoria dataset, download the official AEC files for event
 ```bash
 python3 scripts/build_aec_vic.py --year 2007 --event-id 13745 --raw-dir tmp/aec_2007_vic --out data --shp tmp/aec_2007_vic/national-esri-2010/COM_ELB_2010_region.shp --gis-source https://www.aec.gov.au/Electorates/gis/files/national-esri-2010.zip
 python3 scripts/validate_vec_csv.py data/federal_2007_vic_preferences_long.csv
-python3 scripts/validate_federal_vic.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2007_vic_division_boundaries.geojson --aec-dop tmp/aec_2007_vic/HouseDopByDivisionDownload-13745.csv --expected-divisions 37
+python3 scripts/validate_federal.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2007_vic_division_boundaries.geojson --aec-dop tmp/aec_2007_vic/HouseDopByDivisionDownload-13745.csv --expected-divisions 37 --scope vic
 ```
 
 The VEC scraper writes:
