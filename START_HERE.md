@@ -60,6 +60,10 @@ data/federal_2025_au_preferences_long.csv
 data/federal_2025_au_division_boundaries.geojson
 data/federal_2022_au_preferences_long.csv
 data/federal_2022_au_division_boundaries.geojson
+data/federal_2019_au_preferences_long.csv
+data/federal_2019_au_division_boundaries.geojson
+data/federal_2016_au_preferences_long.csv
+data/federal_2016_au_division_boundaries.geojson
 ```
 
 Federal Victoria options remain available too:

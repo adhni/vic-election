@@ -53,7 +53,7 @@ data/vic_2006_preferences_long.csv
 data/vic_2006_district_boundaries.geojson
 ```
 
-Australia-wide federal `2025` and `2022` options use authoritative Australian Electoral Commission House results and matching national AEC federal division ESRI boundary datasets:
+Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
 ```text
 data/federal_2025_au_preferences_long.csv
@@ -62,6 +62,12 @@ data/federal_2025_au_division_boundaries.geojson
 data/federal_2022_au_preferences_long.csv
 data/federal_2022_au_district_summary.csv
 data/federal_2022_au_division_boundaries.geojson
+data/federal_2019_au_preferences_long.csv
+data/federal_2019_au_district_summary.csv
+data/federal_2019_au_division_boundaries.geojson
+data/federal_2016_au_preferences_long.csv
+data/federal_2016_au_district_summary.csv
+data/federal_2016_au_division_boundaries.geojson
 ```
 
 Victoria-only federal options remain available for `2025`, `2022`, `2019`, `2016`, `2013`, `2010`, and `2007`:
@@ -121,6 +127,12 @@ data/federal_2025_vic_division_boundaries.geojson # AEC October 2024 federal div
 data/federal_2022_au_preferences_long.csv         # AEC 2022 federal House preference rows, Australia-wide
 data/federal_2022_au_district_summary.csv         # AEC 2022 federal House division summary, Australia-wide
 data/federal_2022_au_division_boundaries.geojson  # AEC 2021 national federal division polygons used at 2022 election
+data/federal_2019_au_preferences_long.csv         # AEC 2019 federal House preference rows, Australia-wide
+data/federal_2019_au_district_summary.csv         # AEC 2019 federal House division summary, Australia-wide
+data/federal_2019_au_division_boundaries.geojson  # AEC 2019 national federal division polygons
+data/federal_2016_au_preferences_long.csv         # AEC 2016 federal House preference rows, Australia-wide
+data/federal_2016_au_district_summary.csv         # AEC 2016 federal House division summary, Australia-wide
+data/federal_2016_au_division_boundaries.geojson  # AEC 2016 election-period national division polygons assembled from official jurisdiction files
 data/federal_2022_vic_preferences_long.csv        # AEC 2022 federal House preference rows, Victoria only
 data/federal_2022_vic_district_summary.csv        # AEC 2022 federal House division summary, Victoria only
 data/federal_2022_vic_division_boundaries.geojson # AEC July 2021 federal division polygons, Victoria
@@ -252,6 +264,14 @@ python3 scripts/validate_vec_csv.py data/federal_2022_au_preferences_long.csv
 python3 scripts/validate_federal.py --csv data/federal_2022_au_preferences_long.csv --boundaries data/federal_2022_au_division_boundaries.geojson --aec-dop tmp/aec_2022_au/HouseDopByDivisionDownload-27966.csv --expected-divisions 151 --scope au
 ```
 
+For the 2019 Australia-wide federal dataset, download the official AEC files for event `24310` into `tmp/aec_2019_au`, unzip `national-esri-fe2019.zip` there, then run:
+
+```bash
+python3 scripts/build_aec_federal.py --year 2019 --event-id 24310 --scope au --raw-dir tmp/aec_2019_au --out data --shp tmp/aec_2019_au/COM_ELB_region.shp --gis-source https://www.aec.gov.au/Electorates/gis/files/national-esri-fe2019.zip
+python3 scripts/validate_vec_csv.py data/federal_2019_au_preferences_long.csv
+python3 scripts/validate_federal.py --csv data/federal_2019_au_preferences_long.csv --boundaries data/federal_2019_au_division_boundaries.geojson --aec-dop tmp/aec_2019_au/HouseDopByDivisionDownload-24310.csv --expected-divisions 151 --scope au
+```
+
 For the 2022 federal Victoria dataset, download the official AEC files for event `27966` into `tmp/aec_2022_vic`, unzip `vic-july-2021-esri.zip` there, then run:
 
 ```bash
@@ -266,6 +286,14 @@ For the 2019 federal Victoria dataset, download the official AEC files for event
 python3 scripts/build_aec_vic.py --year 2019 --event-id 24310 --raw-dir tmp/aec_2019_vic --out data --shp tmp/aec_2019_vic/vic-july-2018-esri/E_AUGFN3_region.shp --gis-source https://emailfooter.aec.gov.au/Electorates/gis/files/vic-july-2018-esri.zip
 python3 scripts/validate_vec_csv.py data/federal_2019_vic_preferences_long.csv
 python3 scripts/validate_federal.py --csv data/federal_2019_vic_preferences_long.csv --boundaries data/federal_2019_vic_division_boundaries.geojson --aec-dop tmp/aec_2019_vic/HouseDopByDivisionDownload-24310.csv --expected-divisions 38 --scope vic
+```
+
+For the 2016 Australia-wide federal dataset, download the official AEC files for event `20499` into `tmp/aec_2016_au`, place the official jurisdiction boundary ZIPs in `tmp/aec_2016_au_sources`, then run:
+
+```bash
+python3 scripts/build_aec_federal_2016_au.py --raw-dir tmp/aec_2016_au --source-dir tmp/aec_2016_au_sources --extract-dir tmp/aec_2016_au_extract --out data
+python3 scripts/validate_vec_csv.py data/federal_2016_au_preferences_long.csv
+python3 scripts/validate_federal.py --csv data/federal_2016_au_preferences_long.csv --boundaries data/federal_2016_au_division_boundaries.geojson --aec-dop tmp/aec_2016_au/HouseDopByDivisionDownload-20499.csv --expected-divisions 150 --scope au
 ```
 
 For the 2016 federal Victoria dataset, download the official AEC files for event `20499` into `tmp/aec_2016_vic`, unzip `vic-esri-24122010.zip` there, then run:
@@ -346,11 +374,27 @@ The federal 2019 Victoria option validates against:
 - matching AEC result and boundary names
 - no large boundary overlaps or internal gaps
 
+The federal 2019 Australia option validates against:
+
+- 7,412 preference rows
+- 151 federal divisions
+- 151 boundary features
+- matching AEC result and boundary names
+- no large boundary overlaps or internal gaps
+
 The federal 2016 Victoria option validates against:
 
 - 1,921 preference rows
 - 37 federal divisions
 - 37 boundary features
+- matching AEC result and boundary names
+- no large boundary overlaps or internal gaps
+
+The federal 2016 Australia option validates against:
+
+- 6,786 preference rows
+- 150 federal divisions
+- 150 boundary features
 - matching AEC result and boundary names
 - no large boundary overlaps or internal gaps
 

@@ -52,6 +52,8 @@ For Australia-wide federal options, use the matching national AEC federal divisi
 ```text
 data/federal_2025_au_division_boundaries.geojson
 data/federal_2022_au_division_boundaries.geojson
+data/federal_2019_au_division_boundaries.geojson
+data/federal_2016_au_division_boundaries.geojson
 ```
 
 For federal Victoria options, use the matching AEC Victoria federal division file for the election period:
@@ -82,9 +84,13 @@ The 2025 federal Victoria boundary file is adapted from the AEC `Vic-october-202
 
 The 2022 federal Australia boundary file is adapted from the AEC `2021-Cwlth_electoral_boundaries_ESRI.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2022 House of Representatives Distribution of Preferences by Division CSV, event `27966`, with no `StateAb` filtering.
 
+The 2019 federal Australia boundary file is adapted from the AEC `national-esri-fe2019.zip` shapefile. The result rows are generated from the AEC 2019 House of Representatives Distribution of Preferences by Division CSV, event `24310`, with no `StateAb` filtering. The boundary file uses the legacy spelling `Mcpherson`; the builder normalises this to the AEC result spelling `McPherson`.
+
 The 2022 federal Victoria boundary file is adapted from the AEC `vic-july-2021-esri.zip` superseded boundary shapefile. The result rows are generated from the AEC 2022 House of Representatives Distribution of Preferences by Division CSV, event `27966`, filtered to `StateAb == VIC`.
 
 The 2019 federal Victoria boundary file is adapted from the AEC `vic-july-2018-esri.zip` redistribution boundary shapefile. The result rows are generated from the AEC 2019 House of Representatives Distribution of Preferences by Division CSV, event `24310`, filtered to `StateAb == VIC`.
+
+The 2016 federal Australia boundary file is assembled from the official AEC jurisdiction files used for the 2016 election period: `act-tab-20072016.zip`, `nsw-esri-06042016.zip`, `nt-midmif-07022017.zip`, `qld-shape-files-13012010.zip`, `sa-esri-16122011.zip`, `tas-november2017-midmif.zip`, `vic-esri-24122010.zip`, and `wa-esri-19012016.zip`. The result rows are generated from the AEC 2016 House of Representatives Distribution of Preferences by Division CSV, event `20499`, with no `StateAb` filtering. The builder reprojects each jurisdiction to WGS84 lon/lat, normalises `Mcpherson` to `McPherson`, and maps Tasmania's later boundary name `Clark` back to the 2016 result name `Denison`.
 
 The 2016 federal Victoria boundary file is adapted from the AEC `vic-esri-24122010.zip` superseded boundary shapefile. The result rows are generated from the AEC 2016 House of Representatives Distribution of Preferences by Division CSV, event `20499`, filtered to `StateAb == VIC`. The older GIS file uses VicGrid projected metres, legacy field names, and the boundary property spelling `Mcmillan`; the builder reprojects the coordinates to WGS84 lon/lat and normalises the district spelling to the AEC result spelling `McMillan`.
 
