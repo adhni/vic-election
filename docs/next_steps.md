@@ -109,7 +109,7 @@ Do not move to external JSON yet. A separate `data/elections.json` can wait unti
 
 Possible later targets:
 
-- NSW lower-house elections
+- NSW lower-house elections beyond 2023
 - Queensland lower-house elections
 
 Likely prerequisite work:
@@ -119,6 +119,12 @@ Likely prerequisite work:
 - less VEC-specific naming in shared code
 - broader party normalisation
 - jurisdiction-specific boundary handling
+
+NSW lower-house feasibility is now proven by the `NSW State 2023` integration:
+
+- official NSWEC district result pages are structured enough to scrape repeatably
+- the 2021 redistribution shapefile matches the 2023 election
+- small source-specific normalisation is still needed, such as NSW party labels and footnote-marked district names
 
 At that point, consider whether the project should become a broader Australian preference explorer.
 
