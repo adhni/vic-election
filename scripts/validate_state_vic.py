@@ -88,7 +88,12 @@ def validate_rows(rows: list[dict[str, str]], expected_districts: int) -> set[st
     return districts
 
 
-def validate_boundaries(path: Path, districts: set[str]) -> None:
+def validate_boundaries(
+    path: Path,
+    districts: set[str],
+    max_overlap_ratio: float = 0.00001,
+    max_gap_ratio: float = 0.0005,
+) -> None:
     sys.path.insert(0, str(Path("tmp/pydeps")))
     try:
         from shapely.geometry import Polygon, shape
@@ -122,13 +127,13 @@ def validate_boundaries(path: Path, districts: set[str]) -> None:
     summed_area = sum(geom.area for geom in geometries)
     union = unary_union(geometries)
     overlap_ratio = max(0.0, (summed_area - union.area) / summed_area)
-    if overlap_ratio > 0.00001:
+    if overlap_ratio > max_overlap_ratio:
         raise SystemExit(f"Boundary overlap ratio too large: {overlap_ratio:.8f}")
 
     polygons = list(union.geoms) if union.geom_type == "MultiPolygon" else [union]
     hole_area = sum(abs(Polygon(ring).area) for poly in polygons for ring in poly.interiors)
     gap_ratio = hole_area / union.area if union.area else 0
-    if gap_ratio > 0.0005:
+    if gap_ratio > max_gap_ratio:
         raise SystemExit(f"Internal gap ratio too large: {gap_ratio:.8f}")
 
     print(f"Boundary topology: overlap_ratio={overlap_ratio:.8f}, internal_gap_ratio={gap_ratio:.8f}")
@@ -139,14 +144,22 @@ def main() -> None:
     parser.add_argument("--csv", type=Path, default=Path("data/vic_2010_preferences_long.csv"))
     parser.add_argument("--boundaries", type=Path, default=Path("data/vic_2010_district_boundaries.geojson"))
     parser.add_argument("--expected-districts", type=int, default=88)
+    parser.add_argument("--label", default="State")
+    parser.add_argument("--max-overlap-ratio", type=float, default=0.00001)
+    parser.add_argument("--max-gap-ratio", type=float, default=0.0005)
     args = parser.parse_args()
 
     rows = read_csv(args.csv)
     districts = validate_rows(rows, args.expected_districts)
-    validate_boundaries(args.boundaries, districts)
+    validate_boundaries(
+        args.boundaries,
+        districts,
+        max_overlap_ratio=args.max_overlap_ratio,
+        max_gap_ratio=args.max_gap_ratio,
+    )
     print(f"Rows: {len(rows)}")
-    print(f"Victorian state districts: {len(districts)}")
-    print("Victorian state validation passed")
+    print(f"{args.label} districts: {len(districts)}")
+    print(f"{args.label} validation passed")
 
 
 if __name__ == "__main__":

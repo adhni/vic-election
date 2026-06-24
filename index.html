@@ -1147,6 +1147,16 @@
         "boundaries": "data/vic_2006_district_boundaries.geojson"
       },
       {
+        "key": "nsw-2023",
+        "label": "NSW State 2023",
+        "type": "state",
+        "jurisdiction": "New South Wales",
+        "year": 2023,
+        "source": "NSWEC",
+        "csv": "data/nsw_2023_preferences_long.csv",
+        "boundaries": "data/nsw_2023_district_boundaries.geojson"
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -1295,10 +1305,14 @@
       const upper = p.toUpperCase();
       if (upper === "ALP") return "Labor";
       if (p === "Australian Labor Party - Victorian Branch") return "Labor";
+      if (p === "Australian Labor Party (NSW Branch)") return "Labor";
       if (upper === "GREENS") return "Greens";
       if (p === "Australian Greens") return "Greens";
+      if (p === "The Greens NSW") return "Greens";
       if (upper === "LIBERAL") return "Liberal";
+      if (p === "The Liberal Party of Australia, New South Wales Division") return "Liberal";
       if (upper === "NATIONALS") return "Nationals";
+      if (p === "National Party of Australia - NSW") return "Nationals";
       if (p === "Family First Victoria") return "Family First";
       if (p === "Fiona Patten's Reason Party") return "Reason";
       if (p === "Animal Justice Party") return "Animal Justice";

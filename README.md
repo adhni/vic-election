@@ -53,6 +53,14 @@ data/vic_2006_preferences_long.csv
 data/vic_2006_district_boundaries.geojson
 ```
 
+NSW state coverage currently includes `2023`:
+
+```text
+data/nsw_2023_preferences_long.csv
+data/nsw_2023_district_summary.csv
+data/nsw_2023_district_boundaries.geojson
+```
+
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
 ```text
@@ -118,6 +126,9 @@ data/vic_2010_district_boundaries.geojson # 2001 state assembly district boundar
 data/vic_2006_preferences_long.csv        # 2006 long preference-count rows
 data/vic_2006_district_summary.csv        # 2006 district-level result summary
 data/vic_2006_district_boundaries.geojson # 2001 state assembly district boundary polygons
+data/nsw_2023_preferences_long.csv        # NSWEC 2023 Legislative Assembly long preference-count rows
+data/nsw_2023_district_summary.csv        # NSWEC 2023 district-level result summary
+data/nsw_2023_district_boundaries.geojson # NSW 2021 redistribution boundaries used at the 2023 election
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
@@ -155,6 +166,8 @@ data/sample_melbourne_preferences_long.csv
 ```
 
 Boundary data is election-year-specific. The 2022 election used boundaries from the 2020-2021 redivision, so earlier elections such as 2006, 2010, 2014, and 2018 need their own boundary file.
+
+NSW 2023 uses the official NSW Electoral Commission 2021 redistribution district shapefile, which is the boundary set in force for the 25 March 2023 election.
 
 2014 and 2018 boundary data is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. It is licensed under Creative Commons Attribution 4.0. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
 
@@ -234,10 +247,17 @@ python scripts/scrape_vec_2022_preferences.py --year 2018 --out data --keep-goin
 python scripts/validate_vec_csv.py data/vic_2018_preferences_long.csv
 python scripts/scrape_vec_2022_preferences.py --year 2010 --out data --keep-going
 python scripts/build_vic_2010_boundaries.py --out data/vic_2010_district_boundaries.geojson
-python scripts/validate_state_vic.py --csv data/vic_2010_preferences_long.csv --boundaries data/vic_2010_district_boundaries.geojson --expected-districts 88
+python scripts/validate_state_vic.py --csv data/vic_2010_preferences_long.csv --boundaries data/vic_2010_district_boundaries.geojson --expected-districts 88 --label VIC-2010
 python scripts/scrape_vec_2022_preferences.py --year 2006 --out data --keep-going
 python scripts/build_vic_2010_boundaries.py --year 2006 --out data/vic_2006_district_boundaries.geojson
-python scripts/validate_state_vic.py --csv data/vic_2006_preferences_long.csv --boundaries data/vic_2006_district_boundaries.geojson --expected-districts 88
+python scripts/validate_state_vic.py --csv data/vic_2006_preferences_long.csv --boundaries data/vic_2006_district_boundaries.geojson --expected-districts 88 --label VIC-2006
+```
+
+For NSW 2023:
+
+```bash
+python scripts/build_nsw_state_2023.py --out data
+python scripts/validate_state_vic.py --csv data/nsw_2023_preferences_long.csv --boundaries data/nsw_2023_district_boundaries.geojson --expected-districts 93 --label NSW-2023 --max-gap-ratio 0.005
 ```
 
 For the 2025 Australia-wide federal dataset, download the official AEC event `31496` files into `tmp/aec_2025_au`, unzip the national boundary ZIP there, then run:
