@@ -30,9 +30,9 @@ SOURCE_FIXTURES = (
     },
     {
         "state": "NT",
-        "zip_name": "nt-midmif-07022017.zip",
-        "dataset_path": "E_Propos.MIF",
-        "gis_source": "https://www.aec.gov.au/Electorates/gis/files/nt-midmif-07022017.zip",
+        "zip_name": "NT-20080919-elb.zip",
+        "dataset_path": "NT_FINAL_BOUNDARIES.MIF",
+        "gis_source": "https://www.aec.gov.au/Electorates/gis/files/gis/elb/NT-20080919-elb.zip",
     },
     {
         "state": "QLD",
@@ -48,9 +48,9 @@ SOURCE_FIXTURES = (
     },
     {
         "state": "TAS",
-        "zip_name": "tas-november2017-midmif.zip",
-        "dataset_path": "E_FINAL.TAB",
-        "gis_source": "https://www.aec.gov.au/Electorates/gis/files/tas-november2017-midmif.zip",
+        "zip_name": "TAS-20080216-elb.zip",
+        "dataset_path": "TAS_FINAL_BOUNDARIES.MIF",
+        "gis_source": "https://www.aec.gov.au/Electorates/gis/files/gis/elb/TAS-20080216-elb.zip",
     },
     {
         "state": "VIC",
@@ -69,9 +69,6 @@ SOURCE_FIXTURES = (
 
 DIVISION_NAME_FIELDS = ("Elect_div", "ELECT_DIV")
 DIVISION_ID_FIELDS = ("E_div_number", "E_div_numb", "DIV_NUMBER")
-YEAR_SPECIFIC_NAME_FIXES = {
-    "Clark": "Denison",
-}
 
 
 def record_value(record: dict[str, object], fields: tuple[str, ...]) -> object:
@@ -140,7 +137,6 @@ def load_state_boundaries(source_dir: Path, extract_dir: Path, fixture: dict[str
         geometry = force_2d(geometry)
         district = str(record_value(record, DIVISION_NAME_FIELDS))
         district = BOUNDARY_NAME_FIXES.get(district, district)
-        district = YEAR_SPECIFIC_NAME_FIXES.get(district, district)
         division_id = optional_record_value(record, DIVISION_ID_FIELDS)
         features.append({
             "type": "Feature",
