@@ -10,6 +10,7 @@ import zipfile
 from dataclasses import dataclass
 from io import StringIO
 from pathlib import Path
+from urllib.parse import urlparse
 from urllib.parse import urljoin
 
 import geopandas as gpd
@@ -229,6 +230,14 @@ def resolve_candidate(label: object, candidate_names: list[str]) -> str:
     return ""
 
 
+def district_cache_key(district_url: str, district_name: str) -> str:
+    path = urlparse(district_url).path
+    match = re.search(r"/la/([^/]+)/cc/", path, flags=re.I)
+    if match:
+        return match.group(1)
+    return re.sub(r"[^a-z0-9]+", "-", district_name.strip().lower()).strip("-")
+
+
 def parse_distribution(
     html: str,
     candidate_parties: dict[str, str],
@@ -245,9 +254,18 @@ def parse_distribution(
     header_exclusions = [clean_text(value) for value in df.iloc[0].tolist()]
     data_rows = df.iloc[2:].reset_index(drop=True)
 
-    last_col_index = len(df.columns) - 1 if clean_text(df.columns[-1]) == "% of Vote" else len(df.columns)
-    round_count = (last_col_index - 2) // 2
-    if round_count < 1:
+    header_labels = [clean_text(value) for value in df.iloc[1].tolist()]
+    round_pairs: list[tuple[int, int]] = []
+    col = 2
+    while col + 1 < len(df.columns):
+        transfer_header = header_labels[col]
+        progressive_header = header_labels[col + 1]
+        if transfer_header != "Votes Distributed" or progressive_header != "Progressive Totals":
+            break
+        round_pairs.append((col, col + 1))
+        col += 2
+
+    if not round_pairs:
         raise SystemExit("Could not derive NSW distribution rounds")
 
     long_rows: list[dict[str, object]] = []
@@ -259,15 +277,10 @@ def parse_distribution(
             absolute_majority = clean_int(row.iloc[1])
             break
 
-    for round_number in range(1, round_count + 1):
-        transfer_col = 2 + (round_number - 1) * 2
-        progressive_col = transfer_col + 1
-        if progressive_col >= last_col_index:
-            raise SystemExit(f"Round {round_number}: unexpected distribution column layout")
-
+    for round_number, (transfer_col, progressive_col) in enumerate(round_pairs, start=1):
         excluded = resolve_candidate(header_exclusions[transfer_col], candidate_names)
         excluded_party = candidate_parties.get(excluded, "")
-        row_type = "final" if round_number == round_count else "progressive"
+        row_type = "final" if round_number == len(round_pairs) else "progressive"
 
         for _, row in data_rows.iterrows():
             label = clean_text(row.iloc[0])
@@ -310,7 +323,7 @@ def parse_distribution(
 
 
 def build_rows_for_district(session: requests.Session, raw_dir: Path, links: DistrictLinks, refresh: bool = False) -> tuple[list[dict[str, object]], dict[str, object]]:
-    slug = links.district_url.rstrip("/").split("/")[-3]
+    slug = district_cache_key(links.district_url, links.district)
     fp_html = fetch_text(session, links.district_url, raw_dir / "districts" / f"{slug}_fp.html", refresh=refresh)
     dop_html = fetch_text(session, links.distribution_url, raw_dir / "districts" / f"{slug}_dop.html", refresh=refresh)
 
