@@ -1167,6 +1167,16 @@
         "boundaries": "data/nsw_2019_district_boundaries.geojson"
       },
       {
+        "key": "nsw-2015",
+        "label": "NSW State 2015",
+        "type": "state",
+        "jurisdiction": "New South Wales",
+        "year": 2015,
+        "source": "NSWEC",
+        "csv": "data/nsw_2015_preferences_long.csv",
+        "boundaries": "data/nsw_2015_district_boundaries.geojson"
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -1319,8 +1329,10 @@
       if (upper === "GREENS") return "Greens";
       if (p === "Australian Greens") return "Greens";
       if (p === "The Greens NSW") return "Greens";
+      if (p === "The Greens") return "Greens";
       if (upper === "LIBERAL") return "Liberal";
       if (p === "The Liberal Party of Australia, New South Wales Division") return "Liberal";
+      if (p === "Liberal Party of Australia New South Wales Division") return "Liberal";
       if (upper === "NATIONALS") return "Nationals";
       if (p === "National Party of Australia - NSW") return "Nationals";
       if (p === "Family First Victoria") return "Family First";

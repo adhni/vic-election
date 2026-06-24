@@ -53,7 +53,7 @@ data/vic_2006_preferences_long.csv
 data/vic_2006_district_boundaries.geojson
 ```
 
-NSW state coverage currently includes `2023` and `2019`:
+NSW state coverage currently includes `2023`, `2019`, and `2015`:
 
 ```text
 data/nsw_2023_preferences_long.csv
@@ -62,6 +62,9 @@ data/nsw_2023_district_boundaries.geojson
 data/nsw_2019_preferences_long.csv
 data/nsw_2019_district_summary.csv
 data/nsw_2019_district_boundaries.geojson
+data/nsw_2015_preferences_long.csv
+data/nsw_2015_district_summary.csv
+data/nsw_2015_district_boundaries.geojson
 ```
 
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
@@ -135,6 +138,9 @@ data/nsw_2023_district_boundaries.geojson # NSW 2021 redistribution boundaries u
 data/nsw_2019_preferences_long.csv        # NSWEC 2019 Legislative Assembly long preference-count rows
 data/nsw_2019_district_summary.csv        # NSWEC 2019 district-level result summary
 data/nsw_2019_district_boundaries.geojson # NSW 2013 redistribution boundaries used at the 2019 election
+data/nsw_2015_preferences_long.csv        # NSWEC 2015 Legislative Assembly long preference-count rows
+data/nsw_2015_district_summary.csv        # NSWEC 2015 district-level result summary
+data/nsw_2015_district_boundaries.geojson # NSW 2013 redistribution boundaries used at the 2015 election
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
@@ -176,6 +182,8 @@ Boundary data is election-year-specific. The 2022 election used boundaries from 
 NSW 2023 uses the official NSW Electoral Commission 2021 redistribution district shapefile, which is the boundary set in force for the 25 March 2023 election.
 
 NSW 2019 uses the official NSW Electoral Commission 2013 redistribution boundary dataset, published as MapInfo MID/MIF files and used at the 23 March 2019 election.
+
+NSW 2015 uses the same official NSW Electoral Commission 2013 redistribution boundary dataset, which was also in force for the 28 March 2015 election.
 
 2014 and 2018 boundary data is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. It is licensed under Creative Commons Attribution 4.0. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
 
@@ -273,6 +281,13 @@ For NSW 2019:
 ```bash
 python scripts/build_nsw_state_2019.py --out data
 python scripts/validate_state_vic.py --csv data/nsw_2019_preferences_long.csv --boundaries data/nsw_2019_district_boundaries.geojson --expected-districts 93 --label NSW-2019 --max-gap-ratio 0.005
+```
+
+For NSW 2015:
+
+```bash
+python scripts/build_nsw_state_2015.py --out data
+python scripts/validate_state_vic.py --csv data/nsw_2015_preferences_long.csv --boundaries data/nsw_2015_district_boundaries.geojson --expected-districts 93 --label NSW-2015 --max-gap-ratio 0.005
 ```
 
 For the 2025 Australia-wide federal dataset, download the official AEC event `31496` files into `tmp/aec_2025_au`, unzip the national boundary ZIP there, then run:
