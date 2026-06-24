@@ -15,6 +15,7 @@ BOUNDARY_NAME_FIXES = {
     "Mcewen": "McEwen",
     "Mcmahon": "McMahon",
     "Mcmillan": "McMillan",
+    "Mcpherson": "McPherson",
     "O'connor": "O'Connor",
 }
 DIVISION_NAME_FIELDS = ("Elect_div", "ELECT_DIV")
