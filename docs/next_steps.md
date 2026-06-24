@@ -120,10 +120,11 @@ Likely prerequisite work:
 - broader party normalisation
 - jurisdiction-specific boundary handling
 
-NSW lower-house feasibility is now proven by the `NSW State 2023` integration:
+NSW lower-house feasibility is now proven by the `NSW State 2023` and `NSW State 2019` integrations:
 
 - official NSWEC district result pages are structured enough to scrape repeatably
 - the 2021 redistribution shapefile matches the 2023 election
+- the 2013 redistribution MID/MIF boundary dataset matches the 2019 election
 - small source-specific normalisation is still needed, such as NSW party labels and footnote-marked district names
 
 At that point, consider whether the project should become a broader Australian preference explorer.
