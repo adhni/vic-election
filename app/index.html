@@ -1177,6 +1177,16 @@
         "boundaries": "data/nsw_2015_district_boundaries.geojson"
       },
       {
+        "key": "nsw-2011",
+        "label": "NSW State 2011",
+        "type": "state",
+        "jurisdiction": "New South Wales",
+        "year": 2011,
+        "source": "NSWEC",
+        "csv": "data/nsw_2011_preferences_long.csv",
+        "boundaries": "data/nsw_2011_district_boundaries.geojson"
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -1324,17 +1334,25 @@
       const p = (raw || "Independent").trim();
       const upper = p.toUpperCase();
       if (upper === "ALP") return "Labor";
+      if (upper === "CL") return "Country Labor";
       if (p === "Australian Labor Party - Victorian Branch") return "Labor";
       if (p === "Australian Labor Party (NSW Branch)") return "Labor";
+      if (upper === "GNS") return "Greens";
       if (upper === "GREENS") return "Greens";
       if (p === "Australian Greens") return "Greens";
       if (p === "The Greens NSW") return "Greens";
       if (p === "The Greens") return "Greens";
+      if (upper === "LP") return "Liberal";
       if (upper === "LIBERAL") return "Liberal";
       if (p === "The Liberal Party of Australia, New South Wales Division") return "Liberal";
       if (p === "Liberal Party of Australia New South Wales Division") return "Liberal";
+      if (upper === "NP") return "Nationals";
       if (upper === "NATIONALS") return "Nationals";
       if (p === "National Party of Australia - NSW") return "Nationals";
+      if (upper === "IND") return "Independent";
+      if (upper === "CDP") return "Christian Democrats";
+      if (upper === "AD") return "Australian Democrats";
+      if (upper === "FF") return "Family First";
       if (p === "Family First Victoria") return "Family First";
       if (p === "Fiona Patten's Reason Party") return "Reason";
       if (p === "Animal Justice Party") return "Animal Justice";
