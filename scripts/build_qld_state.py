@@ -190,7 +190,13 @@ def build_district_rows(
                 "votes": running_total,
             })
 
-    final_round = int(preference.get("countround") or len(distributions) or 1)
+    distribution_rounds = [int(distribution.get("exclusion") or 0) for distribution in distributions]
+    final_round = max(
+        int(preference.get("countround") or 0),
+        max(distribution_rounds, default=0),
+        len(distributions),
+        1,
+    )
     for row in final_rows:
         long_rows.append({
             **meta,
