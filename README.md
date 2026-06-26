@@ -70,6 +70,17 @@ data/nsw_2011_district_summary.csv
 data/nsw_2011_district_boundaries.geojson
 ```
 
+Queensland state coverage currently includes `2024` and `2020`:
+
+```text
+data/qld_2024_preferences_long.csv
+data/qld_2024_district_summary.csv
+data/qld_2024_district_boundaries.geojson
+data/qld_2020_preferences_long.csv
+data/qld_2020_district_summary.csv
+data/qld_2020_district_boundaries.geojson
+```
+
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
 ```text
@@ -147,6 +158,12 @@ data/nsw_2015_district_boundaries.geojson # NSW 2013 redistribution boundaries u
 data/nsw_2011_preferences_long.csv        # NSWEC 2011 Legislative Assembly first-preference and final preferred rows
 data/nsw_2011_district_summary.csv        # NSWEC 2011 district-level result summary
 data/nsw_2011_district_boundaries.geojson # historical 2011 NSW district polygons adapted from the Terria ABS 2011 SED tiles
+data/qld_2024_preferences_long.csv        # ECQ 2024 Legislative Assembly long preference-count rows
+data/qld_2024_district_summary.csv        # ECQ 2024 district-level result summary
+data/qld_2024_district_boundaries.geojson # Queensland 2017 redistribution boundaries used at the 2024 election
+data/qld_2020_preferences_long.csv        # ECQ 2020 Legislative Assembly long preference-count rows
+data/qld_2020_district_summary.csv        # ECQ 2020 district-level result summary
+data/qld_2020_district_boundaries.geojson # Queensland 2017 redistribution boundaries used at the 2020 election
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
@@ -192,6 +209,8 @@ NSW 2019 uses the official NSW Electoral Commission 2013 redistribution boundary
 NSW 2015 uses the same official NSW Electoral Commission 2013 redistribution boundary dataset, which was also in force for the 28 March 2015 election.
 
 NSW 2011 result rows are generated from the official NSWEC district summary pages under `SGE2011/la_index.htm`. Those pages expose final first-preference tables and final two-candidate-preferred tables but not machine-readable round-by-round distributions, so the app stores first and final rows for each district. The 2011 boundary file is adapted from the Terria/NationalMap `FID_SED_2011_AUST` historical ABS State Electoral Division vector tiles at zoom 6, filtered to the 93 NSW districts used at the 26 March 2011 election.
+
+Queensland 2024 and 2020 result rows are generated from the Electoral Commission of Queensland public results JSON service under `resultsdata.elections.qld.gov.au`, using `SGE2024` and `state2020` district `primary` and `preference` count files. Both elections use the official Queensland Spatial `State electoral boundary 2017` REST layer because the 2017 redistribution remained in force for the 31 October 2020 and 26 October 2024 state general elections.
 
 2014 and 2018 boundary data is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. It is licensed under Creative Commons Attribution 4.0. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
 

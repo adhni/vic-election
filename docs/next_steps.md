@@ -109,8 +109,8 @@ Do not move to external JSON yet. A separate `data/elections.json` can wait unti
 
 Possible later targets:
 
-- NSW lower-house elections beyond 2023
-- Queensland lower-house elections
+- NSW lower-house elections earlier than 2011
+- Queensland lower-house elections earlier than 2020
 
 Likely prerequisite work:
 
@@ -120,13 +120,20 @@ Likely prerequisite work:
 - broader party normalisation
 - jurisdiction-specific boundary handling
 
-NSW lower-house feasibility is now proven by the `NSW State 2023`, `NSW State 2019`, and `NSW State 2015` integrations:
+NSW lower-house feasibility is now proven by the `NSW State 2023`, `NSW State 2019`, `NSW State 2015`, and `NSW State 2011` integrations:
 
 - official NSWEC district result pages are structured enough to scrape repeatably
 - the 2021 redistribution shapefile matches the 2023 election
 - the 2013 redistribution MID/MIF boundary dataset matches the 2019 election
 - the older `SGE2015` VTR structure still fits the same core importer with a small route/HTML compatibility adjustment
+- the older `SGE2011` archive still yields first-preference and final preferred rows, even without full round-by-round distributions
 - small source-specific normalisation is still needed, such as NSW party labels and footnote-marked district names
+
+Queensland lower-house feasibility is now also proven by the `Queensland State 2024` and `Queensland State 2020` integrations:
+
+- the ECQ public results app exposes stable district `primary` and `preference` JSON blobs keyed by election stub and district stub
+- the same 2017 Queensland redistribution boundary layer matches both 2020 and 2024 because that boundary set remained in force
+- the importer can reuse the app's existing long-row model with explicit `transfer`, `progressive`, and `final` rows from the ECQ preference payload
 
 At that point, consider whether the project should become a broader Australian preference explorer.
 
