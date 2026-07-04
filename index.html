@@ -222,6 +222,7 @@
       border: 1px solid var(--line);
       border-radius: 10px;
       background: #fff;
+      white-space: normal;
     }
 
     .ranking-row:hover { background: #f5f1eb; }
@@ -512,6 +513,13 @@
     }
 
     .pref-impact strong { color: var(--ink); font-style: normal; }
+
+    .summary-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
 
     /* ── Party chip ── */
     .party-chip {
@@ -841,7 +849,7 @@
   <div class="page-wrap">
     <header class="page-header">
       <h1>Australian Election · Preference Explorer</h1>
-      <p>Victorian state districts and Australian federal House divisions — first preferences, distribution rounds, and final result.</p>
+      <p>Australian state districts, multi-member divisions, and federal House divisions — first preferences, counts, and final results.</p>
     </header>
 
     <nav class="controls" aria-label="Controls">
@@ -1207,6 +1215,30 @@
         "boundaries": "data/qld_2020_district_boundaries.geojson"
       },
       {
+        "key": "tas-2025",
+        "label": "Tasmania State 2025",
+        "type": "state",
+        "jurisdiction": "Tasmania",
+        "year": 2025,
+        "source": "TEC",
+        "system": "hare-clark",
+        "membersPerDistrict": 7,
+        "csv": "data/tas_2025_preferences_long.csv",
+        "boundaries": "data/tas_2025_district_boundaries.geojson"
+      },
+      {
+        "key": "tas-2024",
+        "label": "Tasmania State 2024",
+        "type": "state",
+        "jurisdiction": "Tasmania",
+        "year": 2024,
+        "source": "TEC",
+        "system": "hare-clark",
+        "membersPerDistrict": 7,
+        "csv": "data/tas_2024_preferences_long.csv",
+        "boundaries": "data/tas_2024_district_boundaries.geojson"
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -1334,6 +1366,7 @@
     let mapDrag = null;
     let suppressUrlUpdate = false;
     let electionLoadId = 0;
+    let pendingDistrictFromUrl = "";
     let datasetMeta = {
       label: "Embedded sample data",
       rowCount: countRowsFromDistricts(allDistricts)
@@ -1357,18 +1390,22 @@
       if (upper === "CL") return "Country Labor";
       if (p === "Australian Labor Party - Victorian Branch") return "Labor";
       if (p === "Australian Labor Party (NSW Branch)") return "Labor";
+      if (p === "Australian Labor Party") return "Labor";
       if (upper === "GNS") return "Greens";
       if (upper === "GREENS") return "Greens";
       if (p === "Australian Greens") return "Greens";
       if (p === "The Greens NSW") return "Greens";
       if (p === "The Greens") return "Greens";
+      if (p === "Tasmanian Greens") return "Greens";
       if (upper === "LP") return "Liberal";
       if (upper === "LIBERAL") return "Liberal";
       if (p === "The Liberal Party of Australia, New South Wales Division") return "Liberal";
       if (p === "Liberal Party of Australia New South Wales Division") return "Liberal";
+      if (p === "Liberal Party") return "Liberal";
       if (upper === "NP") return "Nationals";
       if (upper === "NATIONALS") return "Nationals";
       if (p === "National Party of Australia - NSW") return "Nationals";
+      if (p === "The Nationals") return "Nationals";
       if (upper === "IND") return "Independent";
       if (upper === "CDP") return "Christian Democrats";
       if (upper === "AD") return "Australian Democrats";
@@ -1377,6 +1414,8 @@
       if (p === "Fiona Patten's Reason Party") return "Reason";
       if (p === "Animal Justice Party") return "Animal Justice";
       if (p === "Freedom Party of Victoria") return "Freedom Party";
+      if (p === "Jacqui Lambie Network") return "Jacqui Lambie Network";
+      if (p === "Shooters, Fishers, Farmers TAS") return "Shooters, Fishers, Farmers";
       if (!p) return "Independent";
       return p;
     }
@@ -1407,7 +1446,9 @@
       if (p.includes("liberal")) return "#2f61bf";
       if (p.includes("national")) return "#25539f";
       if (p.includes("greens")) return "#2d8a4b";
+      if (p.includes("jacqui lambie")) return "#b55a9d";
       if (p.includes("animal justice")) return "#7a57b8";
+      if (p.includes("shooters")) return "#8a6a3f";
       if (p.includes("socialists")) return "#ad3d6f";
       if (p.includes("reason")) return "#2b98a3";
       if (p.includes("family first")) return "#c27022";
@@ -1444,6 +1485,44 @@
       return d.partyMap?.[candidate] || "Independent";
     }
 
+    function isMultiMemberElection() {
+      const election = activeElection();
+      return election.system === "hare-clark" || Number(election.membersPerDistrict || 1) > 1;
+    }
+
+    function electedMembers(d) {
+      const source = d.elected_members || d.elected_member || "";
+      return source.split(";").map(name => name.trim()).filter(Boolean);
+    }
+
+    function isElectedCandidate(d, candidate) {
+      return Boolean(d.electedSet?.has(candidate) || electedMembers(d).includes(candidate));
+    }
+
+    function electedSeatCounts(d, labeler = partyBloc) {
+      const counts = new Map();
+      electedMembers(d).forEach(candidate => {
+        const label = labeler(getParty(d, candidate));
+        counts.set(label, (counts.get(label) || 0) + 1);
+      });
+      return counts;
+    }
+
+    function electedSeatSummary(d) {
+      return [...electedSeatCounts(d, partyLabel).entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([party, count]) => `${party} ${count}`)
+        .join(" · ");
+    }
+
+    function leadingElectedBloc(d) {
+      const counts = [...electedSeatCounts(d, partyBloc).entries()];
+      if (!counts.length) return "Other";
+      const primaryBloc = partyBloc(getParty(d, getFirstLeader(d)[0]));
+      counts.sort((a, b) => b[1] - a[1] || (a[0] === primaryBloc ? -1 : b[0] === primaryBloc ? 1 : a[0].localeCompare(b[0])));
+      return counts[0][0];
+    }
+
     function getFinal(d) {
       const last = d.rounds[d.rounds.length - 1];
       return last?.totals || {};
@@ -1462,6 +1541,7 @@
     }
 
     function finalMargin(d) {
+      if (isMultiMemberElection()) return Number(d.majority || 0);
       const [, winnerVotes] = getWinnerFromFinal(d);
       const [, secondVotes] = getSecondFromFinal(d);
       return Math.max(0, winnerVotes - secondVotes);
@@ -1472,6 +1552,10 @@
     }
 
     function resultChanged(d) {
+      if (isMultiMemberElection()) {
+        const topPrimary = new Set(ranked(d.first).slice(0, Number(d.members_to_elect || electedMembers(d).length || 1)).map(([candidate]) => candidate));
+        return electedMembers(d).some(candidate => !topPrimary.has(candidate));
+      }
       return getFirstLeader(d)[0] !== getWinnerFromFinal(d)[0];
     }
 
@@ -1480,18 +1564,30 @@
     }
 
     function winningBloc(d) {
+      if (isMultiMemberElection()) return leadingElectedBloc(d);
       return partyBloc(getParty(d, getWinnerFromFinal(d)[0]));
     }
 
     function electorateLabel(count = 0) {
-      const noun = activeElectionYear.startsWith("federal-") ? "division" : "district";
+      const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";
       return count === 1 ? noun : `${noun}s`;
     }
 
     function winnerGain(d) {
+      if (isMultiMemberElection()) return biggestElectedGain(d).gain;
       const [winner, finalVotes] = getWinnerFromFinal(d);
       const firstVotes = d.first[winner] || 0;
       return finalVotes - firstVotes;
+    }
+
+    function biggestElectedGain(d) {
+      const finalTotals = getFinal(d);
+      const gains = electedMembers(d).map(candidate => ({
+        candidate,
+        gain: Math.max(0, Number(finalTotals[candidate] || 0) - Number(d.first[candidate] || 0))
+      }));
+      gains.sort((a, b) => b.gain - a.gain || a.candidate.localeCompare(b.candidate));
+      return gains[0] || { candidate: "", gain: 0 };
     }
 
     function countRowsFromDistricts(list) {
@@ -1570,6 +1666,7 @@
       if (state.district) {
         const selected = allDistricts.find(d => d.district.toLowerCase() === state.district.toLowerCase());
         if (selected) {
+          pendingDistrictFromUrl = "";
           document.getElementById("districtSearch").value = "";
           document.getElementById("partyFilter").value = "all";
           document.getElementById("changedOnly").checked = false;
@@ -1577,12 +1674,14 @@
           districts = [...allDistricts];
           activeDistrict = selected;
           focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+        } else {
+          pendingDistrictFromUrl = state.district;
         }
       }
       suppressUrlUpdate = false;
       populateControls();
       render();
-      updateUrlState(replace);
+      if (!pendingDistrictFromUrl) updateUrlState(replace);
     }
 
     function mapVisual(d) {
@@ -1605,6 +1704,14 @@
           label: changed ? "Changed" : "Held"
         };
       }
+      if (isMultiMemberElection()) {
+        const color = blocColor(winningBloc(d));
+        return {
+          color,
+          fill: hexToRgba(color, .58),
+          label: winningBloc(d)
+        };
+      }
       const color = blocColor(winnerParty);
       return {
         color,
@@ -1614,6 +1721,13 @@
     }
 
     function tooltipHtml(d) {
+      if (isMultiMemberElection()) {
+        return `
+          <strong>${d.district}</strong>
+          <div>${electedSeatSummary(d)}</div>
+          <span>Last seat gap ${pct(finalMargin(d), d.formal_votes)} · quota ${fmt.format(d.quota || 0)}</span>
+        `;
+      }
       const [winner] = getWinnerFromFinal(d);
       const winnerParty = getParty(d, winner);
       return `
@@ -1761,7 +1875,9 @@
         const isMuted = !shown.has(d.district);
         const [winner] = getWinnerFromFinal(d);
         const winnerParty = getParty(d, winner);
-        const mapTitle = `${d.district} · ${partyBloc(winnerParty)} · ${partyLabel(winnerParty)} · ${shortName(winner)}`;
+        const mapTitle = isMultiMemberElection()
+          ? `${d.district} · ${electedSeatSummary(d)}`
+          : `${d.district} · ${partyBloc(winnerParty)} · ${partyLabel(winnerParty)} · ${shortName(winner)}`;
         return `
           <path
             class="district-shape${isActive ? " active" : ""}${isMuted ? " muted" : ""}"
@@ -1873,8 +1989,14 @@
       let veryCloseCount = 0;
 
       allDistricts.forEach(d => {
-        const bloc = winningBloc(d);
-        blocCounts.set(bloc, (blocCounts.get(bloc) || 0) + 1);
+        if (isMultiMemberElection()) {
+          electedSeatCounts(d, partyBloc).forEach((count, bloc) => {
+            blocCounts.set(bloc, (blocCounts.get(bloc) || 0) + count);
+          });
+        } else {
+          const bloc = winningBloc(d);
+          blocCounts.set(bloc, (blocCounts.get(bloc) || 0) + 1);
+        }
         if (resultChanged(d)) changedCount += 1;
         const marginShare = d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
         if (marginShare <= .05) closeCount += 1;
@@ -1889,8 +2011,15 @@
         if (!count) return;
         chips.push(`<span class="summary-chip"><span class="dot" style="background:${blocColor(bloc)}"></span>${bloc} <strong>${fmt.format(count)}</strong></span>`);
       });
-      chips.push(`<span class="summary-chip"><strong>${fmt.format(changedCount)}</strong> changed on preferences</span>`);
-      chips.push(`<span class="summary-chip"><strong>${fmt.format(closeCount)}</strong> under 5%</span>`);
+      if (isMultiMemberElection()) {
+        const totalMembers = allDistricts.reduce((sum, d) => sum + electedMembers(d).length, 0);
+        chips.splice(1, 0, `<span class="summary-chip"><strong>${fmt.format(totalMembers)}</strong> members elected</span>`);
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(changedCount)}</strong> divisions elected outside primary top ${activeElection().membersPerDistrict || 7}</span>`);
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(closeCount)}</strong> last-seat gaps under 5%</span>`);
+      } else {
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(changedCount)}</strong> changed on preferences</span>`);
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(closeCount)}</strong> under 5%</span>`);
+      }
       if (veryCloseCount) {
         chips.push(`<span class="summary-chip"><strong>${fmt.format(veryCloseCount)}</strong> under 2%</span>`);
       }
@@ -1919,6 +2048,78 @@
       }
 
       const topCount = Math.min(5, allDistricts.length);
+      if (isMultiMemberElection()) {
+        const byClosest = [...allDistricts]
+          .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || finalMargin(a) - finalMargin(b) || a.district.localeCompare(b.district))
+          .slice(0, topCount);
+        const byPrimaryLeader = [...allDistricts]
+          .sort((a, b) => getFirstLeader(b)[1] / b.formal_votes - getFirstLeader(a)[1] / a.formal_votes || a.district.localeCompare(b.district))
+          .slice(0, topCount);
+        const byChanged = [...allDistricts]
+          .filter(d => resultChanged(d))
+          .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || a.district.localeCompare(b.district))
+          .slice(0, topCount);
+        const byTransferGain = [...allDistricts]
+          .sort((a, b) => biggestElectedGain(b).gain - biggestElectedGain(a).gain || a.district.localeCompare(b.district))
+          .slice(0, topCount);
+        const outsideTopCount = d => {
+          const topPrimary = new Set(ranked(d.first).slice(0, Number(d.members_to_elect || electedMembers(d).length || 1)).map(([candidate]) => candidate));
+          return electedMembers(d).filter(candidate => !topPrimary.has(candidate)).length;
+        };
+
+        const cards = [
+          {
+            title: "Closest final seats",
+            rows: rankingsListHtml(
+              byClosest,
+              d => `${electedSeatSummary(d)} · quota ${fmt.format(d.quota || 0)}`,
+              d => pct(finalMargin(d), d.formal_votes),
+              "No divisions loaded."
+            )
+          },
+          {
+            title: "Highest primary leaders",
+            rows: rankingsListHtml(
+              byPrimaryLeader,
+              d => {
+                const [leader] = getFirstLeader(d);
+                return `${shortName(leader)} · ${partyLabel(getParty(d, leader))}`;
+              },
+              d => pct(getFirstLeader(d)[1], d.formal_votes),
+              "No primary vote rows loaded."
+            )
+          },
+          {
+            title: "Elected after preferences",
+            rows: rankingsListHtml(
+              byChanged,
+              d => `${outsideTopCount(d)} elected outside the primary top ${d.members_to_elect || 7}`,
+              d => pct(finalMargin(d), d.formal_votes),
+              "No divisions elected outside the primary top group."
+            )
+          },
+          {
+            title: "Biggest elected transfer gains",
+            rows: rankingsListHtml(
+              byTransferGain,
+              d => {
+                const gain = biggestElectedGain(d);
+                return `${shortName(gain.candidate)} gained ${fmt.format(gain.gain)} votes`;
+              },
+              d => pct(biggestElectedGain(d).gain, d.formal_votes),
+              "No elected transfer gains available."
+            )
+          }
+        ];
+
+        target.innerHTML = cards.map(card => `
+          <section class="ranking-card">
+            <div class="section-title">${card.title}</div>
+            ${card.rows}
+          </section>
+        `).join("");
+        return;
+      }
       const byClosest = [...allDistricts]
         .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || finalMargin(a) - finalMargin(b) || a.district.localeCompare(b.district))
         .slice(0, topCount);
@@ -2052,6 +2253,7 @@
       roundSelect.disabled = false;
       roundSelect.innerHTML = activeDistrict.rounds.map(r => {
         const excludedParty = partyLabel(getParty(activeDistrict, r.excluded));
+        if (!r.excluded) return `<option value="${r.round}">Count ${r.round}${r.final ? " — final" : ""}</option>`;
         return `<option value="${r.round}">Round ${r.round} — ${excludedParty} excluded${r.final ? " (final)" : ""}</option>`;
       }).join("");
       roundSelect.value = String(focusRound);
@@ -2198,6 +2400,55 @@
     function renderSummary(d) {
       const [leader, leaderVotes] = getFirstLeader(d);
       const leaderParty = getParty(d, leader);
+      if (isMultiMemberElection()) {
+        const members = electedMembers(d);
+        const memberHtml = members.map((candidate, index) => {
+          const party = getParty(d, candidate);
+          const color = partyColor(party);
+          return `<span class="party-chip" style="background:${hexToRgba(color,.1)};color:${color};border-color:${hexToRgba(color,.2)}"><span class="dot" style="background:${color}"></span>${index + 1}. ${shortName(candidate)} · ${partyLabel(party)}</span>`;
+        }).join("");
+        const outsideTop = (() => {
+          const topPrimary = new Set(ranked(d.first).slice(0, Number(d.members_to_elect || members.length || 1)).map(([candidate]) => candidate));
+          return members.filter(candidate => !topPrimary.has(candidate)).length;
+        })();
+
+        document.getElementById("districtSummary").innerHTML = `
+          <h2 class="result-district">${d.district}</h2>
+          <div class="result-facts">
+            <div class="fact-item">
+              <span class="fact-label">System</span>
+              <span class="fact-value">Hare-Clark STV</span>
+            </div>
+            <div class="fact-item">
+              <span class="fact-label">Members elected</span>
+              <span class="fact-value">${fmt.format(members.length)} of ${fmt.format(d.members_to_elect || members.length)}</span>
+            </div>
+            <div class="fact-item">
+              <span class="fact-label">Seat split</span>
+              <span class="fact-value">${electedSeatSummary(d)}</span>
+            </div>
+            <div class="fact-item">
+              <span class="fact-label">Primary leader</span>
+              <span class="fact-value">${blocBadgeHtml(leaderParty)} ${shortName(leader)}</span>
+            </div>
+            <div class="fact-item">
+              <span class="fact-label">Quota</span>
+              <span class="fact-value">${fmt.format(d.quota || 0)}</span>
+            </div>
+            <div class="fact-item">
+              <span class="fact-label">Last seat gap</span>
+              <span class="fact-value">${fmt.format(finalMargin(d))} <span style="color:var(--muted);font-weight:400">(${pct(finalMargin(d), d.formal_votes)})</span></span>
+            </div>
+            <div class="fact-item">
+              <span class="fact-label">Turnout</span>
+              <span class="fact-value">${Number(d.turnout_pct).toFixed(1)}%</span>
+            </div>
+          </div>
+          <p class="pref-impact">${outsideTop ? `<strong>${fmt.format(outsideTop)}</strong> elected member${outsideTop === 1 ? "" : "s"} finished outside the primary top ${d.members_to_elect || members.length} before preferences.` : `The elected members all started inside the primary top ${d.members_to_elect || members.length}.`}</p>
+          <div class="summary-chips">${memberHtml}</div>
+        `;
+        return;
+      }
       const [winner, finalVotes] = getWinnerFromFinal(d);
       const winnerParty = getParty(d, winner);
       const changed = resultChanged(d);
@@ -2254,12 +2505,13 @@
       document.getElementById(target).innerHTML = rows.map(([candidate, votes]) => {
         const party = getParty(d, candidate);
         const color = partyColor(party);
-        const isHighlight = candidate === highlightName;
+        const isHighlight = candidate === highlightName || (isMultiMemberElection() && isElectedCandidate(d, candidate));
+        const status = isMultiMemberElection() && isElectedCandidate(d, candidate) ? ` · elected ${d.electedOrder?.[candidate] || ""}` : "";
         return `
-          <div class="bar-row" title="${partyLabel(party)} · ${candidate}: ${fmt.format(votes)}">
+          <div class="bar-row" title="${partyLabel(party)} · ${candidate}: ${fmt.format(votes)}${status}">
             <div class="bar-label">
               <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
-              <div class="candidate-line">${shortName(candidate)}</div>
+              <div class="candidate-line">${shortName(candidate)}${status ? ` · elected ${d.electedOrder?.[candidate]}` : ""}</div>
             </div>
             <div class="track"><div class="fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${isHighlight ? 1 : .72};"></div></div>
             <div class="bar-value">${fmt.format(votes)}<br><span style="font-size:10px">${pct(votes, denominator)}</span></div>
@@ -2274,6 +2526,42 @@
       if (!r) { document.getElementById("roundDisplay").innerHTML = ""; return; }
       const d = activeDistrict;
       const transfers = ranked(r.transfers);
+      if (isMultiMemberElection() && !transfers.length) {
+        const rows = ranked(r.totals);
+        const max = rows[0]?.[1] || 1;
+        document.getElementById("roundDisplay").innerHTML = `
+          <div class="round-card">
+            <div class="round-header">
+              <div>
+                <p class="round-title">Count ${r.round}${r.final ? " — Final count" : ""}</p>
+                <div class="round-meta">
+                  <span>Quota: <strong>${fmt.format(d.quota || 0)}</strong></span>
+                  <span>${fmt.format(electedMembers(d).length)} elected</span>
+                  <span>Last seat gap: <strong>${fmt.format(finalMargin(d))}</strong></span>
+                </div>
+              </div>
+            </div>
+            <div class="transfer-list">
+              ${rows.map(([candidate, votes]) => {
+                const party = getParty(d, candidate);
+                const color = partyColor(party);
+                const elected = isElectedCandidate(d, candidate);
+                return `
+                  <div class="transfer-row" title="${partyLabel(party)} · ${candidate}: ${fmt.format(votes)}">
+                    <div class="transfer-label">
+                      <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
+                      <div class="candidate-line">${shortName(candidate)}${elected ? ` · elected ${d.electedOrder?.[candidate] || ""}` : ""}</div>
+                    </div>
+                    <div class="mini-track"><div class="mini-fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${elected ? 1 : .5};"></div></div>
+                    <div class="bar-value">${fmt.format(votes)}<br><span style="font-size:10px">${pct(votes, d.formal_votes)}</span></div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+        return;
+      }
       const max = transfers[0]?.[1] || 1;
       const total = Object.values(r.transfers).reduce((a, b) => a + Number(b || 0), 0);
       const excludedParty = getParty(d, r.excluded);
@@ -2355,7 +2643,9 @@
       const leadText = second
         ? `${partyLabel(leaderParty)} leads ${partyLabel(secondParty)} by ${fmt.format(leaderVotes - secondVotes)} votes.`
         : `${partyLabel(leaderParty)} is the only candidate remaining.`;
-      const movementText = storyStep === 0
+      const movementText = isMultiMemberElection()
+        ? `${fmt.format(electedMembers(d).length)} members are elected in ${d.district}; quota is ${fmt.format(d.quota || 0)}.`
+        : storyStep === 0
         ? "This is the first-preference scoreboard."
         : previousLeader && previousLeader !== leader
           ? `${partyLabel(leaderParty)} took the lead at this count.`
@@ -2376,7 +2666,7 @@
             <button id="storyNextRound" type="button"${storyStep >= steps.length - 1 ? " disabled" : ""}>Next</button>
           </div>
           <div class="story-standings">
-            ${rows.map(([candidate, votes], i) => storyRow(d, candidate, votes, max, d.formal_votes, { leader: i === 0 })).join("")}
+            ${rows.map(([candidate, votes], i) => storyRow(d, candidate, votes, max, d.formal_votes, { leader: i === 0 || (isMultiMemberElection() && isElectedCandidate(d, candidate)) })).join("")}
           </div>
           ${eliminated.length ? `<div class="story-eliminated">Eliminated: ${eliminated.map(name => `${partyLabel(getParty(d, name))} ${shortName(name)}`).join(", ")}</div>` : ""}
         </div>
@@ -2495,6 +2785,9 @@
           source,
           elected_member: firstRow.elected_member || "",
           elected_party: firstRow.elected_party || "Independent",
+          elected_members: firstRow.elected_members || firstRow.elected_member || "",
+          members_to_elect: Number(firstRow.members_to_elect || 1),
+          quota: Number(firstRow.quota || 0),
           enrolment: Number(firstRow.enrolment || 0),
           formal_votes: Number(firstRow.formal_votes || 0),
           informal_votes: Number(firstRow.informal_votes || 0),
@@ -2502,6 +2795,9 @@
           turnout_pct: Number(firstRow.turnout_pct || 0),
           majority: Number(firstRow.majority || 0),
           partyMap: {},
+          statusMap: {},
+          electedSet: new Set(),
+          electedOrder: {},
           first: {},
           rounds: []
         };
@@ -2509,6 +2805,13 @@
         entries.forEach(r => {
           if (r.candidate) d.partyMap[r.candidate] = r.candidate_party || d.partyMap[r.candidate] || "Independent";
           if (r.excluded_candidate && r.excluded_party) d.partyMap[r.excluded_candidate] = r.excluded_party || d.partyMap[r.excluded_candidate] || "Independent";
+          if (r.candidate && r.candidate_status) d.statusMap[r.candidate] = r.candidate_status;
+          if (r.candidate && r.candidate_elected === "True") d.electedSet.add(r.candidate);
+          if (r.candidate && r.candidate_elected_order) d.electedOrder[r.candidate] = Number(r.candidate_elected_order);
+        });
+        electedMembers(d).forEach((candidate, index) => {
+          d.electedSet.add(candidate);
+          if (!d.electedOrder[candidate]) d.electedOrder[candidate] = index + 1;
         });
 
         entries.filter(r => r.row_type === "first").forEach(r => {
@@ -2537,7 +2840,12 @@
       if (!loaded.length) throw new Error("No valid district rows found.");
       allDistricts = loaded;
       districts = [...allDistricts];
-      activeDistrict = districts[0];
+      activeDistrict = pendingDistrictFromUrl
+        ? districts.find(d => d.district.toLowerCase() === pendingDistrictFromUrl.toLowerCase()) || districts[0]
+        : districts[0];
+      if (activeDistrict?.district?.toLowerCase() === pendingDistrictFromUrl.toLowerCase()) {
+        pendingDistrictFromUrl = "";
+      }
       datasetMeta = { label: source === "Uploaded CSV" ? "Loaded uploaded CSV" : `Loaded ${source}`, rowCount: rows.length };
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;

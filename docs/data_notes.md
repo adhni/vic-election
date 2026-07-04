@@ -5,6 +5,7 @@ Source targets:
 - Victorian Electoral Commission State Election results pages
 - Australian Electoral Commission Federal Election House of Representatives downloads
 - Australian Electoral Commission federal division GIS boundaries
+- Tasmanian Electoral Commission House of Assembly result workbooks
 
 This repo is built around three levels of data:
 
@@ -83,6 +84,8 @@ The NSW state 2011 result rows are generated from the official NSWEC district su
 The Queensland state 2024 result rows are generated from the Electoral Commission of Queensland public results JSON service under `resultsdata.elections.qld.gov.au`, using the `SGE2024` district `primary` and `preference` count files. The boundary file is generated from the official Queensland Spatial `State electoral boundary 2017` ArcGIS REST layer, which the dataset metadata states remains the official state electoral boundary set until the next redistribution.
 
 The Queensland state 2020 result rows are generated from the same Electoral Commission of Queensland JSON service, using the `state2020` district `primary` and `preference` count files. The 2020 boundary file uses the same Queensland Spatial `State electoral boundary 2017` layer because those 93 districts were also in force for the 31 October 2020 election.
+
+The Tasmania state 2025 and 2024 result rows are generated from the Tasmanian Electoral Commission final House of Assembly result workbooks for the divisions of Bass, Braddon, Clark, Franklin, and Lyons. Tasmania uses Hare-Clark STV, so each division elects seven members rather than a single winner. The app stores first-preference rows and final-count rows with extra fields for quota, elected order, elected status, and members to elect. The boundary files are filtered from the AEC March 2025 national federal division boundary file because Tasmanian House of Assembly divisions share the names and boundaries of the five Tasmanian federal divisions.
 
 The 2025 federal Australia boundary file is adapted from the AEC `AUS-March-2025-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, with no `StateAb` filtering.
 

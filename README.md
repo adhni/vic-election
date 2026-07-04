@@ -1,6 +1,6 @@
 # Australian Election Preference Explorer
 
-A static HTML data app for exploring Victorian lower-house preference counts from state elections and Australian federal House elections.
+A static HTML data app for exploring Australian state lower-house preference counts and Australian federal House elections.
 
 The app is map-first and party/bloc-first:
 
@@ -79,6 +79,17 @@ data/qld_2024_district_boundaries.geojson
 data/qld_2020_preferences_long.csv
 data/qld_2020_district_summary.csv
 data/qld_2020_district_boundaries.geojson
+```
+
+Tasmania state coverage currently includes the multi-member House of Assembly `2025` and `2024` elections:
+
+```text
+data/tas_2025_preferences_long.csv
+data/tas_2025_district_summary.csv
+data/tas_2025_district_boundaries.geojson
+data/tas_2024_preferences_long.csv
+data/tas_2024_district_summary.csv
+data/tas_2024_district_boundaries.geojson
 ```
 
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
@@ -164,6 +175,12 @@ data/qld_2024_district_boundaries.geojson # Queensland 2017 redistribution bound
 data/qld_2020_preferences_long.csv        # ECQ 2020 Legislative Assembly long preference-count rows
 data/qld_2020_district_summary.csv        # ECQ 2020 district-level result summary
 data/qld_2020_district_boundaries.geojson # Queensland 2017 redistribution boundaries used at the 2020 election
+data/tas_2025_preferences_long.csv        # TEC 2025 House of Assembly Hare-Clark first and final count rows
+data/tas_2025_district_summary.csv        # TEC 2025 division-level elected member summary
+data/tas_2025_district_boundaries.geojson # Tasmania House divisions filtered from AEC March 2025 federal boundaries
+data/tas_2024_preferences_long.csv        # TEC 2024 House of Assembly Hare-Clark first and final count rows
+data/tas_2024_district_summary.csv        # TEC 2024 division-level elected member summary
+data/tas_2024_district_boundaries.geojson # Tasmania House divisions filtered from AEC March 2025 federal boundaries
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
@@ -211,6 +228,8 @@ NSW 2015 uses the same official NSW Electoral Commission 2013 redistribution bou
 NSW 2011 result rows are generated from the official NSWEC district summary pages under `SGE2011/la_index.htm`. Those pages expose final first-preference tables and final two-candidate-preferred tables but not machine-readable round-by-round distributions, so the app stores first and final rows for each district. The 2011 boundary file is adapted from the Terria/NationalMap `FID_SED_2011_AUST` historical ABS State Electoral Division vector tiles at zoom 6, filtered to the 93 NSW districts used at the 26 March 2011 election.
 
 Queensland 2024 and 2020 result rows are generated from the Electoral Commission of Queensland public results JSON service under `resultsdata.elections.qld.gov.au`, using `SGE2024` and `state2020` district `primary` and `preference` count files. Both elections use the official Queensland Spatial `State electoral boundary 2017` REST layer because the 2017 redistribution remained in force for the 31 October 2020 and 26 October 2024 state general elections.
+
+Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commission final House of Assembly result workbooks for Bass, Braddon, Clark, Franklin, and Lyons. Tasmania uses Hare-Clark STV, so each division elects seven members; the app stores first-preference rows and final-count rows, plus quota, elected order, and candidate status fields. The boundary files are filtered from the AEC March 2025 national federal division boundary file because Tasmanian House of Assembly divisions share the names and boundaries of the five Tasmanian federal divisions.
 
 2014 and 2018 boundary data is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. It is licensed under Creative Commons Attribution 4.0. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
 
@@ -315,6 +334,15 @@ For NSW 2015:
 ```bash
 python scripts/build_nsw_state_2015.py --out data
 python scripts/validate_state_vic.py --csv data/nsw_2015_preferences_long.csv --boundaries data/nsw_2015_district_boundaries.geojson --expected-districts 93 --label NSW-2015 --max-gap-ratio 0.005
+```
+
+For Tasmania House of Assembly:
+
+```bash
+python scripts/build_tas_state_2025.py
+python scripts/validate_tas_state.py --csv data/tas_2025_preferences_long.csv --boundaries data/tas_2025_district_boundaries.geojson
+python scripts/build_tas_state_2024.py
+python scripts/validate_tas_state.py --csv data/tas_2024_preferences_long.csv --boundaries data/tas_2024_district_boundaries.geojson
 ```
 
 For the 2025 Australia-wide federal dataset, download the official AEC event `31496` files into `tmp/aec_2025_au`, unzip the national boundary ZIP there, then run:
