@@ -65,6 +65,9 @@ jobs:
           python scripts/validate_federal.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2007_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-13745.csv --expected-divisions 37 --scope vic
           python scripts/validate_state_vic.py --csv data/vic_2010_preferences_long.csv --boundaries data/vic_2010_district_boundaries.geojson --expected-districts 88
           python scripts/validate_state_vic.py --csv data/vic_2006_preferences_long.csv --boundaries data/vic_2006_district_boundaries.geojson --expected-districts 88
+          python scripts/validate_tas_state.py --csv data/tas_2025_preferences_long.csv --boundaries data/tas_2025_district_boundaries.geojson
+          python scripts/validate_tas_state.py --csv data/tas_2024_preferences_long.csv --boundaries data/tas_2024_district_boundaries.geojson
+          python scripts/validate_tas_state.py --csv data/tas_2021_preferences_long.csv --boundaries data/tas_2021_district_boundaries.geojson --expected-members 5
 
       - name: Smoke test static app
         run: |

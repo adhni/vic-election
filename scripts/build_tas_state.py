@@ -7,21 +7,23 @@ import json
 import re
 import time
 from pathlib import Path
+from io import StringIO
 from urllib.parse import quote
 
 import pandas as pd
 import requests
+from bs4 import BeautifulSoup
 
 
 UA = "Mozilla/5.0 (compatible; australian-election-preference-explorer/0.1; +https://github.com/)"
-
-MEMBERS_TO_ELECT = 7
 
 ELECTIONS = {
     2025: {
         "base": "https://www.tec.tas.gov.au/house-of-assembly/elections-2025/results",
         "filename": "{year} House of Assembly - Division of {division} - Export Count {count}.xlsx",
         "boundaries_source": Path("data/federal_2025_au_division_boundaries.geojson"),
+        "members_to_elect": 7,
+        "source_format": "xlsx",
         "divisions": {
             "Bass": {"slug": "bass", "count": 90, "enrolment": 80566},
             "Braddon": {"slug": "braddon", "count": 92, "enrolment": 84566},
@@ -34,12 +36,27 @@ ELECTIONS = {
         "base": "https://www.tec.tas.gov.au/house-of-assembly/elections-2024/results",
         "filename": "{year} House of Assembly - Division of {division} - Export {count}.xlsx",
         "boundaries_source": Path("data/federal_2025_au_division_boundaries.geojson"),
+        "members_to_elect": 7,
+        "source_format": "xlsx",
         "divisions": {
             "Bass": {"slug": "bass", "count": 80, "enrolment": 80126},
             "Braddon": {"slug": "braddon", "count": 85, "enrolment": 83875},
             "Clark": {"slug": "clark", "count": 45, "enrolment": 74236},
             "Franklin": {"slug": "franklin", "count": 58, "enrolment": 82238},
             "Lyons": {"slug": "lyons", "count": 72, "enrolment": 87722},
+        },
+    },
+    2021: {
+        "base": "https://www.tec.tas.gov.au/house-of-assembly/StateElection2021/results",
+        "boundaries_source": Path("data/federal_2019_au_division_boundaries.geojson"),
+        "members_to_elect": 5,
+        "source_format": "html",
+        "divisions": {
+            "Bass": {"slug": "bass", "count": 52, "enrolment": 78182},
+            "Braddon": {"slug": "braddon", "count": 34, "enrolment": 81211},
+            "Clark": {"slug": "clark", "count": 33, "enrolment": 73998},
+            "Franklin": {"slug": "franklin", "count": 40, "enrolment": 78130},
+            "Lyons": {"slug": "lyons", "count": 44, "enrolment": 82911},
         },
     },
 }
@@ -229,7 +246,7 @@ def result_rows(df: pd.DataFrame) -> list[dict[str, object]]:
     return rows
 
 
-def elected_order(df: pd.DataFrame) -> list[str]:
+def elected_order(df: pd.DataFrame, members_to_elect: int) -> list[str]:
     elected: list[str] = []
     for _, row in df.iterrows():
         name = clean_text(row.iloc[1] if len(row) > 1 else "")
@@ -238,7 +255,222 @@ def elected_order(df: pd.DataFrame) -> list[str]:
             continue
         if count and count.lower() != "count1":
             elected.append(format_candidate_name(name))
-    return elected[:MEMBERS_TO_ELECT]
+    return elected[:members_to_elect]
+
+
+def html_snippet_url(config: dict[str, object], meta: dict[str, int | str], prefix: str) -> str:
+    slug = str(meta["slug"])
+    return f"{config['base']}/{slug}/{prefix}-{slug}-m.html" if prefix == "dist" else f"{config['base']}/{slug}/{prefix}-{slug}-e.html"
+
+
+def party_headings(html: str) -> list[str]:
+    soup = BeautifulSoup(html, "html.parser")
+    headings: list[str] = []
+    for heading in soup.find_all("h3"):
+        text = clean_text(heading.get_text(" "))
+        if not text or "summary" in text.lower():
+            break
+        headings.append(text)
+    return headings
+
+
+def parse_candidate_table(table: pd.DataFrame, value_column: int, status_column: int | None = None) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for _, row in table.iterrows():
+        name = clean_text(row.iloc[1] if len(row) > 1 else "")
+        if (
+            not name
+            or name in {"Group total", "Total formal votes", "Informal ballot papers", "Total ballot papers counted", "Electors on roll", "Progressive turnout"}
+            or name.startswith("Percentage of")
+            or name.startswith("Quotas")
+        ):
+            continue
+        votes = clean_int(row.iloc[value_column] if len(row) > value_column else "")
+        status = clean_text(row.iloc[status_column] if status_column is not None and len(row) > status_column else "")
+        if name.lower() in {"nan", "division of bass", "division of braddon", "division of clark", "division of franklin", "division of lyons"}:
+            continue
+        rows.append(clean_row({
+            "candidate": format_candidate_name(name),
+            "votes": votes,
+            "status": status,
+        }))
+    return rows
+
+
+def read_html_tables(html: str) -> list[pd.DataFrame]:
+    return pd.read_html(StringIO(html))
+
+
+def summary_value(summary_table: pd.DataFrame, label: str) -> int:
+    for _, row in summary_table.iterrows():
+        if clean_text(row.iloc[1] if len(row) > 1 else "") == label:
+            return clean_int(row.iloc[2] if len(row) > 2 else "")
+    return 0
+
+
+def parse_html_division(
+    session: requests.Session,
+    year: int,
+    config: dict[str, object],
+    division: str,
+    meta: dict[str, int | str],
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    first_url = html_snippet_url(config, meta, "fp")
+    final_url = html_snippet_url(config, meta, "dist")
+    first_html = session.get(first_url, timeout=120).text
+    final_html = session.get(final_url, timeout=120).text
+    first_tables = read_html_tables(first_html)
+    final_tables = read_html_tables(final_html)
+    parties = party_headings(first_html)
+    if len(first_tables) < 2 or len(final_tables) < 2:
+        raise SystemExit(f"{division}: could not parse Tasmania {year} HTML result tables")
+
+    first_votes: dict[str, int] = {}
+    party_by_candidate: dict[str, str] = {}
+    for table, party in zip(first_tables[:-1], parties):
+        for row in parse_candidate_table(table, 2):
+            candidate = str(row["candidate"])
+            first_votes[candidate] = int(row["votes"])
+            party_by_candidate[candidate] = party_from_group(party)
+
+    final_candidates: list[dict[str, object]] = []
+    for table in final_tables[:-1]:
+        final_candidates.extend(parse_candidate_table(table, 2, 3))
+
+    summary_table = first_tables[-1]
+    formal_votes = summary_value(summary_table, "Total formal votes")
+    informal_votes = summary_value(summary_table, "Informal ballot papers")
+    first_text = BeautifulSoup(first_html, "html.parser").get_text(" ")
+    quota_matches = re.findall(r"Quota \(progressive\):\s*[\d,]+", first_text)
+    if not quota_matches:
+        raise SystemExit(f"{division}: missing quota in Tasmania {year} HTML")
+    quota = max(clean_int(text) for text in quota_matches)
+    members_to_elect = int(config["members_to_elect"])
+    elected = [
+        str(row["candidate"])
+        for row in sorted(
+            final_candidates,
+            key=lambda item: clean_int(str(item["status"]).replace("Elected", "")) or 999,
+        )
+        if str(row["status"]).startswith("Elected")
+    ][:members_to_elect]
+    return build_output_rows(
+        year=year,
+        config=config,
+        division=division,
+        meta=meta,
+        first_votes=first_votes,
+        final_candidates=final_candidates,
+        party_by_candidate=party_by_candidate,
+        elected=elected,
+        formal_votes=formal_votes,
+        informal_votes=informal_votes,
+        quota=quota,
+        distribution_url=final_url,
+    )
+
+
+def build_output_rows(
+    *,
+    year: int,
+    config: dict[str, object],
+    division: str,
+    meta: dict[str, int | str],
+    first_votes: dict[str, int],
+    final_candidates: list[dict[str, object]],
+    party_by_candidate: dict[str, str],
+    elected: list[str],
+    formal_votes: int,
+    informal_votes: int,
+    quota: int,
+    distribution_url: str,
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    members_to_elect = int(config["members_to_elect"])
+    elected_set = set(elected)
+    order_by_candidate = {name: index + 1 for index, name in enumerate(elected)}
+
+    final_votes = {str(row["candidate"]): int(row["votes"]) for row in final_candidates}
+    status_by_candidate = {str(row["candidate"]): str(row["status"]) for row in final_candidates}
+
+    non_elected_final = [votes for candidate, votes in final_votes.items() if candidate not in elected_set]
+    elected_final = [final_votes.get(candidate, 0) for candidate in elected]
+    final_seat_gap = max(0, min(elected_final or [0]) - max(non_elected_final or [0]))
+    primary_leader = max(first_votes.items(), key=lambda item: item[1])
+    final_leader = max(final_votes.items(), key=lambda item: item[1])
+    final_runner_up = sorted(final_votes.items(), key=lambda item: item[1], reverse=True)[1]
+
+    district_url = f"{config['base']}/{meta['slug']}/index.html"
+    elected_members = "; ".join(elected)
+    elected_parties = "; ".join(party_by_candidate.get(candidate, "Independent") for candidate in elected)
+
+    base = {
+        "district": division,
+        "district_url": district_url,
+        "distribution_url": distribution_url,
+        "elected_member": elected_members,
+        "elected_party": elected_parties,
+        "elected_members": elected_members,
+        "members_to_elect": members_to_elect,
+        "quota": quota,
+        "enrolment": int(meta["enrolment"]),
+        "formal_votes": formal_votes,
+        "informal_votes": informal_votes,
+        "total_votes": formal_votes + informal_votes,
+        "turnout_pct": round((formal_votes + informal_votes) / int(meta["enrolment"]) * 100, 2) if int(meta["enrolment"]) else "",
+        "majority": final_seat_gap,
+    }
+
+    long_rows: list[dict[str, object]] = []
+    for candidate, votes in sorted(first_votes.items(), key=lambda item: (-item[1], item[0])):
+        long_rows.append(clean_row({
+            **base,
+            "round_number": 0,
+            "row_type": "first",
+            "excluded_candidate": "",
+            "excluded_party": "",
+            "candidate": candidate,
+            "candidate_party": party_by_candidate.get(candidate, "Independent"),
+            "candidate_status": status_by_candidate.get(candidate, ""),
+            "candidate_elected": str(candidate in elected_set),
+            "candidate_elected_order": order_by_candidate.get(candidate, ""),
+            "votes": votes,
+        }))
+
+    for candidate, votes in sorted(final_votes.items(), key=lambda item: (-item[1], item[0])):
+        long_rows.append(clean_row({
+            **base,
+            "round_number": int(meta["count"]),
+            "row_type": "final",
+            "excluded_candidate": "",
+            "excluded_party": "",
+            "candidate": candidate,
+            "candidate_party": party_by_candidate.get(candidate, "Independent"),
+            "candidate_status": status_by_candidate.get(candidate, ""),
+            "candidate_elected": str(candidate in elected_set),
+            "candidate_elected_order": order_by_candidate.get(candidate, ""),
+            "votes": votes,
+        }))
+
+    elected_from_outside_top = any(
+        candidate not in {name for name, _ in sorted(first_votes.items(), key=lambda item: item[1], reverse=True)[:members_to_elect]}
+        for candidate in elected
+    )
+    summary = clean_row({
+        **base,
+        "primary_leader": primary_leader[0],
+        "primary_leader_party": party_by_candidate.get(primary_leader[0], "Independent"),
+        "primary_leader_votes": primary_leader[1],
+        "winner": final_leader[0],
+        "winner_party": party_by_candidate.get(final_leader[0], "Independent"),
+        "winner_final_votes": final_leader[1],
+        "runner_up": final_runner_up[0],
+        "runner_up_party": party_by_candidate.get(final_runner_up[0], "Independent"),
+        "runner_up_final_votes": final_runner_up[1],
+        "final_margin": final_seat_gap,
+        "preference_changed_result": str(elected_from_outside_top),
+        "winner_transfer_gain": final_leader[1] - first_votes.get(final_leader[0], 0),
+    })
+    return long_rows, summary
 
 
 def parse_division(
@@ -305,93 +537,21 @@ def parse_division(
     enrolment = int(meta["enrolment"])
     turnout_pct = round(total_votes / enrolment * 100, 2) if enrolment else ""
 
-    elected = elected_order(status_df)
-    elected_set = set(elected)
-    order_by_candidate = {name: index + 1 for index, name in enumerate(elected)}
-
-    final_votes = {str(row["candidate"]): int(row["votes"]) for row in final_candidates}
-    status_by_candidate = {str(row["candidate"]): str(row["status"]) for row in final_candidates}
-
-    non_elected_final = [votes for candidate, votes in final_votes.items() if candidate not in elected_set]
-    elected_final = [final_votes.get(candidate, 0) for candidate in elected]
-    final_seat_gap = max(0, min(elected_final or [0]) - max(non_elected_final or [0]))
-    primary_leader = max(first_votes.items(), key=lambda item: item[1])
-    final_leader = max(final_votes.items(), key=lambda item: item[1])
-    final_runner_up = sorted(final_votes.items(), key=lambda item: item[1], reverse=True)[1]
-
-    district_url = f"{config['base']}/{meta['slug']}/index.html"
-    distribution_url = workbook_url(year, config, division, meta)
-    elected_members = "; ".join(elected)
-    elected_parties = "; ".join(party_by_candidate.get(candidate, "Independent") for candidate in elected)
-
-    base = {
-        "district": division,
-        "district_url": district_url,
-        "distribution_url": distribution_url,
-        "elected_member": elected_members,
-        "elected_party": elected_parties,
-        "elected_members": elected_members,
-        "members_to_elect": MEMBERS_TO_ELECT,
-        "quota": quota,
-        "enrolment": enrolment,
-        "formal_votes": formal_votes,
-        "informal_votes": informal_votes,
-        "total_votes": total_votes,
-        "turnout_pct": turnout_pct,
-        "majority": final_seat_gap,
-    }
-
-    long_rows: list[dict[str, object]] = []
-    for candidate, votes in sorted(first_votes.items(), key=lambda item: (-item[1], item[0])):
-        long_rows.append(clean_row({
-            **base,
-            "round_number": 0,
-            "row_type": "first",
-            "excluded_candidate": "",
-            "excluded_party": "",
-            "candidate": candidate,
-            "candidate_party": party_by_candidate.get(candidate, "Independent"),
-            "candidate_status": status_by_candidate.get(candidate, ""),
-            "candidate_elected": str(candidate in elected_set),
-            "candidate_elected_order": order_by_candidate.get(candidate, ""),
-            "votes": votes,
-        }))
-
-    for candidate, votes in sorted(final_votes.items(), key=lambda item: (-item[1], item[0])):
-        long_rows.append(clean_row({
-            **base,
-            "round_number": int(meta["count"]),
-            "row_type": "final",
-            "excluded_candidate": "",
-            "excluded_party": "",
-            "candidate": candidate,
-            "candidate_party": party_by_candidate.get(candidate, "Independent"),
-            "candidate_status": status_by_candidate.get(candidate, ""),
-            "candidate_elected": str(candidate in elected_set),
-            "candidate_elected_order": order_by_candidate.get(candidate, ""),
-            "votes": votes,
-        }))
-
-    elected_from_outside_top = any(
-        candidate not in {name for name, _ in sorted(first_votes.items(), key=lambda item: item[1], reverse=True)[:MEMBERS_TO_ELECT]}
-        for candidate in elected
+    elected = elected_order(status_df, int(config["members_to_elect"]))
+    return build_output_rows(
+        year=year,
+        config=config,
+        division=division,
+        meta=meta,
+        first_votes=first_votes,
+        final_candidates=final_candidates,
+        party_by_candidate=party_by_candidate,
+        elected=elected,
+        formal_votes=formal_votes,
+        informal_votes=informal_votes,
+        quota=quota,
+        distribution_url=workbook_url(year, config, division, meta),
     )
-    summary = clean_row({
-        **base,
-        "primary_leader": primary_leader[0],
-        "primary_leader_party": party_by_candidate.get(primary_leader[0], "Independent"),
-        "primary_leader_votes": primary_leader[1],
-        "winner": final_leader[0],
-        "winner_party": party_by_candidate.get(final_leader[0], "Independent"),
-        "winner_final_votes": final_leader[1],
-        "runner_up": final_runner_up[0],
-        "runner_up_party": party_by_candidate.get(final_runner_up[0], "Independent"),
-        "runner_up_final_votes": final_runner_up[1],
-        "final_margin": final_seat_gap,
-        "preference_changed_result": str(elected_from_outside_top),
-        "winner_transfer_gain": final_leader[1] - first_votes.get(final_leader[0], 0),
-    })
-    return long_rows, summary
 
 
 def write_boundaries(source_path: Path, out_path: Path, divisions: set[str], year: int) -> None:
@@ -433,10 +593,13 @@ def main(argv: list[str] | None = None) -> None:
     long_rows: list[dict[str, object]] = []
     summary_rows: list[dict[str, object]] = []
     for division, meta in divisions.items():
-        url = workbook_url(args.year, config, division, meta)
-        path = raw_dir / f"{division.lower()}_count_{meta['count']}.xlsx"
-        download(session, url, path, refresh=args.refresh)
-        division_rows, summary = parse_division(path, args.year, config, division, meta)
+        if config["source_format"] == "html":
+            division_rows, summary = parse_html_division(session, args.year, config, division, meta)
+        else:
+            url = workbook_url(args.year, config, division, meta)
+            path = raw_dir / f"{division.lower()}_count_{meta['count']}.xlsx"
+            download(session, url, path, refresh=args.refresh)
+            division_rows, summary = parse_division(path, args.year, config, division, meta)
         long_rows.extend(division_rows)
         summary_rows.append(summary)
 
