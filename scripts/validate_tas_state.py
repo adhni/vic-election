@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 from pathlib import Path
 
 
@@ -32,6 +33,13 @@ def load_geojson(path: Path) -> dict:
         return json.load(f)
 
 
+def surname_key(value: str) -> str:
+    text = value.strip()
+    if "," in text:
+        text = text.split(",", 1)[0]
+    return re.sub(r"[^A-Z0-9]", "", text.upper())
+
+
 def validate_rows(rows: list[dict[str, str]], expected_divisions: int, expected_members: int) -> set[str]:
     if not rows:
         raise SystemExit("Preference CSV is empty")
@@ -51,11 +59,29 @@ def validate_rows(rows: list[dict[str, str]], expected_divisions: int, expected_
             raise SystemExit(f"{division}: missing first preference rows")
         if not final_rows:
             raise SystemExit(f"{division}: missing final rows")
+        for row in district_rows:
+            candidate = row["candidate"].strip()
+            if candidate.upper().startswith("RESULTS COUNT"):
+                raise SystemExit(f"{division}: workbook header row was parsed as a candidate")
 
         formal_votes = int(float(district_rows[0]["formal_votes"]))
         first_total = sum(int(float(row["votes"])) for row in first_rows)
         if first_total != formal_votes:
             raise SystemExit(f"{division}: first preference total {first_total} != formal votes {formal_votes}")
+
+        first_surnames = {surname_key(row["candidate"]) for row in first_rows}
+        final_surnames = {
+            surname_key(row["candidate"])
+            for row in final_rows
+            if int(float(row["votes"])) > 0 or row["candidate_elected"] == "True"
+        }
+        missing_first = sorted(final_surnames - first_surnames)
+        missing_final = []
+        if missing_first or missing_final:
+            raise SystemExit(
+                f"{division}: candidate surname mismatch between first and final rows; "
+                f"missing first={missing_first}, missing final={missing_final}"
+            )
 
         elected = [row for row in final_rows if row["candidate_elected"] == "True"]
         if len(elected) != expected_members:

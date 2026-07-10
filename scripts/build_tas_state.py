@@ -132,6 +132,16 @@ def surname_key(value: str) -> str:
     return normalize_key(parts[0] if len(parts) == 2 else text)
 
 
+def name_words(value: str) -> list[str]:
+    return re.findall(r"[A-Z0-9]+", clean_text(value).upper())
+
+
+def surname_word_prefixes(value: str) -> list[str]:
+    surname = clean_text(value).split(",", 1)[0]
+    words = name_words(surname)
+    return ["".join(words[:count]) for count in range(len(words), 0, -1)]
+
+
 def surname_initial_key(value: str) -> str:
     text = clean_text(value)
     if "," in text:
@@ -154,6 +164,14 @@ def format_candidate_name(value: str) -> str:
         surname, given = parts
         return f"{surname.upper()}, {given}".strip()
     return text.upper()
+
+
+def cell_value(value: object) -> object:
+    return clean_text(value) if isinstance(value, str) else value
+
+
+def clean_row(row: dict[str, object]) -> dict[str, object]:
+    return {key: cell_value(value) for key, value in row.items()}
 
 
 def party_from_group(value: str) -> str:
@@ -199,13 +217,15 @@ def result_rows(df: pd.DataFrame) -> list[dict[str, object]]:
             continue
         votes = clean_int(row.iloc[2] if len(row) > 2 else "")
         status = clean_text(row.iloc[5] if len(row) > 5 else "")
+        if status.lower() == "status" or name.lower().startswith("results count"):
+            continue
         if not status and not votes:
             continue
-        rows.append({
+        rows.append(clean_row({
             "candidate": format_candidate_name(name),
             "votes": votes,
             "status": status,
-        })
+        }))
     return rows
 
 
@@ -237,13 +257,24 @@ def parse_division(
         surname_initial_key(str(candidate["candidate"])): str(candidate["candidate"])
         for candidate in final_candidates
     }
+    name_by_surname_prefix: dict[str, str] = {}
+    surname_prefix_counts: dict[str, int] = {}
     surname_groups: dict[str, list[str]] = {}
     for candidate in final_candidates:
-        surname_groups.setdefault(surname_key(str(candidate["candidate"])), []).append(str(candidate["candidate"]))
+        name = str(candidate["candidate"])
+        surname_groups.setdefault(surname_key(name), []).append(name)
+        for prefix in surname_word_prefixes(name):
+            surname_prefix_counts[prefix] = surname_prefix_counts.get(prefix, 0) + 1
+            name_by_surname_prefix[prefix] = name
     name_by_unique_surname = {
         key: names[0]
         for key, names in surname_groups.items()
         if len(names) == 1
+    }
+    name_by_unique_surname_prefix = {
+        key: name
+        for key, name in name_by_surname_prefix.items()
+        if surname_prefix_counts[key] == 1
     }
 
     party_by_candidate: dict[str, str] = {}
@@ -259,8 +290,9 @@ def parse_division(
         if party_header:
             current_party = party_from_group(party_header)
         candidate = (
-            name_by_surname_initial.get(surname_initial_key(header))
-            or name_by_unique_surname.get(surname_key(header))
+            name_by_unique_surname.get(surname_key(header))
+            or name_by_unique_surname_prefix.get(surname_key(header))
+            or name_by_surname_initial.get(surname_initial_key(header))
             or format_candidate_name(header)
         )
         party_by_candidate[candidate] = current_party or "Independent"
@@ -311,7 +343,7 @@ def parse_division(
 
     long_rows: list[dict[str, object]] = []
     for candidate, votes in sorted(first_votes.items(), key=lambda item: (-item[1], item[0])):
-        long_rows.append({
+        long_rows.append(clean_row({
             **base,
             "round_number": 0,
             "row_type": "first",
@@ -323,10 +355,10 @@ def parse_division(
             "candidate_elected": str(candidate in elected_set),
             "candidate_elected_order": order_by_candidate.get(candidate, ""),
             "votes": votes,
-        })
+        }))
 
     for candidate, votes in sorted(final_votes.items(), key=lambda item: (-item[1], item[0])):
-        long_rows.append({
+        long_rows.append(clean_row({
             **base,
             "round_number": int(meta["count"]),
             "row_type": "final",
@@ -338,13 +370,13 @@ def parse_division(
             "candidate_elected": str(candidate in elected_set),
             "candidate_elected_order": order_by_candidate.get(candidate, ""),
             "votes": votes,
-        })
+        }))
 
     elected_from_outside_top = any(
         candidate not in {name for name, _ in sorted(first_votes.items(), key=lambda item: item[1], reverse=True)[:MEMBERS_TO_ELECT]}
         for candidate in elected
     )
-    summary = {
+    summary = clean_row({
         **base,
         "primary_leader": primary_leader[0],
         "primary_leader_party": party_by_candidate.get(primary_leader[0], "Independent"),
@@ -358,7 +390,7 @@ def parse_division(
         "final_margin": final_seat_gap,
         "preference_changed_result": str(elected_from_outside_top),
         "winner_transfer_gain": final_leader[1] - first_votes.get(final_leader[0], 0),
-    }
+    })
     return long_rows, summary
 
 
@@ -414,11 +446,11 @@ def main(argv: list[str] | None = None) -> None:
     boundary_path = args.out_dir / f"tas_{args.year}_district_boundaries.geojson"
 
     with pref_path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=LONG_FIELDS)
+        writer = csv.DictWriter(f, fieldnames=LONG_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(long_rows)
     with summary_path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=SUMMARY_FIELDS)
+        writer = csv.DictWriter(f, fieldnames=SUMMARY_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(summary_rows)
     write_boundaries(boundaries_source, boundary_path, set(divisions), args.year)
