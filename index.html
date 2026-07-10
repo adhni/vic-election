@@ -1508,6 +1508,11 @@
       return counts;
     }
 
+    function electedBlocs(d) {
+      if (!isMultiMemberElection()) return [winningBloc(d)];
+      return [...electedSeatCounts(d, partyBloc).keys()];
+    }
+
     function electedSeatSummary(d) {
       return [...electedSeatCounts(d, partyLabel).entries()]
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
@@ -1609,7 +1614,7 @@
 
     function districtMatchesFilters(d, filters) {
       const matchesQuery = !filters.query || d.district.toLowerCase().includes(filters.query);
-      const matchesParty = filters.party === "all" || winningBloc(d) === filters.party;
+      const matchesParty = filters.party === "all" || electedBlocs(d).includes(filters.party);
       const matchesChanged = !filters.changedOnly || resultChanged(d);
       const matchesClose = !filters.closeOnly || (d.formal_votes && finalMargin(d) / d.formal_votes <= 0.05);
       return matchesQuery && matchesParty && matchesChanged && matchesClose;
@@ -2210,7 +2215,7 @@
       const partyFilter = document.getElementById("partyFilter");
       const selectedParty = partyFilter.value || "all";
       const blocOrder = ["Labor", "Coalition", "Greens", "Independent", "Other"];
-      const winningBlocs = blocOrder.filter(bloc => allDistricts.some(d => winningBloc(d) === bloc));
+      const winningBlocs = blocOrder.filter(bloc => allDistricts.some(d => electedBlocs(d).includes(bloc)));
       partyFilter.innerHTML = [`<option value="all">Any bloc</option>`].concat(
         winningBlocs.map(p => `<option value="${p}">${p}</option>`)
       ).join("");
