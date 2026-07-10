@@ -81,7 +81,7 @@ data/qld_2020_district_summary.csv
 data/qld_2020_district_boundaries.geojson
 ```
 
-Tasmania state coverage currently includes the multi-member House of Assembly `2025` and `2024` elections:
+Tasmania state coverage currently includes the multi-member House of Assembly `2025`, `2024`, and `2021` elections:
 
 ```text
 data/tas_2025_preferences_long.csv
@@ -90,6 +90,9 @@ data/tas_2025_district_boundaries.geojson
 data/tas_2024_preferences_long.csv
 data/tas_2024_district_summary.csv
 data/tas_2024_district_boundaries.geojson
+data/tas_2021_preferences_long.csv
+data/tas_2021_district_summary.csv
+data/tas_2021_district_boundaries.geojson
 ```
 
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
@@ -181,6 +184,9 @@ data/tas_2025_district_boundaries.geojson # Tasmania House divisions filtered fr
 data/tas_2024_preferences_long.csv        # TEC 2024 House of Assembly Hare-Clark first and final count rows
 data/tas_2024_district_summary.csv        # TEC 2024 division-level elected member summary
 data/tas_2024_district_boundaries.geojson # Tasmania House divisions filtered from AEC March 2025 federal boundaries
+data/tas_2021_preferences_long.csv        # TEC 2021 House of Assembly Hare-Clark first and final count rows
+data/tas_2021_district_summary.csv        # TEC 2021 division-level elected member summary
+data/tas_2021_district_boundaries.geojson # Tasmania House divisions filtered from AEC 2019 federal boundaries
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
@@ -343,6 +349,8 @@ python scripts/build_tas_state_2025.py
 python scripts/validate_tas_state.py --csv data/tas_2025_preferences_long.csv --boundaries data/tas_2025_district_boundaries.geojson
 python scripts/build_tas_state_2024.py
 python scripts/validate_tas_state.py --csv data/tas_2024_preferences_long.csv --boundaries data/tas_2024_district_boundaries.geojson
+python scripts/build_tas_state_2021.py
+python scripts/validate_tas_state.py --csv data/tas_2021_preferences_long.csv --boundaries data/tas_2021_district_boundaries.geojson --expected-members 5
 ```
 
 For the 2025 Australia-wide federal dataset, download the official AEC event `31496` files into `tmp/aec_2025_au`, unzip the national boundary ZIP there, then run:
