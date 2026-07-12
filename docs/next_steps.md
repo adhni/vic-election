@@ -71,6 +71,13 @@ Completed Australia-wide 2025 and 2022 work:
 - generated national long CSV, summary CSV, and boundary GeoJSON files for both years
 - generalised the app branding and seat wording so the mixed Victoria-state and Australia-federal scope is explicit
 
+Completed federal data cleanup:
+
+- removed duplicate Victoria-only 2016, 2019, 2022, and 2025 datasets because the Australia-wide files already contain every Victorian division
+- retained Victoria-only 2007, 2010, and 2013 until equivalent national datasets are available
+- removed the duplicate selector and CI validation paths, reducing checked-out data by about 30 MB
+- tested generic boundary coordinate rounding but deferred it because rounding invalidated some official polygon geometries; future boundary reduction must preserve shared topology
+
 ## Phase 3: Comparison And Rankings UI
 
 Before adding other states, improve analysis inside the existing Victoria dataset.
