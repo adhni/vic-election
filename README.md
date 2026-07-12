@@ -81,6 +81,17 @@ data/qld_2020_district_summary.csv
 data/qld_2020_district_boundaries.geojson
 ```
 
+South Australia state coverage currently includes `2022` and `2018`:
+
+```text
+data/sa_2022_preferences_long.csv
+data/sa_2022_district_summary.csv
+data/sa_2022_district_boundaries.geojson
+data/sa_2018_preferences_long.csv
+data/sa_2018_district_summary.csv
+data/sa_2018_district_boundaries.geojson
+```
+
 Tasmania state coverage currently includes the multi-member House of Assembly `2025`, `2024`, and `2021` elections:
 
 ```text
@@ -178,6 +189,9 @@ data/qld_2024_district_boundaries.geojson # Queensland 2017 redistribution bound
 data/qld_2020_preferences_long.csv        # ECQ 2020 Legislative Assembly long preference-count rows
 data/qld_2020_district_summary.csv        # ECQ 2020 district-level result summary
 data/qld_2020_district_boundaries.geojson # Queensland 2017 redistribution boundaries used at the 2020 election
+data/sa_2022_preferences_long.csv         # ECSA 2022 House of Assembly first-preference and final distribution rows
+data/sa_2022_district_summary.csv         # ECSA 2022 House of Assembly district-level result summary
+data/sa_2022_district_boundaries.geojson  # Data SA 2022 state electorate boundaries
 data/tas_2025_preferences_long.csv        # TEC 2025 House of Assembly Hare-Clark first and final count rows
 data/tas_2025_district_summary.csv        # TEC 2025 division-level elected member summary
 data/tas_2025_district_boundaries.geojson # Tasmania House divisions filtered from AEC March 2025 federal boundaries
@@ -340,6 +354,15 @@ For NSW 2015:
 ```bash
 python scripts/build_nsw_state_2015.py --out data
 python scripts/validate_state_vic.py --csv data/nsw_2015_preferences_long.csv --boundaries data/nsw_2015_district_boundaries.geojson --expected-districts 93 --label NSW-2015 --max-gap-ratio 0.005
+```
+
+For South Australia House of Assembly:
+
+```bash
+python scripts/build_sa_state.py
+python scripts/validate_state_vic.py --csv data/sa_2022_preferences_long.csv --boundaries data/sa_2022_district_boundaries.geojson --expected-districts 47 --label SA-2022 --max-gap-ratio 0.005
+python scripts/build_sa_state.py --year 2018
+python scripts/validate_state_vic.py --csv data/sa_2018_preferences_long.csv --boundaries data/sa_2018_district_boundaries.geojson --expected-districts 47 --label SA-2018 --max-gap-ratio 0.005
 ```
 
 For Tasmania House of Assembly:

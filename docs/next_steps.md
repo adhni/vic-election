@@ -136,6 +136,14 @@ Queensland lower-house feasibility is now also proven by the `Queensland State 2
 - the same 2017 Queensland redistribution boundary layer matches both 2020 and 2024 because that boundary set remained in force
 - the importer can reuse the app's existing long-row model with explicit `transfer`, `progressive`, and `final` rows from the ECQ preference payload
 
+South Australia lower-house feasibility is now proven by the `South Australia State 2022` and `South Australia State 2018` integrations:
+
+- ECSA publishes official House of Assembly first-preference CSVs by district and final distribution CSVs by district
+- Data SA publishes the matching 2022 state electorate boundary GeoJSON
+- the importer can reuse the single-member state long-row model with first, transfer, progressive, and final rows
+- the archived 2018 ECSA pages expose final first-preference and two-candidate-preferred totals for all 47 districts, while Location SA retains the matching 2018 boundary layer
+- 2018 therefore includes first and final rows without fabricated intermediate transfers; 2022 retains the complete round-by-round distribution
+
 Tasmania House of Assembly feasibility is now proven by the `Tasmania State 2025`, `Tasmania State 2024`, and `Tasmania State 2021` integrations:
 
 - official TEC final result workbooks expose candidate first preferences, final count totals, candidate status, elected order, quota, and formal/informal ballot totals
