@@ -1281,16 +1281,6 @@
         "boundaries": "data/federal_2025_au_division_boundaries.geojson"
       },
       {
-        "key": "federal-2025-vic",
-        "label": "Federal 2025 - Victoria",
-        "type": "federal",
-        "jurisdiction": "Victoria",
-        "year": 2025,
-        "source": "AEC",
-        "csv": "data/federal_2025_vic_preferences_long.csv",
-        "boundaries": "data/federal_2025_vic_division_boundaries.geojson"
-      },
-      {
         "key": "federal-2022-au",
         "label": "Federal 2022 - Australia",
         "type": "federal",
@@ -1299,16 +1289,6 @@
         "source": "AEC",
         "csv": "data/federal_2022_au_preferences_long.csv",
         "boundaries": "data/federal_2022_au_division_boundaries.geojson"
-      },
-      {
-        "key": "federal-2022-vic",
-        "label": "Federal 2022 - Victoria",
-        "type": "federal",
-        "jurisdiction": "Victoria",
-        "year": 2022,
-        "source": "AEC",
-        "csv": "data/federal_2022_vic_preferences_long.csv",
-        "boundaries": "data/federal_2022_vic_division_boundaries.geojson"
       },
       {
         "key": "federal-2019-au",
@@ -1321,16 +1301,6 @@
         "boundaries": "data/federal_2019_au_division_boundaries.geojson"
       },
       {
-        "key": "federal-2019-vic",
-        "label": "Federal 2019 - Victoria",
-        "type": "federal",
-        "jurisdiction": "Victoria",
-        "year": 2019,
-        "source": "AEC",
-        "csv": "data/federal_2019_vic_preferences_long.csv",
-        "boundaries": "data/federal_2019_vic_division_boundaries.geojson"
-      },
-      {
         "key": "federal-2016-au",
         "label": "Federal 2016 - Australia",
         "type": "federal",
@@ -1339,16 +1309,6 @@
         "source": "AEC",
         "csv": "data/federal_2016_au_preferences_long.csv",
         "boundaries": "data/federal_2016_au_division_boundaries.geojson"
-      },
-      {
-        "key": "federal-2016-vic",
-        "label": "Federal 2016 - Victoria",
-        "type": "federal",
-        "jurisdiction": "Victoria",
-        "year": 2016,
-        "source": "AEC",
-        "csv": "data/federal_2016_vic_preferences_long.csv",
-        "boundaries": "data/federal_2016_vic_division_boundaries.geojson"
       },
       {
         "key": "federal-2013-vic",
@@ -1383,6 +1343,12 @@
     ];
 
     const electionYears = Object.fromEntries(electionDefinitions.map(election => [election.key, election]));
+    const electionYearAliases = {
+      "federal-2025-vic": "federal-2025-au",
+      "federal-2022-vic": "federal-2022-au",
+      "federal-2019-vic": "federal-2019-au",
+      "federal-2016-vic": "federal-2016-au"
+    };
     const activeElection = () => electionYears[activeElectionYear] || electionYears["2022"];
 
     let activeElectionYear = "2022";
@@ -1660,7 +1626,8 @@
     function readUrlState() {
       const params = new URLSearchParams(window.location.search);
       const mode = params.get("mode");
-      const year = params.get("year");
+      const requestedYear = params.get("year");
+      const year = electionYearAliases[requestedYear] || requestedYear;
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
