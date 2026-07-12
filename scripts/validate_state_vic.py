@@ -92,9 +92,9 @@ def validate_rows(
         ):
             informal_votes = int(float(metadata["informal_votes"]))
             total_votes = int(float(metadata["total_votes"]))
-            if total_votes < formal_votes + informal_votes:
+            if total_votes != formal_votes + informal_votes:
                 raise SystemExit(
-                    f"{district}: total votes {total_votes} < "
+                    f"{district}: total votes {total_votes} != "
                     f"formal {formal_votes} + informal {informal_votes}"
                 )
 
