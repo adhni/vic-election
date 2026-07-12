@@ -1343,6 +1343,12 @@
     ];
 
     const electionYears = Object.fromEntries(electionDefinitions.map(election => [election.key, election]));
+    const electionYearAliases = {
+      "federal-2025-vic": "federal-2025-au",
+      "federal-2022-vic": "federal-2022-au",
+      "federal-2019-vic": "federal-2019-au",
+      "federal-2016-vic": "federal-2016-au"
+    };
     const activeElection = () => electionYears[activeElectionYear] || electionYears["2022"];
 
     let activeElectionYear = "2022";
@@ -1620,7 +1626,8 @@
     function readUrlState() {
       const params = new URLSearchParams(window.location.search);
       const mode = params.get("mode");
-      const year = params.get("year");
+      const requestedYear = params.get("year");
+      const year = electionYearAliases[requestedYear] || requestedYear;
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
