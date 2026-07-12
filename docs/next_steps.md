@@ -151,6 +151,13 @@ South Australia lower-house feasibility is now proven by the `South Australia St
 - the archived 2018 ECSA pages expose final first-preference and two-candidate-preferred totals for all 47 districts, while Location SA retains the matching 2018 boundary layer
 - 2018 therefore includes first and final rows without fabricated intermediate transfers; 2022 retains the complete round-by-round distribution
 
+Western Australia lower-house feasibility is now proven by the `Western Australia State 2025` and `Western Australia State 2021` integrations:
+
+- WAEC publishes final Legislative Assembly XML feeds with district enrolment, first-preference totals, candidate metadata, and turnout fields
+- certified WAEC Results and Statistics reports provide the final two-candidate totals for every district, including contests where the election-night indicative pairing was zeroed or superseded
+- the 2025 election uses the Landgate 2023 distribution MLA layer, while 2021 uses the ABS 2021 State Electoral Division approximation of the 2019 WA distribution
+- both elections cover all 59 districts with first and final rows and no fabricated intermediate preference rounds
+
 Tasmania House of Assembly feasibility is now proven by the `Tasmania State 2025`, `Tasmania State 2024`, and `Tasmania State 2021` integrations:
 
 - official TEC final result workbooks expose candidate first preferences, final count totals, candidate status, elected order, quota, and formal/informal ballot totals
