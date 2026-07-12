@@ -411,16 +411,24 @@ def parse_2018_district(config: dict[str, object], district: str, html_path: Pat
     first_rows.sort(key=lambda row: (-int(row["votes"]), str(row["candidate"])))
 
     footers = first_table.select("tfoot tr")
-    totals = {
-        clean_text(tr.find_all(["th", "td"], recursive=False)[0].get_text(" ")).rstrip(":"): clean_int(
-            tr.find_all(["th", "td"], recursive=False)[-1].get_text(" ")
-        )
-        for tr in footers
-        if tr.find_all(["th", "td"], recursive=False)
-    }
+    totals = {}
+    for tr in footers:
+        cells = tr.find_all(["th", "td"], recursive=False)
+        if not cells:
+            continue
+        label = clean_text(cells[0].get_text(" ")).rstrip(":")
+        # Some archived ECSA pages wrap individual digits in span tags. Joining
+        # fragments without a separator preserves values such as 1,216 and
+        # 22,696 instead of parsing them as 12 and 22.
+        totals[label] = clean_int(cells[-1].get_text("", strip=True))
     formal_votes = totals.get("Total Formal", sum(int(row["votes"]) for row in first_rows))
     informal_votes = totals.get("Total Informal", 0)
     total_votes = totals.get("Total Ballot Papers", formal_votes + informal_votes)
+    if total_votes != formal_votes + informal_votes:
+        raise SystemExit(
+            f"{district}: total ballot papers {total_votes} != "
+            f"formal {formal_votes} + informal {informal_votes}"
+        )
 
     final_table = table_after_heading(soup, "Two Candidate Preferred")
     final_votes: dict[str, int] = {}
