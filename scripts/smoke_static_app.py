@@ -15,6 +15,11 @@ REQUIRED_RANKINGS_MARKERS = (
     "Changed on preferences",
     "Biggest winner transfer gains",
 )
+REQUIRED_NZ_MARKERS = (
+    '"system": "mmp-fpp"',
+    '["party", "party-vote", "close"]',
+    "function syncBoundaryTypeToActiveDistrict()",
+)
 EXPECTED_ELECTION_ALIASES = {
     "federal-2025-vic": "federal-2025-au",
     "federal-2022-vic": "federal-2022-au",
@@ -35,6 +40,11 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_RANKINGS_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing rankings UI marker {marker!r}")
+    for marker in REQUIRED_NZ_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing NZ MMP UI marker {marker!r}")
+    if html.count("syncBoundaryTypeToActiveDistrict();") < 2:
+        raise SystemExit(f"{html_file}: NZ map layer is not synchronized after filters and reset")
     match = re.search(r"const electionDefinitions = (\[.*?\]);", html, flags=re.S)
     if not match:
         raise SystemExit(f"{html_file}: missing electionDefinitions config")

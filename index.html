@@ -1720,10 +1720,13 @@
       const mode = params.get("mode");
       const requestedYear = params.get("year");
       const year = electionYearAliases[requestedYear] || requestedYear;
+      const allowedMapModes = electionYears[year]?.system === "mmp-fpp"
+        ? ["party", "party-vote", "close"]
+        : ["party", "close", "changed"];
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
-        mode: ["party", "close", "changed"].includes(mode) ? mode : ""
+        mode: allowedMapModes.includes(mode) ? mode : ""
       };
     }
 
@@ -1975,8 +1978,15 @@
         ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
         : boundaryFeatures;
       boundaryShapes = makeBoundaryShapes(visible);
-      resetMapZoom();
+      mapView = { x: 0, y: 0, w: 960, h: 560 };
+      hideTooltip();
       if (shouldRender) renderSeatMap();
+    }
+
+    function syncBoundaryTypeToActiveDistrict() {
+      if (isFppElection() && activeDistrict?.electorate_type && activeBoundaryType !== activeDistrict.electorate_type) {
+        setBoundaryType(activeDistrict.electorate_type, false);
+      }
     }
 
     function renderSeatMap() {
@@ -2462,6 +2472,7 @@
       const previous = activeDistrict?.district;
       districts = filteredDistricts();
       activeDistrict = districts.find(d => d.district === previous) || districts[0] || null;
+      syncBoundaryTypeToActiveDistrict();
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
       populateControls();
@@ -2476,6 +2487,7 @@
       document.getElementById("closeOnly").checked = false;
       districts = [...allDistricts];
       activeDistrict = districts[0] || null;
+      syncBoundaryTypeToActiveDistrict();
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
       populateControls();
