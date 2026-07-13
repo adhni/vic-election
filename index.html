@@ -1340,6 +1340,27 @@
         ]
       },
       {
+        "key": "nz-2020",
+        "label": "New Zealand General 2020",
+        "type": "national",
+        "jurisdiction": "New Zealand",
+        "year": 2020,
+        "source": "Electoral Commission NZ",
+        "system": "mmp-fpp",
+        "csv": "data/nz_2020_mmp.csv",
+        "boundaries": "data/nz_2020_electorate_boundaries.geojson",
+        "electorateSeats": 72,
+        "listSeats": 48,
+        "totalSeats": 120,
+        "parliament": [
+          ["Labour Party", 65],
+          ["National Party", 33],
+          ["Green Party", 10],
+          ["ACT New Zealand", 10],
+          ["Māori Party", 2]
+        ]
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -1521,7 +1542,7 @@
       if (p === "green") return "#098137";
       if (p.includes("act new zealand")) return "#f7dc00";
       if (p.includes("new zealand first")) return "#111111";
-      if (p.includes("te pāti māori")) return "#b51f2e";
+      if (p.includes("te pāti māori") || p.includes("māori party")) return "#b51f2e";
       if (p.includes("opportunities")) return "#0b9ea5";
       if (p.includes("labor")) return "#d94b49";
       if (p.includes("liberal")) return "#2f61bf";

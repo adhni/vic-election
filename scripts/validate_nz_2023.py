@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
 
-CSV_PATH = Path("data/nz_2023_mmp.csv")
-BOUNDARY_PATH = Path("data/nz_2023_electorate_boundaries.geojson")
-
-
 def main() -> None:
-    with CSV_PATH.open(newline="", encoding="utf-8") as handle:
+    parser = argparse.ArgumentParser(description="Validate a generated New Zealand MMP election")
+    parser.add_argument("--year", type=int, choices=(2020, 2023), default=2023)
+    args = parser.parse_args()
+    csv_path = Path(f"data/nz_{args.year}_mmp.csv")
+    boundary_path = Path(f"data/nz_{args.year}_electorate_boundaries.geojson")
+
+    with csv_path.open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
     groups: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in rows:
@@ -34,7 +37,7 @@ def main() -> None:
         if sum(int(row["votes"]) for row in party) <= 0:
             raise SystemExit(f"{district}: party votes are empty")
         if status == "cancelled":
-            if district != "Port Waikato" or any(int(row["votes"]) for row in first + final):
+            if args.year != 2023 or district != "Port Waikato" or any(int(row["votes"]) for row in first + final):
                 raise SystemExit(f"{district}: invalid cancelled-contest rows")
             continue
         if status != "official" or len(first) < 2 or len(first) != len(final):
@@ -47,11 +50,19 @@ def main() -> None:
         if total != formal + informal:
             raise SystemExit(f"{district}: total votes do not equal formal plus informal")
 
-    checks = {
-        "Mt Albert": ("Helen White", 13238, 18),
-        "Nelson": ("Rachel Boyack", 17541, 26),
-        "Tāmaki Makaurau": ("Takutai Tarsh Kemp", 10068, 42),
-    }
+    checks = (
+        {
+            "Mt Albert": ("Helen White", 13238, 18),
+            "Nelson": ("Rachel Boyack", 17541, 26),
+            "Tāmaki Makaurau": ("Takutai Tarsh Kemp", 10068, 42),
+        }
+        if args.year == 2023
+        else {
+            "Auckland Central": ("Chlöe Swarbrick", 12631, 1068),
+            "Northland": ("Willow-Jean Prime", 17066, 163),
+            "Waiariki": ("Rawiri Waititi", 12389, 836),
+        }
+    )
     for district, (winner, votes, margin) in checks.items():
         final = sorted(
             ((row["candidate"], int(row["votes"])) for row in groups[district] if row["row_type"] == "final"),
@@ -60,7 +71,7 @@ def main() -> None:
         if final[0] != (winner, votes) or final[0][1] - final[1][1] != margin:
             raise SystemExit(f"{district}: spot check failed: {final[:2]}")
 
-    geojson = json.loads(BOUNDARY_PATH.read_text(encoding="utf-8"))
+    geojson = json.loads(boundary_path.read_text(encoding="utf-8"))
     features = geojson.get("features", [])
     boundary_names = {feature["properties"]["district"] for feature in features}
     if len(features) != 72 or boundary_names != set(groups):
@@ -68,7 +79,8 @@ def main() -> None:
     boundary_types = Counter(feature["properties"]["electorate_type"] for feature in features)
     if boundary_types != {"General": 65, "Māori": 7}:
         raise SystemExit(f"Unexpected boundary split: {boundary_types}")
-    print("NZ 2023 validation passed: 65 general + 7 Māori electorates, 71 contests + Port Waikato cancelled")
+    contest_summary = "71 contests + Port Waikato cancelled" if args.year == 2023 else "72 official contests"
+    print(f"NZ {args.year} validation passed: 65 general + 7 Māori electorates, {contest_summary}")
 
 
 if __name__ == "__main__":

@@ -129,14 +129,16 @@ data/tas_2021_district_summary.csv
 data/tas_2021_district_boundaries.geojson
 ```
 
-New Zealand coverage currently includes the `2023` general election. It shows all 65 general and 7 Māori electorates, candidate and party votes, the nationwide 122-seat MMP result, and a General/Māori map-layer toggle:
+New Zealand coverage currently includes the `2023` and `2020` general elections. Each shows all 65 general and 7 Māori electorates, candidate and party votes, the nationwide MMP result, and a General/Māori map-layer toggle:
 
 ```text
 data/nz_2023_mmp.csv
 data/nz_2023_electorate_boundaries.geojson
+data/nz_2020_mmp.csv
+data/nz_2020_electorate_boundaries.geojson
 ```
 
-Electorate MPs are elected by first past the post, so preference-round and transfer-gain views are hidden for this election. Port Waikato is retained as a cancelled electorate contest with its valid party vote; the later by-election is not merged into the general-election result.
+Electorate MPs are elected by first past the post, so preference-round and transfer-gain views are hidden for these elections. In 2023, Port Waikato is retained as a cancelled electorate contest with its valid party vote; the later by-election is not merged into the general-election result.
 
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 

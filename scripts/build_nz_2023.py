@@ -15,6 +15,7 @@ from shapely.geometry import mapping, shape
 
 
 UA = "Mozilla/5.0 (compatible; election-preference-explorer/0.1; +https://github.com/)"
+ELECTION_YEAR = 2023
 RESULT_BASE = "https://archive.electionresults.govt.nz/electionresults_2023/statistics"
 MIRROR_BASE = "https://r.jina.ai/https://media.election.net.nz/electionresults_2023/statistics"
 CANDIDATE_LIST_URL = "https://en.wikipedia.org/wiki/Candidates_in_the_2023_New_Zealand_general_election_by_electorate"
@@ -129,7 +130,7 @@ def candidate_tables(html: str) -> list[tuple[str, list[tuple[str, str]]]]:
     out: list[tuple[str, list[tuple[str, str]]]] = []
     for table in tables:
         first_heading = clean(table.columns[0][0] if isinstance(table.columns, pd.MultiIndex) else table.columns[0])
-        match = re.match(r"2023 general election:\s*(.+)", first_heading)
+        match = re.match(rf"{ELECTION_YEAR} general election:\s*(.+)", first_heading)
         if not match:
             continue
         table.columns = table.columns.get_level_values(-1) if isinstance(table.columns, pd.MultiIndex) else table.columns
@@ -142,7 +143,8 @@ def candidate_tables(html: str) -> list[tuple[str, list[tuple[str, str]]]]:
             if not candidate or candidate.lower() == "nan" or "withdrawn candidates" in candidate.lower():
                 continue
             rows.append((candidate, PARTY_NAMES.get(party, party or "Independent")))
-        electorate = ELECTORATE_NAMES.get(match.group(1), match.group(1))
+        raw_electorate = re.sub(r"\[\d+\]", "", match.group(1)).strip()
+        electorate = ELECTORATE_NAMES.get(raw_electorate, raw_electorate)
         out.append((electorate, rows))
     if len(out) != 72:
         raise SystemExit(f"Expected 72 candidate tables, found {len(out)}")
@@ -167,7 +169,7 @@ def make_rows(
     party_values: list[int],
     source_url: str,
 ) -> list[dict[str, object]]:
-    cancelled = district == "Port Waikato"
+    cancelled = ELECTION_YEAR == 2023 and district == "Port Waikato"
     if cancelled:
         formal, informal = 0, 0
         candidate_results = [("Electorate vote cancelled", "Cancelled", 0)]
@@ -253,8 +255,8 @@ def boundary_features(path: Path, electorate_type: str, name_field: str) -> list
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build NZ 2023 MMP election data")
-    parser.add_argument("--raw-dir", type=Path, default=Path("tmp/nz_2023"))
+    parser = argparse.ArgumentParser(description=f"Build NZ {ELECTION_YEAR} MMP election data")
+    parser.add_argument("--raw-dir", type=Path, default=Path(f"tmp/nz_{ELECTION_YEAR}"))
     parser.add_argument("--out-dir", type=Path, default=Path("data"))
     parser.add_argument("--refresh", action="store_true")
     args = parser.parse_args()
@@ -273,14 +275,18 @@ def main() -> None:
         party_url = f"{MIRROR_BASE}/party-votes-by-voting-place-{electorate_id}.html"
         download(session, candidate_url, candidate_path, args.refresh)
         download(session, party_url, party_path, args.refresh)
-        candidate_values = [] if district == "Port Waikato" else total_line(candidate_path.read_text(encoding="utf-8"), district)
+        candidate_values = (
+            []
+            if ELECTION_YEAR == 2023 and district == "Port Waikato"
+            else total_line(candidate_path.read_text(encoding="utf-8"), district)
+        )
         party_values = total_line(party_path.read_text(encoding="utf-8"), district)
         electorate_type = "Māori" if electorate_id > 65 else "General"
         source_url = f"{RESULT_BASE}/candidate-votes-by-voting-place-{electorate_id}.html"
         all_rows.extend(make_rows(district, electorate_type, candidates, candidate_values, party_values, source_url))
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    csv_path = args.out_dir / "nz_2023_mmp.csv"
+    csv_path = args.out_dir / f"nz_{ELECTION_YEAR}_mmp.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=FIELDS, lineterminator="\n")
         writer.writeheader()
@@ -294,10 +300,10 @@ def main() -> None:
     features.extend(boundary_features(maori_source, "Māori", "MED2020_V1_00_NAME"))
     if len(features) != 72:
         raise SystemExit(f"Expected 72 boundary features, found {len(features)}")
-    boundary_path = args.out_dir / "nz_2023_electorate_boundaries.geojson"
+    boundary_path = args.out_dir / f"nz_{ELECTION_YEAR}_electorate_boundaries.geojson"
     boundary_path.write_text(json.dumps({
         "type": "FeatureCollection",
-        "name": "new_zealand_2023_general_and_maori_electorates",
+        "name": f"new_zealand_{ELECTION_YEAR}_general_and_maori_electorates",
         "features": features,
     }, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
