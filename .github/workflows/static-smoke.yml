@@ -61,6 +61,8 @@ jobs:
           python scripts/validate_state_vic.py --csv data/sa_2018_preferences_long.csv --boundaries data/sa_2018_district_boundaries.geojson --expected-districts 47 --label SA-2018 --max-gap-ratio 0.005 --validate-vote-totals
           python scripts/validate_state_vic.py --csv data/wa_2025_preferences_long.csv --boundaries data/wa_2025_district_boundaries.geojson --expected-districts 59 --label WA-2025 --max-gap-ratio 0.005 --validate-vote-totals
           python scripts/validate_state_vic.py --csv data/wa_2021_preferences_long.csv --boundaries data/wa_2021_district_boundaries.geojson --expected-districts 59 --label WA-2021 --max-gap-ratio 0.005 --validate-vote-totals
+          python scripts/validate_state_vic.py --csv data/nt_2024_preferences_long.csv --boundaries data/nt_2024_district_boundaries.geojson --expected-districts 25 --label NT-2024 --max-gap-ratio 0.005 --validate-vote-totals
+          python scripts/validate_state_vic.py --csv data/nt_2020_preferences_long.csv --boundaries data/nt_2020_district_boundaries.geojson --expected-districts 25 --label NT-2020 --max-gap-ratio 0.005 --validate-vote-totals
           python scripts/validate_tas_state.py --csv data/tas_2025_preferences_long.csv --boundaries data/tas_2025_district_boundaries.geojson
           python scripts/validate_tas_state.py --csv data/tas_2024_preferences_long.csv --boundaries data/tas_2024_district_boundaries.geojson
           python scripts/validate_tas_state.py --csv data/tas_2021_preferences_long.csv --boundaries data/tas_2021_district_boundaries.geojson --expected-members 5
