@@ -6,6 +6,8 @@ Source targets:
 - Australian Electoral Commission Federal Election House of Representatives downloads
 - Australian Electoral Commission federal division GIS boundaries
 - Tasmanian Electoral Commission House of Assembly result workbooks
+- New Zealand Electoral Commission 2023 General Election result pages
+- Stats NZ 2020 general and Māori electorate boundaries
 
 This repo is built around three levels of data:
 
@@ -30,6 +32,7 @@ Important row types:
 - `transfer`: votes transferred from an excluded candidate
 - `progressive`: progressive total after a round
 - `final`: final standing after distribution
+- `party_vote`: New Zealand's separate MMP party vote within an electorate
 
 ## 3. District boundary polygons
 
@@ -86,6 +89,8 @@ The Western Australia 2025 and 2021 Legislative Assembly rows are generated from
 The Northern Territory 2024 and 2020 Legislative Assembly rows are generated from the official NTEC electorate result summaries. They preserve each candidate's first preferences and the published final two-candidate-preferred totals, plus enrolment, formal, informal, total-counted, and turnout metadata. Intermediate exclusion counts are not inferred. The boundary files use the ABS 2024 and ABS 2021 State Electoral Division layers respectively, filtered to the 25 Northern Territory electorates and normalised to the app's district property.
 
 The Tasmania state 2025 and 2024 result rows are generated from the Tasmanian Electoral Commission final House of Assembly result workbooks for the divisions of Bass, Braddon, Clark, Franklin, and Lyons. Tasmania uses Hare-Clark STV, so each division elects seven members rather than a single winner. The app stores first-preference rows and final-count rows with extra fields for quota, elected order, elected status, and members to elect. The boundary files are filtered from the AEC March 2025 national federal division boundary file because Tasmanian House of Assembly divisions share the names and boundaries of the five Tasmanian federal divisions.
+
+The New Zealand 2023 rows are generated from Electoral Commission candidate-vote and party-vote totals for all 72 electorates. Candidate names and party labels are aligned to Wikipedia's public 2023 electorate-candidate tables because the Commission's candidate-list CSV currently blocks automated downloads; every vote figure still comes from the official result pages and is checked against its official valid-vote total. Candidate voting uses first past the post, so `first` and `final` rows are identical and the app hides preference-transfer views. Port Waikato is marked `cancelled` and retains only its party vote. The boundary file combines Stats NZ's 65 general and 7 Māori electorate layers used at both the 2020 and 2023 general elections; the app toggles them because those layers overlap geographically. Stats NZ boundary data is licensed CC BY 4.0.
 
 The 2025 federal Australia boundary file is adapted from the AEC `AUS-March-2025-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, with no `StateAb` filtering.
 
