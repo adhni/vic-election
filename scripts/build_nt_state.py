@@ -138,6 +138,35 @@ def parse_flat_summary(section: str) -> tuple[list[dict[str, object]], dict[str,
     return candidates, totals
 
 
+def parse_final_progressive(markdown: str) -> dict[str, int]:
+    distribution_match = re.search(
+        r"### Distribution of preferences(.*?)### Electorate summary",
+        markdown,
+        flags=re.S,
+    )
+    if not distribution_match:
+        return {}
+
+    header: list[str] = []
+    final_progressive: list[str] = []
+    for line in distribution_match.group(1).splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        cells = [clean_text(cell) for cell in line.strip().strip("|").split("|")]
+        if len(cells) >= 6 and cells[:2] == ["Count", "Comments"]:
+            header = cells
+        elif len(cells) >= 6 and cells[1] == "Progressive":
+            final_progressive = cells
+
+    if not header or len(final_progressive) != len(header):
+        return {}
+    candidate_names = [re.sub(r"\s+\([^)]*\)$", "", value) for value in header[2:-2]]
+    return {
+        normalize_key(candidate): clean_int(value)
+        for candidate, value in zip(candidate_names, final_progressive[2:-2])
+    }
+
+
 def parse_district(path: Path, district: str, source_url: str) -> tuple[list[dict[str, object]], dict[str, object]]:
     markdown = path.read_text(encoding="utf-8")
     summary_match = re.search(r"### Electorate summary(.*?)### First preferences by voting centre", markdown, flags=re.S)
@@ -166,12 +195,28 @@ def parse_district(path: Path, district: str, source_url: str) -> tuple[list[dic
         raise SystemExit(f"{district}: total votes do not equal formal plus informal")
 
     tcp_rows = [row for row in candidates if int(row["tcp"])]
-    final_rows = tcp_rows if len(tcp_rows) >= 2 else sorted(candidates, key=lambda row: -int(row["primary"]))
-    final_rows = sorted(final_rows, key=lambda row: (-int(row["tcp"] or row["primary"]), str(row["candidate"])))
+    if len(tcp_rows) >= 2:
+        final_rows = tcp_rows
+        for row in final_rows:
+            row["final"] = int(row["tcp"])
+        if sum(int(row["final"]) for row in final_rows) != formal_votes:
+            final_progressive = parse_final_progressive(markdown)
+            if not final_progressive:
+                raise SystemExit(f"{district}: mismatched TCP total and missing final progressive distribution")
+            for row in candidates:
+                row["final"] = final_progressive.get(normalize_key(row["candidate"]), 0)
+            final_rows = [row for row in candidates if int(row["final"])]
+    else:
+        final_rows = candidates
+        for row in final_rows:
+            row["final"] = int(row["primary"])
+    if len(final_rows) < 2 or sum(int(row["final"]) for row in final_rows) != formal_votes:
+        raise SystemExit(f"{district}: final votes do not equal formal votes")
+    final_rows = sorted(final_rows, key=lambda row: (-int(row["final"]), str(row["candidate"])))
     winner = final_rows[0]
     runner_up = final_rows[1]
-    winner_final = int(winner["tcp"] or winner["primary"])
-    runner_up_final = int(runner_up["tcp"] or runner_up["primary"])
+    winner_final = int(winner["final"])
+    runner_up_final = int(runner_up["final"])
     first_sorted = sorted(candidates, key=lambda row: (-int(row["primary"]), str(row["candidate"])))
     primary_leader = first_sorted[0]
     base = {
@@ -205,7 +250,7 @@ def parse_district(path: Path, district: str, source_url: str) -> tuple[list[dic
         "excluded_party": "",
         "candidate": row["candidate"],
         "candidate_party": row["party"],
-        "votes": row["tcp"] or row["primary"],
+        "votes": row["final"],
     } for row in final_rows)
     winner_first = next(int(row["primary"]) for row in candidates if row["candidate"] == winner["candidate"])
     summary = {
