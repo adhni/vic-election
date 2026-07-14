@@ -4,6 +4,8 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
+import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -50,6 +52,41 @@ def main() -> None:
         if total != formal + informal:
             raise SystemExit(f"{district}: total votes do not equal formal plus informal")
 
+    if args.year == 2020:
+        named_totals = json.loads(Path("scripts/nz_2020_candidate_totals.json").read_text(encoding="utf-8"))
+        aliases = {
+            "KEARNEY, Nick": "Nick Kearney",
+            "TANA HOFF-NIELSEN, Darleen": "Darleen Tana",
+            "VAUGHAN, Peter": "Peter Vaughn",
+        }
+
+        def normalized(value: str) -> str:
+            ascii_value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
+            return re.sub(r"[^a-z0-9]", "", ascii_value.lower())
+
+        for district, source_rows in named_totals.items():
+            actual = {
+                row["candidate"]: int(row["votes"])
+                for row in groups[district]
+                if row["row_type"] == "first"
+            }
+            for source_name, source_votes in source_rows:
+                if source_name in aliases:
+                    matches = [aliases[source_name]]
+                else:
+                    surname = normalized(source_name.split(",", 1)[0])
+                    matches = [candidate for candidate in actual if surname in normalized(candidate)]
+                    if len(matches) > 1:
+                        given_name = normalized(source_name.split(",", 1)[1].strip().split()[0])
+                        given_matches = [candidate for candidate in matches if given_name in normalized(candidate)]
+                        if given_matches:
+                            matches = given_matches
+                if len(matches) != 1 or actual.get(matches[0]) != source_votes:
+                    raise SystemExit(
+                        f"{district}: official named total mismatch for {source_name}: "
+                        f"expected {source_votes}, matched {matches}"
+                    )
+
     checks = (
         {
             "Mt Albert": ("Helen White", 13238, 18),
@@ -59,6 +96,7 @@ def main() -> None:
         if args.year == 2023
         else {
             "Auckland Central": ("Chlöe Swarbrick", 12631, 1068),
+            "Mana": ("Barbara Edmonds", 26122, 16244),
             "Northland": ("Willow-Jean Prime", 17066, 163),
             "Waiariki": ("Rawiri Waititi", 12389, 836),
         }

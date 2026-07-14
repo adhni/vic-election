@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from pathlib import Path
+
 import build_nz_2023 as builder
 
 
@@ -8,6 +10,12 @@ builder.ELECTION_YEAR = 2020
 builder.RESULT_BASE = "https://archive.electionresults.govt.nz/electionresults_2020/statistics"
 builder.MIRROR_BASE = "https://r.jina.ai/https://media.election.net.nz/electionresults_2020/statistics"
 builder.CANDIDATE_LIST_URL = "https://en.wikipedia.org/wiki/Candidates_in_the_2020_New_Zealand_general_election_by_electorate"
+builder.OFFICIAL_CANDIDATE_TOTALS_PATH = Path(__file__).with_name("nz_2020_candidate_totals.json")
+builder.OFFICIAL_CANDIDATE_ALIASES = {
+    "KEARNEY, Nick": ("Nick Kearney", "ACT New Zealand"),
+    "TANA HOFF-NIELSEN, Darleen": ("Darleen Tana", "Green Party"),
+    "VAUGHAN, Peter": ("Peter Vaughn", "Advance New Zealand"),
+}
 builder.PARTY_ORDER = [
     "ACT New Zealand",
     "Advance New Zealand",

@@ -6,6 +6,7 @@ import csv
 import json
 import re
 import time
+import unicodedata
 from io import StringIO
 from pathlib import Path
 
@@ -19,6 +20,8 @@ ELECTION_YEAR = 2023
 RESULT_BASE = "https://archive.electionresults.govt.nz/electionresults_2023/statistics"
 MIRROR_BASE = "https://r.jina.ai/https://media.election.net.nz/electionresults_2023/statistics"
 CANDIDATE_LIST_URL = "https://en.wikipedia.org/wiki/Candidates_in_the_2023_New_Zealand_general_election_by_electorate"
+OFFICIAL_CANDIDATE_TOTALS_PATH: Path | None = None
+OFFICIAL_CANDIDATE_ALIASES: dict[str, tuple[str, str]] = {}
 GENERAL_BOUNDARY_URL = (
     "https://services2.arcgis.com/vKb0s8tBIA3bdocZ/arcgis/rest/services/"
     "General_Electorates_2020/FeatureServer/0/query"
@@ -87,7 +90,8 @@ def clean(value: object) -> str:
 
 
 def normalize(value: object) -> str:
-    return re.sub(r"[^a-z0-9]", "", clean(value).lower())
+    ascii_value = unicodedata.normalize("NFKD", clean(value)).encode("ascii", "ignore").decode("ascii")
+    return re.sub(r"[^a-z0-9]", "", ascii_value.lower())
 
 
 def numbers(value: str) -> list[int]:
@@ -161,11 +165,48 @@ def total_line(markdown: str, district: str) -> list[int]:
     raise SystemExit(f"{district}: total line not found")
 
 
+def match_official_candidates(
+    source_rows: list[tuple[str, int]],
+    candidates: list[tuple[str, str]],
+    district: str,
+) -> list[tuple[str, str, int]]:
+
+    unmatched = list(candidates)
+    matched: list[tuple[str, str, int]] = []
+    for source_name, vote in source_rows:
+        if source_name in OFFICIAL_CANDIDATE_ALIASES:
+            candidate, party = OFFICIAL_CANDIDATE_ALIASES[source_name]
+            if (candidate, party) in unmatched:
+                unmatched.remove((candidate, party))
+            matched.append((candidate, party, vote))
+            continue
+        source_parts = [part for part in re.split(r"[^a-z0-9]+", normalize_name(source_name)) if part]
+        source_surname = normalize(source_name.split(",", 1)[0])
+        ranked: list[tuple[int, int, str, str]] = []
+        for index, (candidate, party) in enumerate(unmatched):
+            candidate_parts = set(re.findall(r"[a-z0-9]+", normalize_name(candidate)))
+            overlap = sum(part in candidate_parts for part in source_parts)
+            surname_match = source_surname in normalize(candidate)
+            ranked.append((overlap + 3 * surname_match, -index, candidate, party))
+        score, _, candidate, party = max(ranked)
+        if score < 3:
+            raise SystemExit(f"{district}: cannot match official candidate {source_name!r}")
+        unmatched.remove((candidate, party))
+        matched.append((candidate, party, vote))
+    return matched
+
+
+def normalize_name(value: object) -> str:
+    ascii_value = unicodedata.normalize("NFKD", clean(value)).encode("ascii", "ignore").decode("ascii")
+    return ascii_value.lower()
+
+
 def make_rows(
     district: str,
     electorate_type: str,
     candidates: list[tuple[str, str]],
     candidate_values: list[int],
+    candidate_results: list[tuple[str, str, int]] | None,
     party_values: list[int],
     source_url: str,
 ) -> list[dict[str, object]]:
@@ -178,9 +219,12 @@ def make_rows(
         if len(candidate_values) < 3:
             raise SystemExit(f"{district}: incomplete candidate total")
         votes, formal, informal = candidate_values[:-2], candidate_values[-2], candidate_values[-1]
-        if len(votes) > len(candidates):
-            raise SystemExit(f"{district}: {len(votes)} vote columns but only {len(candidates)} candidates")
-        candidate_results = [(name, party, vote) for (name, party), vote in zip(candidates[:len(votes)], votes)]
+        if candidate_results is None:
+            if len(votes) > len(candidates):
+                raise SystemExit(f"{district}: {len(votes)} vote columns but only {len(candidates)} candidates")
+            candidate_results = [(name, party, vote) for (name, party), vote in zip(candidates[:len(votes)], votes)]
+        elif sorted(votes) != sorted(vote for _, _, vote in candidate_results):
+            raise SystemExit(f"{district}: detailed totals do not match the official named candidate totals")
         if sum(votes) != formal:
             raise SystemExit(f"{district}: candidate votes {sum(votes)} != valid total {formal}")
         winner_name, winner_party, _ = max(candidate_results, key=lambda row: (row[2], row[0]))
@@ -266,6 +310,13 @@ def main() -> None:
     candidate_list_path = args.raw_dir / "candidate_list.html"
     download(session, CANDIDATE_LIST_URL, candidate_list_path, args.refresh)
     tables = candidate_tables(candidate_list_path.read_text(encoding="utf-8"))
+    official_totals = (
+        json.loads(OFFICIAL_CANDIDATE_TOTALS_PATH.read_text(encoding="utf-8"))
+        if OFFICIAL_CANDIDATE_TOTALS_PATH
+        else None
+    )
+    if official_totals is not None and set(official_totals) != {district for district, _ in tables}:
+        raise SystemExit("Official candidate totals do not cover the same 72 electorates as the candidate list")
 
     all_rows: list[dict[str, object]] = []
     for electorate_id, (district, candidates) in enumerate(tables, start=1):
@@ -274,16 +325,27 @@ def main() -> None:
         candidate_url = f"{MIRROR_BASE}/candidate-votes-by-voting-place-{electorate_id}.html"
         party_url = f"{MIRROR_BASE}/party-votes-by-voting-place-{electorate_id}.html"
         download(session, candidate_url, candidate_path, args.refresh)
+        cancelled = ELECTION_YEAR == 2023 and district == "Port Waikato"
         download(session, party_url, party_path, args.refresh)
         candidate_values = (
             []
             if ELECTION_YEAR == 2023 and district == "Port Waikato"
             else total_line(candidate_path.read_text(encoding="utf-8"), district)
         )
+        if cancelled:
+            candidate_results = []
+        elif official_totals is not None:
+            candidate_results = match_official_candidates(
+                [(name, int(vote)) for name, vote in official_totals[district]], candidates, district
+            )
+        else:
+            candidate_results = None
         party_values = total_line(party_path.read_text(encoding="utf-8"), district)
         electorate_type = "Māori" if electorate_id > 65 else "General"
         source_url = f"{RESULT_BASE}/candidate-votes-by-voting-place-{electorate_id}.html"
-        all_rows.extend(make_rows(district, electorate_type, candidates, candidate_values, party_values, source_url))
+        all_rows.extend(make_rows(
+            district, electorate_type, candidates, candidate_values, candidate_results, party_values, source_url
+        ))
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     csv_path = args.out_dir / f"nz_{ELECTION_YEAR}_mmp.csv"
