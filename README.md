@@ -1,6 +1,6 @@
-# Australian and New Zealand Election Results Explorer
+# Australian, New Zealand, and United Kingdom Election Results Explorer
 
-A static HTML data app for exploring Australian state and federal lower-house elections plus New Zealand MMP elections.
+A static HTML data app for exploring Australian state and federal lower-house elections, New Zealand MMP elections, and the United Kingdom House of Commons.
 
 The app is map-first and party/bloc-first:
 
@@ -11,6 +11,7 @@ The app is map-first and party/bloc-first:
 - first preference, transfer round, progressive chart, and raw row views
 - exact party and candidate detail preserved inside each seat
 - New Zealand candidate-vote and party-vote views with separate general and Māori electorate map layers
+- United Kingdom constituency results and winner-party maps for the 2024 general election
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -140,6 +141,15 @@ data/nz_2020_electorate_boundaries.geojson
 
 Electorate MPs are elected by first past the post, so preference-round and transfer-gain views are hidden for these elections. In 2023, Port Waikato is retained as a cancelled electorate contest with its valid party vote; the later by-election is not merged into the general-election result.
 
+United Kingdom coverage currently includes the 2024 general election, with all 650 House of Commons constituencies across England, Scotland, Wales, and Northern Ireland:
+
+```text
+data/uk_2024_fpp.csv
+data/uk_2024_constituency_boundaries.geojson
+```
+
+The UK election uses first past the post. Candidate and final totals are therefore identical, and preference-transfer views are hidden. Results come from UK Parliament and boundaries from the Office for National Statistics.
+
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
 ```text
@@ -239,6 +249,8 @@ data/tas_2021_district_summary.csv        # TEC 2021 division-level elected memb
 data/tas_2021_district_boundaries.geojson # Tasmania House divisions filtered from AEC 2019 federal boundaries
 data/nz_2023_mmp.csv                       # NZ Electoral Commission candidate and party votes for all 72 electorates
 data/nz_2023_electorate_boundaries.geojson # Stats NZ 2020 general and Māori boundaries used for the 2023 election
+data/uk_2024_fpp.csv                       # UK Parliament candidate results for all 650 constituencies
+data/uk_2024_constituency_boundaries.geojson # ONS July 2024 Westminster constituency boundaries
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons

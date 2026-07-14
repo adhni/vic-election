@@ -175,6 +175,13 @@ New Zealand MMP feasibility is now proven by the `New Zealand General 2023` and 
 - Port Waikato remains cancelled in the 2023 general election rather than being merged with the later by-election
 - the same 65 general and 7 Māori electorate boundary layers are valid for both elections
 
+United Kingdom first-past-the-post feasibility is now proven by the `United Kingdom General 2024` integration:
+
+- UK Parliament publishes candidate results for all 650 constituencies in one official CSV
+- ONS publishes matching July 2024 Westminster constituency boundaries
+- the app reuses its no-transfer election path while keeping New Zealand-only MMP controls separate
+- country and party seat summaries provide useful nationwide context without cross-election matching
+
 At that point, consider whether the project should become a broader Australian preference explorer.
 
 ## Deferred: Local Council Elections
