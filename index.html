@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Australian Election Preference Explorer</title>
+  <title>Election Results Explorer</title>
   <style>
     :root {
       --bg: #f8f7f5;
@@ -1388,6 +1388,21 @@
         "areaLabel": "State / territory"
       },
       {
+        "key": "singapore-2025",
+        "label": "Singapore General 2025",
+        "type": "national",
+        "jurisdiction": "Singapore",
+        "year": 2025,
+        "source": "Elections Department Singapore / data.gov.sg",
+        "system": "fpp",
+        "teamElection": true,
+        "csv": "data/singapore_2025_fpp.csv",
+        "boundaries": "data/singapore_2025_electoral_boundaries.geojson",
+        "totalSeats": 97,
+        "areaLabel": "Electoral division type",
+        "summaryRegions": ["SMC", "GRC"]
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -1571,6 +1586,17 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (p === "pap") return "#1b4f9c";
+      if (p === "wp") return "#d71920";
+      if (p === "psp") return "#c62828";
+      if (p === "sdp") return "#e53935";
+      if (p === "red dot united" || p === "rdu") return "#007f7f";
+      if (p === "ppp") return "#8b1e3f";
+      if (p === "sup") return "#6b21a8";
+      if (p === "par") return "#d97706";
+      if (p === "nsp") return "#f28c28";
+      if (p === "sda") return "#2f855a";
+      if (p === "spp") return "#b91c1c";
       if (p === "ph") return "#dc2626";
       if (p === "pn") return "#2563eb";
       if (p === "bn") return "#1e3a5f";
@@ -1751,6 +1777,7 @@
     function electorateLabel(count = 0) {
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
       if (["United Kingdom", "Malaysia"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
+      if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
       const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";
       return count === 1 ? noun : `${noun}s`;
     }
@@ -2228,11 +2255,15 @@
         allDistricts.forEach(d => {
           countryCounts.set(d.electorate_type, (countryCounts.get(d.electorate_type) || 0) + 1);
           const party = winningParty(d);
-          partyCounts.set(party, (partyCounts.get(party) || 0) + 1);
+          const seats = election.teamElection ? Number(d.members_to_elect || 1) : 1;
+          partyCounts.set(party, (partyCounts.get(party) || 0) + seats);
         });
         const chips = [
           `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
         ];
+        if (election.teamElection) {
+          chips.push(`<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> elected MPs</span>`);
+        }
         (election.summaryRegions || []).forEach(country => {
           chips.push(`<span class="summary-chip">${country} <strong>${fmt.format(countryCounts.get(country) || 0)}</strong></span>`);
         });
@@ -2737,17 +2768,22 @@
         const [winner] = getWinnerFromFinal(d);
         const winnerParty = getParty(d, winner);
         const [runnerUp] = getSecondFromFinal(d);
+        const teamElection = Boolean(activeElection().teamElection);
+        const uncontested = d.contest_status === "uncontested";
+        const members = electedMembers(d);
+        const memberList = members.map(name => shortName(name)).join(" · ");
         document.getElementById("districtSummary").innerHTML = `
           <h2 class="result-district">${d.district}</h2>
           <div class="result-facts">
             <div class="fact-item"><span class="fact-label">${activeElection().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
-            <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">First past the post</span></div>
-            <div class="fact-item"><span class="fact-label">MP elected</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
-            <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
+            <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${teamElection && d.electorate_type === "GRC" ? "Plurality block vote" : "First past the post"}</span></div>
+            <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
+            ${teamElection ? `<div class="fact-item"><span class="fact-label">Members elected</span><span class="fact-value">${memberList}</span></div>` : ""}
+            <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${uncontested ? "Uncontested" : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`}</span></div>
             <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
-            <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.turnout_pct).toFixed(1)}%</span></div>
+            <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${uncontested ? "No poll held" : `${Number(d.turnout_pct).toFixed(1)}%`}</span></div>
           </div>
-          <p class="pref-impact">The candidate with the most votes was elected. This election does not use preference transfers.</p>
+          <p class="pref-impact">${teamElection ? (uncontested ? "The only nominated team was returned without a poll." : d.electorate_type === "GRC" ? `Voters selected a party team; the team with the most votes filled all ${members.length} seats.` : "The candidate with the most votes was elected.") : "The candidate with the most votes was elected."} This election does not use preference transfers.</p>
         `;
         return;
       }

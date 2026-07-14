@@ -189,6 +189,14 @@ Malaysia first-past-the-post feasibility is now proven by the `Malaysia General 
 - three CC0 delimitation datasets combine cleanly into all 222 parliamentary constituencies
 - the existing generic FPTP interface supports Malaysia without preference-transfer assumptions
 
+Singapore mixed SMC/GRC feasibility is now proven by the `Singapore General 2025` integration:
+
+- ELD publishes a complete final-results page and a Statement of Poll for every contested electoral division
+- official data.gov.sg boundaries match all 33 electoral divisions
+- GRC teams are modelled as one vote choice while retaining all elected member names
+- election-wide party summaries count all 97 elected MPs rather than treating every division as one seat
+- the uncontested Marine Parade–Braddell Heights GRC is retained without fabricated votes or turnout
+
 At that point, consider whether the project should become a broader Australian preference explorer.
 
 ## Deferred: Local Council Elections
