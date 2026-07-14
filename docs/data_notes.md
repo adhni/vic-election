@@ -8,6 +8,8 @@ Source targets:
 - Tasmanian Electoral Commission House of Assembly result workbooks
 - New Zealand Electoral Commission 2023 and 2020 General Election result pages
 - Stats NZ 2020 general and Māori electorate boundaries
+- UK Parliament 2024 general election candidate results
+- ONS July 2024 Westminster parliamentary constituency boundaries
 
 This repo is built around three levels of data:
 
@@ -91,6 +93,8 @@ The Northern Territory 2024 and 2020 Legislative Assembly rows are generated fro
 The Tasmania state 2025 and 2024 result rows are generated from the Tasmanian Electoral Commission final House of Assembly result workbooks for the divisions of Bass, Braddon, Clark, Franklin, and Lyons. Tasmania uses Hare-Clark STV, so each division elects seven members rather than a single winner. The app stores first-preference rows and final-count rows with extra fields for quota, elected order, elected status, and members to elect. The boundary files are filtered from the AEC March 2025 national federal division boundary file because Tasmanian House of Assembly divisions share the names and boundaries of the five Tasmanian federal divisions.
 
 The New Zealand 2023 and 2020 rows are generated from Electoral Commission candidate-vote and party-vote totals for all 72 electorates. The 2020 builder matches each official named candidate total to the public electorate-candidate table rather than assuming both sources use the same row order; the detailed-page vote columns must match the named totals exactly. Party labels are aligned to Wikipedia's public electorate-candidate tables because the Commission's candidate-list CSV currently blocks automated downloads. Candidate voting uses first past the post, so `first` and `final` rows are identical and the app hides preference-transfer views. Port Waikato is marked `cancelled` only in 2023 and retains its party vote; all 72 electorate contests were completed in 2020. The boundary files combine Stats NZ's 65 general and 7 Māori electorate layers used at both elections; the app toggles them because those layers overlap geographically. Stats NZ boundary data is licensed CC BY 4.0.
+
+The United Kingdom 2024 rows are generated from UK Parliament's official general-election candidacies CSV for all 650 House of Commons constituencies. Candidate totals are checked against each constituency's valid-vote total, official majority, turnout metadata, country split, and nationwide winning-party seat totals. The UK uses first past the post, so `first` and `final` rows are identical and the app hides preference-transfer views. Boundaries come from the ONS July 2024 Westminster Parliamentary Constituencies UK BSC ArcGIS layer; the builder simplifies the already super-generalised polygons for the static app and normalises the single Glyndŵr spelling difference between the two official sources.
 
 The 2025 federal Australia boundary file is adapted from the AEC `AUS-March-2025-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, with no `StateAb` filtering.
 

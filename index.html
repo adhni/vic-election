@@ -1361,6 +1361,18 @@
         ]
       },
       {
+        "key": "uk-2024",
+        "label": "United Kingdom General 2024",
+        "type": "national",
+        "jurisdiction": "United Kingdom",
+        "year": 2024,
+        "source": "UK Parliament / ONS",
+        "system": "fpp",
+        "csv": "data/uk_2024_fpp.csv",
+        "boundaries": "data/uk_2024_constituency_boundaries.geojson",
+        "totalSeats": 650
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -1489,6 +1501,12 @@
       if (p === "Tasmanian Greens") return "Greens";
       if (p === "Labour Party") return "Labour";
       if (p === "Green Party") return "Green";
+      if (p === "Liberal Democrat") return "Liberal Democrats";
+      if (p === "Scottish National Party") return "SNP";
+      if (p === "Democratic Unionist Party") return "DUP";
+      if (p === "Social Democratic & Labour Party") return "SDLP";
+      if (p === "Traditional Unionist Voice") return "TUV";
+      if (p === "Ulster Unionist Party") return "UUP";
       if (p === "National Party") return "National";
       if (upper === "LP") return "Liberal";
       if (upper === "LIBERAL") return "Liberal";
@@ -1515,7 +1533,7 @@
 
     function partyBloc(raw) {
       const p = partyLabel(raw).toLowerCase();
-      if (activeElection().jurisdiction === "New Zealand") return partyLabel(raw);
+      if (usesPartyView()) return partyLabel(raw);
       if (p === "coalition") return "Coalition";
       if (p === "other") return "Other";
       if (p.includes("labor")) return "Labor";
@@ -1526,7 +1544,7 @@
     }
 
     function blocColor(raw) {
-      if (activeElection().jurisdiction === "New Zealand") return partyColor(raw);
+      if (usesPartyView()) return partyColor(raw);
       const bloc = partyBloc(raw);
       if (bloc === "Labor") return "#d94b49";
       if (bloc === "Coalition") return "#2f61bf";
@@ -1537,6 +1555,18 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (p === "conservative") return "#0087dc";
+      if (p === "liberal democrats") return "#faa61a";
+      if (p === "reform uk") return "#12b6cf";
+      if (p === "snp") return "#f2d30c";
+      if (p === "sinn féin") return "#326760";
+      if (p === "dup") return "#d46a4c";
+      if (p === "plaid cymru") return "#008142";
+      if (p === "sdlp") return "#2aa82c";
+      if (p === "alliance") return "#f6cb2f";
+      if (p === "uup") return "#48a5ee";
+      if (p === "tuv") return "#0c3a6a";
+      if (p === "speaker") return "#777777";
       if (p === "labour") return "#d82a20";
       if (p === "national") return "#00529f";
       if (p === "green") return "#098137";
@@ -1593,7 +1623,15 @@
     }
 
     function isFppElection() {
+      return activeElection().system === "mmp-fpp" || activeElection().system === "fpp";
+    }
+
+    function isMmpElection() {
       return activeElection().system === "mmp-fpp";
+    }
+
+    function usesPartyView() {
+      return isFppElection();
     }
 
     function getPartyVoteLeader(d) {
@@ -1685,6 +1723,7 @@
 
     function electorateLabel(count = 0) {
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
+      if (activeElection().jurisdiction === "United Kingdom") return count === 1 ? "constituency" : "constituencies";
       const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";
       return count === 1 ? noun : `${noun}s`;
     }
@@ -1741,9 +1780,10 @@
       const mode = params.get("mode");
       const requestedYear = params.get("year");
       const year = electionYearAliases[requestedYear] || requestedYear;
-      const allowedMapModes = electionYears[year]?.system === "mmp-fpp"
+      const system = electionYears[year]?.system;
+      const allowedMapModes = system === "mmp-fpp"
         ? ["party", "party-vote", "close"]
-        : ["party", "close", "changed"];
+        : system === "fpp" ? ["party", "close"] : ["party", "close", "changed"];
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
@@ -1805,7 +1845,7 @@
     }
 
     function mapVisual(d) {
-      if (activeMapMode === "party-vote" && isFppElection()) {
+      if (activeMapMode === "party-vote" && isMmpElection()) {
         const [party] = getPartyVoteLeader(d);
         const color = partyColor(party);
         return { color, fill: hexToRgba(color, .68), label: partyLabel(party) };
@@ -1859,7 +1899,7 @@
       return `
         <strong>${d.district}</strong>
         <div>${isFppElection() ? partyLabel(winnerParty) : `${partyBloc(winnerParty)} · ${partyLabel(winnerParty)}`}</div>
-        <span>${d.contest_status === "cancelled" ? "Electorate vote cancelled" : `${shortName(winner)} · margin ${pct(finalMargin(d), d.formal_votes)}`}${isFppElection() ? ` · party vote: ${partyLabel(partyVoteWinner)} ${fmt.format(partyVoteCount)}` : ""}</span>
+        <span>${d.contest_status === "cancelled" ? "Electorate vote cancelled" : `${shortName(winner)} · margin ${pct(finalMargin(d), d.formal_votes)}`}${isMmpElection() ? ` · party vote: ${partyLabel(partyVoteWinner)} ${fmt.format(partyVoteCount)}` : ""}</span>
       `;
     }
 
@@ -1930,7 +1970,7 @@
         districts = [...allDistricts];
       }
       activeDistrict = selected;
-      if (isFppElection() && selected.electorate_type) setBoundaryType(selected.electorate_type, false);
+      if (isMmpElection() && selected.electorate_type) setBoundaryType(selected.electorate_type, false);
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
       populateControls();
@@ -1995,7 +2035,7 @@
       document.querySelectorAll("[data-boundary-type]").forEach(button => {
         button.classList.toggle("active", button.dataset.boundaryType === activeBoundaryType);
       });
-      const visible = isFppElection()
+      const visible = isMmpElection()
         ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
         : boundaryFeatures;
       boundaryShapes = makeBoundaryShapes(visible);
@@ -2005,7 +2045,7 @@
     }
 
     function syncBoundaryTypeToActiveDistrict() {
-      if (isFppElection() && activeDistrict?.electorate_type && activeBoundaryType !== activeDistrict.electorate_type) {
+      if (isMmpElection() && activeDistrict?.electorate_type && activeBoundaryType !== activeDistrict.electorate_type) {
         setBoundaryType(activeDistrict.electorate_type, false);
       }
     }
@@ -2137,7 +2177,7 @@
         target.innerHTML = "";
         return;
       }
-      if (isFppElection()) {
+      if (isMmpElection()) {
         const election = activeElection();
         const general = allDistricts.filter(d => d.electorate_type === "General").length;
         const maori = allDistricts.filter(d => d.electorate_type === "Māori").length;
@@ -2151,6 +2191,28 @@
         (election.parliament || []).forEach(([party, seats]) => {
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${seats}</strong></span>`);
         });
+        target.innerHTML = chips.join("");
+        return;
+      }
+      if (activeElection().system === "fpp") {
+        const countryCounts = new Map();
+        const partyCounts = new Map();
+        allDistricts.forEach(d => {
+          countryCounts.set(d.electorate_type, (countryCounts.get(d.electorate_type) || 0) + 1);
+          const party = winningParty(d);
+          partyCounts.set(party, (partyCounts.get(party) || 0) + 1);
+        });
+        const chips = [
+          `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
+        ];
+        ["England", "Scotland", "Wales", "Northern Ireland"].forEach(country => {
+          chips.push(`<span class="summary-chip">${country} <strong>${fmt.format(countryCounts.get(country) || 0)}</strong></span>`);
+        });
+        [...partyCounts.entries()]
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+          .forEach(([party, seats]) => {
+            chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${party} <strong>${fmt.format(seats)}</strong></span>`);
+          });
         target.innerHTML = chips.join("");
         return;
       }
@@ -2238,7 +2300,7 @@
               return `${shortName(winner)} over ${shortName(runnerUp)} · ${d.electorate_type}`;
             }, d => pct(finalMargin(d), d.formal_votes), `No contested ${electorateLabel(2)} loaded.`)}
           </section>`;
-        target.innerHTML = card("Closest electorates", closest) + card("Largest winning margins", largest);
+        target.innerHTML = card(`Closest ${electorateLabel(2)}`, closest) + card("Largest winning margins", largest);
         return;
       }
       if (isMultiMemberElection()) {
@@ -2400,15 +2462,16 @@
 
     function updateElectionSpecificUi() {
       const fpp = isFppElection();
-      document.getElementById("partyVoteMapMode").classList.toggle("hidden", !fpp);
+      const mmp = isMmpElection();
+      document.getElementById("partyVoteMapMode").classList.toggle("hidden", !mmp);
       document.getElementById("changedMapMode").classList.toggle("hidden", fpp);
-      document.getElementById("boundaryTypeModes").classList.toggle("hidden", !fpp);
+      document.getElementById("boundaryTypeModes").classList.toggle("hidden", !mmp);
       document.getElementById("roundsTabButton").classList.toggle("hidden", fpp);
       document.getElementById("chartTabButton").classList.toggle("hidden", fpp);
       document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", fpp);
       document.querySelector('label[for="partyFilter"]').textContent = fpp ? "Winner party" : "Bloc";
       document.getElementById("primaryVoteTitle").textContent = fpp ? "Candidate vote" : "First-preference vote";
-      document.getElementById("finalVoteTitle").textContent = fpp ? "Party vote" : "Final standing";
+      document.getElementById("finalVoteTitle").textContent = mmp ? "Party vote" : "Final standing";
       if (fpp && (activeTab === "rounds" || activeTab === "chart")) activeTab = "overview";
       document.querySelectorAll(".tab-btn").forEach(button => {
         button.classList.toggle("active", button.dataset.tab === activeTab);
@@ -2442,7 +2505,7 @@
       }
       districtSelect.onchange = () => {
         activeDistrict = districts[Number(districtSelect.value)];
-        if (isFppElection() && activeDistrict?.electorate_type) setBoundaryType(activeDistrict.electorate_type, false);
+        if (isMmpElection() && activeDistrict?.electorate_type) setBoundaryType(activeDistrict.electorate_type, false);
         focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
         render();
         updateUrlState();
@@ -2622,7 +2685,7 @@
     function renderSummary(d) {
       const [leader, leaderVotes] = getFirstLeader(d);
       const leaderParty = getParty(d, leader);
-      if (isFppElection()) {
+      if (isMmpElection()) {
         const cancelled = d.contest_status === "cancelled";
         const [winner, winnerVotes] = getWinnerFromFinal(d);
         const winnerParty = getParty(d, winner);
@@ -2639,6 +2702,24 @@
             <div class="fact-item"><span class="fact-label">Valid candidate votes</span><span class="fact-value">${cancelled ? "—" : fmt.format(d.formal_votes)}</span></div>
           </div>
           <p class="pref-impact">${cancelled ? "The 2023 Port Waikato electorate contest was cancelled after a candidate died. Its party vote remains part of the general election; the later by-election is not merged here." : `The electorate MP was chosen by first past the post. The separate party vote helps determine the proportional composition of Parliament.`}</p>
+        `;
+        return;
+      }
+      if (activeElection().system === "fpp") {
+        const [winner] = getWinnerFromFinal(d);
+        const winnerParty = getParty(d, winner);
+        const [runnerUp] = getSecondFromFinal(d);
+        document.getElementById("districtSummary").innerHTML = `
+          <h2 class="result-district">${d.district}</h2>
+          <div class="result-facts">
+            <div class="fact-item"><span class="fact-label">Country</span><span class="fact-value">${d.electorate_type}</span></div>
+            <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">First past the post</span></div>
+            <div class="fact-item"><span class="fact-label">MP elected</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
+            <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
+            <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
+            <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.turnout_pct).toFixed(1)}%</span></div>
+          </div>
+          <p class="pref-impact">The candidate with the most votes was elected. This election does not use preference transfers.</p>
         `;
         return;
       }
@@ -2982,15 +3063,17 @@
       const [primaryLeader] = getFirstLeader(activeDistrict);
       const [winner] = getWinnerFromFinal(activeDistrict);
       renderBars("primaryBars", activeDistrict.first, activeDistrict.formal_votes, primaryLeader, activeDistrict);
-      if (isFppElection()) {
+      if (isMmpElection()) {
         const [partyVoteWinner] = getPartyVoteLeader(activeDistrict);
         const partyVoteTotal = Object.values(activeDistrict.partyVote || {}).reduce((sum, votes) => sum + Number(votes || 0), 0);
         const partyVoteDistrict = { ...activeDistrict, partyMap: Object.fromEntries(Object.keys(activeDistrict.partyVote || {}).map(party => [party, party])) };
         renderBars("finalBars", activeDistrict.partyVote, partyVoteTotal, partyVoteWinner, partyVoteDistrict);
       } else {
         renderBars("finalBars", getFinal(activeDistrict), activeDistrict.formal_votes, winner, activeDistrict);
-        populateRoundSelect();
-        renderRound();
+        if (!isFppElection()) {
+          populateRoundSelect();
+          renderRound();
+        }
       }
       if (activeTab === "chart") renderPreferenceStory(activeDistrict);
       if (activeTab === "raw") renderRawTable(activeDistrict);
@@ -3156,9 +3239,9 @@
         const geojson = await response.json();
         if (!isCurrentElectionLoad(year, loadId)) return false;
         boundaryFeatures = geojson.features || [];
-        const initialType = isFppElection() ? (activeDistrict?.electorate_type || "General") : "General";
+        const initialType = isMmpElection() ? (activeDistrict?.electorate_type || "General") : "General";
         activeBoundaryType = initialType;
-        const visible = isFppElection()
+        const visible = isMmpElection()
           ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
           : boundaryFeatures;
         boundaryShapes = makeBoundaryShapes(visible);

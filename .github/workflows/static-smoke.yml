@@ -68,6 +68,7 @@ jobs:
           python scripts/validate_tas_state.py --csv data/tas_2021_preferences_long.csv --boundaries data/tas_2021_district_boundaries.geojson --expected-members 5
           python scripts/validate_nz_2023.py
           python scripts/validate_nz_2023.py --year 2020
+          python scripts/validate_uk_2024.py
 
       - name: Smoke test static app
         run: |
