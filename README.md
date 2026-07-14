@@ -1,6 +1,6 @@
-# Australian, New Zealand, United Kingdom, and Malaysian Election Results Explorer
+# International Election Results Explorer
 
-A static HTML data app for exploring Australian state and federal lower-house elections, New Zealand MMP elections, the United Kingdom House of Commons, and Malaysia's Dewan Rakyat.
+A static HTML data app for exploring lower-house elections in Australia, New Zealand, the United Kingdom, Malaysia, and Singapore.
 
 The app is map-first and party/bloc-first:
 
@@ -13,6 +13,7 @@ The app is map-first and party/bloc-first:
 - New Zealand candidate-vote and party-vote views with separate general and Māori electorate map layers
 - United Kingdom constituency results and winner-party maps for the 2024 general election
 - Malaysian constituency results and winner-party maps for the 2022 general election (GE15)
+- Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025 general election
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -160,6 +161,15 @@ data/malaysia_2022_parliamentary_boundaries.geojson
 
 Malaysia also uses first past the post, so preference-transfer views are hidden. Candidate results and voting metadata come from the official SPR open-data portal. The map combines the Peninsular 2018, Sabah 2019, and Sarawak 2015 delimitation datasets published CC0 by ElectionData.MY.
 
+Singapore coverage currently includes the 2025 general election, with all 15 Single Member Constituencies (SMCs), 18 Group Representation Constituencies (GRCs), and 97 elected MPs:
+
+```text
+data/singapore_2025_fpp.csv
+data/singapore_2025_electoral_boundaries.geojson
+```
+
+The app treats each GRC party slate as one contest entry while preserving all elected team members. Party summaries count MPs rather than divisions. Candidate/team votes come from the Elections Department Singapore final results, turnout metadata from the official Statements of Poll, and boundaries from data.gov.sg. Marine Parade–Braddell Heights is retained as uncontested with no invented poll totals.
+
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
 ```text
@@ -263,6 +273,8 @@ data/uk_2024_fpp.csv                       # UK Parliament candidate results for
 data/uk_2024_constituency_boundaries.geojson # ONS July 2024 Westminster constituency boundaries
 data/malaysia_2022_fpp.csv                 # SPR Malaysia GE15 candidate results for all 222 constituencies
 data/malaysia_2022_parliamentary_boundaries.geojson # GE15 parliamentary boundaries from three delimitation sets
+data/singapore_2025_fpp.csv                # ELD GE2025 candidate/team results for all 33 electoral divisions
+data/singapore_2025_electoral_boundaries.geojson # data.gov.sg 2025 SMC and GRC boundaries
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
