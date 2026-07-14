@@ -182,6 +182,13 @@ United Kingdom first-past-the-post feasibility is now proven by the `United King
 - the app reuses its no-transfer election path while keeping New Zealand-only MMP controls separate
 - country and party seat summaries provide useful nationwide context without cross-election matching
 
+Malaysia first-past-the-post feasibility is now proven by the `Malaysia General 2022 (GE15)` integration:
+
+- SPR's official open-data portal provides candidate and ballot metadata for the complete election
+- the delayed Padang Serai result is incorporated from SPR's companion result file
+- three CC0 delimitation datasets combine cleanly into all 222 parliamentary constituencies
+- the existing generic FPTP interface supports Malaysia without preference-transfer assumptions
+
 At that point, consider whether the project should become a broader Australian preference explorer.
 
 ## Deferred: Local Council Elections

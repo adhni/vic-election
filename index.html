@@ -851,7 +851,7 @@
   <div class="page-wrap">
     <header class="page-header">
       <h1>Election · Results Explorer</h1>
-      <p>Explore Australian and New Zealand elections — candidate votes, party votes, preference counts, and final results.</p>
+      <p>Explore elections across multiple countries — candidate votes, party votes, preference counts, and final results.</p>
     </header>
 
     <nav class="controls" aria-label="Controls">
@@ -1370,7 +1370,22 @@
         "system": "fpp",
         "csv": "data/uk_2024_fpp.csv",
         "boundaries": "data/uk_2024_constituency_boundaries.geojson",
-        "totalSeats": 650
+        "totalSeats": 650,
+        "areaLabel": "Country",
+        "summaryRegions": ["England", "Scotland", "Wales", "Northern Ireland"]
+      },
+      {
+        "key": "malaysia-2022",
+        "label": "Malaysia General 2022 (GE15)",
+        "type": "national",
+        "jurisdiction": "Malaysia",
+        "year": 2022,
+        "source": "SPR Malaysia / ElectionData.MY",
+        "system": "fpp",
+        "csv": "data/malaysia_2022_fpp.csv",
+        "boundaries": "data/malaysia_2022_parliamentary_boundaries.geojson",
+        "totalSeats": 222,
+        "areaLabel": "State / territory"
       },
       {
         "key": "federal-2025-au",
@@ -1507,6 +1522,7 @@
       if (p === "Social Democratic & Labour Party") return "SDLP";
       if (p === "Traditional Unionist Voice") return "TUV";
       if (p === "Ulster Unionist Party") return "UUP";
+      if (upper === "BEBAS") return "Independent";
       if (p === "National Party") return "National";
       if (upper === "LP") return "Liberal";
       if (upper === "LIBERAL") return "Liberal";
@@ -1555,6 +1571,17 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (p === "ph") return "#dc2626";
+      if (p === "pn") return "#2563eb";
+      if (p === "bn") return "#1e3a5f";
+      if (p === "gps") return "#eab308";
+      if (p === "pas") return "#059669";
+      if (p === "grs") return "#0d9488";
+      if (p === "dap") return "#e70024";
+      if (p === "warisan") return "#0ea5e9";
+      if (p === "muda") return "#7c3aed";
+      if (p === "kdm") return "#eb7389";
+      if (p === "pbm") return "#ca8a04";
       if (p === "conservative") return "#0087dc";
       if (p === "liberal democrats") return "#faa61a";
       if (p === "reform uk") return "#12b6cf";
@@ -1723,7 +1750,7 @@
 
     function electorateLabel(count = 0) {
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
-      if (activeElection().jurisdiction === "United Kingdom") return count === 1 ? "constituency" : "constituencies";
+      if (["United Kingdom", "Malaysia"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";
       return count === 1 ? noun : `${noun}s`;
     }
@@ -2195,6 +2222,7 @@
         return;
       }
       if (activeElection().system === "fpp") {
+        const election = activeElection();
         const countryCounts = new Map();
         const partyCounts = new Map();
         allDistricts.forEach(d => {
@@ -2205,7 +2233,7 @@
         const chips = [
           `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
         ];
-        ["England", "Scotland", "Wales", "Northern Ireland"].forEach(country => {
+        (election.summaryRegions || []).forEach(country => {
           chips.push(`<span class="summary-chip">${country} <strong>${fmt.format(countryCounts.get(country) || 0)}</strong></span>`);
         });
         [...partyCounts.entries()]
@@ -2712,7 +2740,7 @@
         document.getElementById("districtSummary").innerHTML = `
           <h2 class="result-district">${d.district}</h2>
           <div class="result-facts">
-            <div class="fact-item"><span class="fact-label">Country</span><span class="fact-value">${d.electorate_type}</span></div>
+            <div class="fact-item"><span class="fact-label">${activeElection().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
             <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">First past the post</span></div>
             <div class="fact-item"><span class="fact-label">MP elected</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
             <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
