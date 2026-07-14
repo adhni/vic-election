@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 import requests
@@ -71,7 +71,12 @@ def build_rows(source_rows: list[dict[str, str]]) -> list[dict[str, object]]:
         informal = as_int(first["Election invalid vote count"])
         total = formal + informal
         enrolment = as_int(first["Electorate"])
-        results = [(candidate_name(row), candidate_party(row), as_int(row["Candidate vote count"])) for row in rows]
+        raw_results = [(candidate_name(row), candidate_party(row), as_int(row["Candidate vote count"])) for row in rows]
+        name_counts = Counter(name for name, _, _ in raw_results)
+        results = [
+            (f"{name} ({party})" if name_counts[name] > 1 else name, party, votes)
+            for name, party, votes in raw_results
+        ]
         if sum(votes for _, _, votes in results) != formal:
             raise SystemExit(f"{first['Constituency name']}: candidate votes do not equal valid votes")
         winner, winner_party, _ = results[0]

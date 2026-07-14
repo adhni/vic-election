@@ -64,6 +64,7 @@ def main() -> None:
         "Hendon": ("David Pinto-Duschinsky", 15855, 15),
         "Poole": ("Neil Duncan-Jordan", 14168, 18),
         "Bristol South": ("Karin Smyth", 18521, 7666),
+        "Mid Buckinghamshire": ("Greg Smith (Conservative)", 20150, 5872),
     }
     for district, (winner, votes, margin) in checks.items():
         ranked = sorted(
@@ -72,6 +73,12 @@ def main() -> None:
         )
         if ranked[0] != (winner, votes) or ranked[0][1] - ranked[1][1] != margin:
             raise SystemExit(f"{district}: spot check failed: {ranked[:2]}")
+
+    mid_bucks_names = [
+        row["candidate"] for row in groups["Mid Buckinghamshire"] if row["row_type"] == "first"
+    ]
+    if len(mid_bucks_names) != len(set(mid_bucks_names)) or "Greg Smith (Green Party)" not in mid_bucks_names:
+        raise SystemExit("Mid Buckinghamshire: duplicate candidate names were not disambiguated")
 
     geojson = json.loads(BOUNDARY_PATH.read_text(encoding="utf-8"))
     features = geojson.get("features", [])
