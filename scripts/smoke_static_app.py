@@ -29,8 +29,10 @@ REQUIRED_SINGAPORE_MARKERS = (
 )
 REQUIRED_CANADA_MARKERS = (
     '"key": "canada-2025"',
+    '"key": "canada-2021"',
     '"jurisdiction": "Canada"',
     '"totalSeats": 343',
+    '"totalSeats": 338',
     'return count === 1 ? "riding" : "ridings"',
 )
 EXPECTED_ELECTION_ALIASES = {

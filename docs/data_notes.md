@@ -14,7 +14,7 @@ Source targets:
 - ElectionData.MY parliamentary delimitation boundaries for Peninsular Malaysia, Sabah, and Sarawak
 - Elections Department Singapore 2025 final results and Statements of Poll
 - data.gov.sg 2025 electoral division boundaries
-- Elections Canada 45th general election official voting results and federal electoral district boundaries
+- Elections Canada 44th and 45th general election official voting results and federal electoral district boundaries
 
 This repo is built around three levels of data:
 
@@ -105,7 +105,7 @@ The Malaysia 2022 rows are generated from the official Election Commission (SPR)
 
 The Singapore 2025 rows are generated from the Elections Department Singapore final-results page for all 33 electoral divisions. Each SMC candidate is one contest entry; each GRC party team is one contest entry with its full nominated membership preserved in `elected_members`. The 32 contested divisions use their official Statements of Poll to reconcile electors, valid votes, rejected ballots, votes cast, and turnout exactly. Marine Parade–Braddell Heights was uncontested and is stored with zero poll totals rather than inferred votes. The app counts the winning teams as 97 elected MPs (PAP 87, WP 10), while division-level margins compare the competing candidate or party-team totals. Boundaries come from the official data.gov.sg 2025 Electoral Boundary dataset.
 
-The Canada 2025 rows are generated from Elections Canada's official Tables 11 and 12 for the 45th general election. They contain all 1,959 candidates in all 343 federal electoral districts, with candidate votes reconciled against each riding's valid ballots and total ballots reconciled as valid plus rejected ballots. Computed margins are checked against the official majority field, and nationwide elected-party totals are validated as Liberal 169, Conservative 144, Bloc Québécois 22, NDP 7, and Green 1. Canada uses first past the post, so `first` and `final` rows are identical. The boundaries come from Elections Canada's official `FederalElectoralDistricts_2025_SHP.zip`, are reprojected to WGS84, dissolved by the five-digit riding code where the source stores disconnected pieces separately, and topology-preservingly simplified for the static app.
+The Canada 2025 and 2021 rows are generated from Elections Canada's official Tables 11 and 12 for the 45th and 44th general elections. They contain all 1,959 candidates in 343 federal electoral districts for 2025 and all 2,010 candidates in 338 districts for 2021. Candidate votes reconcile against each riding's valid ballots, total ballots reconcile as valid plus rejected ballots, computed margins match the official majority field, and nationwide party seat totals are validated. Canada uses first past the post, so `first` and `final` rows are identical. Each election uses its matching official Elections Canada boundary archive: the 2025 districts reflect the new representation order, while 2021 retains the earlier 338-district map. Both are reprojected to WGS84, dissolved by five-digit riding code where needed, and topology-preservingly simplified for the static app.
 
 The 2025 federal Australia boundary file is adapted from the AEC `AUS-March-2025-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, with no `StateAb` filtering.
 

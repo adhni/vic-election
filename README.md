@@ -171,14 +171,16 @@ data/singapore_2025_electoral_boundaries.geojson
 
 The app treats each GRC party slate as one contest entry while preserving all elected team members. Party summaries count MPs rather than divisions. Candidate/team votes come from the Elections Department Singapore final results, turnout metadata from the official Statements of Poll, and boundaries from data.gov.sg. Marine Parade–Braddell Heights is retained as uncontested with no invented poll totals.
 
-Canada coverage currently includes the 2025 federal election, with all 343 House of Commons ridings across the ten provinces and three territories:
+Canada coverage currently includes the 2025 and 2021 federal elections, covering every House of Commons riding across the ten provinces and three territories:
 
 ```text
 data/canada_2025_fpp.csv
 data/canada_2025_federal_boundaries.geojson
+data/canada_2021_fpp.csv
+data/canada_2021_federal_boundaries.geojson
 ```
 
-Canada uses first past the post, so preference-transfer views are hidden. The dataset preserves all 1,959 candidates, exact valid and rejected ballot totals, calculated turnout, province/territory metadata, and the official 2025 riding codes. Results and matching 45th-general-election boundaries both come from Elections Canada.
+Canada uses first past the post, so preference-transfer views are hidden. The datasets preserve all 1,959 candidates across 343 ridings in 2025 and all 2,010 candidates across 338 ridings in 2021, with exact valid and rejected ballot totals, calculated turnout, province/territory metadata, and election-specific riding codes. Results and matching boundaries for both elections come from Elections Canada.
 
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
@@ -287,6 +289,8 @@ data/singapore_2025_fpp.csv                # ELD GE2025 candidate/team results f
 data/singapore_2025_electoral_boundaries.geojson # data.gov.sg 2025 SMC and GRC boundaries
 data/canada_2025_fpp.csv                   # Elections Canada GE2025 results for all 343 ridings
 data/canada_2025_federal_boundaries.geojson # Elections Canada 45th-election riding boundaries
+data/canada_2021_fpp.csv                   # Elections Canada GE2021 results for all 338 ridings
+data/canada_2021_federal_boundaries.geojson # Elections Canada 44th-election riding boundaries
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons

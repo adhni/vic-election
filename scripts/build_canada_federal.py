@@ -13,11 +13,30 @@ import requests
 from shapely.geometry import mapping
 
 
-TABLE_11_URL = "https://www.elections.ca/res/rep/off/ovrGE45/62/data_donnees/table_tableau11.csv"
-TABLE_12_URL = "https://www.elections.ca/res/rep/off/ovrGE45/62/data_donnees/table_tableau12.csv"
-BOUNDARIES_URL = "https://www.elections.ca/res/cir/mapsCorner/vector/FederalElectoralDistricts_2025_SHP.zip"
-RESULTS_PAGE = "https://www.elections.ca/res/rep/off/ovrGE45/home.html"
 UA = "Mozilla/5.0 (compatible; election-preference-explorer/0.1; +https://github.com/)"
+
+ELECTIONS = {
+    2025: {
+        "table11": "https://www.elections.ca/res/rep/off/ovrGE45/62/data_donnees/table_tableau11.csv",
+        "table12": "https://www.elections.ca/res/rep/off/ovrGE45/62/data_donnees/table_tableau12.csv",
+        "boundaries": "https://www.elections.ca/res/cir/mapsCorner/vector/FederalElectoralDistricts_2025_SHP.zip",
+        "results_page": "https://www.elections.ca/res/rep/off/ovrGE45/home.html",
+        "shape_name": "FED_CA_2025_EN.shp",
+        "shape_code": "FED_NUM",
+        "ridings": 343,
+        "candidates": 1959,
+    },
+    2021: {
+        "table11": "https://www.elections.ca/res/rep/off/ovr2021app/53/data_donnees/table_tableau11.csv",
+        "table12": "https://www.elections.ca/res/rep/off/ovr2021app/53/data_donnees/table_tableau12.csv",
+        "boundaries": "https://ftp.maps.canada.ca/pub/elections_elections/Electoral-districts_Circonscription-electorale/Elections_Canada_2021/FED_CA_2021_EN.zip",
+        "results_page": "https://www.elections.ca/res/rep/off/ovr2021app/home.html",
+        "shape_name": "FED_CA_2021_EN.shp",
+        "shape_code": "FED_NUM",
+        "ridings": 338,
+        "candidates": 2010,
+    },
+}
 
 FIELDS = [
     "district", "district_url", "distribution_url", "elected_member", "elected_party",
@@ -45,6 +64,14 @@ PARTY_SUFFIXES = {
     "Marxist-Leninist/Marxiste-Léniniste": "Marxist-Leninist",
     "Parti Rhinocéros Party/Parti Rhinocéros Party": "Rhinoceros Party",
     "United Party of Canada (UP)/Parti Uni du Canada (UP)": "United Party",
+    "Free Party Canada/Parti Libre Canada": "Free Party Canada",
+    "Pour l'Indépendance du Québec/Pour l'Indépendance du Québec": "Pour l'Indépendance du Québec",
+    "VCP/CAC": "Veterans Coalition Party",
+    "Parti Patriote/Parti Patriote": "Parti Patriote",
+    "CFF - Canada's Fourth Front/QFC - Quatrième front du Canada": "Canada's Fourth Front",
+    "National Citizens Alliance/Alliance Nationale Citoyens": "National Citizens Alliance",
+    "Nationalist/Nationaliste": "Nationalist",
+    "Maverick Party/Maverick Party": "Maverick Party",
 }
 
 
@@ -84,13 +111,16 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def build_rows(metadata_rows: list[dict[str, str]], candidate_rows: list[dict[str, str]]) -> tuple[list[dict[str, object]], dict[str, dict[str, str]]]:
+def build_rows(
+    metadata_rows: list[dict[str, str]], candidate_rows: list[dict[str, str]],
+    expected_ridings: int, results_page: str,
+) -> tuple[list[dict[str, object]], dict[str, dict[str, str]]]:
     metadata = {field(row, "Electoral District Number"): row for row in metadata_rows}
     groups: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in candidate_rows:
         groups[field(row, "Electoral District Number")].append(row)
-    if len(metadata) != 343 or set(metadata) != set(groups):
-        raise SystemExit(f"Expected the same 343 riding codes in Tables 11 and 12, found {len(metadata)} and {len(groups)}")
+    if len(metadata) != expected_ridings or set(metadata) != set(groups):
+        raise SystemExit(f"Expected the same {expected_ridings} riding codes in Tables 11 and 12, found {len(metadata)} and {len(groups)}")
 
     output = []
     district_by_code: dict[str, dict[str, str]] = {}
@@ -131,8 +161,8 @@ def build_rows(metadata_rows: list[dict[str, str]], candidate_rows: list[dict[st
             raise SystemExit(f"{district}: official turnout does not match ballot totals")
         base = {
             "district": district,
-            "district_url": RESULTS_PAGE,
-            "distribution_url": RESULTS_PAGE,
+            "district_url": results_page,
+            "distribution_url": results_page,
             "elected_member": winner,
             "elected_party": winner_party,
             "enrolment": enrolment,
@@ -160,62 +190,84 @@ def build_rows(metadata_rows: list[dict[str, str]], candidate_rows: list[dict[st
     return output, district_by_code
 
 
-def build_boundaries(zip_path: Path, extract_dir: Path, district_by_code: dict[str, dict[str, str]]) -> dict[str, object]:
-    if not (extract_dir / "SHP" / "FED_CA_2025_EN.shp").exists():
+def build_boundaries(
+    zip_path: Path, extract_dir: Path, district_by_code: dict[str, dict[str, str]],
+    shape_name: str, shape_code: str, expected_ridings: int, year: int,
+) -> dict[str, object]:
+    shape_path = next(extract_dir.rglob(shape_name), None) if extract_dir.exists() else None
+    if not shape_path:
         extract_dir.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(zip_path) as archive:
             archive.extractall(extract_dir)
-    frame = gpd.read_file(extract_dir / "SHP" / "FED_CA_2025_EN.shp").to_crs(4326)
-    frame["FED_NUM"] = frame["FED_NUM"].astype(str).str.zfill(5)
+        shape_path = next(extract_dir.rglob(shape_name), None)
+    if not shape_path:
+        raise SystemExit(f"Boundary archive did not contain {shape_name}")
+    frame = gpd.read_file(shape_path).to_crs(4326)
+    frame[shape_code] = frame[shape_code].astype(str).str.zfill(5)
     frame["geometry"] = frame.geometry.simplify(0.005, preserve_topology=True)
-    frame = frame.dissolve(by="FED_NUM", as_index=False)
-    if len(frame) != 343 or set(frame["FED_NUM"]) != set(district_by_code):
-        raise SystemExit("Official boundaries do not match the 343 result riding codes")
+    invalid = ~frame.geometry.is_valid
+    if invalid.any():
+        frame.loc[invalid, "geometry"] = frame.loc[invalid].geometry.buffer(0)
+    if frame[shape_code].duplicated().any():
+        frame = frame.dissolve(by=shape_code, as_index=False)
+    if len(frame) != expected_ridings or set(frame[shape_code]) != set(district_by_code):
+        raise SystemExit(f"Official boundaries do not match the {expected_ridings} result riding codes")
     features = []
-    for row in frame.itertuples():
-        info = district_by_code[row.FED_NUM]
+    for _, row in frame.iterrows():
+        code = row[shape_code]
+        info = district_by_code[code]
         if not row.geometry.is_valid:
-            raise SystemExit(f"{row.FED_NUM}: simplified boundary is invalid")
+            raise SystemExit(f"{code}: simplified boundary is invalid")
         features.append({
             "type": "Feature",
             "properties": {
                 "district": info["district"],
-                "constituency_code": row.FED_NUM,
+                "constituency_code": code,
                 "electorate_type": info["province"],
             },
             "geometry": mapping(row.geometry),
         })
-    return {"type": "FeatureCollection", "name": "canada_2025_federal_electoral_districts", "features": features}
+    return {"type": "FeatureCollection", "name": f"canada_{year}_federal_electoral_districts", "features": features}
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build Canada 2025 federal election FPTP data")
-    parser.add_argument("--raw-dir", type=Path, default=Path("tmp/canada_2025"))
+    parser = argparse.ArgumentParser(description="Build Canada federal election FPTP data")
+    parser.add_argument("--year", type=int, choices=sorted(ELECTIONS), default=2025)
+    parser.add_argument("--raw-dir", type=Path)
     parser.add_argument("--out-dir", type=Path, default=Path("data"))
     parser.add_argument("--refresh", action="store_true")
     args = parser.parse_args()
+    config = ELECTIONS[args.year]
+    raw_dir = args.raw_dir or Path(f"tmp/canada_{args.year}")
 
     session = requests.Session()
     session.headers.update({"User-Agent": UA})
-    table11_path = args.raw_dir / "table11.csv"
-    table12_path = args.raw_dir / "table12.csv"
-    boundary_zip = args.raw_dir / "FederalElectoralDistricts_2025_SHP.zip"
-    download(session, TABLE_11_URL, table11_path, args.refresh)
-    download(session, TABLE_12_URL, table12_path, args.refresh)
-    download(session, BOUNDARIES_URL, boundary_zip, args.refresh)
+    table11_path = raw_dir / "table11.csv"
+    table12_path = raw_dir / "table12.csv"
+    boundary_zip = raw_dir / "boundaries.zip"
+    download(session, config["table11"], table11_path, args.refresh)
+    download(session, config["table12"], table12_path, args.refresh)
+    download(session, config["boundaries"], boundary_zip, args.refresh)
 
-    rows, district_by_code = build_rows(read_csv(table11_path), read_csv(table12_path))
+    rows, district_by_code = build_rows(
+        read_csv(table11_path), read_csv(table12_path), config["ridings"], config["results_page"]
+    )
+    if len(rows) != config["candidates"] * 2:
+        raise SystemExit(f"Expected {config['candidates']} candidates, found {len(rows) // 2}")
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    csv_path = args.out_dir / "canada_2025_fpp.csv"
+    csv_path = args.out_dir / f"canada_{args.year}_fpp.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
-    boundaries = build_boundaries(boundary_zip, args.raw_dir / "boundaries", district_by_code)
-    boundary_path = args.out_dir / "canada_2025_federal_boundaries.geojson"
+    boundaries = build_boundaries(
+        boundary_zip, raw_dir / "boundaries", district_by_code, config["shape_name"],
+        config["shape_code"], config["ridings"], args.year,
+    )
+    boundary_path = args.out_dir / f"canada_{args.year}_federal_boundaries.geojson"
     boundary_path.write_text(json.dumps(boundaries, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    print(f"Wrote {csv_path} ({len(rows)} rows, 343 ridings, 1,959 candidates)")
+    print(f"Wrote {csv_path} ({len(rows)} rows, {config['ridings']} ridings, {config['candidates']:,} candidates)")
     print(f"Wrote {boundary_path} ({len(boundaries['features'])} features)")
 
 
