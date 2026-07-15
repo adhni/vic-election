@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import shutil
 import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -192,8 +193,10 @@ def build_rows(
 
 def build_boundaries(
     zip_path: Path, extract_dir: Path, district_by_code: dict[str, dict[str, str]],
-    shape_name: str, shape_code: str, expected_ridings: int, year: int,
+    shape_name: str, shape_code: str, expected_ridings: int, year: int, refresh: bool,
 ) -> dict[str, object]:
+    if refresh and extract_dir.exists():
+        shutil.rmtree(extract_dir)
     shape_path = next(extract_dir.rglob(shape_name), None) if extract_dir.exists() else None
     if not shape_path:
         extract_dir.mkdir(parents=True, exist_ok=True)
@@ -263,7 +266,7 @@ def main() -> None:
 
     boundaries = build_boundaries(
         boundary_zip, raw_dir / "boundaries", district_by_code, config["shape_name"],
-        config["shape_code"], config["ridings"], args.year,
+        config["shape_code"], config["ridings"], args.year, args.refresh,
     )
     boundary_path = args.out_dir / f"canada_{args.year}_federal_boundaries.geojson"
     boundary_path.write_text(json.dumps(boundaries, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
