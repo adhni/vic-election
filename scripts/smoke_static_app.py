@@ -27,6 +27,12 @@ REQUIRED_SINGAPORE_MARKERS = (
     '"summaryRegions": ["SMC", "GRC"]',
     '"Plurality block vote"',
 )
+REQUIRED_CANADA_MARKERS = (
+    '"key": "canada-2025"',
+    '"jurisdiction": "Canada"',
+    '"totalSeats": 343',
+    'return count === 1 ? "riding" : "ridings"',
+)
 EXPECTED_ELECTION_ALIASES = {
     "federal-2025-vic": "federal-2025-au",
     "federal-2022-vic": "federal-2022-au",
@@ -53,6 +59,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_SINGAPORE_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Singapore team-election UI marker {marker!r}")
+    for marker in REQUIRED_CANADA_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Canada FPTP UI marker {marker!r}")
     if html.count("syncBoundaryTypeToActiveDistrict();") < 2:
         raise SystemExit(f"{html_file}: NZ map layer is not synchronized after filters and reset")
     match = re.search(r"const electionDefinitions = (\[.*?\]);", html, flags=re.S)

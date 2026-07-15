@@ -197,6 +197,13 @@ Singapore mixed SMC/GRC feasibility is now proven by the `Singapore General 2025
 - election-wide party summaries count all 97 elected MPs rather than treating every division as one seat
 - the uncontested Marine Parade–Braddell Heights GRC is retained without fabricated votes or turnout
 
+Canada first-past-the-post feasibility is now proven by the `Canada Federal 2025` integration:
+
+- Elections Canada publishes compact nationwide candidate and riding summary tables
+- exact ballot, turnout, official-majority, candidate-count, province, and party-seat checks cover all 343 ridings
+- the official 45th-election shapefile matches every five-digit riding code after disconnected geometry pieces are dissolved
+- the generic no-transfer interface supports Canadian ridings with jurisdiction-specific party colours and terminology
+
 At that point, consider whether the project should become a broader Australian preference explorer.
 
 ## Deferred: Local Council Elections
