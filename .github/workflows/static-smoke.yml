@@ -79,4 +79,5 @@ jobs:
 
       - name: Smoke test static app
         run: |
+          python scripts/check_repository_sizes.py
           python scripts/smoke_static_app.py

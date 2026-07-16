@@ -382,6 +382,22 @@ python scripts/smoke_static_app.py
 The smoke test reads `electionDefinitions` from the HTML files and validates that the configured CSV and boundary files exist, load, and match by district name.
 It also checks that the compact rankings UI markers are present in both HTML entry points.
 
+## Asset size guardrails
+
+Static hosting and browser parsing depend on keeping boundary geometry compact. CI rejects an individual boundary file over 15 MiB or a total `data/` directory over 190 MiB:
+
+```bash
+python scripts/check_repository_sizes.py
+```
+
+The oversized historical boundary sources are simplified with shared-topology preservation while retaining 20% of weighted vertices. The optimizer verifies identical feature order and properties, valid non-empty output, and a maximum relative feature-area change of 0.5% before replacing anything:
+
+```bash
+./.venv/bin/python scripts/optimize_boundary_geojson.py --write
+```
+
+The optimizer pins Mapshaper `0.7.45` through `npx` and skips files already below the 11 MiB optimized ceiling, preventing repeated simplification. Victoria 2014 and 2018 are intentionally excluded because the guarded simplification does not preserve valid geometry for those source files.
+
 ## CSV Format
 
 The app expects long CSV rows:
