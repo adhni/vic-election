@@ -1,24 +1,33 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
 
-CSV_PATH = Path("data/singapore_2025_fpp.csv")
-BOUNDARY_PATH = Path("data/singapore_2025_electoral_boundaries.geojson")
+EXPECTED = {
+    2025: {"divisions": 33, "entries": 71, "candidates": 211, "seats": {"PAP": 87, "WP": 10}, "types": {"SMC": 15, "GRC": 18}, "uncontested": ["Marine Parade-Braddell Heights"], "checks": {"Jalan Kayu": ("Ng Chee Meng", 14146, 809), "East Coast": ("PAP team", 80105, 23817), "Aljunied": ("WP team", 79254, 25783)}},
+    2020: {"divisions": 31, "entries": 64, "candidates": 192, "seats": {"PAP": 83, "WP": 10}, "types": {"SMC": 14, "GRC": 17}, "uncontested": [], "checks": {"Marymount": ("GAN SIOW HUANG", 12173, 2230), "Bukit Panjang": ("LIANG ENG HWA", 18085, 2509), "Bukit Batok": ("MURALI PILLAI", 15500, 2713)}},
+}
 
 
 def main() -> None:
-    with CSV_PATH.open(newline="", encoding="utf-8") as handle:
+    parser = argparse.ArgumentParser(description="Validate Singapore General Election data")
+    parser.add_argument("--year", type=int, choices=sorted(EXPECTED), default=2025)
+    args = parser.parse_args()
+    expected = EXPECTED[args.year]
+    csv_path = Path(f"data/singapore_{args.year}_fpp.csv")
+    boundary_path = Path(f"data/singapore_{args.year}_electoral_boundaries.geojson")
+    with csv_path.open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
     groups: dict[str, list[dict[str, str]]] = defaultdict(list)
     for row in rows:
         groups[row["district"]].append(row)
-    if len(groups) != 33:
-        raise SystemExit(f"Expected 33 electoral divisions, found {len(groups)}")
+    if len(groups) != expected["divisions"]:
+        raise SystemExit(f"Expected {expected['divisions']} electoral divisions, found {len(groups)}")
 
     contest_entries = 0
     elected_seats = Counter()
@@ -72,21 +81,16 @@ def main() -> None:
         for row in district_rows
         if row["row_type"] == "first"
     )
-    if contest_entries != 71 or actual_candidate_members != 211:
-        raise SystemExit(f"Expected 71 entries and 211 candidates, found {contest_entries} and {actual_candidate_members}")
-    if elected_seats != {"PAP": 87, "WP": 10}:
+    if contest_entries != expected["entries"] or actual_candidate_members != expected["candidates"]:
+        raise SystemExit(f"Expected {expected['entries']} entries and {expected['candidates']} candidates, found {contest_entries} and {actual_candidate_members}")
+    if elected_seats != expected["seats"]:
         raise SystemExit(f"Unexpected elected seat totals: {elected_seats}")
-    if types != {"SMC": 15, "GRC": 18}:
+    if types != expected["types"]:
         raise SystemExit(f"Unexpected division types: {types}")
-    if uncontested != ["Marine Parade-Braddell Heights"]:
+    if uncontested != expected["uncontested"]:
         raise SystemExit(f"Unexpected uncontested divisions: {uncontested}")
 
-    checks = {
-        "Jalan Kayu": ("Ng Chee Meng", 14146, 809),
-        "East Coast": ("PAP team", 80105, 23817),
-        "Aljunied": ("WP team", 79254, 25783),
-    }
-    for district, (winner, votes, margin) in checks.items():
+    for district, (winner, votes, margin) in expected["checks"].items():
         ranked = sorted(
             ((row["candidate"], int(row["votes"])) for row in groups[district] if row["row_type"] == "final"),
             key=lambda item: (-item[1], item[0]),
@@ -94,12 +98,12 @@ def main() -> None:
         if ranked[0] != (winner, votes) or ranked[0][1] - ranked[1][1] != margin:
             raise SystemExit(f"{district}: spot check failed: {ranked[:2]}")
 
-    geojson = json.loads(BOUNDARY_PATH.read_text(encoding="utf-8"))
+    geojson = json.loads(boundary_path.read_text(encoding="utf-8"))
     features = geojson.get("features", [])
     boundary_names = {feature["properties"]["district"] for feature in features}
-    if len(features) != 33 or boundary_names != set(groups):
+    if len(features) != expected["divisions"] or boundary_names != set(groups):
         raise SystemExit(f"Boundary mismatch: {sorted(boundary_names ^ set(groups))}")
-    print("Singapore GE2025 validation passed: 33 divisions, 97 MPs, all totals and boundaries matched")
+    print(f"Singapore {args.year} validation passed: {expected['divisions']} divisions, {sum(expected['seats'].values())} MPs, all totals and boundaries matched")
 
 
 if __name__ == "__main__":

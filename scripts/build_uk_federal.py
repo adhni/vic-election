@@ -11,13 +11,22 @@ import requests
 from shapely.geometry import mapping, shape
 
 
-RESULTS_URL = "https://electionresults.parliament.uk/general-elections/6/candidacies.csv"
-BOUNDARIES_URL = (
-    "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/"
-    "Westminster_Parliamentary_Constituencies_July_2024_Boundaries_UK_BSC/FeatureServer/0/query"
-    "?where=1%3D1&outFields=PCON24CD%2CPCON24NM%2CPCON24NMW"
-    "&returnGeometry=true&outSR=4326&f=geojson"
-)
+ELECTIONS = {
+    2024: {
+        "election_id": 6,
+        "boundary_service": "Westminster_Parliamentary_Constituencies_July_2024_Boundaries_UK_BSC",
+        "code_field": "PCON24CD",
+        "name_field": "PCON24NM",
+        "candidates": 4515,
+    },
+    2019: {
+        "election_id": 4,
+        "boundary_service": "WPC_Dec_2019_UGCB_UK_2022",
+        "code_field": "pcon19cd",
+        "name_field": "pcon19nm",
+        "candidates": 3320,
+    },
+}
 UA = "Mozilla/5.0 (compatible; election-preference-explorer/0.1; +https://github.com/)"
 
 FIELDS = [
@@ -28,7 +37,10 @@ FIELDS = [
 ]
 
 # Parliament's result feed and ONS boundaries differ only in this diacritic.
-BOUNDARY_NAME_ALIASES = {"Montgomeryshire and Glyndwr": "Montgomeryshire and Glyndŵr"}
+BOUNDARY_NAME_ALIASES = {
+    "Montgomeryshire and Glyndwr": "Montgomeryshire and Glyndŵr",
+    "Ynys Mon": "Ynys Môn",
+}
 
 
 def download(session: requests.Session, url: str, path: Path, refresh: bool) -> None:
@@ -120,12 +132,12 @@ def country_for_code(code: str) -> str:
     }.get(code[:1], "")
 
 
-def build_boundaries(source: dict[str, object]) -> dict[str, object]:
+def build_boundaries(source: dict[str, object], code_field: str, name_field: str, year: int) -> dict[str, object]:
     features = []
     for feature in source.get("features", []):
         properties = feature.get("properties", {})
-        code = str(properties.get("PCON24CD", "")).strip()
-        district = str(properties.get("PCON24NM", "")).strip()
+        code = str(properties.get(code_field, "")).strip()
+        district = str(properties.get(name_field, "")).strip()
         district = BOUNDARY_NAME_ALIASES.get(district, district)
         geometry = mapping(shape(feature["geometry"]).simplify(0.001, preserve_topology=True))
         features.append({
@@ -139,35 +151,50 @@ def build_boundaries(source: dict[str, object]) -> dict[str, object]:
         })
     if len(features) != 650:
         raise SystemExit(f"Expected 650 boundary features, found {len(features)}")
-    return {"type": "FeatureCollection", "name": "uk_2024_westminster_constituencies", "features": features}
+    return {"type": "FeatureCollection", "name": f"uk_{year}_westminster_constituencies", "features": features}
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build UK 2024 House of Commons FPTP election data")
-    parser.add_argument("--raw-dir", type=Path, default=Path("tmp/uk_2024"))
+    parser = argparse.ArgumentParser(description="Build UK House of Commons FPTP election data")
+    parser.add_argument("--year", type=int, choices=sorted(ELECTIONS), default=2024)
+    parser.add_argument("--raw-dir", type=Path)
     parser.add_argument("--out-dir", type=Path, default=Path("data"))
     parser.add_argument("--refresh", action="store_true")
     args = parser.parse_args()
+    config = ELECTIONS[args.year]
+    raw_dir = args.raw_dir or Path(f"tmp/uk_{args.year}")
+    results_url = f"https://electionresults.parliament.uk/general-elections/{config['election_id']}/candidacies.csv"
+    boundaries_url = (
+        "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/"
+        f"{config['boundary_service']}/FeatureServer/0/query?where=1%3D1"
+        f"&outFields={config['code_field']}%2C{config['name_field']}"
+        "&returnGeometry=true&outSR=4326&f=geojson"
+    )
 
     session = requests.Session()
     session.headers.update({"User-Agent": UA})
-    results_path = args.raw_dir / "candidacies.csv"
-    boundaries_path = args.raw_dir / "boundaries.geojson"
-    download(session, RESULTS_URL, results_path, args.refresh)
-    download(session, BOUNDARIES_URL, boundaries_path, args.refresh)
+    results_path = raw_dir / "candidacies.csv"
+    boundaries_path = raw_dir / "boundaries.geojson"
+    download(session, results_url, results_path, args.refresh)
+    download(session, boundaries_url, boundaries_path, args.refresh)
 
     with results_path.open(newline="", encoding="utf-8-sig") as handle:
         source_rows = list(csv.DictReader(handle))
     rows = build_rows(source_rows)
+    if len(rows) != config["candidates"] * 2:
+        raise SystemExit(f"Expected {config['candidates']} candidates, found {len(rows) // 2}")
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    output_csv = args.out_dir / "uk_2024_fpp.csv"
+    output_csv = args.out_dir / f"uk_{args.year}_fpp.csv"
     with output_csv.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
-    boundaries = build_boundaries(json.loads(boundaries_path.read_text(encoding="utf-8")))
-    output_boundaries = args.out_dir / "uk_2024_constituency_boundaries.geojson"
+    boundaries = build_boundaries(
+        json.loads(boundaries_path.read_text(encoding="utf-8")),
+        config["code_field"], config["name_field"], args.year,
+    )
+    output_boundaries = args.out_dir / f"uk_{args.year}_constituency_boundaries.geojson"
     output_boundaries.write_text(
         json.dumps(boundaries, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
     )
