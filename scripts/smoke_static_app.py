@@ -22,10 +22,16 @@ REQUIRED_NZ_MARKERS = (
 )
 REQUIRED_SINGAPORE_MARKERS = (
     '"key": "singapore-2025"',
+    '"key": "singapore-2020"',
     '"teamElection": true',
     '"totalSeats": 97',
+    '"totalSeats": 93',
     '"summaryRegions": ["SMC", "GRC"]',
     '"Plurality block vote"',
+)
+REQUIRED_INTERNATIONAL_HISTORY_MARKERS = (
+    '"key": "uk-2019"',
+    '"key": "malaysia-2018"',
 )
 REQUIRED_CANADA_MARKERS = (
     '"key": "canada-2025"',
@@ -61,6 +67,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_SINGAPORE_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Singapore team-election UI marker {marker!r}")
+    for marker in REQUIRED_INTERNATIONAL_HISTORY_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing international history marker {marker!r}")
     for marker in REQUIRED_CANADA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Canada FPTP UI marker {marker!r}")

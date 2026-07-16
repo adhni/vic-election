@@ -175,21 +175,21 @@ New Zealand MMP feasibility is now proven by the `New Zealand General 2023` and 
 - Port Waikato remains cancelled in the 2023 general election rather than being merged with the later by-election
 - the same 65 general and 7 Māori electorate boundary layers are valid for both elections
 
-United Kingdom first-past-the-post feasibility is now proven by the `United Kingdom General 2024` integration:
+United Kingdom first-past-the-post feasibility is now proven by the 2024 and 2019 integrations:
 
 - UK Parliament publishes candidate results for all 650 constituencies in one official CSV
-- ONS publishes matching July 2024 Westminster constituency boundaries
+- ONS publishes matching July 2024 and December 2019 Westminster constituency boundaries
 - the app reuses its no-transfer election path while keeping New Zealand-only MMP controls separate
 - country and party seat summaries provide useful nationwide context without cross-election matching
 
-Malaysia first-past-the-post feasibility is now proven by the `Malaysia General 2022 (GE15)` integration:
+Malaysia first-past-the-post feasibility is now proven by the GE15 and GE14 integrations:
 
 - SPR's official open-data portal provides candidate and ballot metadata for the complete election
 - the delayed Padang Serai result is incorporated from SPR's companion result file
 - three CC0 delimitation datasets combine cleanly into all 222 parliamentary constituencies
 - the existing generic FPTP interface supports Malaysia without preference-transfer assumptions
 
-Singapore mixed SMC/GRC feasibility is now proven by the `Singapore General 2025` integration:
+Singapore mixed SMC/GRC feasibility is now proven by the 2025 and 2020 integrations:
 
 - ELD publishes a complete final-results page and a Statement of Poll for every contested electoral division
 - official data.gov.sg boundaries match all 33 electoral divisions

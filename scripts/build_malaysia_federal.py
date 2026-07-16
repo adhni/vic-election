@@ -14,10 +14,17 @@ from shapely.geometry import mapping, shape
 
 RESULTS_URL = "https://opendata.spr.gov.my/data/keputusan-pru.json"
 DELAYED_RESULTS_URL = "https://opendata.spr.gov.my/data/keputusan-prk.json"
-BOUNDARY_URLS = {
-    "peninsular": "https://lake.electiondata.my/maps/delimitations/peninsular_2018_parlimen.geojson",
-    "sabah": "https://lake.electiondata.my/maps/delimitations/sabah_2019_parlimen.geojson",
-    "sarawak": "https://lake.electiondata.my/maps/delimitations/sarawak_2015_parlimen.geojson",
+HEADLINE_STATS_URL = "https://lake.electiondata.my/results_headline/headline_stats_federal.csv"
+HEADLINE_BALLOTS_URL = "https://lake.electiondata.my/results_headline/headline_ballots_federal.csv"
+ELECTIONS = {
+    2022: {
+        "ge": "GE15",
+        "boundaries": {"peninsular": 2018, "sabah": 2019, "sarawak": 2015},
+    },
+    2018: {
+        "ge": "GE14",
+        "boundaries": {"peninsular": 2018, "sabah": 2003, "sarawak": 2015},
+    },
 }
 UA = "Mozilla/5.0 (compatible; election-preference-explorer/0.1; +https://github.com/)"
 
@@ -57,21 +64,50 @@ def district_from_seat(value: object) -> str:
     return re.sub(r"^P\.\d{3}\s*", "", str(value or "").strip(), flags=re.I).title()
 
 
-def ge15_rows(main_rows: list[dict[str, object]], delayed_rows: list[dict[str, object]]) -> list[dict[str, object]]:
+def election_rows(main_rows: list[dict[str, object]], delayed_rows: list[dict[str, object]], year: int) -> list[dict[str, object]]:
     rows = [
         row for row in main_rows
-        if str(row.get("TAHUN PILIHAN RAYA")) == "2022"
+        if str(row.get("TAHUN PILIHAN RAYA")) == str(year)
         and str(row.get("JenisCalon", "")).lower() == "parlimen"
     ]
-    rows.extend(
-        row for row in delayed_rows
-        if str(row.get("TAHUN PILIHAN RAYA")) == "2022"
-        and code_from_seat(row.get("PARLIMEN")) == "P.017"
-    )
+    if year == 2022:
+        rows.extend(
+            row for row in delayed_rows
+            if str(row.get("TAHUN PILIHAN RAYA")) == "2022"
+            and code_from_seat(row.get("PARLIMEN")) == "P.017"
+        )
     return rows
 
 
-def build_rows(source_rows: list[dict[str, object]]) -> tuple[list[dict[str, object]], dict[str, str]]:
+def ge14_rows(
+    ballot_rows: list[dict[str, str]], headline_stats: dict[str, dict[str, str]],
+) -> list[dict[str, object]]:
+    rows = []
+    for row in ballot_rows:
+        if row["election"] != "GE-14":
+            continue
+        code = code_from_seat(row["seat"])
+        stats = headline_stats[code]
+        rows.append({
+            "PARLIMEN": row["seat"],
+            "NAMA ATAS KERTAS UNDI": row["name_on_ballot"],
+            "SINGKATAN NAMA PARTI BERTANDING": row["party_on_ballot"],
+            "BILANGAN UNDI": row["votes"],
+            "StatusCalon": "MNG" if row["result"] == "won" else "KLH",
+            "MAJORITI": stats["majority"] if row["result"] == "won" else "0",
+            "UNDI DITOLAK": stats["votes_rejected"],
+            "UNDI TAK KEMBALI": stats["ballots_not_returned"],
+            "JumlahPemilih": stats["voters_total"],
+            "PERATUS UNDI": stats["voter_turnout"],
+            "NEGERI": row["state"].replace("W.P.", "W.P"),
+        })
+    return rows
+
+
+def build_rows(
+    source_rows: list[dict[str, object]], year: int,
+    headline_stats: dict[str, dict[str, str]],
+) -> tuple[list[dict[str, object]], dict[str, str]]:
     groups: dict[str, list[dict[str, object]]] = defaultdict(list)
     for row in source_rows:
         groups[code_from_seat(row.get("PARLIMEN"))].append(row)
@@ -102,6 +138,16 @@ def build_rows(source_rows: list[dict[str, object]]) -> tuple[list[dict[str, obj
         unreturned = as_int(winner_row.get("UNDI TAK KEMBALI"))
         enrolment = as_int(winner_row.get("JumlahPemilih"))
         total = formal + rejected + unreturned
+        stats = headline_stats.get(code)
+        if not enrolment and stats:
+            enrolment = as_int(stats["voters_total"])
+            if (
+                formal != as_int(stats["votes_valid"])
+                or rejected != as_int(stats["votes_rejected"])
+                or unreturned != as_int(stats["ballots_not_returned"])
+                or total != as_int(stats["ballots_issued"])
+            ):
+                raise SystemExit(f"{code} {district}: SPR totals disagree with supplemental statistics")
         official_turnout = float(winner_row.get("PERATUS UNDI") or 0)
         computed_turnout = total / enrolment * 100 if enrolment else 0
         # SPR publishes turnout rounded to one decimal; three seats differ by up to
@@ -115,8 +161,8 @@ def build_rows(source_rows: list[dict[str, object]]) -> tuple[list[dict[str, obj
         state = str(winner_row.get("NEGERI") or "").strip().title()
         base = {
             "district": district,
-            "district_url": "https://opendata.spr.gov.my/katalog?bahagian=penjalanan-pilihan-raya&tab=0&tahun=2022",
-            "distribution_url": "https://opendata.spr.gov.my/katalog?bahagian=penjalanan-pilihan-raya&tab=0&tahun=2022",
+            "district_url": f"https://opendata.spr.gov.my/katalog?bahagian=penjalanan-pilihan-raya&tab=0&tahun={year}",
+            "distribution_url": f"https://opendata.spr.gov.my/katalog?bahagian=penjalanan-pilihan-raya&tab=0&tahun={year}",
             "elected_member": winner,
             "elected_party": winner_party,
             "enrolment": enrolment,
@@ -144,7 +190,7 @@ def build_rows(source_rows: list[dict[str, object]]) -> tuple[list[dict[str, obj
     return output, district_by_code
 
 
-def build_boundaries(sources: list[dict[str, object]], district_by_code: dict[str, str]) -> dict[str, object]:
+def build_boundaries(sources: list[dict[str, object]], district_by_code: dict[str, str], year: int) -> dict[str, object]:
     features = []
     for source in sources:
         for feature in source.get("features", []):
@@ -165,44 +211,63 @@ def build_boundaries(sources: list[dict[str, object]], district_by_code: dict[st
             })
     if len(features) != 222 or len({f["properties"]["constituency_code"] for f in features}) != 222:
         raise SystemExit("Expected 222 unique boundary features")
-    return {"type": "FeatureCollection", "name": "malaysia_ge15_parliamentary_constituencies", "features": features}
+    return {"type": "FeatureCollection", "name": f"malaysia_{year}_parliamentary_constituencies", "features": features}
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build Malaysia GE15 Dewan Rakyat FPTP data")
-    parser.add_argument("--raw-dir", type=Path, default=Path("tmp/malaysia_2022"))
+    parser = argparse.ArgumentParser(description="Build Malaysia Dewan Rakyat FPTP data")
+    parser.add_argument("--year", type=int, choices=sorted(ELECTIONS), default=2022)
+    parser.add_argument("--raw-dir", type=Path)
     parser.add_argument("--out-dir", type=Path, default=Path("data"))
     parser.add_argument("--refresh", action="store_true")
     args = parser.parse_args()
+    config = ELECTIONS[args.year]
+    raw_dir = args.raw_dir or Path(f"tmp/malaysia_{args.year}")
 
     session = requests.Session()
     session.headers.update({"User-Agent": UA})
-    main_path = args.raw_dir / "keputusan-pru.json"
-    delayed_path = args.raw_dir / "keputusan-prk.json"
+    main_path = raw_dir / "keputusan-pru.json"
+    delayed_path = raw_dir / "keputusan-prk.json"
+    stats_path = raw_dir / "headline_stats_federal.csv"
+    ballots_path = raw_dir / "headline_ballots_federal.csv"
     download(session, RESULTS_URL, main_path, args.refresh)
     download(session, DELAYED_RESULTS_URL, delayed_path, args.refresh)
+    download(session, HEADLINE_STATS_URL, stats_path, args.refresh)
+    download(session, HEADLINE_BALLOTS_URL, ballots_path, args.refresh)
     boundary_paths = []
-    for label, url in BOUNDARY_URLS.items():
-        path = args.raw_dir / f"{label}_parlimen.geojson"
+    for label, boundary_year in config["boundaries"].items():
+        url = f"https://lake.electiondata.my/maps/delimitations/{label}_{boundary_year}_parlimen.geojson"
+        path = raw_dir / f"{label}_{boundary_year}_parlimen.geojson"
         download(session, url, path, args.refresh)
         boundary_paths.append(path)
 
-    source_rows = ge15_rows(
-        json.loads(main_path.read_text(encoding="utf-8")),
-        json.loads(delayed_path.read_text(encoding="utf-8")),
-    )
-    rows, district_by_code = build_rows(source_rows)
+    with stats_path.open(newline="", encoding="utf-8-sig") as handle:
+        headline_stats = {
+            code_from_seat(row["seat"]): row
+            for row in csv.DictReader(handle)
+            if row["election"] == config["ge"].replace("GE", "GE-")
+        }
+    if args.year == 2018:
+        with ballots_path.open(newline="", encoding="utf-8-sig") as handle:
+            source_rows = ge14_rows(list(csv.DictReader(handle)), headline_stats)
+    else:
+        source_rows = election_rows(
+            json.loads(main_path.read_text(encoding="utf-8")),
+            json.loads(delayed_path.read_text(encoding="utf-8")),
+            args.year,
+        )
+    rows, district_by_code = build_rows(source_rows, args.year, headline_stats)
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    csv_path = args.out_dir / "malaysia_2022_fpp.csv"
+    csv_path = args.out_dir / f"malaysia_{args.year}_fpp.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
     boundaries = build_boundaries(
-        [json.loads(path.read_text(encoding="utf-8")) for path in boundary_paths], district_by_code
+        [json.loads(path.read_text(encoding="utf-8")) for path in boundary_paths], district_by_code, args.year
     )
-    boundary_path = args.out_dir / "malaysia_2022_parliamentary_boundaries.geojson"
+    boundary_path = args.out_dir / f"malaysia_{args.year}_parliamentary_boundaries.geojson"
     boundary_path.write_text(json.dumps(boundaries, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(f"Wrote {csv_path} ({len(rows)} rows, 222 constituencies)")
     print(f"Wrote {boundary_path} ({len(boundaries['features'])} features)")
