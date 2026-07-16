@@ -1403,6 +1403,32 @@
         "summaryRegions": ["SMC", "GRC"]
       },
       {
+        "key": "canada-2025",
+        "label": "Canada Federal 2025",
+        "type": "national",
+        "jurisdiction": "Canada",
+        "year": 2025,
+        "source": "Elections Canada",
+        "system": "fpp",
+        "csv": "data/canada_2025_fpp.csv",
+        "boundaries": "data/canada_2025_federal_boundaries.geojson",
+        "totalSeats": 343,
+        "areaLabel": "Province / territory"
+      },
+      {
+        "key": "canada-2021",
+        "label": "Canada Federal 2021",
+        "type": "national",
+        "jurisdiction": "Canada",
+        "year": 2021,
+        "source": "Elections Canada",
+        "system": "fpp",
+        "csv": "data/canada_2021_fpp.csv",
+        "boundaries": "data/canada_2021_federal_boundaries.geojson",
+        "totalSeats": 338,
+        "areaLabel": "Province / territory"
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -1586,6 +1612,14 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (activeElection().jurisdiction === "Canada") {
+        if (p === "liberal") return "#d71920";
+        if (p === "conservative") return "#1a4782";
+        if (p === "ndp") return "#f58220";
+        if (p === "bloc québécois") return "#33a7d8";
+        if (p === "green") return "#3d9b35";
+        if (p === "people's party") return "#5b2c83";
+      }
       if (p === "pap") return "#1b4f9c";
       if (p === "wp") return "#d71920";
       if (p === "psp") return "#c62828";
@@ -1778,6 +1812,7 @@
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
       if (["United Kingdom", "Malaysia"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
+      if (activeElection().jurisdiction === "Canada") return count === 1 ? "riding" : "ridings";
       const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";
       return count === 1 ? noun : `${noun}s`;
     }
