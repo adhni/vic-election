@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house elections in Australia, New Zealand, the United Kingdom, Malaysia, Singapore, and Canada.
+A static HTML data app for exploring lower-house elections in Australia, New Zealand, the United Kingdom, Malaysia, Singapore, Canada, and India.
 
 The app is map-first and party/bloc-first:
 
@@ -14,7 +14,8 @@ The app is map-first and party/bloc-first:
 - United Kingdom constituency results and winner-party maps for the 2024, 2019, and 2017 general elections
 - Malaysian constituency results and winner-party maps for the 2022, 2018, and 2013 general elections (GE15–GE13)
 - Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025, 2020, and 2015 general elections
-- Canadian riding results and winner-party maps for the 2025 federal election
+- Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
+- Indian constituency results and winner-party map for the 2024 Lok Sabha election
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -194,6 +195,15 @@ data/canada_2021_federal_boundaries.geojson
 
 Canada uses first past the post, so preference-transfer views are hidden. The datasets preserve all 1,959 candidates across 343 ridings in 2025 and all 2,010 candidates across 338 ridings in 2021, with exact valid and rejected ballot totals, calculated turnout, province/territory metadata, and election-specific riding codes. Results and matching boundaries for both elections come from Elections Canada.
 
+India coverage currently includes the 2024 Lok Sabha election, with all 543 parliamentary constituencies across the states and union territories:
+
+```text
+data/india_2024_fpp.csv
+data/india_2024_parliamentary_boundaries.geojson
+```
+
+India uses first past the post, so preference-transfer views are hidden. The dataset preserves all 8,360 candidates and 542 NOTA options. Candidate totals and turnout metadata are reconciled against the Election Commission of India's final statistical report. Esri India's 2024 parliamentary layer supplies the matching election-specific boundaries and an independent winner/margin check outside Assam, whose layer attributes are shifted between the newly delimited seats. Surat is retained as an uncontested return with no invented votes or turnout.
+
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
 ```text
@@ -367,8 +377,10 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 ├── data/
 ├── scripts/
 │   ├── build_aec_federal.py
+│   ├── build_india_federal.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
+│   ├── validate_india_federal.py
 │   └── validate_vec_csv.py
 ├── docs/
 │   └── data_notes.md
@@ -436,6 +448,13 @@ pip install -r requirements.txt
 
 python scripts/scrape_vec_2022_preferences.py --year 2022 --out data --keep-going
 python scripts/validate_vec_csv.py data/vic_2022_preferences_long.csv
+```
+
+To rebuild and validate India 2024 (the builder downloads its public source files):
+
+```bash
+python scripts/build_india_federal.py
+python scripts/validate_india_federal.py
 ```
 
 For historical state elections:

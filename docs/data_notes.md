@@ -15,6 +15,8 @@ Source targets:
 - Elections Department Singapore 2025, 2020, and 2015 final results and Statements of Poll
 - data.gov.sg 2025, 2020, and 2015 electoral division boundaries
 - Elections Canada 44th and 45th general election official voting results and federal electoral district boundaries
+- Election Commission of India 2024 Lok Sabha final statistical reports and constituency results
+- Esri India Living Atlas 2024 parliamentary constituency boundaries and winner attributes
 
 This repo is built around three levels of data:
 
@@ -106,6 +108,8 @@ The Malaysia 2022 rows use the official SPR `keputusan-pru` file plus the delaye
 The Singapore 2025, 2020, and 2015 rows are generated from Elections Department final-results pages and every official Statement of Poll. Each SMC candidate is one contest entry; each GRC party team retains its full nominated membership. Ballots, rejected votes, electors, turnout, winners, and elected MP totals reconcile exactly: 97 MPs in 2025, 93 in 2020, and 89 in 2015. Marine Parade–Braddell Heights is retained as uncontested only in 2025. Each election uses its dedicated official data.gov.sg Electoral Boundary dataset.
 
 The Canada 2025 and 2021 rows are generated from Elections Canada's official Tables 11 and 12 for the 45th and 44th general elections. They contain all 1,959 candidates in 343 federal electoral districts for 2025 and all 2,010 candidates in 338 districts for 2021. Candidate votes reconcile against each riding's valid ballots, total ballots reconcile as valid plus rejected ballots, computed margins match the official majority field, and nationwide party seat totals are validated. Canada uses first past the post, so `first` and `final` rows are identical. Each election uses its matching official Elections Canada boundary archive: the 2025 districts reflect the new representation order, while 2021 retains the earlier 338-district map. Both are reprojected to WGS84, dissolved by five-digit riding code where needed, and topology-preservingly simplified for the static app.
+
+The India 2024 rows use the Election Commission of India's final constituency-wise detailed result report for electors and ballot totals, combined with the ECI-derived constituency candidate CSV published by OpenCity. All 8,360 candidates and 542 NOTA options are retained across 543 Lok Sabha constituencies. Candidate votes reconcile to formal totals, ballot totals reconcile as formal plus informal, and party seat counts and state/union-territory splits are validated. Surat is represented as the sole uncontested return with 1,786,287 electors and zero poll values, following the ECI's published atlas rather than fabricating a contest. Boundaries come from Esri India's 2024 parliamentary layer, which reflects the updated Assam and Jammu and Kashmir delimitation. The builder matches every boundary by state, constituency code, and name, and checks winner/vote/margin attributes outside Assam; the layer's 14 Assam winner attributes are shifted between the newly delimited seats and are deliberately not used as result truth. India uses first past the post, so `first` and `final` rows are identical.
 
 The 2025 federal Australia boundary file is adapted from the AEC `AUS-March-2025-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, with no `StateAb` filtering.
 

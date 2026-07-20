@@ -204,6 +204,13 @@ Canada first-past-the-post feasibility is now proven by the `Canada Federal 2025
 - matching official shapefiles preserve the different riding maps used before and after the latest representation order
 - the generic no-transfer interface supports Canadian ridings with jurisdiction-specific party colours and terminology
 
+India first-past-the-post feasibility is now proven by the `India General 2024` integration:
+
+- the final ECI statistical report supplies electorate and ballot metadata for all 542 contested constituencies
+- the ECI-derived candidate table retains all 8,360 candidates, 542 NOTA options, and the uncontested Surat return
+- Esri India's election-specific layer supplies all 543 matching boundaries and an independent winner/margin cross-check outside its known shifted Assam attributes
+- the generic no-transfer interface supports Indian constituencies with state/union-territory summaries and party-specific colours
+
 At that point, consider whether the project should become a broader Australian preference explorer.
 
 ## Deferred: Local Council Elections
