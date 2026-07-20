@@ -23,15 +23,19 @@ REQUIRED_NZ_MARKERS = (
 REQUIRED_SINGAPORE_MARKERS = (
     '"key": "singapore-2025"',
     '"key": "singapore-2020"',
+    '"key": "singapore-2015"',
     '"teamElection": true',
     '"totalSeats": 97',
     '"totalSeats": 93',
+    '"totalSeats": 89',
     '"summaryRegions": ["SMC", "GRC"]',
     '"Plurality block vote"',
 )
 REQUIRED_INTERNATIONAL_HISTORY_MARKERS = (
     '"key": "uk-2019"',
+    '"key": "uk-2017"',
     '"key": "malaysia-2018"',
+    '"key": "malaysia-2013"',
 )
 REQUIRED_CANADA_MARKERS = (
     '"key": "canada-2025"',

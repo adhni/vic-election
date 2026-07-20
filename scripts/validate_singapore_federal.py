@@ -11,6 +11,7 @@ from pathlib import Path
 EXPECTED = {
     2025: {"divisions": 33, "entries": 71, "candidates": 211, "seats": {"PAP": 87, "WP": 10}, "types": {"SMC": 15, "GRC": 18}, "uncontested": ["Marine Parade-Braddell Heights"], "checks": {"Jalan Kayu": ("Ng Chee Meng", 14146, 809), "East Coast": ("PAP team", 80105, 23817), "Aljunied": ("WP team", 79254, 25783)}},
     2020: {"divisions": 31, "entries": 64, "candidates": 192, "seats": {"PAP": 83, "WP": 10}, "types": {"SMC": 14, "GRC": 17}, "uncontested": [], "checks": {"Marymount": ("GAN SIOW HUANG", 12173, 2230), "Bukit Panjang": ("LIANG ENG HWA", 18085, 2509), "Bukit Batok": ("MURALI PILLAI", 15500, 2713)}},
+    2015: {"divisions": 29, "entries": 61, "candidates": 181, "seats": {"PAP": 83, "WP": 6}, "types": {"SMC": 13, "GRC": 16}, "uncontested": [], "checks": {"Punggol East": ("CHARLES CHONG YOU FOOK", 16977, 1159), "Aljunied": ("WP team", 70050, 2626), "Fengshan": ("CHERYL CHAN WEI LING", 12417, 3241)}},
 }
 
 
@@ -55,7 +56,7 @@ def main() -> None:
             raise SystemExit(f"{district}: turnout metadata does not reconcile")
         members = [name for name in metadata["elected_members"].split(";") if name]
         seats = int(metadata["members_to_elect"])
-        if len(members) != seats or seats not in {1, 4, 5}:
+        if len(members) != seats or seats not in {1, 4, 5, 6}:
             raise SystemExit(f"{district}: invalid elected-member metadata")
         expected_type = "SMC" if seats == 1 else "GRC"
         if metadata["electorate_type"] != expected_type:

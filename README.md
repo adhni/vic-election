@@ -11,9 +11,9 @@ The app is map-first and party/bloc-first:
 - first preference, transfer round, progressive chart, and raw row views
 - exact party and candidate detail preserved inside each seat
 - New Zealand candidate-vote and party-vote views with separate general and Māori electorate map layers
-- United Kingdom constituency results and winner-party maps for the 2024 general election
-- Malaysian constituency results and winner-party maps for the 2022 general election (GE15)
-- Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025 general election
+- United Kingdom constituency results and winner-party maps for the 2024, 2019, and 2017 general elections
+- Malaysian constituency results and winner-party maps for the 2022, 2018, and 2013 general elections (GE15–GE13)
+- Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025, 2020, and 2015 general elections
 - Canadian riding results and winner-party maps for the 2025 federal election
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
@@ -144,35 +144,41 @@ data/nz_2020_electorate_boundaries.geojson
 
 Electorate MPs are elected by first past the post, so preference-round and transfer-gain views are hidden for these elections. In 2023, Port Waikato is retained as a cancelled electorate contest with its valid party vote; the later by-election is not merged into the general-election result.
 
-United Kingdom coverage currently includes the 2024 and 2019 general elections, each with all 650 House of Commons constituencies across England, Scotland, Wales, and Northern Ireland:
+United Kingdom coverage currently includes the 2024, 2019, and 2017 general elections, each with all 650 House of Commons constituencies across England, Scotland, Wales, and Northern Ireland:
 
 ```text
 data/uk_2024_fpp.csv
 data/uk_2024_constituency_boundaries.geojson
 data/uk_2019_fpp.csv
 data/uk_2019_constituency_boundaries.geojson
+data/uk_2017_fpp.csv
+data/uk_2017_constituency_boundaries.geojson
 ```
 
 The UK election uses first past the post. Candidate and final totals are therefore identical, and preference-transfer views are hidden. Results come from UK Parliament and boundaries from the Office for National Statistics.
 
-Malaysia coverage currently includes the 2022 GE15 and 2018 GE14 elections, each with all 222 Dewan Rakyat constituencies:
+Malaysia coverage currently includes the 2022 GE15, 2018 GE14, and 2013 GE13 elections, each with all 222 Dewan Rakyat constituencies:
 
 ```text
 data/malaysia_2022_fpp.csv
 data/malaysia_2022_parliamentary_boundaries.geojson
 data/malaysia_2018_fpp.csv
 data/malaysia_2018_parliamentary_boundaries.geojson
+data/malaysia_2013_fpp.csv
+data/malaysia_2013_parliamentary_boundaries.geojson
 ```
 
-Malaysia also uses first past the post, so preference-transfer views are hidden. GE15 uses official SPR result files; GE14 uses the CC0 Malaysian Election Corpus to retain corrected candidate and turnout metadata where SPR's older export is incomplete. Each map combines the Peninsular, Sabah, and Sarawak delimitation datasets in force for that election.
+Malaysia also uses first past the post, so preference-transfer views are hidden. GE15 uses official SPR result files; GE14 and GE13 use the CC0 Malaysian Election Corpus to retain complete candidate and turnout metadata where SPR's older export is incomplete. Each map combines the Peninsular, Sabah, and Sarawak delimitation datasets in force for that election.
 
-Singapore coverage currently includes the 2025 and 2020 general elections, preserving their different SMC/GRC maps and 97- and 93-member Parliaments:
+Singapore coverage currently includes the 2025, 2020, and 2015 general elections, preserving their different SMC/GRC maps and 97-, 93-, and 89-member Parliaments:
 
 ```text
 data/singapore_2025_fpp.csv
 data/singapore_2025_electoral_boundaries.geojson
 data/singapore_2020_fpp.csv
 data/singapore_2020_electoral_boundaries.geojson
+data/singapore_2015_fpp.csv
+data/singapore_2015_electoral_boundaries.geojson
 ```
 
 The app treats each GRC party slate as one contest entry while preserving all elected team members. Party summaries count MPs rather than divisions. Candidate/team votes come from the Elections Department Singapore final results, turnout metadata from the official Statements of Poll, and boundaries from data.gov.sg. Marine Parade–Braddell Heights is retained as uncontested with no invented poll totals.
@@ -291,14 +297,20 @@ data/uk_2024_fpp.csv                       # UK Parliament candidate results for
 data/uk_2024_constituency_boundaries.geojson # ONS July 2024 Westminster constituency boundaries
 data/uk_2019_fpp.csv                       # UK Parliament 2019 candidate results for all 650 constituencies
 data/uk_2019_constituency_boundaries.geojson # ONS December 2019 Westminster constituency boundaries
+data/uk_2017_fpp.csv                       # UK Parliament 2017 candidate results for all 650 constituencies
+data/uk_2017_constituency_boundaries.geojson # ONS December 2019 layer for the unchanged 2017 constituencies
 data/malaysia_2022_fpp.csv                 # SPR Malaysia GE15 candidate results for all 222 constituencies
 data/malaysia_2022_parliamentary_boundaries.geojson # GE15 parliamentary boundaries from three delimitation sets
 data/malaysia_2018_fpp.csv                 # ElectionData.MY GE14 results for all 222 constituencies
 data/malaysia_2018_parliamentary_boundaries.geojson # GE14 parliamentary boundaries from three delimitation sets
+data/malaysia_2013_fpp.csv                 # ElectionData.MY GE13 results for all 222 constituencies
+data/malaysia_2013_parliamentary_boundaries.geojson # GE13 parliamentary boundaries from three delimitation sets
 data/singapore_2025_fpp.csv                # ELD GE2025 candidate/team results for all 33 electoral divisions
 data/singapore_2025_electoral_boundaries.geojson # data.gov.sg 2025 SMC and GRC boundaries
 data/singapore_2020_fpp.csv                # ELD GE2020 candidate/team results for all 31 electoral divisions
 data/singapore_2020_electoral_boundaries.geojson # data.gov.sg 2020 SMC and GRC boundaries
+data/singapore_2015_fpp.csv                # ELD GE2015 candidate/team results for all 29 electoral divisions
+data/singapore_2015_electoral_boundaries.geojson # data.gov.sg 2015 SMC and GRC boundaries
 data/canada_2025_fpp.csv                   # Elections Canada GE2025 results for all 343 ridings
 data/canada_2025_federal_boundaries.geojson # Elections Canada 45th-election riding boundaries
 data/canada_2021_fpp.csv                   # Elections Canada GE2021 results for all 338 ridings

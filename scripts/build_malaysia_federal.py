@@ -25,6 +25,10 @@ ELECTIONS = {
         "ge": "GE14",
         "boundaries": {"peninsular": 2018, "sabah": 2003, "sarawak": 2015},
     },
+    2013: {
+        "ge": "GE13",
+        "boundaries": {"peninsular": 2003, "sabah": 2003, "sarawak": 2005},
+    },
 }
 UA = "Mozilla/5.0 (compatible; election-preference-explorer/0.1; +https://github.com/)"
 
@@ -79,12 +83,13 @@ def election_rows(main_rows: list[dict[str, object]], delayed_rows: list[dict[st
     return rows
 
 
-def ge14_rows(
+def corpus_rows(
     ballot_rows: list[dict[str, str]], headline_stats: dict[str, dict[str, str]],
+    ge: str,
 ) -> list[dict[str, object]]:
     rows = []
     for row in ballot_rows:
-        if row["election"] != "GE-14":
+        if row["election"] != ge:
             continue
         code = code_from_seat(row["seat"])
         stats = headline_stats[code]
@@ -247,9 +252,11 @@ def main() -> None:
             for row in csv.DictReader(handle)
             if row["election"] == config["ge"].replace("GE", "GE-")
         }
-    if args.year == 2018:
+    if args.year in {2018, 2013}:
         with ballots_path.open(newline="", encoding="utf-8-sig") as handle:
-            source_rows = ge14_rows(list(csv.DictReader(handle)), headline_stats)
+            source_rows = corpus_rows(
+                list(csv.DictReader(handle)), headline_stats, config["ge"].replace("GE", "GE-")
+            )
     else:
         source_rows = election_rows(
             json.loads(main_path.read_text(encoding="utf-8")),

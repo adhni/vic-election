@@ -26,6 +26,13 @@ ELECTIONS = {
         "name_field": "pcon19nm",
         "candidates": 3320,
     },
+    2017: {
+        "election_id": 3,
+        "boundary_service": "WPC_Dec_2019_UGCB_UK_2022",
+        "code_field": "pcon19cd",
+        "name_field": "pcon19nm",
+        "candidates": 3304,
+    },
 }
 UA = "Mozilla/5.0 (compatible; election-preference-explorer/0.1; +https://github.com/)"
 
