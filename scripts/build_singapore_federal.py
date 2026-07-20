@@ -16,8 +16,9 @@ from shapely.geometry import mapping, shape
 
 
 ELECTIONS = {
-    2025: {"boundary_id": "d_7ddf956dfc1c59080bf95bba1c58a5d2", "divisions": 33, "statements": 32, "mps": 97},
-    2020: {"boundary_id": "d_6077aa5ab73d447b32f451ea224221b6", "divisions": 31, "statements": 31, "mps": 93},
+    2025: {"boundary_id": "d_7ddf956dfc1c59080bf95bba1c58a5d2", "divisions": 33, "statements": 32, "mps": 97, "results_page": "finalresults2025.html"},
+    2020: {"boundary_id": "d_6077aa5ab73d447b32f451ea224221b6", "divisions": 31, "statements": 31, "mps": 93, "results_page": "finalresults2020.html"},
+    2015: {"boundary_id": "d_1dea85025d48bc75ed566eb2696b7e0f", "divisions": 29, "statements": 29, "mps": 89, "results_page": "elections_past_parliamentary2015.html"},
 }
 UA = "Mozilla/5.0 (compatible; election-preference-explorer/0.1; +https://github.com/)"
 
@@ -104,7 +105,12 @@ def extract_number(text: str, label: str, pattern: str) -> int:
 
 def parse_statement(path: Path) -> tuple[str, dict[str, int]]:
     text = "\n".join(page.extract_text() or "" for page in PdfReader(path).pages)
-    name_match = re.search(r"ELECTORAL DIVISION OF\s+([^\n]+)", text, re.I)
+    # Older Gazette PDFs split some capital letters during text extraction
+    # (for example, "PAYOH" becomes "P A YOH"). Their official filenames
+    # preserve the electoral-division names without that PDF kerning artefact.
+    name_match = re.search(r"Electoral Division of (.+?)\.pdf", path.name, re.I)
+    if not name_match:
+        name_match = re.search(r"ELECTORAL DIVISION OF\s+([^\n]+)", text, re.I)
     if not name_match:
         raise SystemExit(f"{path}: could not parse electoral division")
     district = re.sub(r"\s+", " ", name_match.group(1)).strip().title()
@@ -112,7 +118,7 @@ def parse_statement(path: Path) -> tuple[str, dict[str, int]]:
         "enrolment": extract_number(text, "electors", r"electors.*?used at the Poll\s+([\d,]+)"),
         "total_votes": extract_number(
             text, "votes cast",
-            r"(?:a\.\s*Number of votes cast\d*|Total Number of Ballot Papers found in the ballot boxes)\s+([\d,]+)",
+            r"(?:a\.\s*Number of votes cast\d*|T\s*otal Number of Ballot Papers found in the ballot boxes)\s+([\d,]+)",
         ),
         "informal_votes": extract_number(
             text, "rejected ballots",
@@ -229,7 +235,7 @@ def main() -> None:
     args = parser.parse_args()
     config = ELECTIONS[args.year]
     raw_dir = args.raw_dir or Path(f"tmp/singapore_{args.year}")
-    results_url = f"https://www.eld.gov.sg/finalresults{args.year}.html"
+    results_url = f"https://www.eld.gov.sg/{config['results_page']}"
     gazette_url = f"https://www.eld.gov.sg/gazette_{args.year}.html"
 
     session = requests.Session()

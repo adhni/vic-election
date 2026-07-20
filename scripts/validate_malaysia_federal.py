@@ -19,6 +19,11 @@ EXPECTED = {
         "winners": {"PKR": 104, "BN": 79, "PAS": 18, "DAP": 9, "WARISAN": 8, "BEBAS": 3, "SOLIDARITI": 1},
         "checks": {"Keningau": ("Jeffrey Kitingan", 13286, 45), "Tasek Gelugor": ("Shabudin Yahaya", 18547, 81), "Kimanis": ("Anifah Aman", 11942, 156)},
     },
+    2013: {
+        "candidates": 579,
+        "winners": {"BN": 133, "DAP": 38, "PKR": 30, "PAS": 21},
+        "checks": {"Baram": ("Anyi Ngau", 9182, 194), "Bachok": ("Marzuk Shaary", 35419, 201), "Labis": ("Chua Tee Yong", 15821, 353)},
+    },
 }
 
 

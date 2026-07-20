@@ -21,6 +21,12 @@ EXPECTED = {
         "winners": {"Conservative": 365, "Labour": 202, "Scottish National Party": 48, "Liberal Democrat": 11, "Democratic Unionist Party": 8, "Sinn Féin": 7, "Plaid Cymru": 4, "Social Democratic & Labour Party": 2, "Green Party": 1, "Speaker": 1, "Alliance": 1},
         "checks": {"Fermanagh and South Tyrone": ("Michelle Gildernew", 21986, 57), "Bury North": ("James Daly", 21660, 105), "Bedford": ("Mohammad Yasin", 20491, 145)},
     },
+    2017: {
+        "candidates": 3304,
+        "countries": {"England": 533, "Scotland": 59, "Wales": 40, "Northern Ireland": 18},
+        "winners": {"Conservative": 317, "Labour": 262, "Scottish National Party": 35, "Liberal Democrat": 12, "Democratic Unionist Party": 10, "Sinn Féin": 7, "Plaid Cymru": 4, "Green Party": 1, "Speaker": 1, "Independent": 1},
+        "checks": {"North East Fife": ("Stephen Gethins", 13743, 2), "Kensington": ("Emma Dent Coad", 16333, 20), "Perth and North Perthshire": ("Pete Wishart", 21804, 21)},
+    },
 }
 
 
