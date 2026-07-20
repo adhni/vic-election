@@ -92,10 +92,23 @@ def main() -> None:
     boundary_codes = {feature["properties"]["constituency_code"] for feature in features}
     if len(features) != EXPECTED_SEATS or names != set(groups) or boundary_codes != codes:
         raise SystemExit(f"Boundary/result mismatch: {sorted(names ^ set(groups))}")
+    longitudes = []
+
+    def collect_longitudes(coordinates) -> None:
+        if coordinates and isinstance(coordinates[0], (int, float)):
+            longitudes.append(coordinates[0])
+            return
+        for part in coordinates:
+            collect_longitudes(part)
+
     for feature in features:
         geometry = shape(feature["geometry"])
         if geometry.is_empty or not geometry.is_valid:
             raise SystemExit(f"{feature['properties']['district']}: invalid boundary geometry")
+        collect_longitudes(feature["geometry"]["coordinates"])
+    longitude_span = max(longitudes) - min(longitudes)
+    if longitude_span > 130 or max(longitudes) > 0:
+        raise SystemExit(f"U.S. map has an unnormalised antimeridian span of {longitude_span:.1f} degrees")
     print(
         "U.S. House 2024 validation passed: "
         f"{EXPECTED_SEATS} districts, {EXPECTED_CANDIDATES:,} candidate rows, "

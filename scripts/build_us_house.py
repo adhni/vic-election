@@ -12,7 +12,7 @@ from pathlib import Path
 import geopandas as gpd
 import requests
 from pypdf import PdfReader
-from shapely.geometry import mapping
+from shapely.geometry import mapping, shape
 
 
 RESULTS_URL = "https://clerk.house.gov/member_info/electionInfo/2024/statistics2024.pdf"
@@ -86,6 +86,14 @@ def district_name(state: str, number: int) -> str:
         return f"{state} at-large"
     suffix = "th" if 10 < number % 100 < 14 else {1: "st", 2: "nd", 3: "rd"}.get(number % 10, "th")
     return f"{state} {number}{suffix}"
+
+
+def unwrap_antimeridian_coordinates(coordinates):
+    """Keep Aleutian rings contiguous in the app's simple longitude projection."""
+    if coordinates and isinstance(coordinates[0], (int, float)):
+        longitude, latitude, *rest = coordinates
+        return (longitude - 360 if longitude > 0 else longitude, latitude, *rest)
+    return tuple(unwrap_antimeridian_coordinates(part) for part in coordinates)
 
 
 def parse_recap_totals(reader: PdfReader) -> dict[tuple[str, int], int]:
@@ -243,6 +251,12 @@ def build_boundaries(path: Path, seats: dict[tuple[str, int], dict[str, object]]
         geometry = row.geometry.simplify(0.005, preserve_topology=True)
         if geometry.is_empty or not geometry.is_valid:
             raise SystemExit(f"{district_name(*key)}: invalid simplified Census geometry")
+        display_geometry = mapping(geometry)
+        if state == "Alaska":
+            display_geometry["coordinates"] = unwrap_antimeridian_coordinates(display_geometry["coordinates"])
+            unwrapped = shape(display_geometry)
+            if unwrapped.is_empty or not unwrapped.is_valid:
+                raise SystemExit("Alaska at-large: invalid antimeridian-unwrapped geometry")
         code = str(row["GEOID"])
         codes[key] = code
         features.append({
@@ -251,7 +265,7 @@ def build_boundaries(path: Path, seats: dict[tuple[str, int], dict[str, object]]
                 "district": seats[key]["district"], "constituency_code": code,
                 "electorate_type": state,
             },
-            "geometry": mapping(geometry),
+            "geometry": display_geometry,
         })
     if len(features) != EXPECTED_SEATS or set(codes) != set(seats):
         raise SystemExit(f"Expected {EXPECTED_SEATS} matching Census districts, found {len(features)}")
