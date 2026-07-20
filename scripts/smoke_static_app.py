@@ -53,6 +53,16 @@ REQUIRED_INDIA_MARKERS = (
     '"Bharatiya Janata Party": "BJP"',
     "function rankedForOutcome(d, totals)",
 )
+REQUIRED_US_MARKERS = (
+    '"key": "us-house-2024"',
+    '"jurisdiction": "United States"',
+    '"totalSeats": 435',
+    '"areaLabel": "State"',
+    '"systemLabel": "Plurality / state-specific rules"',
+    'if (p === "democratic") return "#2166ac";',
+    'if (p === "republican") return "#c62828";',
+    'Number(d.enrolment || 0) > 0',
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -92,6 +102,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_INDIA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing India FPTP UI marker {marker!r}")
+    for marker in REQUIRED_US_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing U.S. House UI marker {marker!r}")
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")

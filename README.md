@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house elections in Australia, New Zealand, the United Kingdom, Malaysia, Singapore, Canada, and India.
+A static HTML data app for exploring lower-house elections in Australia, New Zealand, the United Kingdom, Malaysia, Singapore, Canada, India, and the United States.
 
 The app is map-first and party/bloc-first:
 
@@ -16,6 +16,7 @@ The app is map-first and party/bloc-first:
 - Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025, 2020, and 2015 general elections
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
+- United States congressional-district results and winner-party map for the 2024 House election
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -204,6 +205,15 @@ data/india_2024_parliamentary_boundaries.geojson
 
 India uses first past the post, so preference-transfer views are hidden. The dataset preserves all 8,360 candidates and 542 NOTA options. Candidate totals and turnout metadata are reconciled against the Election Commission of India's final statistical report. Esri India's 2024 parliamentary layer supplies the matching election-specific boundaries and an independent winner/margin check outside Assam, whose layer attributes are shifted between the newly delimited seats. Surat is retained as an uncontested return with no invented votes or turnout.
 
+United States coverage currently includes the 2024 House election, covering all 435 voting congressional districts across the 50 states:
+
+```text
+data/us_2024_house_fpp.csv
+data/us_2024_congressional_boundaries.geojson
+```
+
+The dataset parses the U.S. House Clerk's official candidate totals and reconciles every district against its published recapitulation. New York and Connecticut fusion-party lines are combined with their candidates, Maine's duplicated continuing-ballot subtotal is excluded, and all unopposed returns are retained without invented votes. Alaska's published lines are first-choice totals, while Maine's 2nd district reports the final continuing candidates; transfer rounds are not reconstructed. Registered-voter and turnout values remain unavailable because the nationwide Clerk publication does not provide a consistent electorate denominator. Boundaries are the Census Bureau's 119th Congress cartographic districts used for the 2024 election cycle; DC and territorial delegate districts are outside this 435-seat scope.
+
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
 ```text
@@ -378,9 +388,11 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 ├── scripts/
 │   ├── build_aec_federal.py
 │   ├── build_india_federal.py
+│   ├── build_us_house.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
 │   ├── validate_india_federal.py
+│   ├── validate_us_house.py
 │   └── validate_vec_csv.py
 ├── docs/
 │   └── data_notes.md
@@ -460,6 +472,13 @@ To rebuild and validate India 2024 (the builder downloads its public source file
 ```bash
 python scripts/build_india_federal.py
 python scripts/validate_india_federal.py
+```
+
+To rebuild and validate the United States House 2024 dataset (the builder downloads the official Clerk and Census files):
+
+```bash
+./.venv/bin/python scripts/build_us_house.py
+./.venv/bin/python scripts/validate_us_house.py
 ```
 
 For historical state elections:

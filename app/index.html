@@ -1500,6 +1500,21 @@
         "areaLabel": "Province / territory"
       },
       {
+        "key": "us-house-2024",
+        "label": "United States House 2024",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2024,
+        "source": "U.S. House Clerk / U.S. Census Bureau",
+        "system": "fpp",
+        "systemLabel": "Plurality / state-specific rules",
+        "methodNote": "Most districts use plurality voting; Alaska and Maine use ranked-choice voting. The app shows the Clerk's published candidate totals without reconstructing transfer rounds.",
+        "csv": "data/us_2024_house_fpp.csv",
+        "boundaries": "data/us_2024_congressional_boundaries.geojson",
+        "totalSeats": 435,
+        "areaLabel": "State"
+      },
+      {
         "key": "india-2024",
         "label": "India General 2024",
         "type": "national",
@@ -1743,6 +1758,14 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (activeElection().jurisdiction === "United States") {
+        if (p === "democratic") return "#2166ac";
+        if (p === "republican") return "#c62828";
+        if (p === "libertarian" || p === "libertarian party of florida") return "#d6a800";
+        if (p === "green" || p === "pacific green") return "#2e8b57";
+        if (p.includes("independent") || p === "unaffiliated" || p === "no party") return "#737b87";
+        if (p.includes("write-in")) return "#9299a3";
+      }
       if (activeElection().jurisdiction === "India") {
         const indiaColors = {
           "bjp": "#f57c00", "inc": "#00a6d6", "sp": "#d71920", "aitc": "#20a85b",
@@ -2958,18 +2981,26 @@
         const uncontested = d.contest_status === "uncontested";
         const members = electedMembers(d);
         const memberList = members.map(name => shortName(name)).join(" · ");
+        const systemLabel = activeElection().systemLabel || (teamElection && d.electorate_type === "GRC" ? "Plurality block vote" : "First past the post");
+        const turnoutLabel = uncontested && !d.total_votes
+          ? "No poll held"
+          : Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available";
+        const pluralityNote = teamElection
+          ? (uncontested ? "The only nominated team was returned without a poll." : d.electorate_type === "GRC" ? `Voters selected a party team; the team with the most votes filled all ${members.length} seats.` : "The candidate with the most votes was elected.")
+          : "The candidate with the most votes was elected.";
+        const methodNote = activeElection().methodNote || `${pluralityNote} This election does not use preference transfers.`;
         document.getElementById("districtSummary").innerHTML = `
           <h2 class="result-district">${d.district}</h2>
           <div class="result-facts">
             <div class="fact-item"><span class="fact-label">${activeElection().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
-            <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${teamElection && d.electorate_type === "GRC" ? "Plurality block vote" : "First past the post"}</span></div>
+            <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${systemLabel}</span></div>
             <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
             ${teamElection ? `<div class="fact-item"><span class="fact-label">Members elected</span><span class="fact-value">${memberList}</span></div>` : ""}
             <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${uncontested ? "Uncontested" : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`}</span></div>
             <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
-            <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${uncontested ? "No poll held" : `${Number(d.turnout_pct).toFixed(1)}%`}</span></div>
+            <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${turnoutLabel}</span></div>
           </div>
-          <p class="pref-impact">${teamElection ? (uncontested ? "The only nominated team was returned without a poll." : d.electorate_type === "GRC" ? `Voters selected a party team; the team with the most votes filled all ${members.length} seats.` : "The candidate with the most votes was elected.") : "The candidate with the most votes was elected."} This election does not use preference transfers.</p>
+          <p class="pref-impact">${methodNote}</p>
         `;
         return;
       }
