@@ -181,17 +181,11 @@ def build_rows(
             "constituency_code": code,
             "contest_status": "official",
         }
-        for row_type, round_number in (("first", 0), ("final", 1)):
-            output.extend({
-                **base,
-                "round_number": round_number,
-                "row_type": row_type,
-                "excluded_candidate": "",
-                "excluded_party": "",
-                "candidate": name,
-                "candidate_party": party,
-                "votes": votes,
-            } for name, party, votes, _ in results)
+        output.extend({
+            **base, "round_number": 0, "row_type": "first",
+            "excluded_candidate": "", "excluded_party": "", "candidate": name,
+            "candidate_party": party, "votes": votes,
+        } for name, party, votes, _ in results)
     return output, district_by_code
 
 

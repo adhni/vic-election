@@ -3419,6 +3419,9 @@
           const final = rr.some(r => r.row_type === "final");
           d.rounds.push({ round: n, excluded, transfers, totals, final });
         }
+        if (isFppElection() && !d.rounds.length && Object.keys(d.first).length) {
+          d.rounds.push({ round: 1, excluded: "", transfers: {}, totals: { ...d.first }, final: true, synthetic: true });
+        }
         out.push(d);
       }
       return out;

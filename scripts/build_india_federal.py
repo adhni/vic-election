@@ -214,12 +214,11 @@ def build_rows(
             "majority": formal // 2 + 1 if formal else 0, "electorate_type": state,
             "constituency_code": "", "contest_status": "uncontested" if uncontested else "official",
         }
-        for row_type, round_number in (("first", 0), ("final", 1)):
-            output.extend({
-                **base, "round_number": round_number, "row_type": row_type,
-                "excluded_candidate": "", "excluded_party": "", "candidate": candidate,
-                "candidate_party": party, "votes": votes,
-            } for candidate, party, votes in results)
+        output.extend({
+            **base, "round_number": 0, "row_type": "first",
+            "excluded_candidate": "", "excluded_party": "", "candidate": candidate,
+            "candidate_party": party, "votes": votes,
+        } for candidate, party, votes in results)
         seats[key] = {
             "district": district, "state": state, "winner": winner, "party": winner_party,
             "winner_votes": winner_votes, "margin": margin,

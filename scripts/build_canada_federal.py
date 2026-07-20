@@ -176,17 +176,11 @@ def build_rows(
             "constituency_code": code,
             "contest_status": "official",
         }
-        for row_type, round_number in (("first", 0), ("final", 1)):
-            output.extend({
-                **base,
-                "round_number": round_number,
-                "row_type": row_type,
-                "excluded_candidate": "",
-                "excluded_party": "",
-                "candidate": candidate,
-                "candidate_party": party,
-                "votes": votes,
-            } for candidate, party, votes in results)
+        output.extend({
+            **base, "round_number": 0, "row_type": "first",
+            "excluded_candidate": "", "excluded_party": "", "candidate": candidate,
+            "candidate_party": party, "votes": votes,
+        } for candidate, party, votes in results)
         district_by_code[code] = {"district": district, "province": province}
     return output, district_by_code
 
@@ -255,8 +249,8 @@ def main() -> None:
     rows, district_by_code = build_rows(
         read_csv(table11_path), read_csv(table12_path), config["ridings"], config["results_page"]
     )
-    if len(rows) != config["candidates"] * 2:
-        raise SystemExit(f"Expected {config['candidates']} candidates, found {len(rows) // 2}")
+    if len(rows) != config["candidates"]:
+        raise SystemExit(f"Expected {config['candidates']} candidates, found {len(rows)}")
     args.out_dir.mkdir(parents=True, exist_ok=True)
     csv_path = args.out_dir / f"canada_{args.year}_fpp.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as handle:

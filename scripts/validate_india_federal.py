@@ -97,9 +97,8 @@ def main() -> None:
         first = [row for row in district_rows if row["row_type"] == "first"]
         final = [row for row in district_rows if row["row_type"] == "final"]
         first_result = {(row["candidate"], row["candidate_party"]): int(row["votes"]) for row in first}
-        final_result = {(row["candidate"], row["candidate_party"]): int(row["votes"]) for row in final}
-        if len(first_result) != len(first) or first_result != final_result:
-            raise SystemExit(f"{district}: duplicate candidates or unequal first/final totals")
+        if len(first_result) != len(first) or final:
+            raise SystemExit(f"{district}: duplicate candidates or non-compact FPTP rows")
         meta = first[0]
         is_uncontested = meta["contest_status"] == "uncontested"
         if is_uncontested:
@@ -132,7 +131,7 @@ def main() -> None:
 
     if uncontested != ["Surat"]:
         raise SystemExit(f"Unexpected uncontested seats: {uncontested}")
-    if candidates != 8360 or nota_rows != 542 or len(rows) != 17_804:
+    if candidates != 8360 or nota_rows != 542 or len(rows) != 8_902:
         raise SystemExit(f"Unexpected row totals: {candidates} candidates, {nota_rows} NOTA, {len(rows)} rows")
     if winners != Counter(EXPECTED_WINNERS):
         raise SystemExit(f"Unexpected winning-party totals: {winners - Counter(EXPECTED_WINNERS)}")
@@ -149,7 +148,7 @@ def main() -> None:
 
     for district, (winner, votes, margin) in SPOT_CHECKS.items():
         ranked = sorted(
-            ((row["candidate"], int(row["votes"])) for row in groups[district] if row["row_type"] == "final"),
+            ((row["candidate"], int(row["votes"])) for row in groups[district] if row["row_type"] == "first"),
             key=lambda item: (-item[1], item[0]),
         )
         if ranked[0] != (winner, votes) or ranked[0][1] - ranked[1][1] != margin:
