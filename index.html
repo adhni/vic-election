@@ -1500,6 +1500,19 @@
         "areaLabel": "Province / territory"
       },
       {
+        "key": "india-2024",
+        "label": "India General 2024",
+        "type": "national",
+        "jurisdiction": "India",
+        "year": 2024,
+        "source": "Election Commission of India / Esri India",
+        "system": "fpp",
+        "csv": "data/india_2024_fpp.csv",
+        "boundaries": "data/india_2024_parliamentary_boundaries.geojson",
+        "totalSeats": 543,
+        "areaLabel": "State / union territory"
+      },
+      {
         "key": "canada-2021",
         "label": "Canada Federal 2021",
         "type": "national",
@@ -1628,6 +1641,40 @@
     function partyLabel(raw) {
       const p = (raw || "Independent").trim();
       const upper = p.toUpperCase();
+      if (activeElection().jurisdiction === "India") {
+        const indiaParties = {
+          "Bharatiya Janata Party": "BJP",
+          "Indian National Congress": "INC",
+          "Samajwadi Party": "SP",
+          "All India Trinamool Congress": "AITC",
+          "Dravida Munnetra Kazhagam": "DMK",
+          "Telugu Desam": "TDP",
+          "Janata Dal (United)": "JD(U)",
+          "Shiv Sena (Uddhav Balasaheb Thackeray)": "SHS (UBT)",
+          "Nationalist Congress Party – Sharadchandra Pawar": "NCP (SP)",
+          "Lok Janshakti Party(Ram Vilas)": "LJP (RV)",
+          "Communist Party of India (Marxist)": "CPI(M)",
+          "Communist Party of India (Marxist-Leninist) (Liberation)": "CPI(ML)(L)",
+          "Yuvajana Sramika Rythu Congress Party": "YSRCP",
+          "Rashtriya Janata Dal": "RJD",
+          "Jharkhand Mukti Morcha": "JMM",
+          "Aam Aadmi Party": "AAP",
+          "Indian Union Muslim League": "IUML",
+          "Viduthalai Chiruthaigal Katchi": "VCK",
+          "Janata Dal (Secular)": "JD(S)",
+          "Jammu & Kashmir National Conference": "JKN",
+          "Rashtriya Lok Dal": "RLD",
+          "Janasena Party": "JSP",
+          "Communist Party of India": "CPI",
+          "All India Majlis-E-Ittehadul Muslimeen": "AIMIM",
+          "Asom Gana Parishad": "AGP",
+          "Biju Janata Dal": "BJD",
+          "Shiromani Akali Dal": "SAD",
+          "United People’s Party, Liberal": "UPPL",
+          "None of the Above": "NOTA"
+        };
+        if (indiaParties[p]) return indiaParties[p];
+      }
       if (upper === "ALP") return "Labor";
       if (upper === "CL") return "Country Labor";
       if (p === "Australian Labor Party - Victorian Branch") return "Labor";
@@ -1696,6 +1743,20 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (activeElection().jurisdiction === "India") {
+        const indiaColors = {
+          "bjp": "#f57c00", "inc": "#00a6d6", "sp": "#d71920", "aitc": "#20a85b",
+          "dmk": "#9b1c31", "tdp": "#f2cf00", "jd(u)": "#3f8f3e", "shs (ubt)": "#d35400",
+          "ncp (sp)": "#1f9d8a", "shiv sena": "#f28c28", "ljp (rv)": "#5b4bb7",
+          "cpi(m)": "#b51f2e", "rjd": "#2d8a4b", "ysrcp": "#1565a8", "aap": "#007f86",
+          "jmm": "#4f772d", "independent": "#7a7f87", "nota": "#9ca3af"
+        };
+        if (indiaColors[p]) return indiaColors[p];
+        const palette = ["#6b4fa1", "#ad5b2d", "#27878f", "#9b3f68", "#5f7f32", "#4665a8", "#a56b18"];
+        let hash = 0;
+        for (let i = 0; i < p.length; i += 1) hash = ((hash << 5) - hash + p.charCodeAt(i)) | 0;
+        return palette[Math.abs(hash) % palette.length];
+      }
       if (activeElection().jurisdiction === "Canada") {
         if (p === "liberal") return "#d71920";
         if (p === "conservative") return "#1a4782";
@@ -1852,16 +1913,22 @@
       return last?.totals || {};
     }
 
+    function rankedForOutcome(d, totals) {
+      const rows = ranked(totals);
+      if (activeElection().jurisdiction !== "India") return rows;
+      return rows.filter(([candidate]) => partyLabel(getParty(d, candidate)) !== "NOTA");
+    }
+
     function getWinnerFromFinal(d) {
-      return ranked(getFinal(d))[0] || [d.elected_member, 0];
+      return rankedForOutcome(d, getFinal(d))[0] || [d.elected_member, 0];
     }
 
     function getSecondFromFinal(d) {
-      return ranked(getFinal(d))[1] || ["—", 0];
+      return rankedForOutcome(d, getFinal(d))[1] || ["—", 0];
     }
 
     function getFirstLeader(d) {
-      return ranked(d.first)[0] || ["—", 0];
+      return rankedForOutcome(d, d.first)[0] || ["—", 0];
     }
 
     function finalMargin(d) {
@@ -1894,7 +1961,7 @@
 
     function electorateLabel(count = 0) {
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
-      if (["United Kingdom", "Malaysia"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
+      if (["United Kingdom", "Malaysia", "India"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
       if (activeElection().jurisdiction === "Canada") return count === 1 ? "riding" : "ridings";
       const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";

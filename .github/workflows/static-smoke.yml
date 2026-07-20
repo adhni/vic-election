@@ -79,6 +79,7 @@ jobs:
           python scripts/validate_singapore_federal.py --year 2015
           python scripts/validate_canada_federal.py --year 2025
           python scripts/validate_canada_federal.py --year 2021
+          python scripts/validate_india_federal.py
 
       - name: Smoke test static app
         run: |
