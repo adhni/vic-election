@@ -250,18 +250,11 @@ def make_rows(
         "electorate_type": electorate_type,
         "contest_status": "cancelled" if cancelled else "official",
     }
-    rows = []
-    for row_type in ("first", "final"):
-        rows.extend({
-            **base,
-            "round_number": 0 if row_type == "first" else 1,
-            "row_type": row_type,
-            "excluded_candidate": "",
-            "excluded_party": "",
-            "candidate": name,
-            "candidate_party": party,
-            "votes": vote,
-        } for name, party, vote in candidate_results)
+    rows = [{
+        **base, "round_number": 0, "row_type": "first",
+        "excluded_candidate": "", "excluded_party": "", "candidate": name,
+        "candidate_party": party, "votes": vote,
+    } for name, party, vote in candidate_results]
     rows.extend({
         **base,
         "round_number": 0,

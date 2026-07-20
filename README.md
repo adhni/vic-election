@@ -156,7 +156,7 @@ data/uk_2017_fpp.csv
 data/uk_2017_constituency_boundaries.geojson
 ```
 
-The UK election uses first past the post. Candidate and final totals are therefore identical, and preference-transfer views are hidden. Results come from UK Parliament and boundaries from the Office for National Statistics.
+The UK election uses first past the post, so preference-transfer views are hidden. Each candidate result is stored once; the app reconstructs the identical final standing in memory. Results come from UK Parliament and boundaries from the Office for National Statistics.
 
 Malaysia coverage currently includes the 2022 GE15, 2018 GE14, and 2013 GE13 elections, each with all 222 Dewan Rakyat constituencies:
 
@@ -405,6 +405,7 @@ python scripts/smoke_static_app.py
 
 The smoke test reads `electionDefinitions` from the HTML files and validates that the configured CSV and boundary files exist, load, and match by district name.
 It also checks that the compact rankings UI markers are present in both HTML entry points.
+For elections configured as `fpp` or `mmp-fpp`, it requires compact candidate rows with no duplicated `final` copies.
 
 ## Asset size guardrails
 
@@ -422,6 +423,8 @@ The oversized historical boundary sources are simplified with shared-topology pr
 
 The optimizer pins Mapshaper `0.7.45` through `npx` and skips files already below the 11 MiB optimized ceiling, preventing repeated simplification. Victoria 2014 and 2018 are intentionally excluded because the guarded simplification does not preserve valid geometry for those source files.
 
+First-past-the-post CSVs are also compacted structurally. Candidate totals are stored once as `first` rows and the browser creates the identical final standing in memory. This removes about 7 MiB of duplicate rows across New Zealand, the UK, Malaysia, Singapore, Canada, and India without changing any displayed result.
+
 ## CSV Format
 
 The app expects long CSV rows:
@@ -438,6 +441,8 @@ transfer
 progressive
 final
 ```
+
+For `fpp` and `mmp-fpp` election definitions, store each candidate only once as a round-zero `first` row. Do not duplicate those unchanged totals as `final` rows; the app supplies that final standing at load time. Preferential and multi-member count datasets continue to store their real published final rows.
 
 ## Run The Scraper
 

@@ -116,17 +116,11 @@ def build_rows(source_rows: list[dict[str, str]]) -> list[dict[str, object]]:
             "electorate_type": first["Country name"],
             "contest_status": "official",
         }
-        for row_type, round_number in (("first", 0), ("final", 1)):
-            output.extend({
-                **base,
-                "round_number": round_number,
-                "row_type": row_type,
-                "excluded_candidate": "",
-                "excluded_party": "",
-                "candidate": name,
-                "candidate_party": party,
-                "votes": votes,
-            } for name, party, votes in results)
+        output.extend({
+            **base, "round_number": 0, "row_type": "first",
+            "excluded_candidate": "", "excluded_party": "", "candidate": name,
+            "candidate_party": party, "votes": votes,
+        } for name, party, votes in results)
     return output
 
 
@@ -188,8 +182,8 @@ def main() -> None:
     with results_path.open(newline="", encoding="utf-8-sig") as handle:
         source_rows = list(csv.DictReader(handle))
     rows = build_rows(source_rows)
-    if len(rows) != config["candidates"] * 2:
-        raise SystemExit(f"Expected {config['candidates']} candidates, found {len(rows) // 2}")
+    if len(rows) != config["candidates"]:
+        raise SystemExit(f"Expected {config['candidates']} candidates, found {len(rows)}")
     args.out_dir.mkdir(parents=True, exist_ok=True)
     output_csv = args.out_dir / f"uk_{args.year}_fpp.csv"
     with output_csv.open("w", newline="", encoding="utf-8") as handle:

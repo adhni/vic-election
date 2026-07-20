@@ -173,18 +173,12 @@ def build_rows(
             "electorate_type": "GRC" if members_to_elect > 1 else "SMC",
             "contest_status": "uncontested" if contest["uncontested"] else "official",
         }
-        for row_type, round_number in (("first", 0), ("final", 1)):
-            output.extend({
-                **base,
-                "round_number": round_number,
-                "row_type": row_type,
-                "excluded_candidate": "",
-                "excluded_party": "",
-                "candidate": team_label(team),
-                "candidate_members": ";".join(team["members"]),
-                "candidate_party": team["party"],
-                "votes": team["votes"],
-            } for team in sorted_teams)
+        output.extend({
+            **base, "round_number": 0, "row_type": "first",
+            "excluded_candidate": "", "excluded_party": "", "candidate": team_label(team),
+            "candidate_members": ";".join(team["members"]),
+            "candidate_party": team["party"], "votes": team["votes"],
+        } for team in sorted_teams)
     return output
 
 

@@ -211,6 +211,13 @@ India first-past-the-post feasibility is now proven by the `India General 2024` 
 - Esri India's election-specific layer supplies all 543 matching boundaries and an independent winner/margin cross-check outside its known shifted Assam attributes
 - the generic no-transfer interface supports Indian constituencies with state/union-territory summaries and party-specific colours
 
+Completed FPP storage optimization:
+
+- removed duplicated final copies from every `fpp` and `mmp-fpp` CSV
+- reconstruct identical final standings in the browser for maps, margins, rankings, and details
+- updated all affected builders and validators so regenerated data stays compact
+- reduced checked-in `data/` from about 177.2 MiB to 170.2 MiB without dropping an election or result
+
 At that point, consider whether the project should become a broader Australian preference explorer.
 
 ## Deferred: Local Council Elections
@@ -229,10 +236,10 @@ Reasons:
 
 ## Recommended Next Concrete Task
 
-Add comparison UI only.
+Add the 2024 United States House election, provided official result and Census boundary files can stay within the repository size guard.
 
 Insyallah, the best sequence is:
 
-1. comparison UI for matching district/division names
-2. consider earlier Victorian state elections if VEC archive pages and boundaries are workable
-3. generalise to other states only after that
+1. add all 435 US House districts with official candidate results and 119th Congress boundaries
+2. validate nationwide party totals, uncontested races, and district/result matching
+3. keep the boundary file compact enough to preserve at least a small reserve under the repository guard

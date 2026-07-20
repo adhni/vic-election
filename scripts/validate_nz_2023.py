@@ -39,11 +39,11 @@ def main() -> None:
         if sum(int(row["votes"]) for row in party) <= 0:
             raise SystemExit(f"{district}: party votes are empty")
         if status == "cancelled":
-            if args.year != 2023 or district != "Port Waikato" or any(int(row["votes"]) for row in first + final):
+            if args.year != 2023 or district != "Port Waikato" or final or any(int(row["votes"]) for row in first):
                 raise SystemExit(f"{district}: invalid cancelled-contest rows")
             continue
-        if status != "official" or len(first) < 2 or len(first) != len(final):
-            raise SystemExit(f"{district}: invalid candidate rows")
+        if status != "official" or len(first) < 2 or final:
+            raise SystemExit(f"{district}: expected compact candidate rows")
         formal = int(district_rows[0]["formal_votes"])
         informal = int(district_rows[0]["informal_votes"])
         total = int(district_rows[0]["total_votes"])
@@ -102,12 +102,12 @@ def main() -> None:
         }
     )
     for district, (winner, votes, margin) in checks.items():
-        final = sorted(
-            ((row["candidate"], int(row["votes"])) for row in groups[district] if row["row_type"] == "final"),
+        result = sorted(
+            ((row["candidate"], int(row["votes"])) for row in groups[district] if row["row_type"] == "first"),
             key=lambda item: (-item[1], item[0]),
         )
-        if final[0] != (winner, votes) or final[0][1] - final[1][1] != margin:
-            raise SystemExit(f"{district}: spot check failed: {final[:2]}")
+        if result[0] != (winner, votes) or result[0][1] - result[1][1] != margin:
+            raise SystemExit(f"{district}: spot check failed: {result[:2]}")
 
     geojson = json.loads(boundary_path.read_text(encoding="utf-8"))
     features = geojson.get("features", [])

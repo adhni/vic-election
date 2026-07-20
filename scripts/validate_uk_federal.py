@@ -51,12 +51,11 @@ def main() -> None:
     for district, district_rows in groups.items():
         first = [row for row in district_rows if row["row_type"] == "first"]
         final = [row for row in district_rows if row["row_type"] == "final"]
-        if len(first) < 2 or len(first) != len(final):
-            raise SystemExit(f"{district}: invalid FPTP candidate rows")
+        if len(first) < 2 or final:
+            raise SystemExit(f"{district}: expected compact FPTP candidate rows")
         first_result = {(row["candidate"], row["candidate_party"]): int(row["votes"]) for row in first}
-        final_result = {(row["candidate"], row["candidate_party"]): int(row["votes"]) for row in final}
-        if first_result != final_result:
-            raise SystemExit(f"{district}: FPTP first and final rows differ")
+        if len(first_result) != len(first):
+            raise SystemExit(f"{district}: duplicate candidate rows")
         formal = int(first[0]["formal_votes"])
         informal = int(first[0]["informal_votes"])
         total = int(first[0]["total_votes"])
@@ -79,7 +78,7 @@ def main() -> None:
 
     for district, (winner, votes, margin) in expected["checks"].items():
         ranked = sorted(
-            ((row["candidate"], int(row["votes"])) for row in groups[district] if row["row_type"] == "final"),
+            ((row["candidate"], int(row["votes"])) for row in groups[district] if row["row_type"] == "first"),
             key=lambda item: (-item[1], item[0]),
         )
         if ranked[0] != (winner, votes) or ranked[0][1] - ranked[1][1] != margin:

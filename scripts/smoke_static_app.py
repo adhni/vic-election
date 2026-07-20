@@ -53,6 +53,10 @@ REQUIRED_INDIA_MARKERS = (
     '"Bharatiya Janata Party": "BJP"',
     "function rankedForOutcome(d, totals)",
 )
+REQUIRED_COMPACT_FPP_MARKERS = (
+    "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
+    'totals: { ...d.first }, final: true, synthetic: true',
+)
 EXPECTED_ELECTION_ALIASES = {
     "federal-2025-vic": "federal-2025-au",
     "federal-2022-vic": "federal-2022-au",
@@ -88,6 +92,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_INDIA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing India FPTP UI marker {marker!r}")
+    for marker in REQUIRED_COMPACT_FPP_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")
     if html.count("syncBoundaryTypeToActiveDistrict();") < 2:
         raise SystemExit(f"{html_file}: NZ map layer is not synchronized after filters and reset")
     match = re.search(r"const electionDefinitions = (\[.*?\]);", html, flags=re.S)
@@ -155,7 +162,7 @@ def geometry_path(geometry, bounds) -> str:
     return ""
 
 
-def smoke_election(key: str, csv_path: Path, boundary_path: Path) -> None:
+def smoke_election(key: str, csv_path: Path, boundary_path: Path, system: str) -> None:
     rows = read_csv(csv_path)
     districts = {row["district"] for row in rows}
     geojson = json.loads(boundary_path.read_text(encoding="utf-8"))
@@ -177,7 +184,11 @@ def smoke_election(key: str, csv_path: Path, boundary_path: Path) -> None:
     paths = [geometry_path(feature["geometry"], (min_lon, max_lon, min_lat, max_lat)) for feature in features]
     if len([path for path in paths if path.startswith("M") and len(path) > 20]) != len(features):
         raise SystemExit(f"{key}: map path generation failed")
-    if not any(row["row_type"] == "final" for row in rows):
+    row_types = {row["row_type"] for row in rows}
+    if system in {"fpp", "mmp-fpp"}:
+        if "first" not in row_types or "final" in row_types:
+            raise SystemExit(f"{key}: FPP data should contain compact first rows without duplicate final rows")
+    elif "final" not in row_types:
         raise SystemExit(f"{key}: no final rows")
     print(f"{key}: {len(districts)} districts, {len(rows)} rows, {len(paths)} map paths")
 
@@ -198,7 +209,10 @@ def main() -> None:
                 raise SystemExit(f"{html_file}: alias target {new_key} is not selectable")
 
     for election in first:
-        smoke_election(str(election["key"]), Path(str(election["csv"])), Path(str(election["boundaries"])))
+        smoke_election(
+            str(election["key"]), Path(str(election["csv"])),
+            Path(str(election["boundaries"])), str(election.get("system", "")),
+        )
     print("Static app smoke passed")
 
 
