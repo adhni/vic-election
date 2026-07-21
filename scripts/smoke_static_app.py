@@ -53,6 +53,17 @@ REQUIRED_INDIA_MARKERS = (
     '"Bharatiya Janata Party": "BJP"',
     "function rankedForOutcome(d, totals)",
 )
+REQUIRED_THAILAND_MARKERS = (
+    '"key": "thailand-2026"',
+    '"jurisdiction": "Thailand"',
+    '"systemLabel": "Parallel voting · constituency ballot FPTP"',
+    '"electorateSeats": 400',
+    '"listSeats": 100',
+    '"totalSeats": 500',
+    '"cartogram": true',
+    "not a legal-boundary map",
+    'activeElection().jurisdiction === "Thailand"',
+)
 REQUIRED_US_MARKERS = (
     '"key": "us-house-2024"',
     '"jurisdiction": "United States"',
@@ -114,6 +125,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_INDIA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing India FPTP UI marker {marker!r}")
+    for marker in REQUIRED_THAILAND_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Thailand 2026 UI marker {marker!r}")
     for marker in REQUIRED_US_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. House UI marker {marker!r}")
