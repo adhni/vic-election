@@ -54,7 +54,7 @@ jobs:
           python scripts/validate_federal.py --csv data/federal_2016_au_preferences_long.csv --boundaries data/federal_2016_au_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-20499.csv --expected-divisions 150 --scope au
           python scripts/validate_federal.py --csv data/federal_2013_vic_preferences_long.csv --boundaries data/federal_2013_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-17496.csv --expected-divisions 37 --scope vic
           python scripts/validate_federal.py --csv data/federal_2010_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-15508.csv --expected-divisions 37 --scope vic
-          python scripts/validate_federal.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2007_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-13745.csv --expected-divisions 37 --scope vic
+          python scripts/validate_federal.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_ci/HouseDopByDivisionDownload-13745.csv --expected-divisions 37 --scope vic
           python scripts/validate_state_vic.py --csv data/vic_2010_preferences_long.csv --boundaries data/vic_2010_district_boundaries.geojson --expected-districts 88
           python scripts/validate_state_vic.py --csv data/vic_2006_preferences_long.csv --boundaries data/vic_2006_district_boundaries.geojson --expected-districts 88
           python scripts/validate_state_vic.py --csv data/sa_2022_preferences_long.csv --boundaries data/sa_2022_district_boundaries.geojson --expected-districts 47 --label SA-2022 --max-gap-ratio 0.005 --validate-vote-totals
@@ -81,6 +81,7 @@ jobs:
           python scripts/validate_canada_federal.py --year 2021
           python scripts/validate_india_federal.py
           python scripts/validate_us_house.py
+          python scripts/validate_indonesia_presidential.py
 
       - name: Smoke test static app
         run: |

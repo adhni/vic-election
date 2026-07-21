@@ -861,11 +861,11 @@
           <select id="electionYear"></select>
         </div>
         <div class="ctrl-group grow">
-          <label class="ctrl-label" for="districtSearch">Search</label>
+          <label id="districtSearchLabel" class="ctrl-label" for="districtSearch">Search</label>
           <input id="districtSearch" type="search" placeholder="Find a district or division…" autocomplete="off" />
         </div>
         <div class="ctrl-group grow">
-          <label class="ctrl-label" for="districtSelect">Seat</label>
+          <label id="districtSelectLabel" class="ctrl-label" for="districtSelect">Seat</label>
           <select id="districtSelect"></select>
         </div>
         <div class="ctrl-group grow">
@@ -900,7 +900,7 @@
       <div class="map-toolbar">
         <div>
           <h2 class="map-title">Rankings</h2>
-          <p class="map-subtitle">Election-wide leaderboards for the selected election. Click a row to open that district or division.</p>
+          <p id="rankingsSubtitle" class="map-subtitle">Election-wide leaderboards for the selected election. Click a row to open that district or division.</p>
         </div>
       </div>
       <div id="rankingsPanel" class="rankings-grid"></div>
@@ -910,7 +910,7 @@
       <div class="map-toolbar">
         <div>
           <h2 class="map-title">Map</h2>
-          <p class="map-subtitle">Click a seat to explore.</p>
+          <p id="mapSubtitle" class="map-subtitle">Click a seat to explore.</p>
         </div>
         <div class="map-actions">
           <div class="map-modes" role="group" aria-label="Map colour mode">
@@ -922,6 +922,10 @@
           <div id="boundaryTypeModes" class="map-modes hidden" role="group" aria-label="Electorate map layer">
             <button class="map-mode active" type="button" data-boundary-type="General">General</button>
             <button class="map-mode" type="button" data-boundary-type="Māori">Māori</button>
+          </div>
+          <div id="geographyModes" class="map-modes hidden" role="group" aria-label="Result geography">
+            <button class="map-mode active" type="button" data-geography="province">Province</button>
+            <button class="map-mode" type="button" data-geography="kabupaten-kota">Kabupaten/Kota</button>
           </div>
           <div class="map-modes" role="group" aria-label="Map zoom">
             <button id="mapZoomOut" class="map-mode" type="button">-</button>
@@ -953,7 +957,7 @@
           <div id="primaryVoteTitle" class="section-title">First-preference vote</div>
           <div id="primaryBars" class="bars"></div>
         </div>
-        <div>
+        <div id="finalVotePanel">
           <div id="finalVoteTitle" class="section-title">Final standing</div>
           <div id="finalBars" class="bars"></div>
         </div>
@@ -1500,6 +1504,42 @@
         "areaLabel": "Province / territory"
       },
       {
+        "key": "indonesia-president-2024",
+        "label": "Indonesia Presidential 2024",
+        "type": "national",
+        "jurisdiction": "Indonesia",
+        "year": 2024,
+        "source": "KPU / Wikimedia structured mirror",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National majority vote",
+        "methodNote": "Indonesia elects one president and vice-president nationally. Each map area shows its local plurality leader; provinces and kabupaten/kota do not elect separate presidents. Prabowo–Gibran exceeded 50% nationally, so no runoff was required.",
+        "csv": "data/indonesia_2024_president_province_fpp.csv",
+        "boundaries": "data/indonesia_2024_province_boundaries.geojson",
+        "defaultGeography": "province",
+        "geographies": {
+          "province": {
+            "label": "Province",
+            "pluralLabel": "provinces",
+            "areaLabel": "Country",
+            "csv": "data/indonesia_2024_president_province_fpp.csv",
+            "boundaries": "data/indonesia_2024_province_boundaries.geojson"
+          },
+          "kabupaten-kota": {
+            "label": "Kabupaten/Kota",
+            "pluralLabel": "kabupaten/kota",
+            "areaLabel": "Province",
+            "csv": "data/indonesia_2024_president_kabupaten_kota_fpp.csv",
+            "boundaries": "data/indonesia_2024_kabupaten_kota_boundaries.geojson"
+          }
+        },
+        "nationalResults": [
+          ["Prabowo–Gibran", 58.59],
+          ["Anies–Muhaimin", 24.95],
+          ["Ganjar–Mahfud", 16.47]
+        ]
+      },
+      {
         "key": "us-house-2024",
         "label": "United States House 2024",
         "type": "national",
@@ -1608,7 +1648,7 @@
         "year": 2007,
         "source": "AEC",
         "csv": "data/federal_2007_vic_preferences_long.csv",
-        "boundaries": "data/federal_2007_vic_division_boundaries.geojson"
+        "boundaries": "data/federal_2010_vic_division_boundaries.geojson"
       }
     ];
 
@@ -1620,8 +1660,10 @@
       "federal-2016-vic": "federal-2016-au"
     };
     const activeElection = () => electionYears[activeElectionYear] || electionYears["2022"];
+    const activeDataset = () => activeElection().geographies?.[activeGeography] || activeElection();
 
     let activeElectionYear = "2022";
+    let activeGeography = "";
     let allDistricts = structuredClone(sampleDistricts);
     let districts = [...allDistricts];
     let activeDistrict = districts[0];
@@ -1648,6 +1690,14 @@
 
     function shortName(name) {
       if (!name) return "—";
+      if (activeElection().jurisdiction === "Indonesia") {
+        const tickets = {
+          "Anies Baswedan–Muhaimin Iskandar": "Anies–Muhaimin",
+          "Prabowo Subianto–Gibran Rakabuming Raka": "Prabowo–Gibran",
+          "Ganjar Pranowo–Mahfud MD": "Ganjar–Mahfud"
+        };
+        if (tickets[name]) return tickets[name];
+      }
       const parts = name.split(",");
       if (parts.length > 1) return `${parts[0]}, ${parts[1].trim().charAt(0)}.`;
       return name;
@@ -1758,6 +1808,11 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (activeElection().jurisdiction === "Indonesia") {
+        if (p === "anies–muhaimin") return "#16858c";
+        if (p === "prabowo–gibran") return "#4f56a6";
+        if (p === "ganjar–mahfud") return "#c84555";
+      }
       if (activeElection().jurisdiction === "United States") {
         if (p === "democratic") return "#2166ac";
         if (p === "republican") return "#c62828";
@@ -1983,6 +2038,9 @@
     }
 
     function electorateLabel(count = 0) {
+      if (activeElection().jurisdiction === "Indonesia") {
+        return activeGeography === "kabupaten-kota" ? "kabupaten/kota" : count === 1 ? "province" : "provinces";
+      }
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
       if (["United Kingdom", "Malaysia", "India"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
@@ -2026,7 +2084,9 @@
     }
 
     function districtMatchesFilters(d, filters) {
-      const matchesQuery = !filters.query || d.district.toLowerCase().includes(filters.query);
+      const matchesQuery = !filters.query
+        || d.district.toLowerCase().includes(filters.query)
+        || (activeElection().contestType === "presidential" && d.electorate_type.toLowerCase().includes(filters.query));
       const matchesParty = filters.party === "all" || electedBlocs(d).includes(filters.party);
       const matchesChanged = !filters.changedOnly || resultChanged(d);
       const matchesClose = !filters.closeOnly || (d.formal_votes && finalMargin(d) / d.formal_votes <= 0.05);
@@ -2044,13 +2104,16 @@
       const requestedYear = params.get("year");
       const year = electionYearAliases[requestedYear] || requestedYear;
       const system = electionYears[year]?.system;
+      const requestedGeography = params.get("geo");
+      const geography = electionYears[year]?.geographies?.[requestedGeography] ? requestedGeography : "";
       const allowedMapModes = system === "mmp-fpp"
         ? ["party", "party-vote", "close"]
         : system === "fpp" ? ["party", "close"] : ["party", "close", "changed"];
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
-        mode: allowedMapModes.includes(mode) ? mode : ""
+        mode: allowedMapModes.includes(mode) ? mode : "",
+        geography
       };
     }
 
@@ -2060,6 +2123,11 @@
       params.delete("v");
       if (activeElectionYear !== "2022") params.set("year", activeElectionYear);
       else params.delete("year");
+      if (activeElection().geographies && activeGeography && activeGeography !== activeElection().defaultGeography) {
+        params.set("geo", activeGeography);
+      } else {
+        params.delete("geo");
+      }
       if (activeDistrict?.district) params.set("district", activeDistrict.district);
       else params.delete("district");
       if (activeMapMode && activeMapMode !== "party") params.set("mode", activeMapMode);
@@ -2077,6 +2145,7 @@
       suppressUrlUpdate = true;
       if (state.year && electionYears[state.year]) {
         activeElectionYear = state.year;
+        activeGeography = state.geography || electionYears[state.year].defaultGeography || "";
         const yearSelect = document.getElementById("electionYear");
         if (yearSelect) yearSelect.value = activeElectionYear;
       }
@@ -2358,7 +2427,7 @@
         .join("");
       target.className = "geo-map";
       target.innerHTML = `
-        <svg class="geo-map" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" role="img" aria-label="${activeElection().label} seat map">
+        <svg class="geo-map" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" role="img" aria-label="${activeElection().label} ${electorateLabel(2)} map">
           <rect x="0" y="0" width="960" height="560" fill="#f2f4f0"></rect>
           ${inactiveShapes}
           ${activeShape}
@@ -2453,6 +2522,26 @@
         ];
         (election.parliament || []).forEach(([party, seats]) => {
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${seats}</strong></span>`);
+        });
+        target.innerHTML = chips.join("");
+        return;
+      }
+      if (activeElection().contestType === "presidential") {
+        const winnerCounts = new Map();
+        allDistricts.forEach(d => {
+          const ticket = winningParty(d);
+          winnerCounts.set(ticket, (winnerCounts.get(ticket) || 0) + 1);
+        });
+        const chips = [
+          `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
+        ];
+        [...winnerCounts.entries()]
+          .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+          .forEach(([ticket, areas]) => {
+            chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> area wins</span>`);
+          });
+        (activeElection().nationalResults || []).forEach(([ticket, share]) => {
+          chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> national</span>`);
         });
         target.innerHTML = chips.join("");
         return;
@@ -2731,15 +2820,29 @@
     function updateElectionSpecificUi() {
       const fpp = isFppElection();
       const mmp = isMmpElection();
+      const presidential = activeElection().contestType === "presidential";
       document.getElementById("partyVoteMapMode").classList.toggle("hidden", !mmp);
       document.getElementById("changedMapMode").classList.toggle("hidden", fpp);
       document.getElementById("boundaryTypeModes").classList.toggle("hidden", !mmp);
+      document.getElementById("geographyModes").classList.toggle("hidden", !activeElection().geographies);
+      document.querySelectorAll("[data-geography]").forEach(button => {
+        button.classList.toggle("active", button.dataset.geography === activeGeography);
+      });
       document.getElementById("roundsTabButton").classList.toggle("hidden", fpp);
       document.getElementById("chartTabButton").classList.toggle("hidden", fpp);
       document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", fpp);
-      document.querySelector('label[for="partyFilter"]').textContent = fpp ? "Winner party" : "Bloc";
-      document.getElementById("primaryVoteTitle").textContent = fpp ? "Candidate vote" : "First-preference vote";
+      document.querySelector('label[for="partyFilter"]').textContent = presidential ? "Local winner" : fpp ? "Winner party" : "Bloc";
+      document.getElementById("primaryVoteTitle").textContent = presidential ? "Candidate-pair vote" : fpp ? "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? "Party vote" : "Final standing";
+      document.getElementById("finalVotePanel").classList.toggle("hidden", presidential);
+      document.getElementById("districtSelectLabel").textContent = presidential ? activeDataset().label : "Seat";
+      document.getElementById("districtSearch").placeholder = presidential ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
+      document.getElementById("mapSubtitle").textContent = presidential
+        ? `Click a ${electorateLabel(1)} to explore its local presidential vote.`
+        : "Click a seat to explore.";
+      document.getElementById("rankingsSubtitle").textContent = presidential
+        ? `Local-result leaderboards across the selected ${electorateLabel(2)}. Click a row to open that area.`
+        : "Election-wide leaderboards for the selected election. Click a row to open that district or division.";
       if (fpp && (activeTab === "rounds" || activeTab === "chart")) activeTab = "overview";
       document.querySelectorAll(".tab-btn").forEach(button => {
         button.classList.toggle("active", button.dataset.tab === activeTab);
@@ -2758,7 +2861,7 @@
         ? [...new Set(allDistricts.flatMap(d => electedBlocs(d)))].sort()
         : ["Labor", "Coalition", "Greens", "Independent", "Other"];
       const winningBlocs = blocOrder.filter(bloc => allDistricts.some(d => electedBlocs(d).includes(bloc)));
-      partyFilter.innerHTML = [`<option value="all">${isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
+      partyFilter.innerHTML = [`<option value="all">${activeElection().contestType === "presidential" ? "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
         winningBlocs.map(p => `<option value="${p}">${p}</option>`)
       ).join("");
       partyFilter.value = winningBlocs.includes(selectedParty) ? selectedParty : "all";
@@ -2766,7 +2869,7 @@
       districtSelect.disabled = districts.length === 0;
       districtSelect.innerHTML = districts.length
         ? districts.map((d, i) => `<option value="${i}">${d.district}</option>`).join("")
-        : `<option>No matching seats</option>`;
+        : `<option>No matching ${electorateLabel(2)}</option>`;
       if (activeDistrict) {
         const activeIndex = districts.findIndex(d => d.district === activeDistrict.district);
         districtSelect.value = String(Math.max(0, activeIndex));
@@ -2880,6 +2983,9 @@
       document.querySelectorAll("[data-boundary-type]").forEach(btn => {
         btn.addEventListener("click", () => setBoundaryType(btn.dataset.boundaryType));
       });
+      document.querySelectorAll("[data-geography]").forEach(btn => {
+        btn.addEventListener("click", () => setGeography(btn.dataset.geography));
+      });
     }
 
     function setupRankings() {
@@ -2938,7 +3044,7 @@
     }
 
     function renderNoMatches() {
-      document.getElementById("districtSummary").innerHTML = `<p style="color:var(--muted);margin:0;">No seats match the current filters. Try adjusting your search.</p>`;
+      document.getElementById("districtSummary").innerHTML = `<p style="color:var(--muted);margin:0;">No ${electorateLabel(2)} match the current filters. Try adjusting your search.</p>`;
       document.getElementById("primaryBars").innerHTML = "";
       document.getElementById("finalBars").innerHTML = "";
       document.getElementById("roundDisplay").innerHTML = "";
@@ -2974,6 +3080,31 @@
         return;
       }
       if (activeElection().system === "fpp") {
+        if (activeElection().contestType === "presidential") {
+          const [winner] = getWinnerFromFinal(d);
+          const winnerTicket = getParty(d, winner);
+          const [runnerUp] = getSecondFromFinal(d);
+          const drilldown = activeGeography === "province"
+            ? `<button id="provinceDrilldown" type="button">View kabupaten/kota in ${d.district}</button>`
+            : "";
+          document.getElementById("districtSummary").innerHTML = `
+            <h2 class="result-district">${d.district}</h2>
+            <div class="result-facts">
+              <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
+              <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
+              <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${badgeHtml(winnerTicket)}</span></div>
+              <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
+              <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
+              <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">Not available</span></div>
+            </div>
+            <p class="pref-impact">${activeElection().methodNote}</p>
+            ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}
+            ${drilldown}
+          `;
+          const drillButton = document.getElementById("provinceDrilldown");
+          if (drillButton) drillButton.onclick = () => drillDownProvince(d.district);
+          return;
+        }
         const [winner] = getWinnerFromFinal(d);
         const winnerParty = getParty(d, winner);
         const [runnerUp] = getSecondFromFinal(d);
@@ -2992,7 +3123,7 @@
         document.getElementById("districtSummary").innerHTML = `
           <h2 class="result-district">${d.district}</h2>
           <div class="result-facts">
-            <div class="fact-item"><span class="fact-label">${activeElection().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
+            <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
             <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${systemLabel}</span></div>
             <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
             ${teamElection ? `<div class="fact-item"><span class="fact-label">Members elected</span><span class="fact-value">${memberList}</span></div>` : ""}
@@ -3411,6 +3542,7 @@
           majority: Number(firstRow.majority || 0),
           electorate_type: firstRow.electorate_type || "",
           contest_status: firstRow.contest_status || "official",
+          result_note: firstRow.result_note || "",
           partyMap: {},
           partyVote: {},
           statusMap: {},
@@ -3491,8 +3623,9 @@
 
     async function autoLoadCSV(year = activeElectionYear, loadId = electionLoadId, options = {}) {
       const election = electionYears[year] || electionYears["2022"];
+      const dataset = election.geographies?.[activeGeography] || election;
       try {
-        const response = await fetch(election.csv, { cache: "no-store" });
+        const response = await fetch(dataset.csv, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const rows = parseCSV(await response.text());
         if (!isCurrentElectionLoad(year, loadId)) return false;
@@ -3517,8 +3650,9 @@
 
     async function autoLoadBoundaries(year = activeElectionYear, loadId = electionLoadId) {
       const election = electionYears[year] || electionYears["2022"];
+      const dataset = election.geographies?.[activeGeography] || election;
       try {
-        const response = await fetch(election.boundaries, { cache: "no-store" });
+        const response = await fetch(dataset.boundaries, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const geojson = await response.json();
         if (!isCurrentElectionLoad(year, loadId)) return false;
@@ -3546,8 +3680,13 @@
 
     async function loadElection(year, replaceUrl = false) {
       const requestedYear = electionYears[year] ? year : "2022";
+      const previousYear = activeElectionYear;
       const loadId = ++electionLoadId;
       activeElectionYear = requestedYear;
+      const election = electionYears[requestedYear];
+      if (requestedYear !== previousYear || !election.geographies?.[activeGeography]) {
+        activeGeography = election.defaultGeography || "";
+      }
       activeMapMode = "party";
       activeBoundaryType = "General";
       boundaryFeatures = [];
@@ -3557,6 +3696,32 @@
       await autoLoadCSV(requestedYear, loadId, { applyState: replaceUrl });
       await autoLoadBoundaries(requestedYear, loadId);
       if (isCurrentElectionLoad(requestedYear, loadId)) updateUrlState(replaceUrl);
+    }
+
+    async function setGeography(geography, replaceUrl = false) {
+      const election = activeElection();
+      if (!election.geographies?.[geography] || geography === activeGeography) return;
+      const loadId = ++electionLoadId;
+      activeGeography = geography;
+      activeMapMode = "party";
+      pendingDistrictFromUrl = "";
+      boundaryFeatures = [];
+      boundaryShapes = [];
+      resetMapZoom();
+      updateElectionSpecificUi();
+      await autoLoadCSV(activeElectionYear, loadId, { applyState: false });
+      await autoLoadBoundaries(activeElectionYear, loadId);
+      if (isCurrentElectionLoad(activeElectionYear, loadId)) updateUrlState(replaceUrl);
+    }
+
+    async function drillDownProvince(province) {
+      await setGeography("kabupaten-kota", true);
+      districts = allDistricts.filter(d => d.electorate_type === province);
+      activeDistrict = districts[0] || allDistricts[0] || null;
+      focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+      populateControls();
+      render();
+      updateUrlState();
     }
 
     async function handleUpload(event) {

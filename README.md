@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house elections in Australia, New Zealand, the United Kingdom, Malaysia, Singapore, Canada, India, and the United States.
+A static HTML data app for exploring lower-house elections across several countries plus Indonesia's 2024 presidential election.
 
 The app is map-first and party/bloc-first:
 
@@ -17,6 +17,7 @@ The app is map-first and party/bloc-first:
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
 - United States congressional-district results and winner-party map for the 2024 House election
+- Indonesian 2024 presidential results with a 38-province overview and all 514 kabupaten/kota
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -214,6 +215,19 @@ data/us_2024_congressional_boundaries.geojson
 
 The dataset parses the U.S. House Clerk's official candidate totals and reconciles every district against its published recapitulation. New York and Connecticut fusion-party lines are combined with their candidates, Maine's duplicated continuing-ballot subtotal is excluded, and all unopposed returns are retained without invented votes. Alaska's published lines are first-choice totals, while Maine's 2nd district reports the final continuing candidates; transfer rounds are not reconstructed. Registered-voter and turnout values remain unavailable because the nationwide Clerk publication does not provide a consistent electorate denominator. Boundaries are the Census Bureau's 119th Congress cartographic districts used for the 2024 election cycle; Alaska's Aleutian coordinates are unwrapped across the antimeridian for the app's map projection. DC and territorial delegate districts are outside this 435-seat scope.
 
+Indonesia coverage includes the 2024 presidential election at both province and kabupaten/kota level:
+
+```text
+data/indonesia_2024_president_province_fpp.csv
+data/indonesia_2024_province_boundaries.geojson
+data/indonesia_2024_president_kabupaten_kota_fpp.csv
+data/indonesia_2024_kabupaten_kota_boundaries.geojson
+```
+
+Use the map's **Province / Kabupaten-Kota** switch to move between all 38 provinces and all 514 local areas. Province totals are certified results from KPU Decision 360/2024. The structured kabupaten/kota rows preserve KPU administrative codes and are sourced from a CC0 Wikimedia table whose rows link to KPU's Sirekap recapitulation JSON. KPU's Satu Peta boundary endpoints supply both geographic levels. The app describes winners as local vote leaders because these areas do not elect separate presidents.
+
+The published Papua Tengah kabupaten/kota rows sum to 1,035,277 valid votes, which is 67,005 below KPU's certified province total of 1,102,282. The app uses the certified total in the province view, preserves the published local figures without redistributing the difference, and shows this disclosure on every affected detail page.
+
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
 ```text
@@ -244,8 +258,9 @@ data/federal_2010_vic_district_summary.csv
 data/federal_2010_vic_division_boundaries.geojson
 data/federal_2007_vic_preferences_long.csv
 data/federal_2007_vic_district_summary.csv
-data/federal_2007_vic_division_boundaries.geojson
 ```
+
+The 2007 and 2010 Victoria-only federal entries share the byte-identical AEC 2010 boundary file instead of storing a duplicate copy.
 
 If the generated CSV is unavailable, embedded sample districts are used. Manual CSV upload is available under **Data tools**.
 
@@ -335,6 +350,10 @@ data/canada_2025_fpp.csv                   # Elections Canada GE2025 results for
 data/canada_2025_federal_boundaries.geojson # Elections Canada 45th-election riding boundaries
 data/canada_2021_fpp.csv                   # Elections Canada GE2021 results for all 338 ridings
 data/canada_2021_federal_boundaries.geojson # Elections Canada 44th-election riding boundaries
+data/indonesia_2024_president_province_fpp.csv # KPU certified presidential totals for 38 provinces
+data/indonesia_2024_province_boundaries.geojson # KPU Satu Peta province boundaries
+data/indonesia_2024_president_kabupaten_kota_fpp.csv # presidential totals for all 514 kabupaten/kota
+data/indonesia_2024_kabupaten_kota_boundaries.geojson # simplified KPU Satu Peta kabupaten/kota boundaries
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
@@ -355,7 +374,6 @@ data/federal_2010_vic_district_summary.csv        # AEC 2010 federal House divis
 data/federal_2010_vic_division_boundaries.geojson # AEC 2010 national federal division polygons, Victoria features
 data/federal_2007_vic_preferences_long.csv        # AEC 2007 federal House preference rows, Victoria only
 data/federal_2007_vic_district_summary.csv        # AEC 2007 federal House division summary, Victoria only
-data/federal_2007_vic_division_boundaries.geojson # AEC 2010 national federal division polygons, Victoria features
 data/sample_melbourne_preferences_long.csv
 ```
 
@@ -388,10 +406,12 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 ├── scripts/
 │   ├── build_aec_federal.py
 │   ├── build_india_federal.py
+│   ├── build_indonesia_presidential.py
 │   ├── build_us_house.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
 │   ├── validate_india_federal.py
+│   ├── validate_indonesia_presidential.py
 │   ├── validate_us_house.py
 │   └── validate_vec_csv.py
 ├── docs/
@@ -407,7 +427,7 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 
 ## Election Definitions
 
-Election options are driven by the in-app `electionDefinitions` list in `index.html` and `app/index.html`. Each entry defines the key, label, election type, jurisdiction, year, source, preference CSV, and boundary GeoJSON. The election selector is generated from this list.
+Election options are driven by the in-app `electionDefinitions` list in `index.html` and `app/index.html`. Each entry defines the key, label, election type, jurisdiction, year, source, preference CSV, and boundary GeoJSON. The election selector is generated from this list. Indonesia additionally uses a `geographies` map so one election can switch between its province and kabupaten/kota datasets.
 
 When adding an election, add the data files, add one election definition to both HTML entry points, then run:
 
@@ -608,8 +628,17 @@ For the 2007 federal Victoria dataset, download the official AEC files for event
 ```bash
 python3 scripts/build_aec_vic.py --year 2007 --event-id 13745 --raw-dir tmp/aec_2007_vic --out data --shp tmp/aec_2007_vic/national-esri-2010/COM_ELB_2010_region.shp --gis-source https://www.aec.gov.au/Electorates/gis/files/national-esri-2010.zip
 python3 scripts/validate_vec_csv.py data/federal_2007_vic_preferences_long.csv
-python3 scripts/validate_federal.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2007_vic_division_boundaries.geojson --aec-dop tmp/aec_2007_vic/HouseDopByDivisionDownload-13745.csv --expected-divisions 37 --scope vic
+python3 scripts/validate_federal.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_2007_vic/HouseDopByDivisionDownload-13745.csv --expected-divisions 37 --scope vic
 ```
+
+To rebuild and validate Indonesia's 2024 presidential election files:
+
+```bash
+python3 scripts/build_indonesia_presidential.py
+python3 scripts/validate_indonesia_presidential.py
+```
+
+The builder downloads the 514-row structured result table and KPU Satu Peta boundaries, matches every result and polygon by administrative code, and uses pinned Mapshaper topology simplification. The validator requires 38 certified province results, 514 kabupaten/kota, three candidate-pair rows per area, valid matching polygons, the published winner counts, and exactly the disclosed Papua Tengah aggregate difference.
 
 The VEC scraper writes:
 
@@ -632,6 +661,13 @@ The app currently validates against:
 - 87 districts
 - 87 boundary features
 - no missing vote rows
+
+The Indonesia Presidential 2024 option validates against:
+
+- 38 certified province results and matching province boundaries
+- all 514 kabupaten/kota, 1,542 candidate-pair rows, and 514 matching local boundaries
+- 36 province wins for Prabowo–Gibran and 2 for Anies–Muhaimin
+- the single disclosed 67,005-vote Papua Tengah local-to-province difference
 
 The federal 2019 Australia option validates against:
 
