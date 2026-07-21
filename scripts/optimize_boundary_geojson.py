@@ -17,7 +17,6 @@ MAX_AREA_DELTA = 0.005
 ALREADY_OPTIMIZED_BYTES = 11 * 1024 * 1024
 
 BOUNDARY_FILES = [
-    "data/federal_2007_vic_division_boundaries.geojson",
     "data/federal_2010_vic_division_boundaries.geojson",
     "data/federal_2013_vic_division_boundaries.geojson",
     "data/federal_2016_au_division_boundaries.geojson",

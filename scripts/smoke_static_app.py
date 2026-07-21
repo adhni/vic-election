@@ -63,6 +63,18 @@ REQUIRED_US_MARKERS = (
     'if (p === "republican") return "#c62828";',
     'Number(d.enrolment || 0) > 0',
 )
+REQUIRED_INDONESIA_MARKERS = (
+    '"key": "indonesia-president-2024"',
+    '"contestType": "presidential"',
+    '"defaultGeography": "province"',
+    '"kabupaten-kota"',
+    'id="geographyModes"',
+    "function setGeography(geography, replaceUrl = false)",
+    "function drillDownProvince(province)",
+    'activeElection().contestType === "presidential"',
+    'firstRow.result_note || ""',
+    "provinces and kabupaten/kota do not elect separate presidents",
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -105,6 +117,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_US_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. House UI marker {marker!r}")
+    for marker in REQUIRED_INDONESIA_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Indonesia presidential UI marker {marker!r}")
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")
@@ -222,10 +237,23 @@ def main() -> None:
                 raise SystemExit(f"{html_file}: alias target {new_key} is not selectable")
 
     for election in first:
-        smoke_election(
-            str(election["key"]), Path(str(election["csv"])),
-            Path(str(election["boundaries"])), str(election.get("system", "")),
-        )
+        geographies = election.get("geographies")
+        if geographies:
+            default = str(election.get("defaultGeography", ""))
+            if default not in geographies:
+                raise SystemExit(f"{election['key']}: invalid default geography {default!r}")
+            if election["csv"] != geographies[default]["csv"] or election["boundaries"] != geographies[default]["boundaries"]:
+                raise SystemExit(f"{election['key']}: top-level files must match the default geography")
+            for geography, dataset in geographies.items():
+                smoke_election(
+                    f"{election['key']}:{geography}", Path(str(dataset["csv"])),
+                    Path(str(dataset["boundaries"])), str(election.get("system", "")),
+                )
+        else:
+            smoke_election(
+                str(election["key"]), Path(str(election["csv"])),
+                Path(str(election["boundaries"])), str(election.get("system", "")),
+            )
     print("Static app smoke passed")
 
 

@@ -76,8 +76,9 @@ Victoria-only federal options are retained only for years without an Australia-w
 ```text
 data/federal_2013_vic_division_boundaries.geojson
 data/federal_2010_vic_division_boundaries.geojson
-data/federal_2007_vic_division_boundaries.geojson
 ```
+
+The 2007 Victoria-only federal entry reuses the byte-identical 2010 AEC boundary file.
 
 Do not reuse 2022 boundaries for earlier elections. The 2022 election used boundaries from the 2020-2021 redivision, 2014 and 2018 used the 2012-2013 redivision, and 2006 and 2010 used the earlier 2001 Legislative Assembly boundaries.
 
@@ -115,6 +116,10 @@ The India 2024 rows use the Election Commission of India's final constituency-wi
 
 The United States 2024 House rows are parsed from the U.S. House Clerk's official Statistics of the Presidential and Congressional Election publication. They cover all 435 voting districts and reconcile the Clerk's candidate lines with its district recapitulations, including fusion-line aggregation in Connecticut and New York and the special ranked-choice reporting in Alaska and Maine. Maine's 2nd district publishes continuing ballots as both the two-candidate sum and a separate subtotal; the builder verifies that duplication and stores it only once, with exhausted ballots outside the candidate total. Ten unopposed returns are retained, including two states that publish no poll total for the returned candidate. The source does not contain a consistent registered-voter denominator, so enrolment and turnout remain unavailable rather than being inferred. Boundaries come from the Census Bureau's 2024 1:5,000,000 cartographic file for the 119th Congress, filtered to the 435 voting districts in the 50 states and matched by state and congressional district code. Alaska's positive-longitude Aleutian coordinates are shifted to the equivalent longitudes west of -180 degrees so the app's simple global min/max projection keeps the district contiguous and does not compress the lower 48. The U.S. House data uses compact single-copy rows: Alaska's Clerk lines are first-choice totals, Maine's 2nd district lines are the final continuing-candidate totals, and the app does not reconstruct ranked-choice transfer rounds.
 
+The Indonesia 2024 presidential province rows use the certified valid-vote totals in KPU Decision 360/2024, Appendix I. The kabupaten/kota rows use the 514-area CC0 Wikimedia structured table, which preserves KPU administrative codes and links each row to its public Sirekap `hr/ppwp/{province}.json` source. Candidate totals reconcile within every local area. Thirty-seven kabupaten/kota province aggregates match the certified KPU totals exactly; Papua Tengah is lower by 7,524 Anies–Muhaimin votes, 46,859 Prabowo–Gibran votes, and 12,622 Ganjar–Mahfud votes, or 67,005 votes overall. The app shows the certified province result, retains the structured local rows without inventing a redistribution, and displays a disclosure for Papua Tengah.
+
+The matching province and kabupaten/kota polygons come from KPU Satu Peta endpoints, whose map states that it uses Badan Informasi Geospasial reference geography. All 38 province and 514 local polygons are matched to results by two- and four-digit KPU codes. KPU's additional North Sulawesi `7105/7110` inter-regency overlap feature is excluded because it is not a result-reporting area. The national local-area map is simplified with pinned Mapshaper shared topology and repaired only where coordinate rounding leaves an invalid ring.
+
 All `fpp` and `mmp-fpp` CSVs use this compact single-copy representation. Their validators reject duplicated final rows, while the browser synthesizes a final round from the candidate rows before calculating winners, margins, rankings, maps, and detail views. Preferential and Hare-Clark datasets retain their distinct published final-count rows.
 
 The 2025 federal Australia boundary file is adapted from the AEC `AUS-March-2025-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, with no `StateAb` filtering.
@@ -129,7 +134,7 @@ The 2013 federal Victoria boundary file uses the same AEC `vic-esri-24122010.zip
 
 The 2010 federal Victoria boundary file is adapted from the AEC `national-esri-2010.zip` shapefile because the AEC states the 2010 federal election in Victoria ran on the same boundaries as the 2007 election while the 2010 Victorian redistribution was still underway. The result rows are generated from the AEC 2010 House of Representatives Distribution of Preferences by Division CSV, event `15508`, filtered to `StateAb == VIC`. The older national GIS file provides `ELECT_DIV` and `STATE` fields but no numeric division ID, so the builder filters `STATE == VIC` and leaves `division_id` blank for this boundary source.
 
-The 2007 federal Victoria boundary file uses the same AEC `national-esri-2010.zip` shapefile filtered to Victoria because the Victorian federal division names and shapes match the 2007-era boundaries also used for the 2010 election. The result rows are generated from the AEC 2007 House of Representatives Distribution of Preferences by Division CSV, event `13745`, filtered to `StateAb == VIC`.
+The 2007 federal Victoria entry reuses the 2010 boundary file because both were generated from the same AEC `national-esri-2010.zip` shapefile and are byte-identical. The result rows are generated from the AEC 2007 House of Representatives Distribution of Preferences by Division CSV, event `13745`, filtered to `StateAb == VIC`.
 
 ## Why long format?
 
