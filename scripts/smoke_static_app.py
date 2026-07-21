@@ -65,6 +65,8 @@ REQUIRED_US_MARKERS = (
 )
 REQUIRED_INDONESIA_MARKERS = (
     '"key": "indonesia-president-2024"',
+    '"key": "indonesia-president-2019"',
+    '"key": "indonesia-president-2014"',
     '"contestType": "presidential"',
     '"defaultGeography": "province"',
     '"kabupaten-kota"',
@@ -74,6 +76,8 @@ REQUIRED_INDONESIA_MARKERS = (
     'activeElection().contestType === "presidential"',
     'firstRow.result_note || ""',
     "provinces and kabupaten/kota do not elect separate presidents",
+    "Later-created districts are dissolved into their election-time parents",
+    "No digitised vote",
 )
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
