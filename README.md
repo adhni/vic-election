@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house elections across several countries plus Indonesia's 2024 presidential election.
+A static HTML data app for exploring lower-house elections across several countries plus Indonesia's 2024, 2019, and 2014 presidential elections.
 
 The app is map-first and party/bloc-first:
 
@@ -17,7 +17,7 @@ The app is map-first and party/bloc-first:
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
 - United States congressional-district results and winner-party map for the 2024 House election
-- Indonesian 2024 presidential results with a 38-province overview and all 514 kabupaten/kota
+- Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -226,18 +226,29 @@ data/us_2024_congressional_boundaries.geojson
 
 The dataset parses the U.S. House Clerk's official candidate totals and reconciles every district against its published recapitulation. New York and Connecticut fusion-party lines are combined with their candidates, Maine's duplicated continuing-ballot subtotal is excluded, and all unopposed returns are retained without invented votes. Alaska's published lines are first-choice totals, while Maine's 2nd district reports the final continuing candidates; transfer rounds are not reconstructed. Registered-voter and turnout values remain unavailable because the nationwide Clerk publication does not provide a consistent electorate denominator. Boundaries are the Census Bureau's 119th Congress cartographic districts used for the 2024 election cycle; Alaska's Aleutian coordinates are unwrapped across the antimeridian for the app's map projection. DC and territorial delegate districts are outside this 435-seat scope.
 
-Indonesia coverage includes the 2024 presidential election at both province and kabupaten/kota level:
+Indonesia coverage includes the 2024, 2019, and 2014 presidential elections at both province and kabupaten/kota level:
 
 ```text
 data/indonesia_2024_president_province_fpp.csv
 data/indonesia_2024_province_boundaries.geojson
 data/indonesia_2024_president_kabupaten_kota_fpp.csv
 data/indonesia_2024_kabupaten_kota_boundaries.geojson
+data/indonesia_2019_president_province_fpp.csv
+data/indonesia_2019_province_boundaries.geojson
+data/indonesia_2019_president_kabupaten_kota_fpp.csv
+data/indonesia_2014_president_province_fpp.csv
+data/indonesia_2014_province_boundaries.geojson
+data/indonesia_2014_president_kabupaten_kota_fpp.csv
+data/indonesia_2014_kabupaten_kota_boundaries.geojson
 ```
 
 Use the map's **Province / Kabupaten-Kota** switch to move between all 38 provinces and all 514 local areas. Province totals are certified results from KPU Decision 360/2024. The structured kabupaten/kota rows preserve KPU administrative codes and are sourced from a CC0 Wikimedia table whose rows link to KPU's Sirekap recapitulation JSON. KPU's Satu Peta boundary endpoints supply both geographic levels. The app describes winners as local vote leaders because these areas do not elect separate presidents.
 
 The published Papua Tengah kabupaten/kota rows sum to 1,035,277 valid votes, which is 67,005 below KPU's certified province total of 1,102,282. The app uses the certified total in the province view, preserves the published local figures without redistributing the difference, and shows this disclosure on every affected detail page.
+
+The 2019 view preserves the election's 34-province hierarchy and all 514 local reporting areas. Local totals reconcile exactly to the province totals. The compact 2024 local boundary file is reused because no kabupaten/kota split occurred between the elections; renamed areas use their current display labels, while every row retains its 2019 province membership. The 2019 province polygons are dissolved from that historical hierarchy, including the pre-split Papua and Papua Barat provinces.
+
+The 2014 province view uses certified KPU totals for 33 reporting provinces, with North Kalimantan included in East Kalimantan as it was in the official recapitulation. Its 497-area local view aggregates KawalPemilu's archived KPU C1-scan digitisation, covering 98.24% of the certified domestic valid vote. Missing votes are not estimated; four Papua units with no digitised candidate totals are explicitly shown as unavailable. Seventeen modern child districts are dissolved into their election-time parent polygons, so later administrative splits never receive copied historical votes.
 
 Australia-wide federal `2025`, `2022`, `2019`, and `2016` options use authoritative Australian Electoral Commission House results and matching national AEC federal division boundary datasets:
 
@@ -367,6 +378,13 @@ data/indonesia_2024_president_province_fpp.csv # KPU certified presidential tota
 data/indonesia_2024_province_boundaries.geojson # KPU Satu Peta province boundaries
 data/indonesia_2024_president_kabupaten_kota_fpp.csv # presidential totals for all 514 kabupaten/kota
 data/indonesia_2024_kabupaten_kota_boundaries.geojson # simplified KPU Satu Peta kabupaten/kota boundaries
+data/indonesia_2019_president_province_fpp.csv # KPU presidential totals for the 34 election-time provinces
+data/indonesia_2019_province_boundaries.geojson # province polygons dissolved to the 2019 hierarchy
+data/indonesia_2019_president_kabupaten_kota_fpp.csv # all 514 local presidential recapitulations
+data/indonesia_2014_president_province_fpp.csv # KPU certified totals for 33 reporting provinces
+data/indonesia_2014_province_boundaries.geojson # province polygons dissolved to the 2014 hierarchy
+data/indonesia_2014_president_kabupaten_kota_fpp.csv # 497 KawalPemilu C1 archive aggregates
+data/indonesia_2014_kabupaten_kota_boundaries.geojson # election-time local units with later splits dissolved
 data/federal_2025_au_preferences_long.csv         # AEC 2025 federal House preference rows, Australia-wide
 data/federal_2025_au_district_summary.csv         # AEC 2025 federal House division summary, Australia-wide
 data/federal_2025_au_division_boundaries.geojson  # AEC March 2025 national federal division polygons
@@ -419,11 +437,13 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 ├── scripts/
 │   ├── build_aec_federal.py
 │   ├── build_india_federal.py
+│   ├── build_indonesia_historical_presidential.py
 │   ├── build_indonesia_presidential.py
 │   ├── build_us_house.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
 │   ├── validate_india_federal.py
+│   ├── validate_indonesia_historical_presidential.py
 │   ├── validate_indonesia_presidential.py
 │   ├── validate_us_house.py
 │   └── validate_vec_csv.py
@@ -644,14 +664,18 @@ python3 scripts/validate_vec_csv.py data/federal_2007_vic_preferences_long.csv
 python3 scripts/validate_federal.py --csv data/federal_2007_vic_preferences_long.csv --boundaries data/federal_2010_vic_division_boundaries.geojson --aec-dop tmp/aec_2007_vic/HouseDopByDivisionDownload-13745.csv --expected-divisions 37 --scope vic
 ```
 
-To rebuild and validate Indonesia's 2024 presidential election files:
+To rebuild and validate Indonesia's presidential election files:
 
 ```bash
 python3 scripts/build_indonesia_presidential.py
 python3 scripts/validate_indonesia_presidential.py
+python3 scripts/build_indonesia_historical_presidential.py
+python3 scripts/validate_indonesia_historical_presidential.py
 ```
 
 The builder downloads the 514-row structured result table and KPU Satu Peta boundaries, matches every result and polygon by administrative code, and uses pinned Mapshaper topology simplification. The validator requires 38 certified province results, 514 kabupaten/kota, three candidate-pair rows per area, valid matching polygons, the published winner counts, and exactly the disclosed Papua Tengah aggregate difference.
+
+The historical builder downloads the preserved 2019 KPU recapitulation and KawalPemilu 2014 C1 archive, repairs three known malformed 2019 province arrays from certified recapitulations, and constructs election-year geography from the compact KPU local boundaries. Its validator requires exact 2019 local-to-province reconciliation, 34/514 areas in 2019, 33/497 areas in 2014, valid matching polygons, the documented 2014 archive coverage, and the absence of post-hierarchy split districts from the 2014 results.
 
 To rebuild and validate Thailand's 2026 constituency election files:
 
@@ -690,6 +714,13 @@ The Indonesia Presidential 2024 option validates against:
 - all 514 kabupaten/kota, 1,542 candidate-pair rows, and 514 matching local boundaries
 - 36 province wins for Prabowo–Gibran and 2 for Anies–Muhaimin
 - the single disclosed 67,005-vote Papua Tengah local-to-province difference
+
+The Indonesia Presidential 2019 and 2014 options validate against:
+
+- 34 provinces and all 514 kabupaten/kota for 2019, with exact local-to-province reconciliation
+- 33 reporting provinces and 497 election-time kabupaten/kota for 2014
+- certified 2014 province totals, 98.24% archived domestic C1 coverage, and four explicitly unavailable Papua local results
+- historical province membership and dissolved parent polygons for later administrative splits
 
 The federal 2019 Australia option validates against:
 
