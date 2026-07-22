@@ -829,6 +829,7 @@
 
     @media (max-width: 720px) {
       .overview-cols { grid-template-columns: 1fr; }
+      .controls { position: static; }
       .controls-inner { flex-direction: column; align-items: stretch; }
       .ctrl-group.grow, .ctrl-group.shrink { flex: none; }
       .bar-row, .transfer-row { grid-template-columns: 1fr auto; }
@@ -1638,6 +1639,24 @@
         "areaLabel": "State / union territory"
       },
       {
+        "key": "thailand-2026",
+        "label": "Thailand General 2026",
+        "type": "national",
+        "jurisdiction": "Thailand",
+        "year": 2026,
+        "source": "ECT Thailand / Thai PBS",
+        "system": "fpp",
+        "systemLabel": "Parallel voting · constituency ballot FPTP",
+        "methodNote": "Thailand elected 400 constituency MPs by first past the post and 100 party-list MPs on a separate ballot. This view covers the 400 constituency contests. The map is Thai PBS's equal-area constituency cartogram, not a legal-boundary map.",
+        "csv": "data/thailand_2026_fpp.csv",
+        "boundaries": "data/thailand_2026_constituency_cartogram.geojson",
+        "electorateSeats": 400,
+        "listSeats": 100,
+        "totalSeats": 500,
+        "areaLabel": "Province",
+        "cartogram": true
+      },
+      {
         "key": "canada-2021",
         "label": "Canada Federal 2021",
         "type": "national",
@@ -1744,7 +1763,8 @@
     let activeBoundaryType = "General";
     let boundaryFeatures = [];
     let boundaryShapes = [];
-    let mapView = { x: 0, y: 0, w: 960, h: 560 };
+    let mapBaseView = { x: 0, y: 0, w: 960, h: 560 };
+    let mapView = { ...mapBaseView };
     let mapDrag = null;
     let suppressUrlUpdate = false;
     let electionLoadId = 0;
@@ -1907,6 +1927,19 @@
           "jmm": "#4f772d", "independent": "#7a7f87", "nota": "#9ca3af"
         };
         if (indiaColors[p]) return indiaColors[p];
+        const palette = ["#6b4fa1", "#ad5b2d", "#27878f", "#9b3f68", "#5f7f32", "#4665a8", "#a56b18"];
+        let hash = 0;
+        for (let i = 0; i < p.length; i += 1) hash = ((hash << 5) - hash + p.charCodeAt(i)) | 0;
+        return palette[Math.abs(hash) % palette.length];
+      }
+      if (activeElection().jurisdiction === "Thailand") {
+        const thailandColors = {
+          "bhumjaithai": "#312682", "people's party": "#ff6d21", "pheu thai": "#f11824",
+          "klatham": "#4ec86f", "democrat": "#15a5f5", "palang pracharath": "#006536",
+          "thai sang thai": "#6841d0", "movement": "#04c001", "thai ruam palang": "#aa7e48",
+          "prachachat": "#795548", "new opportunity": "#8a6a3f"
+        };
+        if (thailandColors[p]) return thailandColors[p];
         const palette = ["#6b4fa1", "#ad5b2d", "#27878f", "#9b3f68", "#5f7f32", "#4665a8", "#a56b18"];
         let hash = 0;
         for (let i = 0; i < p.length; i += 1) hash = ((hash << 5) - hash + p.charCodeAt(i)) | 0;
@@ -2121,7 +2154,7 @@
         return activeGeography === "kabupaten-kota" ? "kabupaten/kota" : count === 1 ? "province" : "provinces";
       }
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
-      if (["United Kingdom", "Malaysia", "India"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
+      if (["United Kingdom", "Malaysia", "India", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
       if (activeElection().jurisdiction === "Canada") return count === 1 ? "riding" : "ridings";
       const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";
@@ -2423,6 +2456,15 @@
       const mapH = (maxLat - minLat) * scale;
       const offsetX = (width - mapW) / 2;
       const offsetY = (height - mapH) / 2;
+      mapBaseView = activeElection().cartogram
+        ? {
+            x: Math.max(0, offsetX - 8),
+            y: Math.max(0, offsetY - 8),
+            w: Math.min(width, mapW + 16),
+            h: Math.min(height, mapH + 16)
+          }
+        : { x: 0, y: 0, w: width, h: height };
+      mapView = { ...mapBaseView };
       const project = ([lon, lat]) => [
         offsetX + (lon - minLon) * scale,
         offsetY + (maxLat - lat) * scale
@@ -2457,7 +2499,6 @@
         ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
         : boundaryFeatures;
       boundaryShapes = makeBoundaryShapes(visible);
-      mapView = { x: 0, y: 0, w: 960, h: 560 };
       hideTooltip();
       if (shouldRender) renderSeatMap();
     }
@@ -2925,7 +2966,9 @@
       document.getElementById("districtSearch").placeholder = presidential ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
       document.getElementById("mapSubtitle").textContent = presidential
         ? `Click a ${electorateLabel(1)} to explore its local presidential vote.`
-        : "Click a seat to explore.";
+        : activeElection().cartogram
+          ? `Equal-area ${electorateLabel(1)} cartogram (not legal boundaries). Click a seat to explore.`
+          : "Click a seat to explore.";
       document.getElementById("rankingsSubtitle").textContent = presidential
         ? `Local-result leaderboards across the selected ${electorateLabel(2)}. Click a row to open that area.`
         : "Election-wide leaderboards for the selected election. Click a row to open that district or division.";
@@ -3085,7 +3128,7 @@
     }
 
     function clampMapView() {
-      const base = { x: 0, y: 0, w: 960, h: 560 };
+      const base = mapBaseView;
       mapView.w = Math.max(120, Math.min(base.w, mapView.w));
       mapView.h = mapView.w * base.h / base.w;
       if (mapView.h > base.h) {
@@ -3110,7 +3153,7 @@
     }
 
     function resetMapZoom() {
-      mapView = { x: 0, y: 0, w: 960, h: 560 };
+      mapView = { ...mapBaseView };
       hideTooltip();
       renderSeatMap();
     }
@@ -3219,6 +3262,7 @@
             <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${turnoutLabel}</span></div>
           </div>
           <p class="pref-impact">${methodNote}</p>
+          ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}
         `;
         return;
       }
@@ -3778,6 +3822,7 @@
       activeBoundaryType = "General";
       boundaryFeatures = [];
       boundaryShapes = [];
+      mapBaseView = { x: 0, y: 0, w: 960, h: 560 };
       resetMapZoom();
       document.getElementById("electionYear").value = activeElectionYear;
       await autoLoadCSV(requestedYear, loadId, { applyState: replaceUrl });

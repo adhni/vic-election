@@ -206,6 +206,17 @@ data/india_2024_parliamentary_boundaries.geojson
 
 India uses first past the post, so preference-transfer views are hidden. The dataset preserves all 8,360 candidates and 542 NOTA options. Candidate totals and turnout metadata are reconciled against the Election Commission of India's final statistical report. Esri India's 2024 parliamentary layer supplies the matching election-specific boundaries and an independent winner/margin check outside Assam, whose layer attributes are shifted between the newly delimited seats. Surat is retained as an uncontested return with no invented votes or turnout.
 
+Thailand coverage includes the 8 February 2026 general election, with all 400 single-member constituency contests and all 3,527 candidates across 77 provinces:
+
+```text
+data/thailand_2026_fpp.csv
+data/thailand_2026_constituency_cartogram.geojson
+```
+
+Thailand used parallel voting: 400 constituency MPs were elected by first past the post and 100 party-list MPs were allocated from a separate nationwide ballot. This view covers the constituency ballot; it does not present the party-list vote as if it were a district contest. Results come from the Thai PBS English machine feed backed by ECT data. The final outstanding Suphan Buri 2 seat, certified on 8 April after a recount, is updated to the final 500-member House result, giving Bhumjaithai 173 constituency seats and 192 seats overall. Its post-recount non-candidate ballot and turnout fields remain unavailable instead of being invented.
+
+The map is Thai PBS's equal-area 400-seat constituency cartogram. Every cell opens the corresponding result, but the cells are explicitly labelled as a cartogram and are not legal electoral-boundary polygons.
+
 United States coverage currently includes the 2024 House election, covering all 435 voting congressional districts across the 50 states:
 
 ```text
@@ -361,6 +372,8 @@ data/canada_2025_fpp.csv                   # Elections Canada GE2025 results for
 data/canada_2025_federal_boundaries.geojson # Elections Canada 45th-election riding boundaries
 data/canada_2021_fpp.csv                   # Elections Canada GE2021 results for all 338 ridings
 data/canada_2021_federal_boundaries.geojson # Elections Canada 44th-election riding boundaries
+data/thailand_2026_fpp.csv                  # ECT/Thai PBS candidate results for all 400 constituency seats
+data/thailand_2026_constituency_cartogram.geojson # Thai PBS equal-area seat cartogram (not legal boundaries)
 data/indonesia_2024_president_province_fpp.csv # KPU certified presidential totals for 38 provinces
 data/indonesia_2024_province_boundaries.geojson # KPU Satu Peta province boundaries
 data/indonesia_2024_president_kabupaten_kota_fpp.csv # presidential totals for all 514 kabupaten/kota
@@ -663,6 +676,15 @@ python3 scripts/validate_indonesia_historical_presidential.py
 The builder downloads the 514-row structured result table and KPU Satu Peta boundaries, matches every result and polygon by administrative code, and uses pinned Mapshaper topology simplification. The validator requires 38 certified province results, 514 kabupaten/kota, three candidate-pair rows per area, valid matching polygons, the published winner counts, and exactly the disclosed Papua Tengah aggregate difference.
 
 The historical builder downloads the preserved 2019 KPU recapitulation and KawalPemilu 2014 C1 archive, repairs three known malformed 2019 province arrays from certified recapitulations, and constructs election-year geography from the compact KPU local boundaries. Its validator requires exact 2019 local-to-province reconciliation, 34/514 areas in 2019, 33/497 areas in 2014, valid matching polygons, the documented 2014 archive coverage, and the absence of post-hierarchy split districts from the 2014 results.
+
+To rebuild and validate Thailand's 2026 constituency election files:
+
+```bash
+python3 scripts/build_thailand_2026.py
+python3 scripts/validate_thailand_2026.py
+```
+
+The builder downloads pinned English master data and the 18 March ECT official result snapshot from Thai PBS, preserves the earlier ECT enrolment denominator for turnout, and extracts the 400 keyed cells from Thai PBS's nationwide cartogram asset. The later-certified Suphan Buri 2 candidate result is included with a mandatory disclosure and without unavailable post-recount turnout metadata.
 
 The VEC scraper writes:
 
