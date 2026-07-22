@@ -1540,6 +1540,76 @@
         ]
       },
       {
+        "key": "indonesia-president-2019",
+        "label": "Indonesia Presidential 2019",
+        "type": "national",
+        "jurisdiction": "Indonesia",
+        "year": 2019,
+        "source": "KPU / archived 2019 recapitulation",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National majority vote",
+        "methodNote": "Indonesia elects one president and vice-president nationally. Each map area shows its local plurality leader, using the 34 provinces and 514 kabupaten/kota reported at the 2019 election. Jokowi–Ma'ruf exceeded 50% nationally, so no runoff was required.",
+        "csv": "data/indonesia_2019_president_province_fpp.csv",
+        "boundaries": "data/indonesia_2019_province_boundaries.geojson",
+        "defaultGeography": "province",
+        "geographies": {
+          "province": {
+            "label": "Province",
+            "pluralLabel": "provinces",
+            "areaLabel": "Country",
+            "csv": "data/indonesia_2019_president_province_fpp.csv",
+            "boundaries": "data/indonesia_2019_province_boundaries.geojson"
+          },
+          "kabupaten-kota": {
+            "label": "Kabupaten/Kota",
+            "pluralLabel": "kabupaten/kota",
+            "areaLabel": "Province",
+            "csv": "data/indonesia_2019_president_kabupaten_kota_fpp.csv",
+            "boundaries": "data/indonesia_2024_kabupaten_kota_boundaries.geojson"
+          }
+        },
+        "nationalResults": [
+          ["Jokowi–Ma'ruf", 55.50],
+          ["Prabowo–Sandiaga", 44.50]
+        ]
+      },
+      {
+        "key": "indonesia-president-2014",
+        "label": "Indonesia Presidential 2014",
+        "type": "national",
+        "jurisdiction": "Indonesia",
+        "year": 2014,
+        "source": "KPU / KawalPemilu C1 archive",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National majority vote",
+        "methodNote": "Indonesia elects one president and vice-president nationally. The province view uses certified KPU totals for the 33 reporting provinces; North Kalimantan is included with East Kalimantan. The 497-area local view uses KawalPemilu's archived C1 digitisation and discloses its incomplete coverage. Later-created districts are dissolved into their election-time parents.",
+        "csv": "data/indonesia_2014_president_province_fpp.csv",
+        "boundaries": "data/indonesia_2014_province_boundaries.geojson",
+        "defaultGeography": "province",
+        "geographies": {
+          "province": {
+            "label": "Province",
+            "pluralLabel": "provinces",
+            "areaLabel": "Country",
+            "csv": "data/indonesia_2014_president_province_fpp.csv",
+            "boundaries": "data/indonesia_2014_province_boundaries.geojson"
+          },
+          "kabupaten-kota": {
+            "label": "Kabupaten/Kota",
+            "pluralLabel": "kabupaten/kota",
+            "areaLabel": "Province",
+            "csv": "data/indonesia_2014_president_kabupaten_kota_fpp.csv",
+            "boundaries": "data/indonesia_2014_kabupaten_kota_boundaries.geojson"
+          }
+        },
+        "nationalResults": [
+          ["Jokowi–Kalla", 53.15],
+          ["Prabowo–Hatta", 46.85]
+        ]
+      },
+      {
         "key": "us-house-2024",
         "label": "United States House 2024",
         "type": "national",
@@ -1694,7 +1764,11 @@
         const tickets = {
           "Anies Baswedan–Muhaimin Iskandar": "Anies–Muhaimin",
           "Prabowo Subianto–Gibran Rakabuming Raka": "Prabowo–Gibran",
-          "Ganjar Pranowo–Mahfud MD": "Ganjar–Mahfud"
+          "Ganjar Pranowo–Mahfud MD": "Ganjar–Mahfud",
+          "Joko Widodo–Ma'ruf Amin": "Jokowi–Ma'ruf",
+          "Prabowo Subianto–Sandiaga Uno": "Prabowo–Sandiaga",
+          "Prabowo Subianto–Hatta Rajasa": "Prabowo–Hatta",
+          "Joko Widodo–Jusuf Kalla": "Jokowi–Kalla"
         };
         if (tickets[name]) return tickets[name];
       }
@@ -1809,9 +1883,12 @@
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
       if (activeElection().jurisdiction === "Indonesia") {
+        if (p === "no digitised vote") return "#7a7f87";
         if (p === "anies–muhaimin") return "#16858c";
         if (p === "prabowo–gibran") return "#4f56a6";
         if (p === "ganjar–mahfud") return "#c84555";
+        if (p === "jokowi–ma'ruf" || p === "jokowi–kalla") return "#c84555";
+        if (p === "prabowo–sandiaga" || p === "prabowo–hatta") return "#4f56a6";
       }
       if (activeElection().jurisdiction === "United States") {
         if (p === "democratic") return "#2166ac";
@@ -2029,11 +2106,13 @@
     }
 
     function winningParty(d) {
+      if (activeElection().contestType === "presidential" && !d.formal_votes) return "No digitised vote";
       return partyLabel(getParty(d, getWinnerFromFinal(d)[0]));
     }
 
     function winningBloc(d) {
       if (isMultiMemberElection()) return leadingElectedBloc(d);
+      if (activeElection().contestType === "presidential") return winningParty(d);
       return partyBloc(getParty(d, getWinnerFromFinal(d)[0]));
     }
 
@@ -2182,7 +2261,7 @@
         const color = partyColor(party);
         return { color, fill: hexToRgba(color, .68), label: partyLabel(party) };
       }
-      const winnerParty = getParty(d, getWinnerFromFinal(d)[0]);
+      const winnerParty = winningParty(d);
       const marginPct = d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
       if (activeMapMode === "close") {
         const color = marginPct <= .02 ? "#b94d36" : marginPct <= .05 ? "#d4872b" : "#7a7f87";
@@ -2225,6 +2304,13 @@
           <span>Last seat gap ${pct(finalMargin(d), d.formal_votes)} · quota ${fmt.format(d.quota || 0)}</span>
         `;
       }
+      if (activeElection().contestType === "presidential" && !d.formal_votes) {
+        return `
+          <strong>${d.district}</strong>
+          <div>No digitised vote</div>
+          <span>The 2014 C1 archive contains no candidate totals for this area.</span>
+        `;
+      }
       const [winner] = getWinnerFromFinal(d);
       const winnerParty = getParty(d, winner);
       const [partyVoteWinner, partyVoteCount] = getPartyVoteLeader(d);
@@ -2262,7 +2348,7 @@
     function renderMapLegend() {
       const legend = document.getElementById("mapLegend");
       if (isFppElection() && (activeMapMode === "party" || activeMapMode === "party-vote")) {
-        const parties = [...new Set(allDistricts.map(d => activeMapMode === "party-vote" ? getPartyVoteLeader(d)[0] : getParty(d, getWinnerFromFinal(d)[0])))]
+        const parties = [...new Set(allDistricts.map(d => activeMapMode === "party-vote" ? getPartyVoteLeader(d)[0] : winningParty(d)))]
           .filter(party => party && party !== "Cancelled")
           .sort((a, b) => partyLabel(a).localeCompare(partyLabel(b)));
         legend.innerHTML = parties.map(party => `<span class="legend-item"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)}</span>`).join("");
@@ -2404,7 +2490,7 @@
         const mapTitle = isMultiMemberElection()
           ? `${d.district} · ${electedSeatSummary(d)}`
           : isFppElection()
-            ? `${d.district} · ${d.contest_status === "cancelled" ? "electorate vote cancelled" : `${partyLabel(winnerParty)} · ${shortName(winner)}`}`
+            ? `${d.district} · ${d.contest_status === "cancelled" ? "electorate vote cancelled" : d.contest_status === "unavailable" ? "no digitised vote" : `${partyLabel(winnerParty)} · ${shortName(winner)}`}`
             : `${d.district} · ${partyBloc(winnerParty)} · ${partyLabel(winnerParty)} · ${shortName(winner)}`;
         return `
           <path
@@ -3084,6 +3170,7 @@
           const [winner] = getWinnerFromFinal(d);
           const winnerTicket = getParty(d, winner);
           const [runnerUp] = getSecondFromFinal(d);
+          const reported = d.formal_votes > 0;
           const drilldown = activeGeography === "province"
             ? `<button id="provinceDrilldown" type="button">View kabupaten/kota in ${d.district}</button>`
             : "";
@@ -3092,8 +3179,8 @@
             <div class="result-facts">
               <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
               <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
-              <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${badgeHtml(winnerTicket)}</span></div>
-              <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
+              <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) : "No digitised vote"}</span></div>
+              <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
               <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
               <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">Not available</span></div>
             </div>
