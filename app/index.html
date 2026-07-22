@@ -2112,6 +2112,7 @@
 
     function winningBloc(d) {
       if (isMultiMemberElection()) return leadingElectedBloc(d);
+      if (activeElection().contestType === "presidential") return winningParty(d);
       return partyBloc(getParty(d, getWinnerFromFinal(d)[0]));
     }
 
@@ -2347,7 +2348,7 @@
     function renderMapLegend() {
       const legend = document.getElementById("mapLegend");
       if (isFppElection() && (activeMapMode === "party" || activeMapMode === "party-vote")) {
-        const parties = [...new Set(allDistricts.map(d => activeMapMode === "party-vote" ? getPartyVoteLeader(d)[0] : getParty(d, getWinnerFromFinal(d)[0])))]
+        const parties = [...new Set(allDistricts.map(d => activeMapMode === "party-vote" ? getPartyVoteLeader(d)[0] : winningParty(d)))]
           .filter(party => party && party !== "Cancelled")
           .sort((a, b) => partyLabel(a).localeCompare(partyLabel(b)));
         legend.innerHTML = parties.map(party => `<span class="legend-item"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)}</span>`).join("");

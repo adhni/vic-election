@@ -78,6 +78,8 @@ REQUIRED_INDONESIA_MARKERS = (
     "provinces and kabupaten/kota do not elect separate presidents",
     "Later-created districts are dissolved into their election-time parents",
     "No digitised vote",
+    'if (activeElection().contestType === "presidential") return winningParty(d);',
+    ': winningParty(d)))]',
 )
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
