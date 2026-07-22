@@ -5,13 +5,12 @@ import argparse
 import csv
 import hashlib
 import json
-import shutil
-import subprocess
 import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
 
 import geopandas as gpd
+import py7zr
 import requests
 from shapely.geometry import mapping
 
@@ -107,11 +106,9 @@ def extract_boundaries(archive: Path, raw_dir: Path) -> Path:
     output = raw_dir / "DISTRITO_FEDERAL.shp"
     if output.exists() and output.stat().st_size:
         return output
-    extractor = shutil.which("bsdtar")
-    if not extractor:
-        raise SystemExit("bsdtar is required to extract the official INE .7z boundary archive")
     names = [f"DISTRITO_FEDERAL.{suffix}" for suffix in ("shp", "shx", "dbf", "prj")]
-    subprocess.run([extractor, "-xf", str(archive), "-C", str(raw_dir), *names], check=True)
+    with py7zr.SevenZipFile(archive, mode="r") as source:
+        source.extract(path=raw_dir, targets=names)
     return output
 
 
