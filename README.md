@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house elections across several countries plus Indonesia's 2024, 2019, and 2014 presidential elections.
+A static HTML data app for exploring lower-house elections across several countries plus Indonesian and Philippine presidential elections.
 
 The app is map-first and party/bloc-first:
 
@@ -18,6 +18,7 @@ The app is map-first and party/bloc-first:
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
+- Separate Philippine presidential and vice-presidential results for 2022, mapped by domestic province/city certificate of canvass
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -217,6 +218,18 @@ Thailand used parallel voting: 400 constituency MPs were elected by first past t
 
 The map is Thai PBS's equal-area 400-seat constituency cartogram. Every cell opens the corresponding result, but the cells are explicitly labelled as a cartogram and are not legal electoral-boundary polygons.
 
+Philippines coverage includes the separate presidential and vice-presidential ballots held on 9 May 2022:
+
+```text
+data/philippines_2022_president_fpp.csv
+data/philippines_2022_vice_president_fpp.csv
+data/philippines_2022_coc_boundaries.geojson
+```
+
+Both offices were elected independently by nationwide plurality. The app therefore provides two linked election options rather than presenting Marcos and Duterte as a single combined ballot. Each map uses 107 domestic reporting areas: 81 province-level certificates of canvass and 26 separately canvassed cities/NCR units. The Special Geographic Area COC is combined with Cotabato because its 63 barangays cannot be separated from the official municipal geometry. Absentee and overseas votes appear in the official national shares but are not falsely drawn as domestic map areas.
+
+Local candidate figures follow the pinned congressional COC table and boundaries are dissolved from the Philippine Statistics Authority municipal layer. Invalid/blank ballots and turnout are available nationally but not consistently by mapped COC area, so the app does not invent local turnout. The published detailed COC transcription has small arithmetic differences from the adopted national resolution for several minor candidates; local figures are preserved as published, while the national cards use Resolution of Both Houses No. 1. The builder locks the exact known differences so they cannot change silently.
+
 United States coverage currently includes the 2024 House election, covering all 435 voting congressional districts across the 50 states:
 
 ```text
@@ -374,6 +387,9 @@ data/canada_2021_fpp.csv                   # Elections Canada GE2021 results for
 data/canada_2021_federal_boundaries.geojson # Elections Canada 44th-election riding boundaries
 data/thailand_2026_fpp.csv                  # ECT/Thai PBS candidate results for all 400 constituency seats
 data/thailand_2026_constituency_cartogram.geojson # Thai PBS equal-area seat cartogram (not legal boundaries)
+data/philippines_2022_president_fpp.csv     # presidential candidate totals for 107 domestic COC map areas
+data/philippines_2022_vice_president_fpp.csv # vice-presidential candidate totals for the same areas
+data/philippines_2022_coc_boundaries.geojson # PSA municipal geometry dissolved to province/city COC areas
 data/indonesia_2024_president_province_fpp.csv # KPU certified presidential totals for 38 provinces
 data/indonesia_2024_province_boundaries.geojson # KPU Satu Peta province boundaries
 data/indonesia_2024_president_kabupaten_kota_fpp.csv # presidential totals for all 514 kabupaten/kota
@@ -439,12 +455,14 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 │   ├── build_india_federal.py
 │   ├── build_indonesia_historical_presidential.py
 │   ├── build_indonesia_presidential.py
+│   ├── build_philippines_2022.py
 │   ├── build_us_house.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
 │   ├── validate_india_federal.py
 │   ├── validate_indonesia_historical_presidential.py
 │   ├── validate_indonesia_presidential.py
+│   ├── validate_philippines_2022.py
 │   ├── validate_us_house.py
 │   └── validate_vec_csv.py
 ├── docs/
@@ -686,6 +704,15 @@ python3 scripts/validate_thailand_2026.py
 
 The builder downloads pinned English master data and the 18 March ECT official result snapshot from Thai PBS, preserves the earlier ECT enrolment denominator for turnout, and extracts the 400 keyed cells from Thai PBS's nationwide cartogram asset. The later-certified Suphan Buri 2 candidate result is included with a mandatory disclosure and without unavailable post-recount turnout metadata.
 
+To rebuild and validate the Philippines 2022 executive-election files:
+
+```bash
+python3 scripts/build_philippines_2022.py
+python3 scripts/validate_philippines_2022.py
+```
+
+The builder parses a pinned transcription of the congressional canvass, requires its 173 COC rows to retain the documented relationship to the adopted national totals, folds the Special Geographic Area into Cotabato only for mapping, and dissolves official PSA municipal polygons into 107 non-duplicated domestic reporting areas. The validator checks every candidate set, vote total, local winner, margin, reporting code, region, and matching valid geometry.
+
 The VEC scraper writes:
 
 ```text
@@ -721,6 +748,13 @@ The Indonesia Presidential 2019 and 2014 options validate against:
 - 33 reporting provinces and 497 election-time kabupaten/kota for 2014
 - certified 2014 province totals, 98.24% archived domestic C1 coverage, and four explicitly unavailable Papua local results
 - historical province membership and dissolved parent polygons for later administrative splits
+
+The Philippines President and Vice President 2022 options validate against:
+
+- 107 matching domestic province/city COC map areas for each separate ballot
+- 1,070 presidential rows for 10 candidates and 963 vice-presidential rows for 9 candidates
+- 89 local Marcos wins and 99 local Duterte wins, with all other area winners reconciled
+- matching PSA-derived geometry, unique reporting codes, candidate totals, margins, and the documented COC-detail arithmetic differences
 
 The federal 2019 Australia option validates against:
 
