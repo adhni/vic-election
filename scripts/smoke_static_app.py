@@ -92,6 +92,15 @@ REQUIRED_INDONESIA_MARKERS = (
     'if (activeElection().contestType === "presidential") return winningParty(d);',
     ': winningParty(d)))]',
 )
+REQUIRED_PHILIPPINES_MARKERS = (
+    '"key": "philippines-president-2022"',
+    '"key": "philippines-vice-president-2022"',
+    '"jurisdiction": "Philippines"',
+    '"candidateVoteLabel": "Presidential candidate vote"',
+    '"candidateVoteLabel": "Vice-presidential candidate vote"',
+    '"districtLabel": "Province / city"',
+    'if (activeElection().jurisdiction === "Philippines")',
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -140,6 +149,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_INDONESIA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Indonesia presidential UI marker {marker!r}")
+    for marker in REQUIRED_PHILIPPINES_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Philippines 2022 UI marker {marker!r}")
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")

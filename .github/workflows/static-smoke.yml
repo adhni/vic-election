@@ -81,6 +81,7 @@ jobs:
           python scripts/validate_canada_federal.py --year 2021
           python scripts/validate_india_federal.py
           python scripts/validate_thailand_2026.py
+          python scripts/validate_philippines_2022.py
           python scripts/validate_us_house.py
           python scripts/validate_indonesia_presidential.py
           python scripts/validate_indonesia_historical_presidential.py

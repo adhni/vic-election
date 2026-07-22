@@ -840,6 +840,7 @@
       .map-actions { flex-direction: column; align-items: stretch; }
       .map-modes { width: 100%; }
       .map-mode { flex: 1; }
+      .geo-map.compact-mobile-map { height: 380px; }
     }
 
     @media (max-width: 480px) {
@@ -1657,6 +1658,69 @@
         "cartogram": true
       },
       {
+        "key": "philippines-president-2022",
+        "label": "Philippines President 2022",
+        "type": "national",
+        "jurisdiction": "Philippines",
+        "year": 2022,
+        "source": "Congress of the Philippines / PSA",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National plurality vote · separate presidential ballot",
+        "methodNote": "The president and vice president are elected separately. This view shows the presidential ballot and each domestic COC area's local leader; no province or city elects a separate president. Official national shares include absentee and overseas votes that are not drawn on the map.",
+        "candidateVoteLabel": "Presidential candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "presidential vote",
+        "districtLabel": "Province / city",
+        "compactMobileMap": true,
+        "csv": "data/philippines_2022_president_fpp.csv",
+        "boundaries": "data/philippines_2022_coc_boundaries.geojson",
+        "areaLabel": "Region",
+        "nationalResults": [
+          ["Marcos", 58.77],
+          ["Robredo", 27.94],
+          ["Pacquiao", 6.81],
+          ["Moreno", 3.59],
+          ["Lacson", 1.66],
+          ["Mangondato", 0.56],
+          ["Abella", 0.21],
+          ["De Guzman", 0.17],
+          ["Gonzales", 0.17],
+          ["Montemayor", 0.11]
+        ]
+      },
+      {
+        "key": "philippines-vice-president-2022",
+        "label": "Philippines Vice President 2022",
+        "type": "national",
+        "jurisdiction": "Philippines",
+        "year": 2022,
+        "source": "Congress of the Philippines / PSA",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National plurality vote · separate vice-presidential ballot",
+        "methodNote": "The vice president is elected separately from the president. This view shows the vice-presidential ballot and each domestic COC area's local leader; no province or city elects a separate vice president. Official national shares include absentee and overseas votes that are not drawn on the map.",
+        "candidateVoteLabel": "Vice-presidential candidate vote",
+        "candidateFilterLabel": "Any vice-presidential candidate",
+        "localVoteLabel": "vice-presidential vote",
+        "districtLabel": "Province / city",
+        "compactMobileMap": true,
+        "csv": "data/philippines_2022_vice_president_fpp.csv",
+        "boundaries": "data/philippines_2022_coc_boundaries.geojson",
+        "areaLabel": "Region",
+        "nationalResults": [
+          ["Duterte", 61.53],
+          ["Pangilinan", 17.82],
+          ["Sotto", 15.76],
+          ["Ong", 3.59],
+          ["Atienza", 0.52],
+          ["Lopez", 0.31],
+          ["Bello", 0.19],
+          ["Serapio", 0.17],
+          ["David", 0.11]
+        ]
+      },
+      {
         "key": "canada-2021",
         "label": "Canada Federal 2021",
         "type": "national",
@@ -1910,6 +1974,18 @@
         if (p === "jokowi–ma'ruf" || p === "jokowi–kalla") return "#c84555";
         if (p === "prabowo–sandiaga" || p === "prabowo–hatta") return "#4f56a6";
       }
+      if (activeElection().jurisdiction === "Philippines") {
+        const philippinesColors = {
+          "marcos": "#b9272f", "robredo": "#e34d91", "pacquiao": "#e1812c",
+          "moreno": "#2875bd", "lacson": "#31568e", "mangondato": "#4c8b55",
+          "abella": "#8a6a9b", "de guzman": "#b33c45", "gonzales": "#56637a",
+          "montemayor": "#80746d", "duterte": "#21845b", "pangilinan": "#e34d91",
+          "sotto": "#3d62a3", "ong": "#328997", "atienza": "#628e45",
+          "lopez": "#9a4e43", "bello": "#b33c45", "serapio": "#a27b32",
+          "david": "#765a91"
+        };
+        if (philippinesColors[p]) return philippinesColors[p];
+      }
       if (activeElection().jurisdiction === "United States") {
         if (p === "democratic") return "#2166ac";
         if (p === "republican") return "#c62828";
@@ -2153,6 +2229,7 @@
       if (activeElection().jurisdiction === "Indonesia") {
         return activeGeography === "kabupaten-kota" ? "kabupaten/kota" : count === 1 ? "province" : "provinces";
       }
+      if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
       if (["United Kingdom", "Malaysia", "India", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
@@ -2552,9 +2629,10 @@
         .filter(shape => shape.district === activeDistrict?.district)
         .map(shapeHtml)
         .join("");
-      target.className = "geo-map";
+      const mapClass = `geo-map${activeElection().compactMobileMap ? " compact-mobile-map" : ""}`;
+      target.className = mapClass;
       target.innerHTML = `
-        <svg class="geo-map" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" role="img" aria-label="${activeElection().label} ${electorateLabel(2)} map">
+        <svg class="${mapClass}" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" preserveAspectRatio="${activeElection().compactMobileMap ? "xMidYMid slice" : "xMidYMid meet"}" role="img" aria-label="${activeElection().label} ${electorateLabel(2)} map">
           <rect x="0" y="0" width="960" height="560" fill="#f2f4f0"></rect>
           ${inactiveShapes}
           ${activeShape}
@@ -2959,13 +3037,13 @@
       document.getElementById("chartTabButton").classList.toggle("hidden", fpp);
       document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", fpp);
       document.querySelector('label[for="partyFilter"]').textContent = presidential ? "Local winner" : fpp ? "Winner party" : "Bloc";
-      document.getElementById("primaryVoteTitle").textContent = presidential ? "Candidate-pair vote" : fpp ? "Candidate vote" : "First-preference vote";
+      document.getElementById("primaryVoteTitle").textContent = presidential ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? "Party vote" : "Final standing";
       document.getElementById("finalVotePanel").classList.toggle("hidden", presidential);
-      document.getElementById("districtSelectLabel").textContent = presidential ? activeDataset().label : "Seat";
+      document.getElementById("districtSelectLabel").textContent = presidential ? activeElection().districtLabel || activeDataset().label : "Seat";
       document.getElementById("districtSearch").placeholder = presidential ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
       document.getElementById("mapSubtitle").textContent = presidential
-        ? `Click a ${electorateLabel(1)} to explore its local presidential vote.`
+        ? `Click a ${electorateLabel(1)} to explore its ${activeElection().localVoteLabel || "local presidential vote"}.`
         : activeElection().cartogram
           ? `Equal-area ${electorateLabel(1)} cartogram (not legal boundaries). Click a seat to explore.`
           : "Click a seat to explore.";
@@ -2990,7 +3068,7 @@
         ? [...new Set(allDistricts.flatMap(d => electedBlocs(d)))].sort()
         : ["Labor", "Coalition", "Greens", "Independent", "Other"];
       const winningBlocs = blocOrder.filter(bloc => allDistricts.some(d => electedBlocs(d).includes(bloc)));
-      partyFilter.innerHTML = [`<option value="all">${activeElection().contestType === "presidential" ? "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
+      partyFilter.innerHTML = [`<option value="all">${activeElection().contestType === "presidential" ? activeElection().candidateFilterLabel || "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
         winningBlocs.map(p => `<option value="${p}">${p}</option>`)
       ).join("");
       partyFilter.value = winningBlocs.includes(selectedParty) ? selectedParty : "all";
