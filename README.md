@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house elections across several countries plus Indonesian and Philippine presidential elections.
+A static HTML data app for exploring lower-house elections across several countries plus Indonesian, Philippine, and Mexican presidential elections.
 
 The app is map-first and party/bloc-first:
 
@@ -19,6 +19,7 @@ The app is map-first and party/bloc-first:
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
 - Separate Philippine presidential and vice-presidential results for 2022, mapped by domestic province/city certificate of canvass
+- Mexican presidential results for 2024, mapped across all 300 federal electoral districts
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
@@ -229,6 +230,15 @@ data/philippines_2022_coc_boundaries.geojson
 Both offices were elected independently by nationwide plurality. The app therefore provides two linked election options rather than presenting Marcos and Duterte as a single combined ballot. Each map uses 107 domestic reporting areas: 81 province-level certificates of canvass and 26 separately canvassed cities/NCR units. The Special Geographic Area COC is combined with Cotabato because its 63 barangays cannot be separated from the official municipal geometry. Absentee and overseas votes appear in the official national shares but are not falsely drawn as domestic map areas.
 
 Local candidate figures follow the pinned congressional COC table and boundaries are dissolved from the Philippine Statistics Authority municipal layer. Invalid/blank ballots and turnout are available nationally but not consistently by mapped COC area, so the app does not invent local turnout. The published detailed COC transcription has small arithmetic differences from the adopted national resolution for several minor candidates; local figures are preserved as published, while the national cards use Resolution of Both Houses No. 1. The builder locks the exact known differences so they cannot change silently.
+
+Mexico coverage includes the presidential election held on 2 June 2024:
+
+```text
+data/mexico_2024_president_fpp.csv
+data/mexico_2024_federal_district_boundaries.geojson
+```
+
+The map covers all 300 federal electoral districts and shows the locally leading presidential candidate in each district. Claudia Sheinbaum led in 275 districts and Xóchitl Gálvez in 25; the districts are analytical reporting areas and do not elect separate presidents. The dataset aggregates INE's final district-computation polling-place records, combines each coalition's separate and joint party ballot columns into its presidential candidacy, and reconciles candidate, non-registered, null, total-ballot, nominal-list, and turnout fields exactly. Official national shares include special-vote records that are not assigned to a mapped district. Boundaries are the matching 300-district layer from INE's national electoral geographic framework.
 
 United States coverage currently includes the 2024 House election, covering all 435 voting congressional districts across the 50 states:
 
@@ -713,6 +723,15 @@ python3 scripts/validate_philippines_2022.py
 
 The builder parses a pinned transcription of the congressional canvass, requires its 173 COC rows to retain the documented relationship to the adopted national totals, folds the Special Geographic Area into Cotabato only for mapping, and dissolves official PSA municipal polygons into 107 non-duplicated domestic reporting areas. The validator checks every candidate set, vote total, local winner, margin, reporting code, region, and matching valid geometry.
 
+To rebuild and validate the Mexico 2024 presidential-election files:
+
+```bash
+python3 scripts/build_mexico_2024.py
+python3 scripts/validate_mexico_2024.py
+```
+
+The builder downloads checksum-pinned final INE computation and cartography archives, aggregates polling-place records to the 300 federal districts, and simplifies the official polygons for the static app. The validator requires all 900 candidate rows, exact mapped totals and turnout, 32-state coverage, unique district codes, the 275–25 local-leader split, and matching valid boundaries.
+
 The VEC scraper writes:
 
 ```text
@@ -755,6 +774,13 @@ The Philippines President and Vice President 2022 options validate against:
 - 1,070 presidential rows for 10 candidates and 963 vice-presidential rows for 9 candidates
 - 89 local Marcos wins and 99 local Duterte wins, with all other area winners reconciled
 - matching PSA-derived geometry, unique reporting codes, candidate totals, margins, and the documented COC-detail arithmetic differences
+
+The Mexico President 2024 option validates against:
+
+- all 300 federal electoral districts and 900 candidate rows across all 32 states
+- exact mapped candidate, null/non-registered, ballot, nominal-list, turnout, and margin totals
+- 275 local Sheinbaum leads and 25 local Gálvez leads
+- matching INE-derived geometry, unique federal district codes, and no material polygon overlaps
 
 The federal 2019 Australia option validates against:
 
