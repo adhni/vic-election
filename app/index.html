@@ -840,7 +840,7 @@
       .map-actions { flex-direction: column; align-items: stretch; }
       .map-modes { width: 100%; }
       .map-mode { flex: 1; }
-      .geo-map.compact-mobile-map { height: 380px; }
+      .geo-map.compact-mobile-map, .geo-map.wide-mobile-map { height: 380px; }
     }
 
     @media (max-width: 480px) {
@@ -1721,6 +1721,31 @@
         ]
       },
       {
+        "key": "mexico-president-2024",
+        "label": "Mexico President 2024",
+        "type": "national",
+        "jurisdiction": "Mexico",
+        "year": 2024,
+        "source": "INE México",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National plurality vote",
+        "methodNote": "Mexico elects one president nationally by plurality. Each of the 300 federal districts shows its local vote leader; districts do not elect separate presidents. National shares are calculated from valid candidate votes and include special-vote records that are not assigned to a mapped district.",
+        "candidateVoteLabel": "Presidential candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "presidential vote",
+        "districtLabel": "Federal district",
+        "wideMobileMap": true,
+        "csv": "data/mexico_2024_president_fpp.csv",
+        "boundaries": "data/mexico_2024_federal_district_boundaries.geojson",
+        "areaLabel": "State",
+        "nationalResults": [
+          ["Sheinbaum", 61.27],
+          ["Gálvez", 28.15],
+          ["Máynez", 10.58]
+        ]
+      },
+      {
         "key": "canada-2021",
         "label": "Canada Federal 2021",
         "type": "national",
@@ -1986,6 +2011,11 @@
         };
         if (philippinesColors[p]) return philippinesColors[p];
       }
+      if (activeElection().jurisdiction === "Mexico") {
+        if (p === "sheinbaum") return "#8b1d41";
+        if (p === "gálvez") return "#2257a5";
+        if (p === "máynez") return "#ef7d22";
+      }
       if (activeElection().jurisdiction === "United States") {
         if (p === "democratic") return "#2166ac";
         if (p === "republican") return "#c62828";
@@ -2230,6 +2260,7 @@
         return activeGeography === "kabupaten-kota" ? "kabupaten/kota" : count === 1 ? "province" : "provinces";
       }
       if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";
+      if (activeElection().jurisdiction === "Mexico") return count === 1 ? "federal district" : "federal districts";
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
       if (["United Kingdom", "Malaysia", "India", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
@@ -2629,7 +2660,7 @@
         .filter(shape => shape.district === activeDistrict?.district)
         .map(shapeHtml)
         .join("");
-      const mapClass = `geo-map${activeElection().compactMobileMap ? " compact-mobile-map" : ""}`;
+      const mapClass = `geo-map${activeElection().compactMobileMap ? " compact-mobile-map" : ""}${activeElection().wideMobileMap ? " wide-mobile-map" : ""}`;
       target.className = mapClass;
       target.innerHTML = `
         <svg class="${mapClass}" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" preserveAspectRatio="${activeElection().compactMobileMap ? "xMidYMid slice" : "xMidYMid meet"}" role="img" aria-label="${activeElection().label} ${electorateLabel(2)} map">
@@ -3303,7 +3334,7 @@
               <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) : "No digitised vote"}</span></div>
               <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
               <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
-              <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">Not available</span></div>
+              <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available"}</span></div>
             </div>
             <p class="pref-impact">${activeElection().methodNote}</p>
             ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}

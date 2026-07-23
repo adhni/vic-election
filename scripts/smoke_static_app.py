@@ -101,6 +101,15 @@ REQUIRED_PHILIPPINES_MARKERS = (
     '"districtLabel": "Province / city"',
     'if (activeElection().jurisdiction === "Philippines")',
 )
+REQUIRED_MEXICO_MARKERS = (
+    '"key": "mexico-president-2024"',
+    '"jurisdiction": "Mexico"',
+    '"districtLabel": "Federal district"',
+    '"wideMobileMap": true',
+    '"nationalResults": [',
+    '["Sheinbaum", 61.27]',
+    'if (activeElection().jurisdiction === "Mexico")',
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -152,6 +161,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_PHILIPPINES_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Philippines 2022 UI marker {marker!r}")
+    for marker in REQUIRED_MEXICO_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Mexico 2024 UI marker {marker!r}")
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")
