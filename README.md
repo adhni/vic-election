@@ -54,9 +54,8 @@ Victorian state election options use the same naming pattern:
 
 ```text
 data/vic_2014_preferences_long.csv
-data/vic_2014_district_boundaries.geojson
 data/vic_2018_preferences_long.csv
-data/vic_2018_district_boundaries.geojson
+data/vic_2014_district_boundaries.geojson # shared 2012-2013 redivision map for 2014 and 2018
 data/vic_2010_preferences_long.csv
 data/vic_2010_district_boundaries.geojson
 data/vic_2006_preferences_long.csv
@@ -319,10 +318,9 @@ data/vic_2022_district_summary.csv        # district-level result summary
 data/vic_2022_district_boundaries.geojson # 2022 district boundary polygons
 data/vic_2018_preferences_long.csv        # 2018 long preference-count rows
 data/vic_2018_district_summary.csv        # 2018 district-level result summary
-data/vic_2018_district_boundaries.geojson # 2018 district boundary polygons
 data/vic_2014_preferences_long.csv        # 2014 long preference-count rows
 data/vic_2014_district_summary.csv        # 2014 district-level result summary
-data/vic_2014_district_boundaries.geojson # 2014 district boundary polygons
+data/vic_2014_district_boundaries.geojson # shared 2014 and 2018 district boundary polygons
 data/vic_2010_preferences_long.csv        # 2010 long preference-count rows
 data/vic_2010_district_summary.csv        # 2010 district-level result summary
 data/vic_2010_district_boundaries.geojson # 2001 state assembly district boundary polygons
@@ -508,13 +506,13 @@ Static hosting and browser parsing depend on keeping boundary geometry compact. 
 python scripts/check_repository_sizes.py
 ```
 
-The oversized historical boundary sources are simplified with shared-topology preservation while retaining 20% of weighted vertices. The optimizer verifies identical feature order and properties, valid non-empty output, and a maximum relative feature-area change of 0.5% before replacing anything:
+Oversized boundary sources are simplified with shared-topology preservation. The first pass retains 20% of weighted vertices; the already-simplified Australia-wide federal maps use a guarded 70% second pass. The invalid source rings in the shared Victoria 2014/2018 map are cleaned before retaining 5%. The optimizer verifies identical feature order and properties, valid non-empty output, and a maximum relative feature-area change of 0.5% before replacing anything:
 
 ```bash
 ./.venv/bin/python scripts/optimize_boundary_geojson.py --write
 ```
 
-The optimizer pins Mapshaper `0.7.45` through `npx` and skips files already below the 11 MiB optimized ceiling, preventing repeated simplification. Victoria 2014 and 2018 are intentionally excluded because the guarded simplification does not preserve valid geometry for those source files.
+The optimizer pins Mapshaper `0.7.45` through `npx` and skips files already below the 8 MiB optimized ceiling, preventing repeated simplification. Victoria 2014 and 2018 use the same 2012-2013 redivision, so both election definitions point to one repaired and optimized boundary file instead of storing duplicate geometry.
 
 First-past-the-post CSVs are also compacted structurally. Candidate totals are stored once as `first` rows and the browser creates the identical final standing in memory. This removes about 7 MiB of duplicate rows across New Zealand, the UK, Malaysia, Singapore, Canada, and India without changing any displayed result.
 

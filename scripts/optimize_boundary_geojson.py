@@ -11,10 +11,26 @@ from shapely.geometry import shape
 
 
 MAPSHAPER_VERSION = "0.7.45"
-KEEP_PERCENT = 20
-PRECISION = 0.000001
+DEFAULT_KEEP_PERCENT = 20
+DEFAULT_PRECISION = 0.000001
 MAX_AREA_DELTA = 0.005
-ALREADY_OPTIMIZED_BYTES = 11 * 1024 * 1024
+ALREADY_OPTIMIZED_BYTES = 8 * 1024 * 1024
+
+FILE_OPTIONS = {
+    # These VEC polygons contain invalid source rings. Mapshaper's shared-topology
+    # clean pass repairs them before the more substantial simplification.
+    "vic_2014_district_boundaries.geojson": {
+        "keep_percent": 5,
+        "precision": 0.00001,
+        "clean": True,
+    },
+    # These files already passed through the original 20% optimizer. Retaining
+    # 70% of their remaining vertices keeps every feature within the area guard.
+    "federal_2016_au_division_boundaries.geojson": {"keep_percent": 70},
+    "federal_2019_au_division_boundaries.geojson": {"keep_percent": 70},
+    "federal_2022_au_division_boundaries.geojson": {"keep_percent": 70},
+    "federal_2025_au_division_boundaries.geojson": {"keep_percent": 70},
+}
 
 BOUNDARY_FILES = [
     "data/federal_2010_vic_division_boundaries.geojson",
@@ -35,6 +51,7 @@ BOUNDARY_FILES = [
     "data/tas_2025_district_boundaries.geojson",
     "data/vic_2006_district_boundaries.geojson",
     "data/vic_2010_district_boundaries.geojson",
+    "data/vic_2014_district_boundaries.geojson",
     "data/wa_2021_district_boundaries.geojson",
     "data/wa_2025_district_boundaries.geojson",
 ]
@@ -71,17 +88,22 @@ def optimize(path: Path, write: bool) -> None:
     if original_bytes <= ALREADY_OPTIMIZED_BYTES:
         print(f"{path}: already within optimized ceiling; skipped")
         return
+    options = FILE_OPTIONS.get(path.name, {})
+    keep_percent = options.get("keep_percent", DEFAULT_KEEP_PERCENT)
+    precision = options.get("precision", DEFAULT_PRECISION)
     original = json.loads(path.read_text(encoding="utf-8"))
     with tempfile.TemporaryDirectory(prefix="boundary-opt-") as temp_dir:
         candidate_path = Path(temp_dir) / path.name
-        subprocess.run(
+        command = ["npx", "--yes", f"mapshaper@{MAPSHAPER_VERSION}", str(path)]
+        if options.get("clean"):
+            command.append("-clean")
+        command.extend(
             [
-                "npx", "--yes", f"mapshaper@{MAPSHAPER_VERSION}", str(path),
-                "-simplify", f"{KEEP_PERCENT}%", "keep-shapes",
-                "-o", "format=geojson", f"precision={PRECISION}", str(candidate_path),
-            ],
-            check=True,
+                "-simplify", f"{keep_percent}%", "keep-shapes",
+                "-o", "format=geojson", f"precision={precision}", str(candidate_path),
+            ]
         )
+        subprocess.run(command, check=True)
         candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
         max_delta = validate(original, candidate, path)
         for key, value in original.items():
