@@ -7,6 +7,7 @@ The app is map-first and party/bloc-first:
 - winner map with Labor, Coalition, Greens, Independent, and Other grouping
 - zoomable/pannable seat boundary map for the selected election year
 - election-wide rankings for closest seats, largest margins, changed results, and winner transfer gains
+- paired country and election selectors, with Australian elections grouped by federal or state/territory jurisdiction
 - seat search, seat picker, bloc filter, close-seat filter, and preference-changed filter
 - first preference, transfer round, progressive chart, and raw row views
 - exact party and candidate detail preserved inside each seat
