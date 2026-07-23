@@ -15,6 +15,14 @@ REQUIRED_RANKINGS_MARKERS = (
     "Changed on preferences",
     "Biggest winner transfer gains",
 )
+REQUIRED_ELECTION_PICKER_MARKERS = (
+    'id="electionCountry"',
+    'id="electionYear"',
+    "function populateElectionOptions(country)",
+    "function syncElectionPicker()",
+    "const electionCountry = election =>",
+    '<optgroup label="${label}">',
+)
 REQUIRED_NZ_MARKERS = (
     '"system": "mmp-fpp"',
     '["party", "party-vote", "close"]',
@@ -131,6 +139,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     html = html_file.read_text(encoding="utf-8")
     if '<select id="electionYear"></select>' not in html:
         raise SystemExit(f"{html_file}: election selector should be generated from config")
+    for marker in REQUIRED_ELECTION_PICKER_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing election-picker marker {marker!r}")
     for marker in REQUIRED_RANKINGS_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing rankings UI marker {marker!r}")

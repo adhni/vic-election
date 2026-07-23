@@ -82,6 +82,14 @@
     .ctrl-group.grow { flex: 1 1 160px; }
     .ctrl-group.shrink { flex: 0 0 auto; }
 
+    .election-picker {
+      flex: 1 1 330px;
+      display: grid;
+      grid-template-columns: minmax(120px, .8fr) minmax(190px, 1.4fr);
+      gap: 8px;
+      min-width: 0;
+    }
+
     label.ctrl-label {
       font-size: 11px;
       font-weight: 700;
@@ -832,6 +840,7 @@
       .controls { position: static; }
       .controls-inner { flex-direction: column; align-items: stretch; }
       .ctrl-group.grow, .ctrl-group.shrink { flex: none; }
+      .election-picker { flex: none; grid-template-columns: 1fr; }
       .bar-row, .transfer-row { grid-template-columns: 1fr auto; }
       .story-row { grid-template-columns: 1fr auto; }
       .bar-row .track, .transfer-row .mini-track { display: none; }
@@ -858,9 +867,15 @@
 
     <nav class="controls" aria-label="Controls">
       <div class="controls-inner">
-        <div class="ctrl-group shrink">
-          <label class="ctrl-label" for="electionYear">Election</label>
-          <select id="electionYear"></select>
+        <div class="election-picker">
+          <div class="ctrl-group">
+            <label class="ctrl-label" for="electionCountry">Country</label>
+            <select id="electionCountry"></select>
+          </div>
+          <div class="ctrl-group">
+            <label class="ctrl-label" for="electionYear">Election</label>
+            <select id="electionYear"></select>
+          </div>
         </div>
         <div class="ctrl-group grow">
           <label id="districtSearchLabel" class="ctrl-label" for="districtSearch">Search</label>
@@ -1892,6 +1907,14 @@
     ];
 
     const electionYears = Object.fromEntries(electionDefinitions.map(election => [election.key, election]));
+    const australianJurisdictions = new Set([
+      "Australia", "Victoria", "New South Wales", "Queensland", "South Australia",
+      "Western Australia", "Northern Territory", "Tasmania"
+    ]);
+    const australianJurisdictionOrder = [
+      "Australia", "Victoria", "New South Wales", "Queensland", "South Australia",
+      "Western Australia", "Northern Territory", "Tasmania"
+    ];
     const electionYearAliases = {
       "federal-2025-vic": "federal-2025-au",
       "federal-2022-vic": "federal-2022-au",
@@ -1900,6 +1923,19 @@
     };
     const activeElection = () => electionYears[activeElectionYear] || electionYears["2022"];
     const activeDataset = () => activeElection().geographies?.[activeGeography] || activeElection();
+    const electionCountry = election => australianJurisdictions.has(election.jurisdiction)
+      ? "Australia"
+      : election.jurisdiction;
+    const electionPickerLabel = election => {
+      const country = electionCountry(election);
+      if (country === "Australia") {
+        return election.jurisdiction === "Australia"
+          ? election.label.replace(" - Australia", "")
+          : election.label;
+      }
+      const prefix = `${country} `;
+      return election.label.startsWith(prefix) ? election.label.slice(prefix.length) : election.label;
+    };
 
     let activeElectionYear = "2022";
     let activeGeography = "";
@@ -2441,8 +2477,7 @@
       if (state.year && electionYears[state.year]) {
         activeElectionYear = state.year;
         activeGeography = state.geography || electionYears[state.year].defaultGeography || "";
-        const yearSelect = document.getElementById("electionYear");
-        if (yearSelect) yearSelect.value = activeElectionYear;
+        syncElectionPicker();
       }
       if (state.mode) {
         activeMapMode = state.mode;
@@ -3119,13 +3154,54 @@
       `).join("");
     }
 
-    function populateElectionSelect() {
+    function populateElectionOptions(country) {
       const electionYear = document.getElementById("electionYear");
       if (!electionYear) return;
-      electionYear.innerHTML = electionDefinitions
-        .map(election => `<option value="${election.key}">${election.label}</option>`)
-        .join("");
+      const elections = electionDefinitions.filter(election => electionCountry(election) === country);
+      if (country === "Australia") {
+        electionYear.innerHTML = australianJurisdictionOrder
+          .map(jurisdiction => {
+            const options = elections
+              .filter(election => election.jurisdiction === jurisdiction)
+              .map(election => `<option value="${election.key}">${electionPickerLabel(election)}</option>`)
+              .join("");
+            if (!options) return "";
+            const label = jurisdiction === "Australia" ? "Federal — Australia" : jurisdiction;
+            return `<optgroup label="${label}">${options}</optgroup>`;
+          })
+          .join("");
+      } else {
+        electionYear.innerHTML = elections
+          .map(election => `<option value="${election.key}">${electionPickerLabel(election)}</option>`)
+          .join("");
+      }
       electionYear.value = activeElectionYear;
+    }
+
+    function syncElectionPicker() {
+      const countrySelect = document.getElementById("electionCountry");
+      if (!countrySelect) return;
+      const country = electionCountry(activeElection());
+      countrySelect.value = country;
+      populateElectionOptions(country);
+    }
+
+    function populateElectionSelect() {
+      const countrySelect = document.getElementById("electionCountry");
+      const electionYear = document.getElementById("electionYear");
+      if (!countrySelect || !electionYear) return;
+      const countries = [...new Set(electionDefinitions.map(electionCountry))]
+        .sort((a, b) => a === "Australia" ? -1 : b === "Australia" ? 1 : a.localeCompare(b));
+      countrySelect.innerHTML = countries
+        .map(country => `<option value="${country}">${country}</option>`)
+        .join("");
+      syncElectionPicker();
+      countrySelect.onchange = () => {
+        const elections = electionDefinitions.filter(election => electionCountry(election) === countrySelect.value);
+        const preferred = elections.find(election => election.jurisdiction === "Australia") || elections[0];
+        if (preferred) loadElection(preferred.key);
+      };
+      electionYear.onchange = () => loadElection(electionYear.value);
     }
 
     function updateElectionSpecificUi() {
@@ -4008,7 +4084,7 @@
       boundaryShapes = [];
       mapBaseView = { x: 0, y: 0, w: 960, h: 560 };
       resetMapZoom();
-      document.getElementById("electionYear").value = activeElectionYear;
+      syncElectionPicker();
       await autoLoadCSV(requestedYear, loadId, { applyState: replaceUrl });
       await autoLoadBoundaries(requestedYear, loadId);
       if (isCurrentElectionLoad(requestedYear, loadId)) updateUrlState(replaceUrl);
