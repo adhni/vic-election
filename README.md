@@ -239,6 +239,17 @@ data/mexico_2024_federal_district_boundaries.geojson
 
 The map covers all 300 federal electoral districts and shows the locally leading presidential candidate in each district. Claudia Sheinbaum led in 275 districts and Xóchitl Gálvez in 25; the districts are analytical reporting areas and do not elect separate presidents. The dataset aggregates INE's final district-computation polling-place records, combines each coalition's separate and joint party ballot columns into its presidential candidacy, and reconciles candidate, non-registered, null, total-ballot, nominal-list, and turnout fields exactly. Official national shares include special-vote records that are not assigned to a mapped district. Boundaries are the matching 300-district layer from INE's national electoral geographic framework.
 
+South Korea coverage includes the presidential elections held on 3 June 2025 and 9 March 2022:
+
+```text
+data/south_korea_2025_president_fpp.csv
+data/south_korea_2025_municipal_boundaries.geojson
+data/south_korea_2022_president_fpp.csv
+data/south_korea_2022_municipal_boundaries.geojson
+```
+
+Both views show the locally leading presidential candidate across all municipality/election-commission reporting areas, while making clear that the president is elected by one nationwide plurality vote. The result files are official National Election Commission polling-district returns aggregated to 252 areas in 2025 and 250 areas in 2022. The maps use Statistics Korea SGIS municipal geometry. For 2025, Hwaseong's two commission areas are combined into its municipal polygon; for 2022, the builder restores the former unified Bucheon reporting area and Gunwi's election-time placement in North Gyeongsang.
+
 United States coverage currently includes the 2024 House election, covering all 435 voting congressional districts across the 50 states:
 
 ```text
@@ -730,6 +741,15 @@ python3 scripts/validate_mexico_2024.py
 
 The builder downloads checksum-pinned final INE computation and cartography archives, aggregates polling-place records to the 300 federal districts, and simplifies the official polygons for the static app. The validator requires all 900 candidate rows, exact mapped totals and turnout, 32-state coverage, unique district codes, the 275–25 local-leader split, and matching valid boundaries.
 
+To rebuild and validate the South Korea presidential-election files:
+
+```bash
+python3 scripts/build_south_korea_presidential.py
+python3 scripts/validate_south_korea_presidential.py
+```
+
+The builder downloads checksum-pinned NEC returns for both elections and the official SGIS municipal layer, aggregates every polling district, reconciles all candidate, invalid-ballot, turnout, and electorate totals, and applies the documented historical geography adjustments. The validator checks exact national totals, all 17 first-level regions, local winners and margins, unique area codes, valid matching polygons, and no material overlaps.
+
 The VEC scraper writes:
 
 ```text
@@ -779,6 +799,13 @@ The Mexico President 2024 option validates against:
 - exact mapped candidate, null/non-registered, ballot, nominal-list, turnout, and margin totals
 - 275 local Sheinbaum leads and 25 local Gálvez leads
 - matching INE-derived geometry, unique federal district codes, and no material polygon overlaps
+
+The South Korea President 2025 and 2022 options validate against:
+
+- 252 mapped areas and 1,260 candidate rows for 2025
+- 250 historical areas and 3,000 candidate rows for 2022
+- exact official candidate, invalid-ballot, turnout, electorate, winner, and margin totals
+- all 17 first-level regions with matching SGIS-derived geometry and documented historical adjustments
 
 The federal 2019 Australia option validates against:
 
