@@ -1746,6 +1746,67 @@
         ]
       },
       {
+        "key": "south-korea-president-2025",
+        "label": "South Korea President 2025",
+        "type": "national",
+        "jurisdiction": "South Korea",
+        "year": 2025,
+        "source": "National Election Commission / Statistics Korea SGIS",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National plurality vote",
+        "methodNote": "South Korea elects one president nationally by plurality. Each mapped municipality or election-commission area shows its local vote leader; these areas do not elect separate presidents. Hwaseong's two commission areas are combined to its official municipal boundary.",
+        "candidateVoteLabel": "Presidential candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "presidential vote",
+        "districtLabel": "Municipality / district",
+        "wideMobileMap": true,
+        "csv": "data/south_korea_2025_president_fpp.csv",
+        "boundaries": "data/south_korea_2025_municipal_boundaries.geojson",
+        "areaLabel": "Province / metropolitan city",
+        "nationalResults": [
+          ["Lee Jae-myung", 49.42],
+          ["Kim Moon-soo", 41.15],
+          ["Lee Jun-seok", 8.34],
+          ["Kwon Young-guk", 0.98],
+          ["Song Jin-ho", 0.10]
+        ]
+      },
+      {
+        "key": "south-korea-president-2022",
+        "label": "South Korea President 2022",
+        "type": "national",
+        "jurisdiction": "South Korea",
+        "year": 2022,
+        "source": "National Election Commission / Statistics Korea SGIS",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National plurality vote",
+        "methodNote": "South Korea elects one president nationally by plurality. Each mapped municipality or election-commission area shows its local vote leader; these areas do not elect separate presidents. The map restores 2022-era Bucheon and assigns Gunwi to its election-time province.",
+        "candidateVoteLabel": "Presidential candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "presidential vote",
+        "districtLabel": "Municipality / district",
+        "wideMobileMap": true,
+        "csv": "data/south_korea_2022_president_fpp.csv",
+        "boundaries": "data/south_korea_2022_municipal_boundaries.geojson",
+        "areaLabel": "Province / metropolitan city",
+        "nationalResults": [
+          ["Yoon Suk Yeol", 48.56],
+          ["Lee Jae-myung", 47.83],
+          ["Sim Sang-jung", 2.38],
+          ["Huh Kyung-young", 0.83],
+          ["Kim Jae-yeon", 0.11],
+          ["Cho Won-jin", 0.08],
+          ["Oh Jun-ho", 0.05],
+          ["Kim Min-chan", 0.05],
+          ["Lee Kyung-hee", 0.03],
+          ["Lee Baek-yoon", 0.03],
+          ["Kim Kyung-jae", 0.02],
+          ["Ok Eun-ho", 0.01]
+        ]
+      },
+      {
         "key": "canada-2021",
         "label": "Canada Federal 2021",
         "type": "national",
@@ -2016,6 +2077,19 @@
         if (p === "gálvez") return "#2257a5";
         if (p === "máynez") return "#ef7d22";
       }
+      if (activeElection().jurisdiction === "South Korea") {
+        const southKoreaColors = {
+          "lee jae-myung": "#1769aa", "kim moon-soo": "#d92832",
+          "yoon suk yeol": "#d92832", "lee jun-seok": "#ef7d22",
+          "sim sang-jung": "#e7bd19", "kwon young-guk": "#b32843",
+          "song jin-ho": "#4a8d63", "huh kyung-young": "#8a5aa4",
+          "kim jae-yeon": "#c0354a", "cho won-jin": "#315d9b",
+          "oh jun-ho": "#4f8c72", "kim min-chan": "#826d50",
+          "lee kyung-hee": "#63748b", "lee baek-yoon": "#9b4564",
+          "kim kyung-jae": "#695d98", "ok eun-ho": "#818181"
+        };
+        if (southKoreaColors[p]) return southKoreaColors[p];
+      }
       if (activeElection().jurisdiction === "United States") {
         if (p === "democratic") return "#2166ac";
         if (p === "republican") return "#c62828";
@@ -2261,6 +2335,7 @@
       }
       if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";
       if (activeElection().jurisdiction === "Mexico") return count === 1 ? "federal district" : "federal districts";
+      if (activeElection().jurisdiction === "South Korea") return count === 1 ? "municipality/district" : "municipalities/districts";
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
       if (["United Kingdom", "Malaysia", "India", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
