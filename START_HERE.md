@@ -44,7 +44,7 @@ data/vic_2014_district_summary.csv
 data/vic_2014_district_boundaries.geojson
 data/vic_2018_preferences_long.csv
 data/vic_2018_district_summary.csv
-data/vic_2018_district_boundaries.geojson
+data/vic_2014_district_boundaries.geojson # shared by the 2014 and 2018 elections
 data/vic_2010_preferences_long.csv
 data/vic_2010_district_summary.csv
 data/vic_2010_district_boundaries.geojson

@@ -62,8 +62,7 @@ data/vic_2022_district_boundaries.geojson
 For earlier elections, use a matching file such as:
 
 ```text
-data/vic_2014_district_boundaries.geojson
-data/vic_2018_district_boundaries.geojson
+data/vic_2014_district_boundaries.geojson # shared by 2014 and 2018
 data/vic_2010_district_boundaries.geojson
 data/vic_2006_district_boundaries.geojson
 ```
@@ -86,9 +85,9 @@ data/federal_2010_vic_division_boundaries.geojson
 
 The 2007 Victoria-only federal entry reuses the byte-identical 2010 AEC boundary file.
 
-Do not reuse 2022 boundaries for earlier elections. The 2022 election used boundaries from the 2020-2021 redivision, 2014 and 2018 used the 2012-2013 redivision, and 2006 and 2010 used the earlier 2001 Legislative Assembly boundaries.
+Do not reuse 2022 boundaries for earlier elections. The 2022 election used boundaries from the 2020-2021 redivision, 2014 and 2018 share the optimized 2012-2013 redivision file, and 2006 and 2010 used the earlier 2001 Legislative Assembly boundaries.
 
-The 2014 and 2018 boundary files are adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. The source is licensed CC-BY-4.0 and the repo files keep the 88 Legislative Assembly district polygons that match the preference CSVs. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
+The shared 2014/2018 boundary file is adapted from Geoscape Administrative Boundaries, August 2018 archive, State Electoral Boundaries February 2018, via data.gov.au's previous versions package. The source is licensed CC-BY-4.0 and the repo file keeps the 88 Legislative Assembly district polygons that match both preference CSVs. These boundaries come from the 2012-2013 state redivision, which came into operation for the 2014 State election and remained in place until the writ for the 2022 State election.
 
 The 2006 and 2010 state boundary files are adapted from the Victorian Government / VEC Vicmap Admin State Assembly Polygon 2001 WFS dataset, `open-data-platform:state_assembly_2001`. The repo files keep the 88 Legislative Assembly district polygons and normalise `district_label` values such as `Gippsland East District` to the app's `district` property.
 

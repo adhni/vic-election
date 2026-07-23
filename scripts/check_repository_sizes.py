@@ -7,6 +7,15 @@ from pathlib import Path
 MIB = 1024 * 1024
 MAX_BOUNDARY_BYTES = 15 * MIB
 MAX_DATA_BYTES = 190 * MIB
+MAX_OPTIMIZED_BOUNDARY_BYTES = 8 * MIB
+OPTIMIZED_BOUNDARIES = [
+    Path("data/vic_2014_district_boundaries.geojson"),
+    Path("data/federal_2016_au_division_boundaries.geojson"),
+    Path("data/federal_2019_au_division_boundaries.geojson"),
+    Path("data/federal_2022_au_division_boundaries.geojson"),
+    Path("data/federal_2025_au_division_boundaries.geojson"),
+]
+REMOVED_DUPLICATES = [Path("data/vic_2018_district_boundaries.geojson")]
 
 
 def main() -> None:
@@ -23,6 +32,22 @@ def main() -> None:
     if total_bytes > MAX_DATA_BYTES:
         raise SystemExit(
             f"data/ size limit exceeded: {total_bytes / MIB:.1f} MiB > {MAX_DATA_BYTES / MIB:.0f} MiB"
+        )
+    optimization_regressions = [
+        path
+        for path in OPTIMIZED_BOUNDARIES
+        if not path.is_file() or path.stat().st_size > MAX_OPTIMIZED_BOUNDARY_BYTES
+    ]
+    if optimization_regressions:
+        raise SystemExit(
+            "Optimized boundary limit exceeded or file missing: "
+            + ", ".join(str(path) for path in optimization_regressions)
+        )
+    restored_duplicates = [path for path in REMOVED_DUPLICATES if path.exists()]
+    if restored_duplicates:
+        raise SystemExit(
+            "Duplicate boundary files restored: "
+            + ", ".join(str(path) for path in restored_duplicates)
         )
     largest = max(data_files, key=lambda path: path.stat().st_size)
     print(
