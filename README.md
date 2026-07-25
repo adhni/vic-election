@@ -259,6 +259,17 @@ data/france_{year}_region_boundaries.geojson
 
 Each contest can switch between departments/department-equivalent overseas territories and regions. Results are definitive French Ministry of the Interior returns. The 2007 and 2012 maps preserve the pre-2016 metropolitan region structure, while 2017 and 2022 use the later regions. French citizens voting abroad contribute to the official national shares but are not assigned a false map polygon. Overseas areas are moved into compact schematic insets so metropolitan France remains legible; the inset positions and scales are explicitly disclosed as non-geographic.
 
+Portugal and Spain coverage includes two recent legislative elections from each country:
+
+```text
+data/portugal_{2025|2024}_legislative_fpp.csv
+data/portugal_{2025|2024}_legislative_boundaries.geojson
+data/spain_{2023|2019}_congress_fpp.csv
+data/spain_{2023|2019}_congress_boundaries.geojson
+```
+
+These are multi-member closed-list proportional elections, not FPTP contests. The compact app rows use its local-leader view to map and rank the party list with the most votes in each electoral district or constituency; the district panel separately shows the number of seats allocated, and the national summary shows the actual Parliament seat totals. Portugal uses the Ministry of Internal Administration's official results and domestic inset map. Its four foreign-constituency seats remain in the 230-seat national summary without being assigned false domestic polygons. Spain uses the Central Electoral Board's certified BOE tables and Eurostat GISCO province geometry. The corrected November 2019 BOE tables are used, including the Zaragoza Más País–Chunta Aragonesista–Equo correction.
+
 Philippines coverage includes the separate presidential and vice-presidential ballots held on 9 May 2022:
 
 ```text
@@ -818,6 +829,15 @@ python3 scripts/validate_france_presidential.py
 ```
 
 The builder downloads checksum-pinned definitive Ministry result tables and a version-pinned data.gouv.fr administrative boundary release. It parses published department and region tables directly where available, aggregates the official 2012 commune workbook, locks national candidate totals, and emits election-time region maps with compact overseas insets. The validator checks all 16 CSV views, candidate sets, ballot arithmetic, turnout, winners, margins, area codes, matching valid geometry, and polygon overlaps.
+
+To rebuild the two Portuguese and two Spanish legislative elections:
+
+```bash
+python3 scripts/build_iberian_elections.py
+python3 scripts/smoke_static_app.py
+```
+
+The builder checksum-pins Portugal's 40 domestic district results and official inset maps, Spain's certified BOE result and turnout tables, and Eurostat GISCO geometry. It requires exact ballot arithmetic and the 226 Portuguese domestic plus 350 Spanish constituency seat allocations before writing output. The static smoke adds one-to-one CSV/map, party-vote, ballot-total, and mapped-seat validation for all four elections.
 
 The VEC scraper writes:
 

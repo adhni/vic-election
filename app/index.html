@@ -1991,6 +1991,94 @@
         "nationalResults": [["Nicolas Sarkozy",53.06],["Ségolène Royal",46.94]]
       },
       {
+        "key": "portugal-legislative-2025",
+        "label": "Portugal Legislative 2025",
+        "type": "national",
+        "jurisdiction": "Portugal",
+        "year": 2025,
+        "source": "Portuguese Ministry of Internal Administration",
+        "system": "fpp",
+        "contestType": "party-list",
+        "systemLabel": "Closed-list proportional representation · D'Hondt",
+        "methodNote": "Each electoral district elects multiple MPs by D'Hondt proportional representation. The map and rankings show the party list with the most local votes, not a single locally elected MP. Four foreign-constituency seats are included in the Parliament totals but are not assigned a domestic polygon.",
+        "candidateVoteLabel": "Party-list vote",
+        "candidateFilterLabel": "Any locally leading party",
+        "localVoteLabel": "party-list vote",
+        "districtLabel": "Electoral district",
+        "csv": "data/portugal_2025_legislative_fpp.csv",
+        "boundaries": "data/portugal_2025_legislative_boundaries.geojson",
+        "totalSeats": 230,
+        "areaLabel": "Country",
+        "schematicMap": true,
+        "schematicMapLabel": "Official domestic electoral-district inset map. Click a district to explore.",
+        "parliament": [["PPD/PSD.CDS-PP",88],["CH",60],["PS",58],["IL",9],["L",6],["PPD/PSD.CDS-PP.PPM",3],["PCP-PEV",3],["B.E.",1],["PAN",1],["JPP",1]]
+      },
+      {
+        "key": "portugal-legislative-2024",
+        "label": "Portugal Legislative 2024",
+        "type": "national",
+        "jurisdiction": "Portugal",
+        "year": 2024,
+        "source": "Portuguese Ministry of Internal Administration",
+        "system": "fpp",
+        "contestType": "party-list",
+        "systemLabel": "Closed-list proportional representation · D'Hondt",
+        "methodNote": "Each electoral district elects multiple MPs by D'Hondt proportional representation. The map and rankings show the party list with the most local votes, not a single locally elected MP. Four foreign-constituency seats are included in the Parliament totals but are not assigned a domestic polygon.",
+        "candidateVoteLabel": "Party-list vote",
+        "candidateFilterLabel": "Any locally leading party",
+        "localVoteLabel": "party-list vote",
+        "districtLabel": "Electoral district",
+        "csv": "data/portugal_2024_legislative_fpp.csv",
+        "boundaries": "data/portugal_2024_legislative_boundaries.geojson",
+        "totalSeats": 230,
+        "areaLabel": "Country",
+        "schematicMap": true,
+        "schematicMapLabel": "Official domestic electoral-district inset map. Click a district to explore.",
+        "parliament": [["PS",78],["PPD/PSD.CDS-PP.PPM",77],["CH",50],["IL",8],["B.E.",5],["PCP-PEV",4],["L",4],["PPD/PSD.CDS-PP",3],["PAN",1]]
+      },
+      {
+        "key": "spain-congress-2023",
+        "label": "Spain Congress 2023",
+        "type": "national",
+        "jurisdiction": "Spain",
+        "year": 2023,
+        "source": "Junta Electoral Central / BOE / Eurostat GISCO",
+        "system": "fpp",
+        "contestType": "party-list",
+        "systemLabel": "Closed-list proportional representation · D'Hondt",
+        "methodNote": "Each constituency elects multiple Congress deputies by D'Hondt proportional representation. The map and rankings show the party list with the most local votes, not a single locally elected MP. The 52 constituency totals are the certified final results published by Spain's Central Electoral Board.",
+        "candidateVoteLabel": "Party-list vote",
+        "candidateFilterLabel": "Any locally leading party",
+        "localVoteLabel": "party-list vote",
+        "districtLabel": "Constituency",
+        "csv": "data/spain_2023_congress_fpp.csv",
+        "boundaries": "data/spain_2023_congress_boundaries.geojson",
+        "totalSeats": 350,
+        "areaLabel": "Country",
+        "parliament": [["PP",137],["PSOE",102],["VOX",33],["SUMAR",31],["PSC",19],["ERC",7],["JUNTS",7],["EH Bildu",6],["EAJ-PNV",5],["BNG",1],["CCa",1],["UPN",1]]
+      },
+      {
+        "key": "spain-congress-2019",
+        "label": "Spain Congress 2019 (November)",
+        "type": "national",
+        "jurisdiction": "Spain",
+        "year": 2019,
+        "source": "Junta Electoral Central / BOE / Eurostat GISCO",
+        "system": "fpp",
+        "contestType": "party-list",
+        "systemLabel": "Closed-list proportional representation · D'Hondt",
+        "methodNote": "Each constituency elects multiple Congress deputies by D'Hondt proportional representation. The map and rankings show the party list with the most local votes, not a single locally elected MP. The official correction assigning Zaragoza's 23,196 votes to Más País–Chunta Aragonesista–Equo is applied.",
+        "candidateVoteLabel": "Party-list vote",
+        "candidateFilterLabel": "Any locally leading party",
+        "localVoteLabel": "party-list vote",
+        "districtLabel": "Constituency",
+        "csv": "data/spain_2019_congress_fpp.csv",
+        "boundaries": "data/spain_2019_congress_boundaries.geojson",
+        "totalSeats": 350,
+        "areaLabel": "Country",
+        "parliament": [["PSOE",108],["PP",87],["VOX",52],["PODEMOS-IU",26],["ERC-SOBIRANISTES",13],["PSC",12],["Cs",10],["JxCAT-JUNTS",8],["ECP-GUANYEM EL CANVI",7],["EAJ-PNV",6],["EH Bildu",5],["MÁS PAÍS-EQUO",2],["CUP-PR",2],["PODEMOS-EU",2],["PP-FORO",2],["CCa-PNC-NC",2],["NA+",2],["MÉS COMPROMÍS",1],["BNG",1],["PRC",1],["¡TERUEL EXISTE!",1]]
+      },
+      {
         "key": "philippines-president-2022",
         "label": "Philippines President 2022",
         "type": "national",
@@ -2458,6 +2546,25 @@
         };
         if (southKoreaColors[p]) return southKoreaColors[p];
       }
+      if (activeElection().jurisdiction === "Portugal") {
+        const portugalColors = {
+          "ppd/psd.cds-pp": "#f28c28", "ppd/psd.cds-pp.ppm": "#f28c28",
+          "ps": "#e84a5f", "ch": "#1f3c88", "il": "#19a7ce", "l": "#d84a9b",
+          "pcp-pev": "#c62828", "b.e.": "#8b1e3f", "pan": "#3a9d5d", "jpp": "#6b4fa1"
+        };
+        if (portugalColors[p]) return portugalColors[p];
+      }
+      if (activeElection().jurisdiction === "Spain") {
+        const spainColors = {
+          "pp": "#1d75bd", "psoe": "#e31b23", "psc": "#e31b23", "vox": "#63a532",
+          "sumar": "#e84a9b", "podemos-iu": "#6d2c91", "ecp-guanyem el canvi": "#6d2c91",
+          "podemos-eu": "#6d2c91", "erc": "#f3b51b", "erc-sobiranistes": "#f3b51b",
+          "junts": "#27a7a0", "jxcat-junts": "#27a7a0", "eh bildu": "#65a743",
+          "eaj-pnv": "#178447", "bng": "#4f7c8a", "cs": "#f28c28", "cupa-pr": "#d9a400",
+          "cup-pr": "#d9a400", "cca": "#e6bd25", "cca-pnc-nc": "#e6bd25"
+        };
+        if (spainColors[p]) return spainColors[p];
+      }
       if (activeElection().jurisdiction === "France") {
         const franceColors = {
           "emmanuel macron": "#e0b62f", "marine le pen": "#263f73",
@@ -2749,6 +2856,8 @@
       if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";
       if (activeElection().jurisdiction === "Mexico") return count === 1 ? "federal district" : "federal districts";
       if (activeElection().jurisdiction === "South Korea") return count === 1 ? "municipality/district" : "municipalities/districts";
+      if (activeElection().jurisdiction === "Portugal") return count === 1 ? "electoral district" : "electoral districts";
+      if (activeElection().jurisdiction === "Spain") return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
       if (activeElection().jurisdiction === "Germany") return count === 1 ? "constituency" : "constituencies";
       if (["United Kingdom", "Malaysia", "India", "Japan", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
@@ -3276,6 +3385,17 @@
       }
       if (activeElection().system === "fpp") {
         const election = activeElection();
+        if (election.contestType === "party-list") {
+          const chips = [
+            `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`,
+            `<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> Parliament seats</span>`
+          ];
+          (election.parliament || []).forEach(([party, seats]) => {
+            chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${fmt.format(seats)}</strong></span>`);
+          });
+          target.innerHTML = chips.join("");
+          return;
+        }
         const countryCounts = new Map();
         const partyCounts = new Map();
         allDistricts.forEach(d => {
@@ -3590,6 +3710,8 @@
       const fpp = isFppElection();
       const mmp = isMmpElection();
       const presidential = activeElection().contestType === "presidential";
+      const partyList = activeElection().contestType === "party-list";
+      const analyticalLocalVote = presidential || partyList;
       const geographyModes = document.getElementById("geographyModes");
       const geographyLabels = activeElection().geographyLabels || {};
       geographyModes.innerHTML = Object.entries(activeElection().geographies || {})
@@ -3610,20 +3732,20 @@
       document.getElementById("roundsTabButton").classList.toggle("hidden", fpp);
       document.getElementById("chartTabButton").classList.toggle("hidden", fpp);
       document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", fpp);
-      document.querySelector('label[for="partyFilter"]').textContent = presidential ? "Local winner" : fpp ? "Winner party" : "Bloc";
-      document.getElementById("primaryVoteTitle").textContent = presidential ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
+      document.querySelector('label[for="partyFilter"]').textContent = analyticalLocalVote ? "Local winner" : fpp ? "Winner party" : "Bloc";
+      document.getElementById("primaryVoteTitle").textContent = analyticalLocalVote ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? activeElection().partyVoteLabel || "Party vote" : "Final standing";
-      document.getElementById("finalVotePanel").classList.toggle("hidden", presidential);
-      document.getElementById("districtSelectLabel").textContent = presidential ? activeElection().districtLabel || activeDataset().label : "Seat";
-      document.getElementById("districtSearch").placeholder = presidential ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
-      document.getElementById("mapSubtitle").textContent = presidential
+      document.getElementById("finalVotePanel").classList.toggle("hidden", analyticalLocalVote);
+      document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeElection().districtLabel || activeDataset().label : "Seat";
+      document.getElementById("districtSearch").placeholder = analyticalLocalVote ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
+      document.getElementById("mapSubtitle").textContent = analyticalLocalVote
         ? `Click a ${electorateLabel(1)} to explore its ${activeElection().localVoteLabel || "local presidential vote"}.`
         : activeElection().cartogram
           ? `Equal-area ${electorateLabel(1)} cartogram (not legal boundaries). Click a seat to explore.`
           : activeElection().schematicMap
-            ? `Schematic ${electorateLabel(1)} map with metropolitan insets (not legal boundaries). Click a seat to explore.`
+            ? activeElection().schematicMapLabel || `Schematic ${electorateLabel(1)} map with metropolitan insets (not legal boundaries). Click a seat to explore.`
             : "Click a seat to explore.";
-      document.getElementById("rankingsSubtitle").textContent = presidential
+      document.getElementById("rankingsSubtitle").textContent = analyticalLocalVote
         ? `Local-result leaderboards across the selected ${electorateLabel(2)}. Click a row to open that area.`
         : "Election-wide leaderboards for the selected election. Click a row to open that district or division.";
       if (fpp && (activeTab === "rounds" || activeTab === "chart")) activeTab = "overview";
@@ -3644,7 +3766,7 @@
         ? [...new Set(allDistricts.flatMap(d => electedBlocs(d)))].sort()
         : ["Labor", "Coalition", "Greens", "Independent", "Other"];
       const winningBlocs = blocOrder.filter(bloc => allDistricts.some(d => electedBlocs(d).includes(bloc)));
-      partyFilter.innerHTML = [`<option value="all">${activeElection().contestType === "presidential" ? activeElection().candidateFilterLabel || "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
+      partyFilter.innerHTML = [`<option value="all">${["presidential", "party-list"].includes(activeElection().contestType) ? activeElection().candidateFilterLabel || "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
         winningBlocs.map(p => `<option value="${p}">${p}</option>`)
       ).join("");
       partyFilter.value = winningBlocs.includes(selectedParty) ? selectedParty : "all";
@@ -3882,6 +4004,25 @@
         return;
       }
       if (activeElection().system === "fpp") {
+        if (activeElection().contestType === "party-list") {
+          const [winner] = getWinnerFromFinal(d);
+          const winnerParty = getParty(d, winner);
+          const [runnerUp] = getSecondFromFinal(d);
+          document.getElementById("districtSummary").innerHTML = `
+            <h2 class="result-district">${d.district}</h2>
+            <div class="result-facts">
+              <div class="fact-item"><span class="fact-label">${activeElection().districtLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
+              <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
+              <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${badgeHtml(winnerParty)}</span></div>
+              <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
+              <div class="fact-item"><span class="fact-label">Seats allocated</span><span class="fact-value">${fmt.format(d.district_seats)}</span></div>
+              <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available"}</span></div>
+            </div>
+            <p class="pref-impact">${activeElection().methodNote}</p>
+            ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}
+          `;
+          return;
+        }
         if (activeElection().contestType === "presidential") {
           const [winner] = getWinnerFromFinal(d);
           const winnerTicket = getParty(d, winner);
@@ -4337,6 +4478,7 @@
           elected_party: firstRow.elected_party || "Independent",
           elected_members: firstRow.elected_members || firstRow.elected_member || "",
           members_to_elect: Number(firstRow.members_to_elect || 1),
+          district_seats: Number(firstRow.district_seats || 0),
           quota: Number(firstRow.quota || 0),
           enrolment: Number(firstRow.enrolment || 0),
           formal_votes: Number(firstRow.formal_votes || 0),

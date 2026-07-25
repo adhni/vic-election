@@ -154,6 +154,21 @@ REQUIRED_FRANCE_MARKERS = (
     'activeElection().jurisdiction === "France"',
     "Foreign-resident votes are included in the national shares",
 )
+REQUIRED_IBERIAN_MARKERS = (
+    '"key": "portugal-legislative-2025"',
+    '"key": "portugal-legislative-2024"',
+    '"key": "spain-congress-2023"',
+    '"key": "spain-congress-2019"',
+    '"contestType": "party-list"',
+    '"candidateVoteLabel": "Party-list vote"',
+    '"totalSeats": 230',
+    '"totalSeats": 350',
+    "Four foreign-constituency seats",
+    "Zaragoza's 23,196 votes",
+    'activeElection().jurisdiction === "Portugal"',
+    'activeElection().jurisdiction === "Spain"',
+    "district_seats: Number(firstRow.district_seats || 0)",
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -220,6 +235,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_FRANCE_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing France presidential UI marker {marker!r}")
+    for marker in REQUIRED_IBERIAN_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Portugal/Spain UI marker {marker!r}")
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")
@@ -321,6 +339,34 @@ def smoke_election(key: str, csv_path: Path, boundary_path: Path, system: str) -
     print(f"{key}: {len(districts)} districts, {len(rows)} rows, {len(paths)} map paths")
 
 
+def validate_iberian(key: str, csv_path: Path) -> None:
+    rows = read_csv(csv_path)
+    grouped: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        grouped.setdefault(row["district"], []).append(row)
+    expected_districts = 20 if key.startswith("portugal-") else 52
+    expected_seats = 226 if key.startswith("portugal-") else 350
+    if len(grouped) != expected_districts:
+        raise SystemExit(f"{key}: expected {expected_districts} mapped districts, found {len(grouped)}")
+    seats = 0
+    for district, district_rows in grouped.items():
+        first = district_rows[0]
+        formal = int(first["formal_votes"])
+        informal = int(first["informal_votes"])
+        total = int(first["total_votes"])
+        candidate_total = sum(int(row["votes"]) for row in district_rows)
+        if candidate_total != formal:
+            raise SystemExit(f"{key} {district}: party rows do not equal formal votes")
+        if formal + informal != total:
+            raise SystemExit(f"{key} {district}: formal plus non-party ballots does not equal total")
+        district_seats = {int(row["district_seats"]) for row in district_rows}
+        if len(district_seats) != 1:
+            raise SystemExit(f"{key} {district}: inconsistent district seat metadata")
+        seats += district_seats.pop()
+    if seats != expected_seats:
+        raise SystemExit(f"{key}: mapped district seats total {seats}, expected {expected_seats}")
+
+
 def main() -> None:
     html_files = [Path("index.html"), Path("app/index.html")]
     definitions_by_file = {html_file: load_election_definitions(html_file) for html_file in html_files}
@@ -354,6 +400,8 @@ def main() -> None:
                 str(election["key"]), Path(str(election["csv"])),
                 Path(str(election["boundaries"])), str(election.get("system", "")),
             )
+        if str(election["key"]).startswith(("portugal-legislative-", "spain-congress-")):
+            validate_iberian(str(election["key"]), Path(str(election["csv"])))
     print("Static app smoke passed")
 
 
