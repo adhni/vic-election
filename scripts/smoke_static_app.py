@@ -129,6 +129,19 @@ REQUIRED_MEXICO_MARKERS = (
     '["Sheinbaum", 61.27]',
     'if (activeElection().jurisdiction === "Mexico")',
 )
+REQUIRED_FRANCE_MARKERS = (
+    '"key": "france-president-2022-round-1"',
+    '"key": "france-president-2022-round-2"',
+    '"key": "france-president-2017-round-1"',
+    '"key": "france-president-2017-round-2"',
+    '"key": "france-president-2012-round-1"',
+    '"key": "france-president-2012-round-2"',
+    '"key": "france-president-2007-round-1"',
+    '"key": "france-president-2007-round-2"',
+    '"geographyLabels": {"department": "Departments / territories", "region": "Regions"}',
+    'activeElection().jurisdiction === "France"',
+    "Foreign-resident votes are included in the national shares",
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -189,6 +202,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_MEXICO_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Mexico 2024 UI marker {marker!r}")
+    for marker in REQUIRED_FRANCE_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing France presidential UI marker {marker!r}")
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")

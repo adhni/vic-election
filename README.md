@@ -232,6 +232,17 @@ Thailand used parallel voting: 400 constituency MPs were elected by first past t
 
 The map is Thai PBS's equal-area 400-seat constituency cartogram. Every cell opens the corresponding result, but the cells are explicitly labelled as a cartogram and are not legal electoral-boundary polygons.
 
+France coverage includes both rounds of the 2022, 2017, 2012, and 2007 presidential elections:
+
+```text
+data/france_{year}_president_round_{1|2}_department_fpp.csv
+data/france_{year}_president_round_{1|2}_region_fpp.csv
+data/france_{year}_department_boundaries.geojson
+data/france_{year}_region_boundaries.geojson
+```
+
+Each contest can switch between departments/department-equivalent overseas territories and regions. Results are definitive French Ministry of the Interior returns. The 2007 and 2012 maps preserve the pre-2016 metropolitan region structure, while 2017 and 2022 use the later regions. French citizens voting abroad contribute to the official national shares but are not assigned a false map polygon. Overseas areas are moved into compact schematic insets so metropolitan France remains legible; the inset positions and scales are explicitly disclosed as non-geographic.
+
 Philippines coverage includes the separate presidential and vice-presidential ballots held on 9 May 2022:
 
 ```text
@@ -423,6 +434,10 @@ data/thailand_2026_constituency_cartogram.geojson # Thai PBS equal-area seat car
 data/japan_2026_house_fpp.csv                # Japan 2026 single-member constituency candidate results
 data/japan_2024_house_fpp.csv                # Japan 2024 single-member constituency candidate results
 data/japan_2022_house_constituency_schematic.geojson # Shared post-2022 schematic with metro insets
+data/france_2022_president_round_1_department_fpp.csv # French presidential department/territory results (pattern repeated for 8 contests)
+data/france_2022_president_round_1_region_fpp.csv # matching election-time region results
+data/france_2022_department_boundaries.geojson # compact department/territory map with overseas insets
+data/france_2022_region_boundaries.geojson # compact election-time region map
 data/philippines_2022_president_fpp.csv     # presidential candidate totals for 107 domestic COC map areas
 data/philippines_2022_vice_president_fpp.csv # vice-presidential candidate totals for the same areas
 data/philippines_2022_coc_boundaries.geojson # PSA municipal geometry dissolved to province/city COC areas
@@ -489,12 +504,14 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 ├── scripts/
 │   ├── build_aec_federal.py
 │   ├── build_india_federal.py
+│   ├── build_france_presidential.py
 │   ├── build_indonesia_historical_presidential.py
 │   ├── build_indonesia_presidential.py
 │   ├── build_philippines_2022.py
 │   ├── build_us_house.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
+│   ├── validate_france_presidential.py
 │   ├── validate_india_federal.py
 │   ├── validate_indonesia_historical_presidential.py
 │   ├── validate_indonesia_presidential.py
@@ -776,6 +793,15 @@ python3 scripts/validate_south_korea_presidential.py
 ```
 
 The builder downloads checksum-pinned NEC returns for both elections and the official SGIS municipal layer, aggregates every polling district, reconciles all candidate, invalid-ballot, turnout, and electorate totals, and applies the documented historical geography adjustments. The validator checks exact national totals, all 17 first-level regions, local winners and margins, unique area codes, valid matching polygons, and no material overlaps.
+
+To rebuild and validate all eight French presidential-election round views:
+
+```bash
+python3 scripts/build_france_presidential.py
+python3 scripts/validate_france_presidential.py
+```
+
+The builder downloads checksum-pinned definitive Ministry result tables and a version-pinned data.gouv.fr administrative boundary release. It parses published department and region tables directly where available, aggregates the official 2012 commune workbook, locks national candidate totals, and emits election-time region maps with compact overseas insets. The validator checks all 16 CSV views, candidate sets, ballot arithmetic, turnout, winners, margins, area codes, matching valid geometry, and polygon overlaps.
 
 The VEC scraper writes:
 
