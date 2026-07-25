@@ -84,6 +84,7 @@ jobs:
           python scripts/validate_japan_house.py --year 2026
           python scripts/validate_japan_house.py --year 2024
           python scripts/validate_thailand_2026.py
+          python scripts/validate_north_korea_2026.py
           python scripts/validate_philippines_2022.py
           python scripts/validate_mexico_2024.py
           python scripts/validate_south_korea_presidential.py

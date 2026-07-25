@@ -72,6 +72,18 @@ REQUIRED_THAILAND_MARKERS = (
     "not a legal-boundary map",
     'activeElection().jurisdiction === "Thailand"',
 )
+REQUIRED_NORTH_KOREA_MARKERS = (
+    '"key": "north-korea-spa-2026"',
+    '"jurisdiction": "North Korea"',
+    '"membersOnly": true',
+    '"nationalTurnoutPct": 99.99',
+    '"nationalSupportPct": 99.93',
+    '"cartogramLabel": "Equal-area seat grid ordered by official constituency number',
+    'd.contest_status === "single-candidate"',
+    'document.getElementById("partyFilter").closest(".ctrl-group").classList.toggle("hidden", Boolean(activeElection().membersOnly))',
+    "Constituency margins unavailable",
+    "State-reported candidate support",
+)
 REQUIRED_JAPAN_MARKERS = (
     '"key": "japan-house-2026"',
     '"key": "japan-house-2024"',
@@ -243,6 +255,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_THAILAND_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Thailand 2026 UI marker {marker!r}")
+    for marker in REQUIRED_NORTH_KOREA_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing North Korea 2026 UI marker {marker!r}")
     for marker in REQUIRED_JAPAN_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Japan House UI marker {marker!r}")
