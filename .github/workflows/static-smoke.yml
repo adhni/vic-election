@@ -86,6 +86,7 @@ jobs:
           python scripts/validate_philippines_2022.py
           python scripts/validate_mexico_2024.py
           python scripts/validate_south_korea_presidential.py
+          python scripts/validate_france_presidential.py
           python scripts/validate_us_house.py
           python scripts/validate_indonesia_presidential.py
           python scripts/validate_indonesia_historical_presidential.py

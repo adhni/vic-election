@@ -940,10 +940,7 @@
             <button class="map-mode active" type="button" data-boundary-type="General">General</button>
             <button class="map-mode" type="button" data-boundary-type="Māori">Māori</button>
           </div>
-          <div id="geographyModes" class="map-modes hidden" role="group" aria-label="Result geography">
-            <button class="map-mode active" type="button" data-geography="province">Province</button>
-            <button class="map-mode" type="button" data-geography="kabupaten-kota">Kabupaten/Kota</button>
-          </div>
+          <div id="geographyModes" class="map-modes hidden" role="group" aria-label="Result geography"></div>
           <div class="map-modes" role="group" aria-label="Map zoom">
             <button id="mapZoomOut" class="map-mode" type="button">-</button>
             <button id="mapZoomIn" class="map-mode" type="button">+</button>
@@ -1709,6 +1706,206 @@
         "cartogram": true
       },
       {
+        "key": "france-president-2022-round-1",
+        "label": "France President 2022 — Round 1",
+        "type": "national",
+        "jurisdiction": "France",
+        "year": 2022,
+        "source": "French Ministry of the Interior / data.gouv.fr",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · first round",
+        "methodNote": "France elects one president nationally using a two-round system. This view shows first-round local vote leaders; departments, territories, and regions do not elect separate presidents. Foreign-resident votes are included in the national shares but have no map polygon. Overseas areas use compact schematic insets, and the region layer uses the boundaries in force at this election.",
+        "candidateVoteLabel": "First-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "first-round presidential vote",
+        "csv": "data/france_2022_president_round_1_department_fpp.csv",
+        "boundaries": "data/france_2022_department_boundaries.geojson",
+        "defaultGeography": "department",
+        "geographyLabels": {"department": "Departments / territories", "region": "Regions"},
+        "geographies": {
+          "department": {"label": "Departments / territories", "csv": "data/france_2022_president_round_1_department_fpp.csv", "boundaries": "data/france_2022_department_boundaries.geojson", "areaLabel": "Area type"},
+          "region": {"label": "Regions", "csv": "data/france_2022_president_round_1_region_fpp.csv", "boundaries": "data/france_2022_region_boundaries.geojson", "areaLabel": "Area type"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["Emmanuel Macron",27.85],["Marine Le Pen",23.15],["Jean-Luc Mélenchon",21.95],["Éric Zemmour",7.07],["Valérie Pécresse",4.78],["Yannick Jadot",4.63],["Jean Lassalle",3.13],["Fabien Roussel",2.28],["Nicolas Dupont-Aignan",2.06],["Anne Hidalgo",1.75],["Philippe Poutou",0.77],["Nathalie Arthaud",0.56]]
+      },
+      {
+        "key": "france-president-2022-round-2",
+        "label": "France President 2022 — Round 2",
+        "type": "national",
+        "jurisdiction": "France",
+        "year": 2022,
+        "source": "French Ministry of the Interior / data.gouv.fr",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · second round",
+        "methodNote": "France elects one president nationally using a two-round system. This view shows second-round local vote leaders; departments, territories, and regions do not elect separate presidents. Foreign-resident votes are included in the national shares but have no map polygon. Overseas areas use compact schematic insets, and the region layer uses the boundaries in force at this election.",
+        "candidateVoteLabel": "Second-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "second-round presidential vote",
+        "csv": "data/france_2022_president_round_2_department_fpp.csv",
+        "boundaries": "data/france_2022_department_boundaries.geojson",
+        "defaultGeography": "department",
+        "geographyLabels": {"department": "Departments / territories", "region": "Regions"},
+        "geographies": {
+          "department": {"label": "Departments / territories", "csv": "data/france_2022_president_round_2_department_fpp.csv", "boundaries": "data/france_2022_department_boundaries.geojson", "areaLabel": "Area type"},
+          "region": {"label": "Regions", "csv": "data/france_2022_president_round_2_region_fpp.csv", "boundaries": "data/france_2022_region_boundaries.geojson", "areaLabel": "Area type"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["Emmanuel Macron",58.55],["Marine Le Pen",41.45]]
+      },
+      {
+        "key": "france-president-2017-round-1",
+        "label": "France President 2017 — Round 1",
+        "type": "national",
+        "jurisdiction": "France",
+        "year": 2017,
+        "source": "French Ministry of the Interior / data.gouv.fr",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · first round",
+        "methodNote": "France elects one president nationally using a two-round system. This view shows first-round local vote leaders; departments, territories, and regions do not elect separate presidents. Foreign-resident votes are included in the national shares but have no map polygon. Overseas areas use compact schematic insets, and the region layer uses the boundaries in force at this election.",
+        "candidateVoteLabel": "First-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "first-round presidential vote",
+        "csv": "data/france_2017_president_round_1_department_fpp.csv",
+        "boundaries": "data/france_2017_department_boundaries.geojson",
+        "defaultGeography": "department",
+        "geographyLabels": {"department": "Departments / territories", "region": "Regions"},
+        "geographies": {
+          "department": {"label": "Departments / territories", "csv": "data/france_2017_president_round_1_department_fpp.csv", "boundaries": "data/france_2017_department_boundaries.geojson", "areaLabel": "Area type"},
+          "region": {"label": "Regions", "csv": "data/france_2017_president_round_1_region_fpp.csv", "boundaries": "data/france_2017_region_boundaries.geojson", "areaLabel": "Area type"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["Emmanuel Macron",24.01],["Marine Le Pen",21.30],["François Fillon",20.01],["Jean-Luc Mélenchon",19.58],["Benoît Hamon",6.36],["Nicolas Dupont-Aignan",4.70],["Jean Lassalle",1.21],["Philippe Poutou",1.09],["François Asselineau",0.92],["Nathalie Arthaud",0.64],["Jacques Cheminade",0.18]]
+      },
+      {
+        "key": "france-president-2017-round-2",
+        "label": "France President 2017 — Round 2",
+        "type": "national",
+        "jurisdiction": "France",
+        "year": 2017,
+        "source": "French Ministry of the Interior / data.gouv.fr",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · second round",
+        "methodNote": "France elects one president nationally using a two-round system. This view shows second-round local vote leaders; departments, territories, and regions do not elect separate presidents. Foreign-resident votes are included in the national shares but have no map polygon. Overseas areas use compact schematic insets, and the region layer uses the boundaries in force at this election.",
+        "candidateVoteLabel": "Second-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "second-round presidential vote",
+        "csv": "data/france_2017_president_round_2_department_fpp.csv",
+        "boundaries": "data/france_2017_department_boundaries.geojson",
+        "defaultGeography": "department",
+        "geographyLabels": {"department": "Departments / territories", "region": "Regions"},
+        "geographies": {
+          "department": {"label": "Departments / territories", "csv": "data/france_2017_president_round_2_department_fpp.csv", "boundaries": "data/france_2017_department_boundaries.geojson", "areaLabel": "Area type"},
+          "region": {"label": "Regions", "csv": "data/france_2017_president_round_2_region_fpp.csv", "boundaries": "data/france_2017_region_boundaries.geojson", "areaLabel": "Area type"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["Emmanuel Macron",66.10],["Marine Le Pen",33.90]]
+      },
+      {
+        "key": "france-president-2012-round-1",
+        "label": "France President 2012 — Round 1",
+        "type": "national",
+        "jurisdiction": "France",
+        "year": 2012,
+        "source": "French Ministry of the Interior / data.gouv.fr",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · first round",
+        "methodNote": "France elects one president nationally using a two-round system. This view shows first-round local vote leaders; departments, territories, and regions do not elect separate presidents. Foreign-resident votes are included in the national shares but have no map polygon. Overseas areas use compact schematic insets, and the region layer uses the boundaries in force at this election.",
+        "candidateVoteLabel": "First-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "first-round presidential vote",
+        "csv": "data/france_2012_president_round_1_department_fpp.csv",
+        "boundaries": "data/france_2012_department_boundaries.geojson",
+        "defaultGeography": "department",
+        "geographyLabels": {"department": "Departments / territories", "region": "Regions"},
+        "geographies": {
+          "department": {"label": "Departments / territories", "csv": "data/france_2012_president_round_1_department_fpp.csv", "boundaries": "data/france_2012_department_boundaries.geojson", "areaLabel": "Area type"},
+          "region": {"label": "Regions", "csv": "data/france_2012_president_round_1_region_fpp.csv", "boundaries": "data/france_2012_region_boundaries.geojson", "areaLabel": "Area type"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["François Hollande",28.63],["Nicolas Sarkozy",27.18],["Marine Le Pen",17.90],["Jean-Luc Mélenchon",11.10],["François Bayrou",9.13],["Eva Joly",2.31],["Nicolas Dupont-Aignan",1.79],["Philippe Poutou",1.15],["Nathalie Arthaud",0.56],["Jacques Cheminade",0.25]]
+      },
+      {
+        "key": "france-president-2012-round-2",
+        "label": "France President 2012 — Round 2",
+        "type": "national",
+        "jurisdiction": "France",
+        "year": 2012,
+        "source": "French Ministry of the Interior / data.gouv.fr",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · second round",
+        "methodNote": "France elects one president nationally using a two-round system. This view shows second-round local vote leaders; departments, territories, and regions do not elect separate presidents. Foreign-resident votes are included in the national shares but have no map polygon. Overseas areas use compact schematic insets, and the region layer uses the boundaries in force at this election.",
+        "candidateVoteLabel": "Second-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "second-round presidential vote",
+        "csv": "data/france_2012_president_round_2_department_fpp.csv",
+        "boundaries": "data/france_2012_department_boundaries.geojson",
+        "defaultGeography": "department",
+        "geographyLabels": {"department": "Departments / territories", "region": "Regions"},
+        "geographies": {
+          "department": {"label": "Departments / territories", "csv": "data/france_2012_president_round_2_department_fpp.csv", "boundaries": "data/france_2012_department_boundaries.geojson", "areaLabel": "Area type"},
+          "region": {"label": "Regions", "csv": "data/france_2012_president_round_2_region_fpp.csv", "boundaries": "data/france_2012_region_boundaries.geojson", "areaLabel": "Area type"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["François Hollande",51.64],["Nicolas Sarkozy",48.36]]
+      },
+      {
+        "key": "france-president-2007-round-1",
+        "label": "France President 2007 — Round 1",
+        "type": "national",
+        "jurisdiction": "France",
+        "year": 2007,
+        "source": "French Ministry of the Interior / data.gouv.fr",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · first round",
+        "methodNote": "France elects one president nationally using a two-round system. This view shows first-round local vote leaders; departments, territories, and regions do not elect separate presidents. Foreign-resident votes are included in the national shares but have no map polygon. Overseas areas use compact schematic insets, and the region layer uses the boundaries in force at this election.",
+        "candidateVoteLabel": "First-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "first-round presidential vote",
+        "csv": "data/france_2007_president_round_1_department_fpp.csv",
+        "boundaries": "data/france_2007_department_boundaries.geojson",
+        "defaultGeography": "department",
+        "geographyLabels": {"department": "Departments / territories", "region": "Regions"},
+        "geographies": {
+          "department": {"label": "Departments / territories", "csv": "data/france_2007_president_round_1_department_fpp.csv", "boundaries": "data/france_2007_department_boundaries.geojson", "areaLabel": "Area type"},
+          "region": {"label": "Regions", "csv": "data/france_2007_president_round_1_region_fpp.csv", "boundaries": "data/france_2007_region_boundaries.geojson", "areaLabel": "Area type"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["Nicolas Sarkozy",31.18],["Ségolène Royal",25.87],["François Bayrou",18.57],["Jean-Marie Le Pen",10.44],["Olivier Besancenot",4.08],["Philippe de Villiers",2.23],["Marie-George Buffet",1.93],["Dominique Voynet",1.57],["Arlette Laguiller",1.33],["José Bové",1.32],["Frédéric Nihous",1.15],["Gérard Schivardi",0.34]]
+      },
+      {
+        "key": "france-president-2007-round-2",
+        "label": "France President 2007 — Round 2",
+        "type": "national",
+        "jurisdiction": "France",
+        "year": 2007,
+        "source": "French Ministry of the Interior / data.gouv.fr",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · second round",
+        "methodNote": "France elects one president nationally using a two-round system. This view shows second-round local vote leaders; departments, territories, and regions do not elect separate presidents. Foreign-resident votes are included in the national shares but have no map polygon. Overseas areas use compact schematic insets, and the region layer uses the boundaries in force at this election.",
+        "candidateVoteLabel": "Second-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "second-round presidential vote",
+        "csv": "data/france_2007_president_round_2_department_fpp.csv",
+        "boundaries": "data/france_2007_department_boundaries.geojson",
+        "defaultGeography": "department",
+        "geographyLabels": {"department": "Departments / territories", "region": "Regions"},
+        "geographies": {
+          "department": {"label": "Departments / territories", "csv": "data/france_2007_president_round_2_department_fpp.csv", "boundaries": "data/france_2007_department_boundaries.geojson", "areaLabel": "Area type"},
+          "region": {"label": "Regions", "csv": "data/france_2007_president_round_2_region_fpp.csv", "boundaries": "data/france_2007_region_boundaries.geojson", "areaLabel": "Area type"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["Nicolas Sarkozy",53.06],["Ségolène Royal",46.94]]
+      },
+      {
         "key": "philippines-president-2022",
         "label": "Philippines President 2022",
         "type": "national",
@@ -2162,6 +2359,22 @@
         };
         if (southKoreaColors[p]) return southKoreaColors[p];
       }
+      if (activeElection().jurisdiction === "France") {
+        const franceColors = {
+          "emmanuel macron": "#e0b62f", "marine le pen": "#263f73",
+          "jean-luc mélenchon": "#c9363e", "nicolas sarkozy": "#315b9a",
+          "françois hollande": "#dc4b63", "ségolène royal": "#d84b68",
+          "françois fillon": "#456aa3", "françois bayrou": "#e88b24",
+          "éric zemmour": "#5b315e", "benoît hamon": "#d75a76",
+          "yannick jadot": "#3b9849", "eva joly": "#3b9849",
+          "valérie pécresse": "#4670a9", "jean-marie le pen": "#263f73"
+        };
+        if (franceColors[p]) return franceColors[p];
+        const palette = ["#6b4fa1", "#ad5b2d", "#27878f", "#9b3f68", "#5f7f32", "#4665a8", "#a56b18"];
+        let hash = 0;
+        for (let i = 0; i < p.length; i += 1) hash = ((hash << 5) - hash + p.charCodeAt(i)) | 0;
+        return palette[Math.abs(hash) % palette.length];
+      }
       if (activeElection().jurisdiction === "United States") {
         if (p === "democratic") return "#2166ac";
         if (p === "republican") return "#c62828";
@@ -2424,6 +2637,11 @@
     function electorateLabel(count = 0) {
       if (activeElection().jurisdiction === "Indonesia") {
         return activeGeography === "kabupaten-kota" ? "kabupaten/kota" : count === 1 ? "province" : "provinces";
+      }
+      if (activeElection().jurisdiction === "France") {
+        return activeGeography === "region"
+          ? (count === 1 ? "region" : "regions")
+          : (count === 1 ? "department/territory" : "departments/territories");
       }
       if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";
       if (activeElection().jurisdiction === "Mexico") return count === 1 ? "federal district" : "federal districts";
@@ -3264,10 +3482,18 @@
       const fpp = isFppElection();
       const mmp = isMmpElection();
       const presidential = activeElection().contestType === "presidential";
+      const geographyModes = document.getElementById("geographyModes");
+      const geographyLabels = activeElection().geographyLabels || {};
+      geographyModes.innerHTML = Object.entries(activeElection().geographies || {})
+        .map(([key, dataset]) => `<button class="map-mode${key === activeGeography ? " active" : ""}" type="button" data-geography="${key}">${geographyLabels[key] || dataset.label || key}</button>`)
+        .join("");
+      geographyModes.querySelectorAll("[data-geography]").forEach(button => {
+        button.onclick = () => setGeography(button.dataset.geography);
+      });
       document.getElementById("partyVoteMapMode").classList.toggle("hidden", !mmp);
       document.getElementById("changedMapMode").classList.toggle("hidden", fpp);
       document.getElementById("boundaryTypeModes").classList.toggle("hidden", !mmp);
-      document.getElementById("geographyModes").classList.toggle("hidden", !activeElection().geographies);
+      geographyModes.classList.toggle("hidden", !activeElection().geographies);
       document.querySelectorAll("[data-geography]").forEach(button => {
         button.classList.toggle("active", button.dataset.geography === activeGeography);
       });
