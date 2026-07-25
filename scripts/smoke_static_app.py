@@ -167,6 +167,8 @@ REQUIRED_IBERIAN_MARKERS = (
     "Zaragoza's 23,196 votes",
     'activeElection().jurisdiction === "Portugal"',
     'activeElection().jurisdiction === "Spain"',
+    'activeElection().schematicMapLabel || "This is a schematic map, not legal boundaries."',
+    '${activeDataset().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}',
     "district_seats: Number(firstRow.district_seats || 0)",
 )
 REQUIRED_COMPACT_FPP_MARKERS = (

@@ -2010,7 +2010,7 @@
         "totalSeats": 230,
         "areaLabel": "Country",
         "schematicMap": true,
-        "schematicMapLabel": "Official domestic electoral-district inset map. Click a district to explore.",
+        "schematicMapLabel": "The shapes use the official domestic electoral-district inset presentation, not geographic boundaries.",
         "parliament": [["PPD/PSD.CDS-PP",88],["CH",60],["PS",58],["IL",9],["L",6],["PPD/PSD.CDS-PP.PPM",3],["PCP-PEV",3],["B.E.",1],["PAN",1],["JPP",1]]
       },
       {
@@ -2033,7 +2033,7 @@
         "totalSeats": 230,
         "areaLabel": "Country",
         "schematicMap": true,
-        "schematicMapLabel": "Official domestic electoral-district inset map. Click a district to explore.",
+        "schematicMapLabel": "The shapes use the official domestic electoral-district inset presentation, not geographic boundaries.",
         "parliament": [["PS",78],["PPD/PSD.CDS-PP.PPM",77],["CH",50],["IL",8],["B.E.",5],["PCP-PEV",4],["L",4],["PPD/PSD.CDS-PP",3],["PAN",1]]
       },
       {
@@ -3739,7 +3739,7 @@
       document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeElection().districtLabel || activeDataset().label : "Seat";
       document.getElementById("districtSearch").placeholder = analyticalLocalVote ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
       document.getElementById("mapSubtitle").textContent = analyticalLocalVote
-        ? `Click a ${electorateLabel(1)} to explore its ${activeElection().localVoteLabel || "local presidential vote"}.`
+        ? `Click ${/^[aeiou]/i.test(electorateLabel(1)) ? "an" : "a"} ${electorateLabel(1)} to explore its ${activeElection().localVoteLabel || "local presidential vote"}.${activeElection().schematicMap ? ` ${activeElection().schematicMapLabel || "This is a schematic map, not legal boundaries."}` : ""}`
         : activeElection().cartogram
           ? `Equal-area ${electorateLabel(1)} cartogram (not legal boundaries). Click a seat to explore.`
           : activeElection().schematicMap
@@ -4011,7 +4011,7 @@
           document.getElementById("districtSummary").innerHTML = `
             <h2 class="result-district">${d.district}</h2>
             <div class="result-facts">
-              <div class="fact-item"><span class="fact-label">${activeElection().districtLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
+              <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
               <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
               <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${badgeHtml(winnerParty)}</span></div>
               <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
