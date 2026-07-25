@@ -218,7 +218,7 @@ Completed FPP storage optimization:
 - updated all affected builders and validators so regenerated data stays compact
 - reduced checked-in `data/` from about 177.2 MiB to 170.2 MiB without dropping an election or result
 
-At that point, consider whether the project should become a broader Australian preference explorer.
+Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while the 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. This supports roughly 50 more compact elections at the recent average while retaining an explicit review point before the repository approaches GitHub's preferred size range.
 
 ## Deferred: Local Council Elections
 
@@ -236,10 +236,11 @@ Reasons:
 
 ## Recommended Next Concrete Task
 
-Add the 2024 United States House election, provided official result and Census boundary files can stay within the repository size guard.
+Continue international coverage in compact two-to-six-election batches, with Finland and Denmark as the next source-discovery candidates.
 
 Insyallah, the best sequence is:
 
-1. add all 435 US House districts with official candidate results and 119th Congress boundaries
-2. validate nationwide party totals, uncontested races, and district/result matching
-3. keep the boundary file compact enough to preserve at least a small reserve under the repository guard
+1. confirm official machine-readable local results and election-time geography before creating data files
+2. estimate the complete checked-in batch size before app wiring
+3. reconcile party votes, ballot totals, national seats, and every result-to-boundary join
+4. keep each boundary below 15 MiB and retain substantial room below the 400 MiB warning threshold

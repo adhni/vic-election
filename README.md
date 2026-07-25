@@ -592,7 +592,7 @@ For elections configured as `fpp` or `mmp-fpp`, it requires compact candidate ro
 
 ## Asset size guardrails
 
-Static hosting and browser parsing depend on keeping boundary geometry compact. CI rejects an individual boundary file over 15 MiB or a total `data/` directory over 190 MiB:
+Static hosting and browser parsing depend on keeping boundary geometry compact. CI rejects an individual boundary file over 15 MiB or a total `data/` directory over 500 MiB. It emits an early warning after 400 MiB so another optimization or hosting review can happen before the hard guard:
 
 ```bash
 python scripts/check_repository_sizes.py
@@ -607,6 +607,8 @@ Oversized boundary sources are simplified with shared-topology preservation. The
 The optimizer pins Mapshaper `0.7.45` through `npx` and skips files already below the 8 MiB optimized ceiling, preventing repeated simplification. Victoria 2014 and 2018 use the same 2012-2013 redivision, so both election definitions point to one repaired and optimized boundary file instead of storing duplicate geometry.
 
 First-past-the-post CSVs are also compacted structurally. Candidate totals are stored once as `first` rows and the browser creates the identical final standing in memory. This removes about 7 MiB of duplicate rows across New Zealand, the UK, Malaysia, Singapore, Canada, and India without changing any displayed result.
+
+The 500 MiB ceiling is a project guard, not GitHub's repository limit. GitHub recommends repositories remain below 1 GB where practical and strongly recommends staying below 5 GB, while blocking individual Git objects above 100 MiB. Keeping `data/` below 500 MiB leaves room for source code and Git history within the preferred range. At the current 184.5 MiB, approximately 315 MiB remains under this guard; the six-election Netherlands/Norway/Sweden batch added about 14 MiB, so another 50 similarly compact elections is realistic. Large raw downloads and browser screenshots belong in the ignored `tmp/` directory and should be deleted after validation. See [GitHub's large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
 
 ## CSV Format
 
