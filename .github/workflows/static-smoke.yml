@@ -68,6 +68,7 @@ jobs:
           python scripts/validate_tas_state.py --csv data/tas_2021_preferences_long.csv --boundaries data/tas_2021_district_boundaries.geojson --expected-members 5
           python scripts/validate_nz_2023.py
           python scripts/validate_nz_2023.py --year 2020
+          python scripts/validate_germany_bundestag.py
           python scripts/validate_uk_federal.py --year 2024
           python scripts/validate_uk_federal.py --year 2019
           python scripts/validate_uk_federal.py --year 2017

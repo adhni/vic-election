@@ -17,6 +17,7 @@ The app is map-first and party/bloc-first:
 - Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025, 2020, and 2015 general elections
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
+- German Erststimme and Zweitstimme results for all 299 constituencies in the 2025, 2021, and 2017 Bundestag elections
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
@@ -208,6 +209,21 @@ data/india_2024_parliamentary_boundaries.geojson
 ```
 
 India uses first past the post, so preference-transfer views are hidden. The dataset preserves all 8,360 candidates and 542 NOTA options. Candidate totals and turnout metadata are reconciled against the Election Commission of India's final statistical report. Esri India's 2024 parliamentary layer supplies the matching election-specific boundaries and an independent winner/margin check outside Assam, whose layer attributes are shifted between the newly delimited seats. Surat is retained as an uncontested return with no invented votes or turnout.
+
+Germany coverage includes the 2025, 2021, and 2017 Bundestag elections, with official Erststimme and Zweitstimme totals for all 299 constituencies:
+
+```text
+data/germany_2025_bundestag.csv
+data/germany_2025_constituency_boundaries.geojson
+data/germany_2021_bundestag.csv
+data/germany_2021_constituency_boundaries.geojson
+data/germany_2017_bundestag.csv
+data/germany_2017_constituency_boundaries.geojson
+```
+
+The 2021 option uses the certified totals after the partial Berlin repeat vote in 2024. For 2025, the app separately identifies the Erststimme leader and whether that leader actually received a constituency mandate under the new Zweitstimme-coverage rule; 23 local leaders did not. The displayed vote choices use the official result file's party or independent-group labels.
+
+See [`docs/germany_bundestag.md`](docs/germany_bundestag.md) for sources, validation, and boundary attribution.
 
 Japan coverage includes the 8 February 2026 and 27 October 2024 House of Representatives elections, with all 289 single-member constituency contests:
 

@@ -83,6 +83,18 @@ REQUIRED_JAPAN_MARKERS = (
     "post-2022 schematic with metropolitan insets",
     'activeElection().jurisdiction === "Japan"',
 )
+REQUIRED_GERMANY_MARKERS = (
+    '"key": "germany-bundestag-2025"',
+    '"key": "germany-bundestag-2021"',
+    '"key": "germany-bundestag-2017"',
+    '"jurisdiction": "Germany"',
+    '"firstVoteLabel": "Erststimme (constituency vote)"',
+    '"partyVoteLabel": "Zweitstimme (party vote)"',
+    '"electorateSeats": 276',
+    '"totalSeats": 630',
+    "function usesBoundaryTypeLayers()",
+    "insufficient Zweitstimme coverage",
+)
 REQUIRED_US_MARKERS = (
     '"key": "us-house-2024"',
     '"jurisdiction": "United States"',
@@ -190,6 +202,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_JAPAN_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Japan House UI marker {marker!r}")
+    for marker in REQUIRED_GERMANY_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Germany Bundestag UI marker {marker!r}")
     for marker in REQUIRED_US_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. House UI marker {marker!r}")
