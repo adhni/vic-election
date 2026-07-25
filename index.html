@@ -1639,6 +1639,91 @@
         "areaLabel": "State"
       },
       {
+        "key": "germany-bundestag-2025",
+        "label": "Germany Bundestag 2025",
+        "type": "national",
+        "jurisdiction": "Germany",
+        "year": 2025,
+        "source": "Federal Returning Officer, Germany",
+        "system": "mmp-fpp",
+        "systemLabel": "Mixed-member proportional · Erststimme plurality",
+        "methodNote": "Each voter had an Erststimme for a constituency choice and a Zweitstimme for a party list. Under the 2025 law, an Erststimme leader received a constituency mandate only when covered by the party's Zweitstimme entitlement; 23 local leaders were therefore not elected.",
+        "firstVoteLabel": "Erststimme (constituency vote)",
+        "partyVoteLabel": "Zweitstimme (party vote)",
+        "csv": "data/germany_2025_bundestag.csv",
+        "boundaries": "data/germany_2025_constituency_boundaries.geojson",
+        "electorateSeats": 276,
+        "listSeats": 354,
+        "totalSeats": 630,
+        "areaLabel": "State",
+        "parliament": [
+          ["CDU", 164],
+          ["AfD", 152],
+          ["SPD", 120],
+          ["GRÜNE", 85],
+          ["Die Linke", 64],
+          ["CSU", 44],
+          ["SSW", 1]
+        ]
+      },
+      {
+        "key": "germany-bundestag-2021",
+        "label": "Germany Bundestag 2021",
+        "type": "national",
+        "jurisdiction": "Germany",
+        "year": 2021,
+        "source": "Federal Returning Officer, Germany",
+        "system": "mmp-fpp",
+        "systemLabel": "Mixed-member proportional · Erststimme plurality",
+        "methodNote": "Each voter had an Erststimme for a constituency choice and a Zweitstimme for a party list. This dataset uses the certified totals after the partial Berlin repeat vote held in 2024.",
+        "firstVoteLabel": "Erststimme (constituency vote)",
+        "partyVoteLabel": "Zweitstimme (party vote)",
+        "csv": "data/germany_2021_bundestag.csv",
+        "boundaries": "data/germany_2021_constituency_boundaries.geojson",
+        "electorateSeats": 299,
+        "listSeats": 436,
+        "totalSeats": 735,
+        "areaLabel": "State",
+        "parliament": [
+          ["SPD", 206],
+          ["CDU", 152],
+          ["GRÜNE", 118],
+          ["FDP", 91],
+          ["AfD", 83],
+          ["CSU", 45],
+          ["DIE LINKE", 39],
+          ["SSW", 1]
+        ]
+      },
+      {
+        "key": "germany-bundestag-2017",
+        "label": "Germany Bundestag 2017",
+        "type": "national",
+        "jurisdiction": "Germany",
+        "year": 2017,
+        "source": "Federal Returning Officer, Germany",
+        "system": "mmp-fpp",
+        "systemLabel": "Mixed-member proportional · Erststimme plurality",
+        "methodNote": "Each voter had an Erststimme for a constituency choice and a Zweitstimme for a party list. All 299 constituency plurality winners received direct mandates under the electoral law then in force.",
+        "firstVoteLabel": "Erststimme (constituency vote)",
+        "partyVoteLabel": "Zweitstimme (party vote)",
+        "csv": "data/germany_2017_bundestag.csv",
+        "boundaries": "data/germany_2017_constituency_boundaries.geojson",
+        "electorateSeats": 299,
+        "listSeats": 410,
+        "totalSeats": 709,
+        "areaLabel": "State",
+        "parliament": [
+          ["CDU", 200],
+          ["SPD", 153],
+          ["AfD", 94],
+          ["FDP", 80],
+          ["DIE LINKE", 69],
+          ["GRÜNE", 67],
+          ["CSU", 46]
+        ]
+      },
+      {
         "key": "india-2024",
         "label": "India General 2024",
         "type": "national",
@@ -2321,6 +2406,20 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (activeElection().jurisdiction === "Germany") {
+        const germanyColors = {
+          "cdu": "#1f1f1f",
+          "csu": "#008ac5",
+          "spd": "#e3000f",
+          "afd": "#009ee0",
+          "grüne": "#64a12d",
+          "die linke": "#be3075",
+          "fdp": "#e5c500",
+          "ssw": "#003c8f",
+          "independent": "#7a7f87"
+        };
+        if (germanyColors[p]) return germanyColors[p];
+      }
       if (activeElection().jurisdiction === "Indonesia") {
         if (p === "no digitised vote") return "#7a7f87";
         if (p === "anies–muhaimin") return "#16858c";
@@ -2535,6 +2634,10 @@
       return activeElection().system === "mmp-fpp";
     }
 
+    function usesBoundaryTypeLayers() {
+      return activeElection().jurisdiction === "New Zealand";
+    }
+
     function usesPartyView() {
       return isFppElection();
     }
@@ -2647,6 +2750,7 @@
       if (activeElection().jurisdiction === "Mexico") return count === 1 ? "federal district" : "federal districts";
       if (activeElection().jurisdiction === "South Korea") return count === 1 ? "municipality/district" : "municipalities/districts";
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
+      if (activeElection().jurisdiction === "Germany") return count === 1 ? "constituency" : "constituencies";
       if (["United Kingdom", "Malaysia", "India", "Japan", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
       if (activeElection().jurisdiction === "Canada") return count === 1 ? "riding" : "ridings";
@@ -2913,7 +3017,7 @@
         districts = [...allDistricts];
       }
       activeDistrict = selected;
-      if (isMmpElection() && selected.electorate_type) setBoundaryType(selected.electorate_type, false);
+      if (usesBoundaryTypeLayers() && selected.electorate_type) setBoundaryType(selected.electorate_type, false);
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
       populateControls();
@@ -2987,7 +3091,7 @@
       document.querySelectorAll("[data-boundary-type]").forEach(button => {
         button.classList.toggle("active", button.dataset.boundaryType === activeBoundaryType);
       });
-      const visible = isMmpElection()
+      const visible = usesBoundaryTypeLayers()
         ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
         : boundaryFeatures;
       boundaryShapes = makeBoundaryShapes(visible);
@@ -2996,7 +3100,7 @@
     }
 
     function syncBoundaryTypeToActiveDistrict() {
-      if (isMmpElection() && activeDistrict?.electorate_type && activeBoundaryType !== activeDistrict.electorate_type) {
+      if (usesBoundaryTypeLayers() && activeDistrict?.electorate_type && activeBoundaryType !== activeDistrict.electorate_type) {
         setBoundaryType(activeDistrict.electorate_type, false);
       }
     }
@@ -3131,15 +3235,19 @@
       }
       if (isMmpElection()) {
         const election = activeElection();
-        const general = allDistricts.filter(d => d.electorate_type === "General").length;
-        const maori = allDistricts.filter(d => d.electorate_type === "Māori").length;
-        const chips = [
-          `<span class="summary-chip"><strong>${general}</strong> general electorates</span>`,
-          `<span class="summary-chip"><strong>${maori}</strong> Māori electorates</span>`,
-          `<span class="summary-chip"><strong>${election.electorateSeats}</strong> electorate seats</span>`,
+        const chips = usesBoundaryTypeLayers()
+          ? [
+              `<span class="summary-chip"><strong>${allDistricts.filter(d => d.electorate_type === "General").length}</strong> general electorates</span>`,
+              `<span class="summary-chip"><strong>${allDistricts.filter(d => d.electorate_type === "Māori").length}</strong> Māori electorates</span>`
+            ]
+          : [
+              `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
+            ];
+        chips.push(
+          `<span class="summary-chip"><strong>${election.electorateSeats}</strong> ${activeElection().jurisdiction === "Germany" ? "constituency mandates" : "electorate seats"}</span>`,
           `<span class="summary-chip"><strong>${election.listSeats}</strong> list seats</span>`,
           `<span class="summary-chip"><strong>${election.totalSeats}</strong> MPs after the general election</span>`
-        ];
+        );
         (election.parliament || []).forEach(([party, seats]) => {
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${seats}</strong></span>`);
         });
@@ -3491,8 +3599,10 @@
         button.onclick = () => setGeography(button.dataset.geography);
       });
       document.getElementById("partyVoteMapMode").classList.toggle("hidden", !mmp);
+      document.querySelector('[data-map-mode="party"]').textContent = activeElection().jurisdiction === "Germany" ? "Erststimme" : "Winner";
+      document.getElementById("partyVoteMapMode").textContent = activeElection().jurisdiction === "Germany" ? "Zweitstimme" : "Party vote";
       document.getElementById("changedMapMode").classList.toggle("hidden", fpp);
-      document.getElementById("boundaryTypeModes").classList.toggle("hidden", !mmp);
+      document.getElementById("boundaryTypeModes").classList.toggle("hidden", !usesBoundaryTypeLayers());
       geographyModes.classList.toggle("hidden", !activeElection().geographies);
       document.querySelectorAll("[data-geography]").forEach(button => {
         button.classList.toggle("active", button.dataset.geography === activeGeography);
@@ -3501,8 +3611,8 @@
       document.getElementById("chartTabButton").classList.toggle("hidden", fpp);
       document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", fpp);
       document.querySelector('label[for="partyFilter"]').textContent = presidential ? "Local winner" : fpp ? "Winner party" : "Bloc";
-      document.getElementById("primaryVoteTitle").textContent = presidential ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? "Candidate vote" : "First-preference vote";
-      document.getElementById("finalVoteTitle").textContent = mmp ? "Party vote" : "Final standing";
+      document.getElementById("primaryVoteTitle").textContent = presidential ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
+      document.getElementById("finalVoteTitle").textContent = mmp ? activeElection().partyVoteLabel || "Party vote" : "Final standing";
       document.getElementById("finalVotePanel").classList.toggle("hidden", presidential);
       document.getElementById("districtSelectLabel").textContent = presidential ? activeElection().districtLabel || activeDataset().label : "Seat";
       document.getElementById("districtSearch").placeholder = presidential ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
@@ -3549,7 +3659,7 @@
       }
       districtSelect.onchange = () => {
         activeDistrict = districts[Number(districtSelect.value)];
-        if (isMmpElection() && activeDistrict?.electorate_type) setBoundaryType(activeDistrict.electorate_type, false);
+        if (usesBoundaryTypeLayers() && activeDistrict?.electorate_type) setBoundaryType(activeDistrict.electorate_type, false);
         focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
         render();
         updateUrlState();
@@ -3738,6 +3848,25 @@
         const winnerParty = getParty(d, winner);
         const [runnerUp] = getSecondFromFinal(d);
         const [partyVoteWinner, partyVoteCount] = getPartyVoteLeader(d);
+        if (activeElection().jurisdiction === "Germany") {
+          const mandate = d.mandate_awarded
+            ? "Awarded"
+            : "Not awarded — insufficient Zweitstimme coverage";
+          document.getElementById("districtSummary").innerHTML = `
+            <h2 class="result-district">${d.district}</h2>
+            <div class="result-facts">
+              <div class="fact-item"><span class="fact-label">${activeElection().areaLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
+              <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
+              <div class="fact-item"><span class="fact-label">Erststimme leader</span><span class="fact-value">${badgeHtml(winnerParty)}</span></div>
+              <div class="fact-item"><span class="fact-label">Erststimme margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
+              <div class="fact-item"><span class="fact-label">Constituency mandate</span><span class="fact-value">${mandate}</span></div>
+              <div class="fact-item"><span class="fact-label">Zweitstimme leader</span><span class="fact-value">${badgeHtml(partyVoteWinner)} ${fmt.format(partyVoteCount)}</span></div>
+            </div>
+            <p class="pref-impact">${activeElection().methodNote}</p>
+            ${d.result_note ? `<p class="pref-impact"><strong>Result note:</strong> ${d.result_note}</p>` : ""}
+          `;
+          return;
+        }
         document.getElementById("districtSummary").innerHTML = `
           <h2 class="result-district">${d.district}</h2>
           <div class="result-facts">
@@ -4218,6 +4347,7 @@
           electorate_type: firstRow.electorate_type || "",
           contest_status: firstRow.contest_status || "official",
           result_note: firstRow.result_note || "",
+          mandate_awarded: firstRow.mandate_awarded === "True",
           partyMap: {},
           partyVote: {},
           statusMap: {},
@@ -4332,9 +4462,9 @@
         const geojson = await response.json();
         if (!isCurrentElectionLoad(year, loadId)) return false;
         boundaryFeatures = geojson.features || [];
-        const initialType = isMmpElection() ? (activeDistrict?.electorate_type || "General") : "General";
+        const initialType = usesBoundaryTypeLayers() ? (activeDistrict?.electorate_type || "General") : "General";
         activeBoundaryType = initialType;
-        const visible = isMmpElection()
+        const visible = usesBoundaryTypeLayers()
           ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
           : boundaryFeatures;
         boundaryShapes = makeBoundaryShapes(visible);
