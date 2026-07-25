@@ -18,6 +18,7 @@ The app is map-first and party/bloc-first:
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
 - German Erststimme and Zweitstimme results for all 299 constituencies in the 2025, 2021, and 2017 Bundestag elections
+- Netherlands, Norway, and Sweden parliamentary results mapped by municipality for two elections each
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
@@ -270,6 +271,19 @@ data/spain_{2023|2019}_congress_boundaries.geojson
 
 These are multi-member closed-list proportional elections, not FPTP contests. The compact app rows use its local-leader view to map and rank the party list with the most votes in each electoral district or constituency; the district panel separately shows the number of seats allocated, and the national summary shows the actual Parliament seat totals. Portugal uses the Ministry of Internal Administration's official results and domestic inset map. Its four foreign-constituency seats remain in the 230-seat national summary without being assigned false domestic polygons. Spain uses the Central Electoral Board's certified BOE tables and Eurostat GISCO province geometry. The corrected November 2019 BOE tables are used, including the Zaragoza Más País–Chunta Aragonesista–Equo correction.
 
+Northern Europe coverage includes two parliamentary elections from each of the Netherlands, Norway, and Sweden:
+
+```text
+data/netherlands_{2025|2023}_house_fpp.csv
+data/netherlands_{2025|2023}_house_boundaries.geojson
+data/norway_{2025|2021}_storting_fpp.csv
+data/norway_{2025|2021}_storting_boundaries.geojson
+data/sweden_{2022|2018}_riksdag_fpp.csv
+data/sweden_{2022|2018}_riksdag_boundaries.geojson
+```
+
+These views map and rank the locally leading party across 342 Dutch, 356/357 Norwegian, and 290 Swedish municipalities. Municipalities do not allocate national MPs: the national Parliament chips show the actual 150-, 169-, and 349-seat outcomes. Results come from the Kiesraad, Valgdirektoratet, and Valmyndigheten, with annual Eurostat GISCO LAU geometry. Dutch Caribbean public-body and postal-vote totals remain in the certified national outcome but are not placed on a false mainland polygon.
+
 Philippines coverage includes the separate presidential and vice-presidential ballots held on 9 May 2022:
 
 ```text
@@ -465,6 +479,12 @@ data/france_2022_president_round_1_department_fpp.csv # French presidential depa
 data/france_2022_president_round_1_region_fpp.csv # matching election-time region results
 data/france_2022_department_boundaries.geojson # compact department/territory map with overseas insets
 data/france_2022_region_boundaries.geojson # compact election-time region map
+data/netherlands_2025_house_fpp.csv         # Kiesraad party-list totals for 342 municipalities
+data/netherlands_2025_house_boundaries.geojson # Eurostat GISCO municipality boundaries
+data/norway_2025_storting_fpp.csv           # Valgdirektoratet party totals for 357 municipalities
+data/norway_2025_storting_boundaries.geojson # Eurostat GISCO municipality boundaries
+data/sweden_2022_riksdag_fpp.csv            # Valmyndigheten results aggregated to 290 municipalities
+data/sweden_2022_riksdag_boundaries.geojson # Eurostat GISCO municipality boundaries
 data/philippines_2022_president_fpp.csv     # presidential candidate totals for 107 domestic COC map areas
 data/philippines_2022_vice_president_fpp.csv # vice-presidential candidate totals for the same areas
 data/philippines_2022_coc_boundaries.geojson # PSA municipal geometry dissolved to province/city COC areas
@@ -838,6 +858,15 @@ python3 scripts/smoke_static_app.py
 ```
 
 The builder checksum-pins Portugal's 40 domestic district results and official inset maps, Spain's certified BOE result and turnout tables, and Eurostat GISCO geometry. It requires exact ballot arithmetic and the 226 Portuguese domestic plus 350 Spanish constituency seat allocations before writing output. The static smoke adds one-to-one CSV/map, party-vote, ballot-total, and mapped-seat validation for all four elections.
+
+To rebuild the two Dutch, two Norwegian, and two Swedish parliamentary elections:
+
+```bash
+python3 scripts/build_northern_europe_elections.py
+python3 scripts/smoke_static_app.py
+```
+
+The builder checksum-pins the Dutch and Swedish publications plus each annual Eurostat GISCO LAU archive, and locks Norway's official API control totals. It validates every municipality's party-vote and ballot arithmetic before emitting the six compact local-leader views.
 
 The VEC scraper writes:
 
