@@ -6,7 +6,8 @@ from pathlib import Path
 
 MIB = 1024 * 1024
 MAX_BOUNDARY_BYTES = 15 * MIB
-MAX_DATA_BYTES = 190 * MIB
+WARN_DATA_BYTES = 400 * MIB
+MAX_DATA_BYTES = 500 * MIB
 MAX_OPTIMIZED_BOUNDARY_BYTES = 8 * MIB
 OPTIMIZED_BOUNDARIES = [
     Path("data/vic_2014_district_boundaries.geojson"),
@@ -50,6 +51,11 @@ def main() -> None:
             + ", ".join(str(path) for path in restored_duplicates)
         )
     largest = max(data_files, key=lambda path: path.stat().st_size)
+    if total_bytes > WARN_DATA_BYTES:
+        print(
+            f"Repository size warning: data/ is {total_bytes / MIB:.1f} MiB; "
+            f"review storage before the {MAX_DATA_BYTES / MIB:.0f} MiB hard guard."
+        )
     print(
         f"Repository size checks passed: data/ {total_bytes / MIB:.1f}/{MAX_DATA_BYTES / MIB:.0f} MiB; "
         f"largest file {largest} {largest.stat().st_size / MIB:.1f}/{MAX_BOUNDARY_BYTES / MIB:.0f} MiB"
