@@ -534,7 +534,7 @@ def build_level(
             year, level, code, area, department_names, region_names
         )
         ranked = sorted(area["votes"].items(), key=lambda item: (-item[1], item[0]))
-        constituency_code = f"FR{year}-T{round_number}-{'DPT' if level == 'department' else 'REG'}-{code}"
+        constituency_code = f"FR{year}-{'DPT' if level == 'department' else 'REG'}-{code}"
         area_type = "Region" if level == "region" else (
             "Overseas department / territory" if code.startswith("Z") else "Department"
         )

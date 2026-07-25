@@ -61,7 +61,7 @@ def validate_csv(year: int, round_number: int, level: str) -> tuple[set[str], di
             raise SystemExit(f"{path}: {area} margin is wrong")
         if float(first["turnout_pct"]) != round(total / enrolment * 100, 2):
             raise SystemExit(f"{path}: {area} turnout is wrong")
-        expected_prefix = f"FR{year}-T{round_number}-{'DPT' if level == 'department' else 'REG'}-"
+        expected_prefix = f"FR{year}-{'DPT' if level == 'department' else 'REG'}-"
         if not first["constituency_code"].startswith(expected_prefix):
             raise SystemExit(f"{path}: {area} has an invalid code")
         if first["contest_status"] != "official":
@@ -113,9 +113,11 @@ def main() -> None:
     for year in (2022, 2017, 2012, 2007):
         for level in ("department", "region"):
             round_one_districts, round_one_codes = validate_csv(year, 1, level)
-            round_two_districts, _ = validate_csv(year, 2, level)
+            round_two_districts, round_two_codes = validate_csv(year, 2, level)
             if round_one_districts != round_two_districts:
                 raise SystemExit(f"{year} {level}: mapped areas differ between rounds")
+            if round_one_codes != round_two_codes:
+                raise SystemExit(f"{year} {level}: shared area codes differ between rounds")
             validate_boundaries(year, level, round_one_districts, round_one_codes)
     print("France validation passed: 2007–2022, both rounds, departments/territories and regions")
 
