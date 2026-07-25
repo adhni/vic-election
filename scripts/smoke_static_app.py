@@ -179,8 +179,21 @@ REQUIRED_NORTHERN_EUROPE_MARKERS = (
     '"key": "sweden-riksdag-2022"',
     '"key": "sweden-riksdag-2018"',
     '"districtLabel": "Municipality"',
-    '["Netherlands", "Norway", "Sweden"].includes(activeElection().jurisdiction)',
+    '["Netherlands", "Norway", "Sweden", "Finland", "Austria"].includes(activeElection().jurisdiction)',
     "${d.district_seats ? `<div class=\"fact-item\"><span class=\"fact-label\">Seats allocated</span>",
+)
+REQUIRED_FINLAND_DENMARK_AUSTRIA_MARKERS = (
+    '"key": "finland-parliament-2023"',
+    '"key": "finland-parliament-2019"',
+    '"key": "denmark-folketing-2026"',
+    '"key": "denmark-folketing-2022"',
+    '"key": "austria-national-council-2024"',
+    '"key": "austria-national-council-2019"',
+    "compatible municipality turnout and invalid-ballot metadata are unavailable",
+    "Christiansø had no registered voters in 2026",
+    "postal votes are not assigned to false municipality polygons",
+    'activeElection().jurisdiction === "Denmark"',
+    '["Netherlands", "Norway", "Sweden", "Finland", "Austria"].includes(activeElection().jurisdiction)',
 )
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
@@ -254,6 +267,11 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_NORTHERN_EUROPE_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing northern Europe UI marker {marker!r}")
+    for marker in REQUIRED_FINLAND_DENMARK_AUSTRIA_MARKERS:
+        if marker not in html:
+            raise SystemExit(
+                f"{html_file}: missing Finland/Denmark/Austria marker {marker!r}"
+            )
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")
@@ -395,6 +413,12 @@ def validate_northern_europe(key: str, csv_path: Path) -> None:
         "norway-storting-2021": 356,
         "sweden-riksdag-2022": 290,
         "sweden-riksdag-2018": 290,
+        "finland-parliament-2023": 309,
+        "finland-parliament-2019": 311,
+        "denmark-folketing-2026": 98,
+        "denmark-folketing-2022": 99,
+        "austria-national-council-2024": 2_093,
+        "austria-national-council-2019": 2_096,
     }[key]
     if len(grouped) != expected_areas:
         raise SystemExit(f"{key}: expected {expected_areas} municipalities, found {len(grouped)}")
@@ -448,6 +472,7 @@ def main() -> None:
             validate_iberian(str(election["key"]), Path(str(election["csv"])))
         if str(election["key"]).startswith((
             "netherlands-house-", "norway-storting-", "sweden-riksdag-",
+            "finland-parliament-", "denmark-folketing-", "austria-national-council-",
         )):
             validate_northern_europe(str(election["key"]), Path(str(election["csv"])))
             if sum(int(seats) for _, seats in election.get("parliament", [])) != int(election["totalSeats"]):
