@@ -225,7 +225,7 @@ Completed FPP storage optimization:
 - updated all affected builders and validators so regenerated data stays compact
 - reduced checked-in `data/` from about 177.2 MiB to 170.2 MiB without dropping an election or result
 
-Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while a universal 99 MiB per-data-file guard keeps every data Git object below GitHub's 100 MiB limit. The stricter 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. This supports roughly 50 more compact elections at the recent average while retaining an explicit review point before the repository approaches GitHub's preferred size range.
+Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while a universal 99 MiB per-data-file guard keeps every data Git object below GitHub's 100 MiB limit. The stricter 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. After the Finland, Denmark, and Austria batch, checked-in `data/` is about 205.6 MiB, leaving roughly 194 MiB before the warning and 294 MiB before the hard guard.
 
 ## Deferred: Local Council Elections
 
@@ -243,7 +243,7 @@ Reasons:
 
 ## Recommended Next Concrete Task
 
-Continue international coverage in compact two-to-six-election batches, with Finland and Denmark as the next source-discovery candidates.
+The Finland, Denmark, and Austria six-election batch is complete. The next source-discovery candidates are Belgium and the Czech Republic, again limited to two recent elections each unless source or boundary complexity argues for a smaller batch.
 
 Insyallah, the best sequence is:
 

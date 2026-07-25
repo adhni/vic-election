@@ -18,7 +18,7 @@ The app is map-first and party/bloc-first:
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
 - German Erststimme and Zweitstimme results for all 299 constituencies in the 2025, 2021, and 2017 Bundestag elections
-- Netherlands, Norway, and Sweden parliamentary results mapped by municipality for two elections each
+- Netherlands, Norway, Sweden, Finland, Denmark, and Austria parliamentary results mapped by local area for two elections each
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
@@ -271,7 +271,7 @@ data/spain_{2023|2019}_congress_boundaries.geojson
 
 These are multi-member closed-list proportional elections, not FPTP contests. The compact app rows use its local-leader view to map and rank the party list with the most votes in each electoral district or constituency; the district panel separately shows the number of seats allocated, and the national summary shows the actual Parliament seat totals. Portugal uses the Ministry of Internal Administration's official results and domestic inset map. Its four foreign-constituency seats remain in the 230-seat national summary without being assigned false domestic polygons. Spain uses the Central Electoral Board's certified BOE tables and Eurostat GISCO province geometry. The corrected November 2019 BOE tables are used, including the Zaragoza Más País–Chunta Aragonesista–Equo correction.
 
-Northern Europe coverage includes two parliamentary elections from each of the Netherlands, Norway, and Sweden:
+Northern and Central Europe coverage includes two parliamentary elections from each of the Netherlands, Norway, Sweden, Finland, Denmark, and Austria:
 
 ```text
 data/netherlands_{2025|2023}_house_fpp.csv
@@ -280,9 +280,15 @@ data/norway_{2025|2021}_storting_fpp.csv
 data/norway_{2025|2021}_storting_boundaries.geojson
 data/sweden_{2022|2018}_riksdag_fpp.csv
 data/sweden_{2022|2018}_riksdag_boundaries.geojson
+data/finland_{2023|2019}_parliament_fpp.csv
+data/finland_{2023|2019}_parliament_boundaries.geojson
+data/denmark_{2026|2022}_folketing_fpp.csv
+data/denmark_{2026|2022}_folketing_boundaries.geojson
+data/austria_{2024|2019}_national_council_fpp.csv
+data/austria_{2024|2019}_national_council_boundaries.geojson
 ```
 
-These views map and rank the locally leading party across 342 Dutch, 356/357 Norwegian, and 290 Swedish municipalities. Municipalities do not allocate national MPs: the national Parliament chips show the actual 150-, 169-, and 349-seat outcomes. Results come from the Kiesraad, Valgdirektoratet, and Valmyndigheten, with annual Eurostat GISCO LAU geometry. Dutch Caribbean public-body and postal-vote totals remain in the certified national outcome but are not placed on a false mainland polygon.
+These views map and rank the locally leading party across Dutch, Norwegian, Swedish, Finnish, Danish, and Austrian municipalities or municipal reporting areas. Local areas do not allocate national MPs: the national Parliament chips show the actual certified seat outcomes. Results come from the countries' official election authorities and statistical agencies, with annual Eurostat GISCO LAU geometry. Unmapped national components remain in the certified national outcome rather than being assigned false polygons. In particular, Finnish local turnout is unavailable in a compatible form, Austrian postal ballots are reported separately from municipalities, and Denmark's zero-voter Christiansø area is omitted in 2026.
 
 Philippines coverage includes the separate presidential and vice-presidential ballots held on 9 May 2022:
 
@@ -487,6 +493,10 @@ data/norway_2025_storting_fpp.csv           # Valgdirektoratet party totals for 
 data/norway_2025_storting_boundaries.geojson # Eurostat GISCO municipality boundaries
 data/sweden_2022_riksdag_fpp.csv            # Valmyndigheten results aggregated to 290 municipalities
 data/sweden_2022_riksdag_boundaries.geojson # Eurostat GISCO municipality boundaries
+data/finland_2023_parliament_fpp.csv         # Statistics Finland party totals for 309 municipalities
+data/denmark_2026_folketing_fpp.csv          # Statistics Denmark party and ballot totals for 98 municipalities
+data/austria_2024_national_council_fpp.csv   # Interior Ministry assigned municipality totals
+data/austria_2024_national_council_boundaries.geojson # Eurostat GISCO municipality boundaries
 data/philippines_2022_president_fpp.csv     # presidential candidate totals for 107 domestic COC map areas
 data/philippines_2022_vice_president_fpp.csv # vice-presidential candidate totals for the same areas
 data/philippines_2022_coc_boundaries.geojson # PSA municipal geometry dissolved to province/city COC areas
@@ -610,7 +620,7 @@ The optimizer pins Mapshaper `0.7.45` through `npx` and skips files already belo
 
 First-past-the-post CSVs are also compacted structurally. Candidate totals are stored once as `first` rows and the browser creates the identical final standing in memory. This removes about 7 MiB of duplicate rows across New Zealand, the UK, Malaysia, Singapore, Canada, and India without changing any displayed result.
 
-The 500 MiB ceiling is a project guard, not GitHub's repository limit. GitHub recommends repositories remain below 1 GB where practical and strongly recommends staying below 5 GB, while blocking individual Git objects above 100 MiB. The universal 99 MiB data-file guard prevents a single CSV or other non-boundary asset from reaching that GitHub limit; boundary files retain their much smaller 15 MiB browser-performance guard. Keeping `data/` below 500 MiB leaves room for source code and Git history within the preferred range. At the current 184.5 MiB, approximately 315 MiB remains under this guard; the six-election Netherlands/Norway/Sweden batch added about 14 MiB, so another 50 similarly compact elections is realistic. Large raw downloads and browser screenshots belong in the ignored `tmp/` directory and should be deleted after validation. See [GitHub's large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
+The 500 MiB ceiling is a project guard, not GitHub's repository limit. GitHub recommends repositories remain below 1 GB where practical and strongly recommends staying below 5 GB, while blocking individual Git objects above 100 MiB. The universal 99 MiB data-file guard prevents a single CSV or other non-boundary asset from reaching that GitHub limit; boundary files retain their much smaller 15 MiB browser-performance guard. Keeping `data/` below 500 MiB leaves room for source code and Git history within the preferred range. At the current 205.6 MiB, approximately 294 MiB remains under this guard. Large raw downloads and browser screenshots belong in the ignored `tmp/` directory and should be deleted after validation. See [GitHub's large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
 
 ## CSV Format
 
@@ -871,6 +881,16 @@ python3 scripts/smoke_static_app.py
 ```
 
 The builder checksum-pins the Dutch and Swedish publications plus each annual Eurostat GISCO LAU archive, and locks Norway's official API control totals. It validates every municipality's party-vote and ballot arithmetic before emitting the six compact local-leader views.
+
+To rebuild the two Finnish, two Danish, and two Austrian parliamentary elections:
+
+```bash
+./.venv/bin/python scripts/build_finland_denmark_austria.py
+./.venv/bin/python scripts/validate_finland_denmark_austria.py
+python3 scripts/smoke_static_app.py
+```
+
+The builder checksum-pins Statistics Finland's parliamentary table, Statistics Denmark's municipal election table, both Austrian Interior Ministry final workbooks, and the 2019/2024 Eurostat GISCO LAU archives. It requires every local party total to reconcile, matches all result and geometry codes one-to-one, repairs invalid simplified rings, disambiguates repeated Austrian municipality names, and locks the official mapped and national control totals.
 
 The VEC scraper writes:
 
