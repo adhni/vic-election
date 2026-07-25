@@ -17,14 +17,16 @@ from shapely.ops import unary_union
 
 YEARS = (2024, 2020, 2016, 2012, 2008)
 COUNTY_SOURCE_PAGE = "https://github.com/tonmcg/US_County_Level_Election_Results_08-24"
+MIT_COUNTY_SOURCE_PAGE = "https://doi.org/10.7910/DVN/VOQCHQ"
 FEC_SOURCE_PAGE = "https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/"
 
 SOURCES = {
-    "county_old": (
-        "https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-24/"
-        "master/US_County_Level_Presidential_Results_08-16.csv",
-        "247888dab80432e03f6d42a8c0458356ad4115c03e3c84171cc9726395d85684",
-        "US_County_Level_Presidential_Results_08-16.csv",
+    "county_historical": (
+        "https://media.githubusercontent.com/media/Hackquantumcpp/california_MRP/"
+        "95d50c189434ac12464f3be82b2cc76251e851cd/"
+        "countypres_2000-2024.csv",
+        "1a2323d8d6ebb77c6593a0403aaec680c17f53a86c1664e74dcd58d8e63c3f5a",
+        "countypres_2000-2024-current.csv",
     ),
     "county_2020": (
         "https://raw.githubusercontent.com/tonmcg/US_County_Level_Election_Results_08-24/"
@@ -142,16 +144,24 @@ FIELDS = (
     "contest_status", "result_note",
 )
 
-COUNTY_NOTE = (
+CURRENT_COUNTY_NOTE = (
     "County-level Democratic, Republican and total vote figures come from a public compilation "
     "of state and media results; Other candidates is the residual. Alaska and the District of "
     "Columbia use official statewide totals because they do not report by county."
 )
+HISTORICAL_COUNTY_NOTE = (
+    "County-level candidate totals come from the MIT Election Data and Science Lab historical "
+    "returns. Kansas City is combined with Jackson County and Bedford City with Bedford County "
+    "to match the shared historical boundary file. Alaska and the District of Columbia use "
+    "official statewide totals."
+)
 STATE_NOTE = "Official statewide presidential totals compiled by the Federal Election Commission."
-KNOWN_OLD_TOTAL_CORRECTIONS = {
-    2008: {"18091", "29105", "29165", "39123", "55111"},
-    2012: set(),
-    2016: set(),
+EXPECTED_STATE_RECONCILIATION_SHA256 = {
+    2008: "ac799a48bfbf3838275dcf060c6295c152b41a4c14b46d94323c4b1e0fc468d8",
+    2012: "20c779898c272ab44c68c7318f50956dd134d67829c49873cd4c97b43877e6b8",
+    2016: "2d5babea9d5c85f358612b0cbcfaf290d84128ef2a5d0ffe32349be25c459a8a",
+    2020: "0883c0be1d70ca18dff3386d12671af0d46eb08de727973ac97ff4c7214a0c35",
+    2024: "1b2e4645469b974bf743424ea806fa85aec4cf667701eaf2631bc9014307cc27",
 }
 
 
@@ -237,31 +247,69 @@ def title_name(name: str) -> str:
     return " ".join(part.capitalize() if part not in {"of", "the"} else part for part in name.lower().split())
 
 
-def parse_old_counties(path: Path, year: int) -> dict[str, dict[str, object]]:
+def county_label(name: str, state_abbr: str) -> str:
+    label = title_name(name)
+    if label.endswith((" County", " Parish", " City", " Borough", " Census Area", " Municipality")):
+        return label
+    if state_abbr == "LA":
+        return f"{label} Parish"
+    return f"{label} County"
+
+
+def parse_historical_counties(path: Path, year: int) -> dict[str, dict[str, object]]:
     areas: dict[str, dict[str, object]] = {}
-    with path.open(newline="", encoding="utf-8-sig") as handle:
+    dem_name, rep_name = (name.upper() for name in CANDIDATES[year])
+    with path.open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
-            code = str(row["fips_code"]).zfill(5)
+            if number(row["year"]) != year:
+                continue
+            state_abbr = str(row["state_po"]).strip()
+            if state_abbr not in STATE_BY_ABBR or state_abbr in {"AK", "DC"}:
+                continue
+            if str(row["mode"]).strip() != "TOTAL":
+                raise SystemExit(f"MIT {year}: unexpected non-total mode {row['mode']!r}")
+            if not str(row["county_fips"]).strip():
+                if str(row["county_name"]).strip() not in {
+                    "STATEWIDE WRITEIN", "MAINE UOCAVA", "FEDERAL PRECINCT",
+                }:
+                    raise SystemExit(f"MIT {year}: unknown non-geographic return {row['county_name']!r}")
+                continue
+            raw_code = number(row["county_fips"])
+            if raw_code == 2_938_000 and state_abbr == "MO":
+                code = "29095"
+            else:
+                code = str(raw_code).zfill(5)
+            code = {"51515": "51019", "46102": "46113"}.get(code, code)
             if len(code) != 5 or code[:2] not in STATE_INFO:
-                continue
-            dem = number(row[f"dem_{year}"])
-            rep = number(row[f"gop_{year}"])
-            other = number(row[f"oth_{year}"])
-            published_total = number(row[f"total_{year}"])
-            total = dem + rep + other
-            if not total:
-                continue
-            if published_total != total and code not in KNOWN_OLD_TOTAL_CORRECTIONS[year]:
                 raise SystemExit(
-                    f"{year} {code}: unexpected county total mismatch "
-                    f"({published_total} != {dem} + {rep} + {other})"
+                    f"MIT {year}: unsupported reporting code {row['county_fips']!r} "
+                    f"for {row['county_name']}"
                 )
-            state = STATE_INFO[code[:2]][1]
-            county = str(row["county"]).strip()
-            areas[code] = {
-                "code": code, "district": f"{county}, {state}", "state": state,
-                "dem": dem, "rep": rep, "other": other, "total": total,
-            }
+            _, state = STATE_BY_ABBR[state_abbr]
+            fixed_label = {
+                "29095": "Jackson County",
+                "51019": "Bedford County",
+                "46113": "Shannon County",
+            }.get(code)
+            if state_abbr == "VA" and int(code[2:]) >= 500:
+                city_name = title_name(str(row["county_name"]))
+                fixed_label = city_name if city_name.endswith(" City") else f"{city_name} City"
+            area = areas.setdefault(code, {
+                "code": code,
+                "district": f"{fixed_label or county_label(str(row['county_name']), state_abbr)}, {state}",
+                "state": state,
+                "dem": 0,
+                "rep": 0,
+                "other": 0,
+                "total": 0,
+            })
+            candidate = str(row["candidate"]).strip().upper()
+            bucket = "dem" if candidate == dem_name else "rep" if candidate == rep_name else "other"
+            votes = number(row["candidatevotes"])
+            area[bucket] += votes
+            area["total"] += votes
+    if len(areas) != 3_111:
+        raise SystemExit(f"MIT {year}: expected 3,111 mapped county areas before fallbacks, found {len(areas)}")
     return areas
 
 
@@ -306,6 +354,32 @@ def add_statewide_fallbacks(
         }
 
 
+def validate_state_reconciliation(
+    year: int,
+    areas: dict[str, dict[str, object]],
+    state_results: dict[str, dict[str, object]],
+) -> None:
+    county_totals = {abbr: Counter() for abbr in state_results}
+    for area in areas.values():
+        abbr = STATE_BY_NAME[str(area["state"]).lower()][1]
+        for bucket in ("dem", "rep", "other"):
+            county_totals[abbr][bucket] += int(area[bucket])
+    report = {
+        abbr: [
+            int(state_results[abbr][bucket]) - county_totals[abbr][bucket]
+            for bucket in ("dem", "rep", "other")
+        ]
+        for abbr in sorted(state_results)
+    }
+    payload = json.dumps(report, sort_keys=True, separators=(",", ":")).encode()
+    digest = hashlib.sha256(payload).hexdigest()
+    if digest != EXPECTED_STATE_RECONCILIATION_SHA256[year]:
+        changed = {abbr: delta for abbr, delta in report.items() if any(delta)}
+        raise SystemExit(
+            f"{year}: county/FEC state reconciliation changed to {digest}: {changed}"
+        )
+
+
 def outcome(area: dict[str, object], year: int) -> tuple[str, str, int]:
     dem_name, rep_name = CANDIDATES[year]
     choices = [
@@ -324,8 +398,16 @@ def build_rows(
 ) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     dem_name, rep_name = CANDIDATES[year]
-    source_url = FEC_SOURCE_PAGE if geography == "state" else COUNTY_SOURCE_PAGE
-    note = STATE_NOTE if geography == "state" else COUNTY_NOTE
+    source_url = (
+        FEC_SOURCE_PAGE if geography == "state"
+        else MIT_COUNTY_SOURCE_PAGE if year <= 2016
+        else COUNTY_SOURCE_PAGE
+    )
+    note = (
+        STATE_NOTE if geography == "state"
+        else HISTORICAL_COUNTY_NOTE if year <= 2016
+        else CURRENT_COUNTY_NOTE
+    )
     for _, area in sorted(areas.items(), key=lambda item: (str(item[1]["state"]), str(item[1]["district"]))):
         code = str(area["code"])
         winner, winner_party, _ = outcome(area, year)
@@ -415,6 +497,27 @@ def build_historical_counties(
     return {"type": "FeatureCollection", "name": "us_presidential_historical_counties", "features": features}
 
 
+def apply_historical_boundary_labels(
+    path: Path,
+    historical_areas: list[dict[str, dict[str, object]]],
+) -> None:
+    source = json.loads(path.read_text(encoding="utf-8"))
+    labels = {}
+    for feature in source["features"]:
+        code = str(feature["id"]).zfill(5)
+        properties = feature["properties"]
+        name = str(properties["NAME"])
+        suffix = str(properties.get("LSAD", "")).strip()
+        labels[code] = name if not suffix or name.lower().endswith(suffix.lower()) else f"{name} {suffix}"
+    for areas in historical_areas:
+        for code, area in areas.items():
+            if code in {"02", "11001"}:
+                continue
+            if code not in labels:
+                raise SystemExit(f"Historical boundary label missing for {code}")
+            area["district"] = f"{labels[code]}, {area['state']}"
+
+
 def build_modern_counties(
     path: Path,
     areas: dict[str, dict[str, object]],
@@ -492,7 +595,7 @@ def main() -> None:
     }
     county_areas = {
         year: (
-            parse_old_counties(paths["county_old"], year)
+            parse_historical_counties(paths["county_historical"], year)
             if year <= 2016
             else parse_new_counties(paths[f"county_{year}"])
         )
@@ -500,6 +603,7 @@ def main() -> None:
     }
     for year in YEARS:
         add_statewide_fallbacks(county_areas[year], fec_states[year])
+        validate_state_reconciliation(year, county_areas[year], fec_states[year])
 
     state_areas = {
         year: {
@@ -514,6 +618,10 @@ def main() -> None:
     }
 
     states = state_geometries(paths["states_2019"])
+    apply_historical_boundary_labels(
+        paths["counties_2010"],
+        [county_areas[2008], county_areas[2012], county_areas[2016]],
+    )
     historical = build_historical_counties(paths["counties_2010"], county_areas[2008], states)
     if set(county_areas[2008]) != set(county_areas[2012]) or set(county_areas[2008]) != set(county_areas[2016]):
         raise SystemExit("Historical county identifier sets changed; shared boundary is unsafe")

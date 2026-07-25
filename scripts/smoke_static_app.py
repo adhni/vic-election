@@ -126,6 +126,8 @@ REQUIRED_US_PRESIDENTIAL_MARKERS = (
     '"defaultGeography": "county"',
     '"bipartisanMarginScale": true',
     '"mapModeLabel": "Red–blue margin"',
+    '"source": "Federal Election Commission / MIT Election Data and Science Lab"',
+    "Non-geographic statewide write-ins and military/overseas precincts",
     '"Strong Democratic"',
     '"Strong Republican"',
     'return count === 1 ? "county/reporting area" : "counties/reporting areas";',

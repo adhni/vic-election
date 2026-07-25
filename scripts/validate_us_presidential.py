@@ -2,20 +2,26 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
 from shapely.geometry import shape
 
-from build_us_presidential import CANDIDATES, YEARS
+from build_us_presidential import (
+    CANDIDATES,
+    EXPECTED_STATE_RECONCILIATION_SHA256,
+    STATE_BY_NAME,
+    YEARS,
+)
 
 
 EXPECTED_AREAS = {2008: 3113, 2012: 3113, 2016: 3113, 2020: 3113, 2024: 3114}
 EXPECTED_LOCAL_WINS = {
     2008: Counter({"Republican": 2238, "Democratic": 875}),
-    2012: Counter({"Republican": 2427, "Democratic": 686}),
-    2016: Counter({"Republican": 2626, "Democratic": 487}),
+    2012: Counter({"Republican": 2417, "Democratic": 696}),
+    2016: Counter({"Republican": 2623, "Democratic": 490}),
     2020: Counter({"Republican": 2575, "Democratic": 538}),
     2024: Counter({"Republican": 2662, "Democratic": 452}),
 }
@@ -28,8 +34,8 @@ EXPECTED_NATIONAL = {
 }
 SPOT_CHECKS = {
     2008: ("Lake County, Indiana", "Barack Obama", 139_301),
-    2012: ("Miami-Dade County, Florida", "Barack Obama", 540_776),
-    2016: ("Los Angeles County, California", "Hillary Clinton", 1_654_626),
+    2012: ("Miami-Dade County, Florida", "Barack Obama", 541_440),
+    2016: ("Los Angeles County, California", "Hillary Clinton", 2_464_364),
     2020: ("Maricopa County, Arizona", "Joe Biden", 1_040_774),
     2024: ("Maricopa County, Arizona", "Donald Trump", 1_051_531),
 }
@@ -116,6 +122,32 @@ def collect_longitudes(coordinates, target: list[float]) -> None:
         collect_longitudes(part, target)
 
 
+def validate_state_reconciliation(year: int, county_groups, state_groups) -> None:
+    county_totals = defaultdict(Counter)
+    state_totals = defaultdict(Counter)
+    for area_rows in county_groups.values():
+        state = area_rows[0]["electorate_type"]
+        for row in area_rows:
+            county_totals[state][row["candidate_party"].lower()] += int(row["votes"])
+    for state, area_rows in state_groups.items():
+        for row in area_rows:
+            state_totals[state][row["candidate_party"].lower()] += int(row["votes"])
+    report = {}
+    for state in sorted(state_totals):
+        abbr = STATE_BY_NAME[state.lower()][1]
+        report[abbr] = [
+            state_totals[state][party] - county_totals[state][party]
+            for party in ("democratic", "republican", "other")
+        ]
+    payload = json.dumps(report, sort_keys=True, separators=(",", ":")).encode()
+    digest = hashlib.sha256(payload).hexdigest()
+    if digest != EXPECTED_STATE_RECONCILIATION_SHA256[year]:
+        changed = {abbr: delta for abbr, delta in report.items() if any(delta)}
+        raise SystemExit(
+            f"{year}: generated county/FEC reconciliation changed to {digest}: {changed}"
+        )
+
+
 def validate_boundary(path: Path, groups, codes) -> None:
     data = json.loads(path.read_text(encoding="utf-8"))
     features = data.get("features", [])
@@ -143,6 +175,7 @@ def main() -> None:
     for year in YEARS:
         county_groups, county_codes = validate_rows(year, "county")
         state_groups, state_codes = validate_rows(year, "state")
+        validate_state_reconciliation(year, county_groups, state_groups)
         if year <= 2016:
             boundary = Path("data/us_president_2008_2016_county_boundaries.geojson")
             if historical_groups is None:
