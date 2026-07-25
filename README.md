@@ -472,6 +472,8 @@ data/canada_2021_fpp.csv                   # Elections Canada GE2021 results for
 data/canada_2021_federal_boundaries.geojson # Elections Canada 44th-election riding boundaries
 data/thailand_2026_fpp.csv                  # ECT/Thai PBS candidate results for all 400 constituency seats
 data/thailand_2026_constituency_cartogram.geojson # Thai PBS equal-area seat cartogram (not legal boundaries)
+data/north_korea_2026_spa.csv               # State-published elected deputy list for all 687 SPA constituencies
+data/north_korea_2026_spa_cartogram.geojson # Equal-area seat grid by official constituency number
 data/japan_2026_house_fpp.csv                # Japan 2026 single-member constituency candidate results
 data/japan_2024_house_fpp.csv                # Japan 2024 single-member constituency candidate results
 data/japan_2022_house_constituency_schematic.geojson # Shared post-2022 schematic with metro insets
@@ -926,6 +928,13 @@ The South Korea President 2025 and 2022 options validate against:
 - 250 historical areas and 3,000 candidate rows for 2022
 - exact official candidate, invalid-ballot, turnout, electorate, winner, and margin totals
 - all 17 first-level regions with matching SGIS-derived geometry and documented historical adjustments
+
+The North Korea SPA 2026 option validates against:
+
+- all 687 numbered constituencies and elected deputies in the Central Election Committee press release
+- the official sequence from Mangyongdae No. 1 through Kumgangsan No. 687
+- blank constituency vote, turnout, margin, and affiliation fields rather than invented values
+- 687 matching equal-area seat-grid cells explicitly marked as non-geographic
 
 The federal 2019 Australia option validates against:
 

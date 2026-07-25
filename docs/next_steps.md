@@ -211,6 +211,13 @@ India first-past-the-post feasibility is now proven by the `India General 2024` 
 - Esri India's election-specific layer supplies all 543 matching boundaries and an independent winner/margin cross-check outside its known shifted Assam attributes
 - the generic no-transfer interface supports Indian constituencies with state/union-territory summaries and party-specific colours
 
+North Korea elected-deputy-list feasibility is now proven by the `North Korea SPA 2026` integration:
+
+- the Central Election Committee press release publishes a complete ordered list of all 687 constituencies and elected deputies
+- constituency vote totals, margins, electorates, and candidate affiliations remain unavailable rather than being invented from national figures
+- the app supports a clearly disclosed non-geographic seat grid and disables unavailable margin analysis
+- state-reported national turnout and candidate-support figures are labelled as such and accompanied by an independent-verification caveat
+
 Completed FPP storage optimization:
 
 - removed duplicated final copies from every `fpp` and `mmp-fpp` CSV

@@ -2354,6 +2354,29 @@
         ]
       },
       {
+        "key": "north-korea-spa-2026",
+        "label": "North Korea SPA 2026",
+        "type": "national",
+        "jurisdiction": "North Korea",
+        "year": 2026,
+        "source": "DPRK Central Election Committee via Korea News Service",
+        "system": "fpp",
+        "systemLabel": "Single-candidate constituency ballot",
+        "methodNote": "The state-reported election returned one pre-selected candidate in each of 687 constituencies. The published national figures were 99.99% turnout and 99.93% support for registered candidates. Constituency vote totals and candidate affiliations were not published, so this view shows only the elected deputy list and does not calculate margins.",
+        "firstVoteLabel": "Elected deputy",
+        "districtLabel": "Constituency",
+        "mapModeLabel": "Deputy list",
+        "membersOnly": true,
+        "csv": "data/north_korea_2026_spa.csv",
+        "boundaries": "data/north_korea_2026_spa_cartogram.geojson",
+        "totalSeats": 687,
+        "areaLabel": "Legislature",
+        "cartogram": true,
+        "cartogramLabel": "Equal-area seat grid ordered by official constituency number—not geographic boundaries. Click a cell to explore.",
+        "nationalTurnoutPct": 99.99,
+        "nationalSupportPct": 99.93
+      },
+      {
         "key": "canada-2021",
         "label": "Canada Federal 2021",
         "type": "national",
@@ -3012,7 +3035,7 @@
       if (["Netherlands", "Norway", "Sweden"].includes(activeElection().jurisdiction)) return count === 1 ? "municipality" : "municipalities";
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
       if (activeElection().jurisdiction === "Germany") return count === 1 ? "constituency" : "constituencies";
-      if (["United Kingdom", "Malaysia", "India", "Japan", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
+      if (["United Kingdom", "Malaysia", "India", "Japan", "Thailand", "North Korea"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
       if (activeElection().jurisdiction === "Canada") return count === 1 ? "riding" : "ridings";
       const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";
@@ -3074,11 +3097,12 @@
       const requestedYear = params.get("year");
       const year = electionYearAliases[requestedYear] || requestedYear;
       const system = electionYears[year]?.system;
+      const membersOnly = Boolean(electionYears[year]?.membersOnly);
       const requestedGeography = params.get("geo");
       const geography = electionYears[year]?.geographies?.[requestedGeography] ? requestedGeography : "";
       const allowedMapModes = system === "mmp-fpp"
         ? ["party", "party-vote", "close"]
-        : system === "fpp" ? ["party", "close"] : ["party", "close", "changed"];
+        : system === "fpp" ? (membersOnly ? ["party"] : ["party", "close"]) : ["party", "close", "changed"];
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
@@ -3199,6 +3223,14 @@
           <strong>${d.district}</strong>
           <div>No digitised vote</div>
           <span>The 2014 C1 archive contains no candidate totals for this area.</span>
+        `;
+      }
+      if (d.contest_status === "single-candidate") {
+        const [deputy] = getWinnerFromFinal(d);
+        return `
+          <strong>${d.district}</strong>
+          <div>Elected deputy · ${shortName(deputy)}</div>
+          <span>Constituency vote total not published.</span>
         `;
       }
       const [winner] = getWinnerFromFinal(d);
@@ -3388,7 +3420,15 @@
         const mapTitle = isMultiMemberElection()
           ? `${d.district} · ${electedSeatSummary(d)}`
           : isFppElection()
-            ? `${d.district} · ${d.contest_status === "cancelled" ? "electorate vote cancelled" : d.contest_status === "unavailable" ? "no digitised vote" : `${partyLabel(winnerParty)} · ${shortName(winner)}`}`
+            ? `${d.district} · ${
+                d.contest_status === "cancelled"
+                  ? "electorate vote cancelled"
+                  : d.contest_status === "unavailable"
+                    ? "no digitised vote"
+                    : d.contest_status === "single-candidate"
+                      ? `elected deputy ${shortName(winner)} · vote total not published`
+                      : `${partyLabel(winnerParty)} · ${shortName(winner)}`
+              }`
             : `${d.district} · ${partyBloc(winnerParty)} · ${partyLabel(winnerParty)} · ${shortName(winner)}`;
         return `
           <path
@@ -3559,6 +3599,12 @@
         const chips = [
           `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
         ];
+        if (Number.isFinite(election.nationalTurnoutPct)) {
+          chips.push(`<span class="summary-chip">State-reported turnout <strong>${Number(election.nationalTurnoutPct).toFixed(2)}%</strong></span>`);
+        }
+        if (Number.isFinite(election.nationalSupportPct)) {
+          chips.push(`<span class="summary-chip">State-reported candidate support <strong>${Number(election.nationalSupportPct).toFixed(2)}%</strong></span>`);
+        }
         if (election.teamElection) {
           chips.push(`<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> elected MPs</span>`);
         }
@@ -3636,6 +3682,15 @@
       if (!target) return;
       if (!allDistricts.length) {
         target.innerHTML = `<div class="ranking-card"><p class="ranking-empty">No election rows loaded.</p></div>`;
+        return;
+      }
+      if (activeElection().membersOnly) {
+        target.innerHTML = `
+          <section class="ranking-card">
+            <div class="section-title">Constituency margins unavailable</div>
+            <p class="ranking-empty">The state report publishes the elected deputy in each constituency, but not constituency vote totals. Use the search or seat grid to open a constituency.</p>
+          </section>
+        `;
         return;
       }
 
@@ -3873,9 +3928,10 @@
         button.onclick = () => setGeography(button.dataset.geography);
       });
       document.getElementById("partyVoteMapMode").classList.toggle("hidden", !mmp);
-      document.querySelector('[data-map-mode="party"]').textContent = activeElection().jurisdiction === "Germany" ? "Erststimme" : "Winner";
+      document.querySelector('[data-map-mode="party"]').textContent = activeElection().mapModeLabel || (activeElection().jurisdiction === "Germany" ? "Erststimme" : "Winner");
       document.getElementById("partyVoteMapMode").textContent = activeElection().jurisdiction === "Germany" ? "Zweitstimme" : "Party vote";
       document.getElementById("changedMapMode").classList.toggle("hidden", fpp);
+      document.querySelector('[data-map-mode="close"]').classList.toggle("hidden", Boolean(activeElection().membersOnly));
       document.getElementById("boundaryTypeModes").classList.toggle("hidden", !usesBoundaryTypeLayers());
       geographyModes.classList.toggle("hidden", !activeElection().geographies);
       document.querySelectorAll("[data-geography]").forEach(button => {
@@ -3884,20 +3940,23 @@
       document.getElementById("roundsTabButton").classList.toggle("hidden", fpp);
       document.getElementById("chartTabButton").classList.toggle("hidden", fpp);
       document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", fpp);
-      document.querySelector('label[for="partyFilter"]').textContent = analyticalLocalVote ? "Local winner" : fpp ? "Winner party" : "Bloc";
+      document.getElementById("closeOnly").closest(".check-pill").classList.toggle("hidden", Boolean(activeElection().membersOnly));
+      document.querySelector('label[for="partyFilter"]').textContent = activeElection().membersOnly ? "Deputy affiliation" : analyticalLocalVote ? "Local winner" : fpp ? "Winner party" : "Bloc";
       document.getElementById("primaryVoteTitle").textContent = analyticalLocalVote ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? activeElection().partyVoteLabel || "Party vote" : "Final standing";
-      document.getElementById("finalVotePanel").classList.toggle("hidden", analyticalLocalVote);
-      document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeElection().districtLabel || activeDataset().label : "Seat";
-      document.getElementById("districtSearch").placeholder = analyticalLocalVote ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
+      document.getElementById("finalVotePanel").classList.toggle("hidden", analyticalLocalVote || Boolean(activeElection().membersOnly));
+      document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeElection().districtLabel || activeDataset().label : activeElection().districtLabel || "Seat";
+      document.getElementById("districtSearch").placeholder = analyticalLocalVote || activeElection().membersOnly ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
       document.getElementById("mapSubtitle").textContent = analyticalLocalVote
         ? `Click ${/^[aeiou]/i.test(electorateLabel(1)) ? "an" : "a"} ${electorateLabel(1)} to explore its ${activeElection().localVoteLabel || "local presidential vote"}.${activeElection().schematicMap ? ` ${activeElection().schematicMapLabel || "This is a schematic map, not legal boundaries."}` : ""}`
         : activeElection().cartogram
-          ? `Equal-area ${electorateLabel(1)} cartogram (not legal boundaries). Click a seat to explore.`
+          ? activeElection().cartogramLabel || `Equal-area ${electorateLabel(1)} cartogram (not legal boundaries). Click a seat to explore.`
           : activeElection().schematicMap
             ? activeElection().schematicMapLabel || `Schematic ${electorateLabel(1)} map with metropolitan insets (not legal boundaries). Click a seat to explore.`
             : "Click a seat to explore.";
-      document.getElementById("rankingsSubtitle").textContent = analyticalLocalVote
+      document.getElementById("rankingsSubtitle").textContent = activeElection().membersOnly
+        ? "Constituency-level margins are unavailable in the published result."
+        : analyticalLocalVote
         ? `Local-result leaderboards across the selected ${electorateLabel(2)}. Click a row to open that area.`
         : "Election-wide leaderboards for the selected election. Click a row to open that district or division.";
       if (fpp && (activeTab === "rounds" || activeTab === "chart")) activeTab = "overview";
@@ -3918,7 +3977,7 @@
         ? [...new Set(allDistricts.flatMap(d => electedBlocs(d)))].sort()
         : ["Labor", "Coalition", "Greens", "Independent", "Other"];
       const winningBlocs = blocOrder.filter(bloc => allDistricts.some(d => electedBlocs(d).includes(bloc)));
-      partyFilter.innerHTML = [`<option value="all">${["presidential", "party-list"].includes(activeElection().contestType) ? activeElection().candidateFilterLabel || "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
+      partyFilter.innerHTML = [`<option value="all">${activeElection().membersOnly ? "Any affiliation" : ["presidential", "party-list"].includes(activeElection().contestType) ? activeElection().candidateFilterLabel || "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
         winningBlocs.map(p => `<option value="${p}">${p}</option>`)
       ).join("");
       partyFilter.value = winningBlocs.includes(selectedParty) ? selectedParty : "all";
@@ -4206,6 +4265,7 @@
         const [runnerUp] = getSecondFromFinal(d);
         const teamElection = Boolean(activeElection().teamElection);
         const uncontested = d.contest_status === "uncontested";
+        const singleCandidate = d.contest_status === "single-candidate";
         const members = electedMembers(d);
         const memberList = members.map(name => shortName(name)).join(" · ");
         const systemLabel = activeElection().systemLabel || (teamElection && d.electorate_type === "GRC" ? "Plurality block vote" : "First past the post");
@@ -4223,8 +4283,8 @@
             <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${systemLabel}</span></div>
             <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
             ${teamElection ? `<div class="fact-item"><span class="fact-label">Members elected</span><span class="fact-value">${memberList}</span></div>` : ""}
-            <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${uncontested ? "Uncontested" : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`}</span></div>
-            <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
+            <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${uncontested ? "Uncontested" : singleCandidate ? "Not published" : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`}</span></div>
+            <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${singleCandidate ? "Not published" : fmt.format(d.formal_votes)}</span></div>
             <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${turnoutLabel}</span></div>
           </div>
           <p class="pref-impact">${methodNote}</p>
@@ -4334,19 +4394,20 @@
     function renderBars(target, obj, denominator, highlightName, d) {
       const rows = ranked(obj);
       const max = rows[0]?.[1] || 1;
+      const votesUnavailable = d.contest_status === "single-candidate";
       document.getElementById(target).innerHTML = rows.map(([candidate, votes]) => {
         const party = getParty(d, candidate);
         const color = partyColor(party);
         const isHighlight = candidate === highlightName || (isMultiMemberElection() && isElectedCandidate(d, candidate));
         const status = isMultiMemberElection() && isElectedCandidate(d, candidate) ? ` · elected ${d.electedOrder?.[candidate] || ""}` : "";
         return `
-          <div class="bar-row" title="${partyLabel(party)} · ${candidate}: ${fmt.format(votes)}${status}">
+          <div class="bar-row" title="${partyLabel(party)} · ${candidate}: ${votesUnavailable ? "vote total not published" : fmt.format(votes)}${status}">
             <div class="bar-label">
               <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
               <div class="candidate-line">${shortName(candidate)}${status ? ` · elected ${d.electedOrder?.[candidate]}` : ""}</div>
             </div>
-            <div class="track"><div class="fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${isHighlight ? 1 : .72};"></div></div>
-            <div class="bar-value">${fmt.format(votes)}<br><span style="font-size:10px">${pct(votes, denominator)}</span></div>
+            <div class="track"><div class="fill" style="width:${votesUnavailable ? 100 : Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${votesUnavailable ? .28 : isHighlight ? 1 : .72};"></div></div>
+            <div class="bar-value">${votesUnavailable ? "—" : fmt.format(votes)}<br><span style="font-size:10px">${votesUnavailable ? "not published" : pct(votes, denominator)}</span></div>
           </div>
         `;
       }).join("");
@@ -4555,7 +4616,7 @@
                 <td>${r.excluded ? shortName(r.excluded) : "—"}</td>
                 <td>${partyLabel(r.candidate_party)}</td>
                 <td>${shortName(r.candidate)}</td>
-                <td class="right">${fmt.format(r.votes)}</td>
+                <td class="right">${d.contest_status === "single-candidate" ? "Not published" : fmt.format(r.votes)}</td>
               </tr>`).join("")}
           </tbody>
         </table>
