@@ -218,7 +218,7 @@ Completed FPP storage optimization:
 - updated all affected builders and validators so regenerated data stays compact
 - reduced checked-in `data/` from about 177.2 MiB to 170.2 MiB without dropping an election or result
 
-Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while the 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. This supports roughly 50 more compact elections at the recent average while retaining an explicit review point before the repository approaches GitHub's preferred size range.
+Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while a universal 99 MiB per-data-file guard keeps every data Git object below GitHub's 100 MiB limit. The stricter 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. This supports roughly 50 more compact elections at the recent average while retaining an explicit review point before the repository approaches GitHub's preferred size range.
 
 ## Deferred: Local Council Elections
 

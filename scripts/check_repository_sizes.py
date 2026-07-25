@@ -5,6 +5,7 @@ from pathlib import Path
 
 
 MIB = 1024 * 1024
+MAX_DATA_FILE_BYTES = 99 * MIB
 MAX_BOUNDARY_BYTES = 15 * MIB
 WARN_DATA_BYTES = 400 * MIB
 MAX_DATA_BYTES = 500 * MIB
@@ -19,9 +20,23 @@ OPTIMIZED_BOUNDARIES = [
 REMOVED_DUPLICATES = [Path("data/vic_2018_district_boundaries.geojson")]
 
 
+def find_oversized_data_files(data_files: list[Path]) -> list[tuple[Path, int]]:
+    return [
+        (path, path.stat().st_size)
+        for path in data_files
+        if path.stat().st_size > MAX_DATA_FILE_BYTES
+    ]
+
+
 def main() -> None:
     data_files = [path for path in Path("data").rglob("*") if path.is_file()]
     total_bytes = sum(path.stat().st_size for path in data_files)
+    oversized_data_files = find_oversized_data_files(data_files)
+    if oversized_data_files:
+        details = ", ".join(
+            f"{path} ({size / MIB:.1f} MiB)" for path, size in oversized_data_files
+        )
+        raise SystemExit(f"Data file size limit exceeded: {details}")
     oversized = [
         (path, path.stat().st_size)
         for path in data_files
@@ -58,7 +73,7 @@ def main() -> None:
         )
     print(
         f"Repository size checks passed: data/ {total_bytes / MIB:.1f}/{MAX_DATA_BYTES / MIB:.0f} MiB; "
-        f"largest file {largest} {largest.stat().st_size / MIB:.1f}/{MAX_BOUNDARY_BYTES / MIB:.0f} MiB"
+        f"largest file {largest} {largest.stat().st_size / MIB:.1f}/{MAX_DATA_FILE_BYTES / MIB:.0f} MiB"
     )
 
 
