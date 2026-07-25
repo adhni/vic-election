@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import csv
 import json
+from collections import Counter
 from pathlib import Path
 
 from shapely.geometry import shape
@@ -17,6 +18,7 @@ SPECS = {
         "formal": 3_095_604,
         "informal": 0,
         "enrolment": 0,
+        "special_statuses": {"aggregated": 16},
     },
     "finland-2019": {
         "csv": Path("data/finland_2019_parliament_fpp.csv"),
@@ -26,6 +28,7 @@ SPECS = {
         "formal": 3_081_916,
         "informal": 0,
         "enrolment": 0,
+        "special_statuses": {"aggregated": 16},
     },
     "denmark-2026": {
         "csv": Path("data/denmark_2026_folketing_fpp.csv"),
@@ -53,6 +56,7 @@ SPECS = {
         "formal": 4_758_596,
         "informal": 45_378,
         "enrolment": 0,
+        "special_statuses": {"tied": 8},
     },
     "austria-2019": {
         "csv": Path("data/austria_2019_national_council_fpp.csv"),
@@ -62,6 +66,7 @@ SPECS = {
         "formal": 4_062_147,
         "informal": 52_089,
         "enrolment": 0,
+        "special_statuses": {"tied": 1},
     },
 }
 
@@ -83,6 +88,7 @@ def validate(key: str, spec: dict[str, object]) -> None:
         raise SystemExit(f"{key}: expected {spec['areas']} areas, found {len(grouped)}")
 
     formal_total = informal_total = enrolment_total = 0
+    special_statuses: Counter[str] = Counter()
     district_names: set[str] = set()
     for code, district_rows in grouped.items():
         metadata = {
@@ -106,6 +112,11 @@ def validate(key: str, spec: dict[str, object]) -> None:
             raise SystemExit(f"{key} {district}: ballot totals do not reconcile")
         if sum(int(row["votes"]) for row in district_rows) != formal:
             raise SystemExit(f"{key} {district}: party votes do not equal valid votes")
+        status = district_rows[0]["contest_status"]
+        if status != "official":
+            special_statuses[status] += 1
+            if any(row["elected_member"] or row["elected_party"] for row in district_rows):
+                raise SystemExit(f"{key} {district}: non-leader result declares a winner")
         if district in district_names:
             raise SystemExit(f"{key}: duplicate district name {district}")
         district_names.add(district)
@@ -118,6 +129,11 @@ def validate(key: str, spec: dict[str, object]) -> None:
     if actual_totals != expected_totals:
         raise SystemExit(
             f"{key}: control totals changed; expected {expected_totals}, found {actual_totals}"
+        )
+    if dict(special_statuses) != spec.get("special_statuses", {}):
+        raise SystemExit(
+            f"{key}: unexpected special outcomes; expected "
+            f"{spec.get('special_statuses', {})}, found {dict(special_statuses)}"
         )
 
     boundary_data = json.loads(spec["boundaries"].read_text(encoding="utf-8"))

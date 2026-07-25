@@ -147,6 +147,17 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
         writer.writerows(rows)
 
 
+def mark_local_outcome(
+    rows: list[dict[str, object]], status: str, note: str
+) -> list[dict[str, object]]:
+    for row in rows:
+        row["elected_member"] = ""
+        row["elected_party"] = ""
+        row["contest_status"] = status
+        row["result_note"] = f"{note} {row['result_note']}"
+    return rows
+
+
 def download_post_csv(
     session: requests.Session,
     url: str,
@@ -191,19 +202,25 @@ def build_finland(path: Path, output_dir: Path) -> None:
                 if party == "Number of votes cast per party, total" or not count:
                     continue
                 votes[FINLAND_PARTIES.get(party, party)] += count
-            rows.extend(
-                election_rows(
-                    district,
-                    f"FI_{code}",
-                    dict(votes),
-                    0,
-                    formal,
-                    0,
-                    FINLAND_SOURCE_PAGE,
-                    "Finland",
-                    note,
-                )
+            district_rows = election_rows(
+                district,
+                f"FI_{code}",
+                dict(votes),
+                0,
+                formal,
+                0,
+                FINLAND_SOURCE_PAGE,
+                "Finland",
+                note,
             )
+            if set(votes) == {"Other"}:
+                mark_local_outcome(
+                    district_rows,
+                    "aggregated",
+                    "Statistics Finland reports Åland local lists only as aggregate Others; "
+                    "a local leader is unavailable.",
+                )
+            rows.extend(district_rows)
 
         expected = EXPECTED[("finland", year)]
         codes = {row["constituency_code"] for row in rows}
@@ -346,19 +363,28 @@ def build_austria(
             for column in party_columns
             if integer(source.iloc[column])
         }
-        rows.extend(
-            election_rows(
-                district,
-                boundary_code,
-                votes,
-                0,
-                integer(source.iloc[5]),
-                integer(source.iloc[4]),
-                AUSTRIA_SOURCE_PAGES[year],
-                "Austria",
-                note,
-            )
+        district_rows = election_rows(
+            district,
+            boundary_code,
+            votes,
+            0,
+            integer(source.iloc[5]),
+            integer(source.iloc[4]),
+            AUSTRIA_SOURCE_PAGES[year],
+            "Austria",
+            note,
         )
+        top_votes = max(votes.values())
+        tied_parties = sorted(
+            party for party, party_votes in votes.items() if party_votes == top_votes
+        )
+        if len(tied_parties) > 1:
+            mark_local_outcome(
+                district_rows,
+                "tied",
+                f"Local party lead tied between {' and '.join(tied_parties)}.",
+            )
+        rows.extend(district_rows)
 
     expected = EXPECTED[("austria", year)]
     if len(boundary_codes) != expected["areas"]:

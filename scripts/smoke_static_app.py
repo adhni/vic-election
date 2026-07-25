@@ -189,9 +189,12 @@ REQUIRED_FINLAND_DENMARK_AUSTRIA_MARKERS = (
     '"key": "denmark-folketing-2022"',
     '"key": "austria-national-council-2024"',
     '"key": "austria-national-council-2019"',
-    "compatible municipality turnout and invalid-ballot metadata are unavailable",
+    "Compatible municipality turnout and invalid-ballot metadata are unavailable",
     "Christiansø had no registered voters in 2026",
     "postal votes are not assigned to false municipality polygons",
+    "function localResultState(d)",
+    "Aggregated local lists",
+    "Tied local leaders",
     'activeElection().jurisdiction === "Denmark"',
     '["Netherlands", "Norway", "Sweden", "Finland", "Austria"].includes(activeElection().jurisdiction)',
 )

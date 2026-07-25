@@ -2126,7 +2126,7 @@
         "system": "fpp",
         "contestType": "party-list",
         "systemLabel": "Open-list proportional representation · D'Hondt by constituency",
-        "methodNote": "Finland elects 200 MPs through 13 multi-member constituencies. Municipalities do not allocate seats; this map shows the locally leading party across 309 municipalities. Statistics Finland publishes exact municipality valid-vote totals, but compatible municipality turnout and invalid-ballot metadata are unavailable and are not inferred.",
+        "methodNote": "Finland elects 200 MPs through 13 multi-member constituencies. Municipalities do not allocate seats; this map shows the locally leading party across 309 municipalities. Statistics Finland aggregates Åland's locally competing lists as Others, so those municipalities are shown without a local leader. Compatible municipality turnout and invalid-ballot metadata are unavailable and are not inferred.",
         "candidateVoteLabel": "Party-list vote",
         "candidateFilterLabel": "Any locally leading party",
         "localVoteLabel": "party-list vote",
@@ -2147,7 +2147,7 @@
         "system": "fpp",
         "contestType": "party-list",
         "systemLabel": "Open-list proportional representation · D'Hondt by constituency",
-        "methodNote": "Finland elects 200 MPs through 13 multi-member constituencies. Municipalities do not allocate seats; this map shows the locally leading party across the 311 municipalities then in force. Statistics Finland groups 2019 voters' associations, including Movement Now candidates, in its historical Other category; compatible municipality turnout and invalid-ballot metadata are unavailable and are not inferred.",
+        "methodNote": "Finland elects 200 MPs through 13 multi-member constituencies. Municipalities do not allocate seats; this map shows the locally leading party across the 311 municipalities then in force. Statistics Finland aggregates Åland's locally competing lists as Others, so those municipalities are shown without a local leader; its 2019 historical Other category also groups voters' associations, including Movement Now candidates. Compatible municipality turnout and invalid-ballot metadata are unavailable and are not inferred.",
         "candidateVoteLabel": "Party-list vote",
         "candidateFilterLabel": "Any locally leading party",
         "localVoteLabel": "party-list vote",
@@ -3123,6 +3123,31 @@
       return rankedForOutcome(d, d.first)[0] || ["—", 0];
     }
 
+    function localResultState(d) {
+      const rows = rankedForOutcome(d, getFinal(d));
+      const topVotes = rows[0]?.[1] || 0;
+      const leaders = rows.filter(([, votes]) => votes === topVotes);
+      const aggregated = d.contest_status === "aggregated" || (
+        activeElection().jurisdiction === "Finland"
+        && rows.length === 1
+        && partyLabel(getParty(d, rows[0]?.[0])).toLowerCase() === "other"
+      );
+      return {
+        status: aggregated
+          ? "aggregated"
+          : d.contest_status === "tied" || leaders.length > 1
+            ? "tied"
+            : "leader",
+        leaders,
+        topVotes
+      };
+    }
+
+    function localLeaderNames(d) {
+      return localResultState(d).leaders
+        .map(([candidate]) => partyLabel(getParty(d, candidate)));
+    }
+
     function finalMargin(d) {
       if (isMultiMemberElection()) return Number(d.majority || 0);
       const [, winnerVotes] = getWinnerFromFinal(d);
@@ -3144,11 +3169,17 @@
 
     function winningParty(d) {
       if (activeElection().contestType === "presidential" && !d.formal_votes) return "No digitised vote";
+      if (activeElection().contestType === "party-list") {
+        const state = localResultState(d);
+        if (state.status === "aggregated") return "Aggregated local lists";
+        if (state.status === "tied") return "Tied local leaders";
+      }
       return partyLabel(getParty(d, getWinnerFromFinal(d)[0]));
     }
 
     function winningBloc(d) {
       if (isMultiMemberElection()) return leadingElectedBloc(d);
+      if (activeElection().contestType === "party-list") return winningParty(d);
       if (activeElection().contestType === "presidential") return winningParty(d);
       return partyBloc(getParty(d, getWinnerFromFinal(d)[0]));
     }
@@ -3310,6 +3341,10 @@
         const color = partyColor(party);
         return { color, fill: hexToRgba(color, .68), label: partyLabel(party) };
       }
+      if (activeElection().contestType === "party-list" && localResultState(d).status === "aggregated") {
+        const color = "#7a7f87";
+        return { color, fill: hexToRgba(color, .35), label: "N/A" };
+      }
       const winnerParty = winningParty(d);
       const marginPct = d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
       if (activeMapMode === "close") {
@@ -3359,6 +3394,23 @@
           <div>No digitised vote</div>
           <span>The 2014 C1 archive contains no candidate totals for this area.</span>
         `;
+      }
+      if (activeElection().contestType === "party-list") {
+        const state = localResultState(d);
+        if (state.status === "aggregated") {
+          return `
+            <strong>${d.district}</strong>
+            <div>Aggregated local lists</div>
+            <span>The source does not identify a municipality leader.</span>
+          `;
+        }
+        if (state.status === "tied") {
+          return `
+            <strong>${d.district}</strong>
+            <div>Tie · ${localLeaderNames(d).join(" / ")}</div>
+            <span>${fmt.format(state.topVotes)} votes each · margin 0.0%</span>
+          `;
+        }
       }
       const [winner] = getWinnerFromFinal(d);
       const winnerParty = getParty(d, winner);
@@ -3544,10 +3596,21 @@
         const isMuted = !shown.has(d.district);
         const [winner] = getWinnerFromFinal(d);
         const winnerParty = getParty(d, winner);
+        const localState = activeElection().contestType === "party-list" ? localResultState(d) : null;
         const mapTitle = isMultiMemberElection()
           ? `${d.district} · ${electedSeatSummary(d)}`
           : isFppElection()
-            ? `${d.district} · ${d.contest_status === "cancelled" ? "electorate vote cancelled" : d.contest_status === "unavailable" ? "no digitised vote" : `${partyLabel(winnerParty)} · ${shortName(winner)}`}`
+            ? `${d.district} · ${
+                d.contest_status === "cancelled"
+                  ? "electorate vote cancelled"
+                  : d.contest_status === "unavailable"
+                    ? "no digitised vote"
+                    : localState?.status === "aggregated"
+                      ? "aggregated local lists · local leader unavailable"
+                      : localState?.status === "tied"
+                        ? `${localLeaderNames(d).join(" / ")} tied on ${fmt.format(localState.topVotes)} votes`
+                        : `${partyLabel(winnerParty)} · ${shortName(winner)}`
+              }`
             : `${d.district} · ${partyBloc(winnerParty)} · ${partyLabel(winnerParty)} · ${shortName(winner)}`;
         return `
           <path
@@ -3800,7 +3863,11 @@
 
       const topCount = Math.min(5, allDistricts.length);
       if (isFppElection()) {
-        const contested = allDistricts.filter(d => d.contest_status !== "cancelled" && d.formal_votes > 0);
+        const contested = allDistricts.filter(d =>
+          d.contest_status !== "cancelled"
+          && d.formal_votes > 0
+          && localResultState(d).status !== "aggregated"
+        );
         const closest = [...contested]
           .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || finalMargin(a) - finalMargin(b) || a.district.localeCompare(b.district))
           .slice(0, topCount);
@@ -3811,6 +3878,10 @@
           <section class="ranking-card">
             <div class="section-title">${title}</div>
             ${rankingsListHtml(items, d => {
+              const state = localResultState(d);
+              if (state.status === "tied") {
+                return `${localLeaderNames(d).join(" and ")} tied · ${d.electorate_type}`;
+              }
               const [winner] = getWinnerFromFinal(d);
               const [runnerUp] = getSecondFromFinal(d);
               return `${shortName(winner)} over ${shortName(runnerUp)} · ${d.electorate_type}`;
@@ -4319,13 +4390,24 @@
           const [winner] = getWinnerFromFinal(d);
           const winnerParty = getParty(d, winner);
           const [runnerUp] = getSecondFromFinal(d);
+          const localState = localResultState(d);
+          const leaderValue = localState.status === "aggregated"
+            ? "Unavailable — aggregated local lists"
+            : localState.status === "tied"
+              ? localState.leaders.map(([candidate]) => badgeHtml(getParty(d, candidate))).join(" / ")
+              : badgeHtml(winnerParty);
+          const marginValue = localState.status === "aggregated"
+            ? "Not available"
+            : localState.status === "tied"
+              ? `Tie on ${fmt.format(localState.topVotes)} votes each`
+              : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`;
           document.getElementById("districtSummary").innerHTML = `
             <h2 class="result-district">${d.district}</h2>
             <div class="result-facts">
               <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
               <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
-              <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${badgeHtml(winnerParty)}</span></div>
-              <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
+              <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${leaderValue}</span></div>
+              <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${marginValue}</span></div>
               ${d.district_seats ? `<div class="fact-item"><span class="fact-label">Seats allocated</span><span class="fact-value">${fmt.format(d.district_seats)}</span></div>` : ""}
               <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available"}</span></div>
             </div>
@@ -4728,7 +4810,11 @@
       }
       renderRankings();
       renderSummary(activeDistrict);
-      const [primaryLeader] = getFirstLeader(activeDistrict);
+      const [rankedPrimaryLeader] = getFirstLeader(activeDistrict);
+      const primaryLeader = activeElection().contestType === "party-list"
+        && localResultState(activeDistrict).status !== "leader"
+        ? ""
+        : rankedPrimaryLeader;
       const [winner] = getWinnerFromFinal(activeDistrict);
       renderBars("primaryBars", activeDistrict.first, activeDistrict.formal_votes, primaryLeader, activeDistrict);
       if (isMmpElection()) {
