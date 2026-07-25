@@ -72,6 +72,17 @@ REQUIRED_THAILAND_MARKERS = (
     "not a legal-boundary map",
     'activeElection().jurisdiction === "Thailand"',
 )
+REQUIRED_JAPAN_MARKERS = (
+    '"key": "japan-house-2026"',
+    '"key": "japan-house-2024"',
+    '"jurisdiction": "Japan"',
+    '"electorateSeats": 289',
+    '"listSeats": 176',
+    '"totalSeats": 465',
+    '"schematicMap": true',
+    "post-2022 schematic with metropolitan insets",
+    'activeElection().jurisdiction === "Japan"',
+)
 REQUIRED_US_MARKERS = (
     '"key": "us-house-2024"',
     '"jurisdiction": "United States"',
@@ -163,6 +174,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_THAILAND_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Thailand 2026 UI marker {marker!r}")
+    for marker in REQUIRED_JAPAN_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Japan House UI marker {marker!r}")
     for marker in REQUIRED_US_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. House UI marker {marker!r}")
