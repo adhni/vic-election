@@ -117,6 +117,19 @@ REQUIRED_US_MARKERS = (
     'if (p === "republican") return "#c62828";',
     'Number(d.enrolment || 0) > 0',
 )
+REQUIRED_US_PRESIDENTIAL_MARKERS = (
+    '"key": "us-president-2024"',
+    '"key": "us-president-2020"',
+    '"key": "us-president-2016"',
+    '"key": "us-president-2012"',
+    '"key": "us-president-2008"',
+    '"defaultGeography": "county"',
+    '"bipartisanMarginScale": true',
+    '"mapModeLabel": "Red–blue margin"',
+    '"Strong Democratic"',
+    '"Strong Republican"',
+    'return count === 1 ? "county/reporting area" : "counties/reporting areas";',
+)
 REQUIRED_INDONESIA_MARKERS = (
     '"key": "indonesia-president-2024"',
     '"key": "indonesia-president-2019"',
@@ -267,6 +280,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_US_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. House UI marker {marker!r}")
+    for marker in REQUIRED_US_PRESIDENTIAL_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing U.S. presidential UI marker {marker!r}")
     for marker in REQUIRED_INDONESIA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Indonesia presidential UI marker {marker!r}")

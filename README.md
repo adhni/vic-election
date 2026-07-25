@@ -20,6 +20,7 @@ The app is map-first and party/bloc-first:
 - German Erststimme and Zweitstimme results for all 299 constituencies in the 2025, 2021, and 2017 Bundestag elections
 - Netherlands, Norway, Sweden, Finland, Denmark, and Austria parliamentary results mapped by local area for two elections each
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
+- United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
 - Separate Philippine presidential and vice-presidential results for 2022, mapped by domestic province/city certificate of canvass
@@ -322,7 +323,18 @@ data/south_korea_2022_municipal_boundaries.geojson
 
 Both views show the locally leading presidential candidate across all municipality/election-commission reporting areas, while making clear that the president is elected by one nationwide plurality vote. The result files are official National Election Commission polling-district returns aggregated to 252 areas in 2025 and 250 areas in 2022. The maps use Statistics Korea SGIS municipal geometry. For 2025, Hwaseong's two commission areas are combined into its municipal polygon; for 2022, the builder restores the former unified Bucheon reporting area and Gunwi's election-time placement in North Gyeongsang.
 
-United States coverage currently includes the 2024 House election, covering all 435 voting congressional districts across the 50 states:
+United States presidential coverage includes 2024, 2020, 2016, 2012, and 2008. Each election can switch between a county/reporting-area view and an official state/DC view:
+
+```text
+data/us_2024_president_county_fpp.csv
+data/us_2024_president_state_fpp.csv
+data/us_president_2024_county_boundaries.geojson
+data/us_president_state_boundaries.geojson
+```
+
+The same result-file pattern is used for the other four years. County rows retain the Democratic and Republican nominees plus an `Other candidates` residual, while state/DC rows are sourced from official FEC result workbooks. Alaska and DC use official statewide totals in the local view because the shared county compilation does not provide comparable county-level reporting there. Historical county geometry is matched to each election period, including Connecticut's transition to planning regions in 2024. The default map shades Democratic wins from pale to deep blue and Republican wins from pale to deep red according to the local winning margin.
+
+United States House coverage currently includes the 2024 election, covering all 435 voting congressional districts across the 50 states:
 
 ```text
 data/us_2024_house_fpp.csv
@@ -568,6 +580,7 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 │   ├── build_indonesia_presidential.py
 │   ├── build_philippines_2022.py
 │   ├── build_us_house.py
+│   ├── build_us_presidential.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
 │   ├── validate_france_presidential.py
@@ -576,6 +589,7 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 │   ├── validate_indonesia_presidential.py
 │   ├── validate_philippines_2022.py
 │   ├── validate_us_house.py
+│   ├── validate_us_presidential.py
 │   └── validate_vec_csv.py
 ├── docs/
 │   └── data_notes.md
@@ -664,6 +678,13 @@ To rebuild and validate the United States House 2024 dataset (the builder downlo
 ```bash
 ./.venv/bin/python scripts/build_us_house.py
 ./.venv/bin/python scripts/validate_us_house.py
+```
+
+To rebuild and validate the five United States presidential elections (the builder downloads checksum-pinned FEC result workbooks, county results, and Census-compatible boundaries):
+
+```bash
+./.venv/bin/python scripts/build_us_presidential.py
+./.venv/bin/python scripts/validate_us_presidential.py
 ```
 
 For historical state elections:
