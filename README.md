@@ -17,6 +17,7 @@ The app is map-first and party/bloc-first:
 - Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025, 2020, and 2015 general elections
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
+- Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
 - Separate Philippine presidential and vice-presidential results for 2022, mapped by domestic province/city certificate of canvass
@@ -207,6 +208,18 @@ data/india_2024_parliamentary_boundaries.geojson
 ```
 
 India uses first past the post, so preference-transfer views are hidden. The dataset preserves all 8,360 candidates and 542 NOTA options. Candidate totals and turnout metadata are reconciled against the Election Commission of India's final statistical report. Esri India's 2024 parliamentary layer supplies the matching election-specific boundaries and an independent winner/margin check outside Assam, whose layer attributes are shifted between the newly delimited seats. Surat is retained as an uncontested return with no invented votes or turnout.
+
+Japan coverage includes the 8 February 2026 and 27 October 2024 House of Representatives elections, with all 289 single-member constituency contests:
+
+```text
+data/japan_2026_house_fpp.csv
+data/japan_2024_house_fpp.csv
+data/japan_2022_house_constituency_schematic.geojson
+```
+
+Japan uses parallel voting: these views cover the 289 first-past-the-post constituency seats, while the separate regional proportional ballot elects another 176 members. Candidate figures are validated against the Ministry of Internal Affairs and Communications result publications. The 2024 transcription is also reconciled by constituency and candidate-vote total with Yukiyanai's public academic dataset. The official national party summary allocates a tiny number of ambiguous ballots fractionally; the candidate tables publish whole-vote figures, which the app preserves and explicitly discloses. District turnout and invalid-ballot metadata are not invented.
+
+Both elections use the constituency allocation introduced by the 2022 redistribution. The compact shared map is derived from the Wikimedia/NHK post-redistribution SVG and retains its metropolitan insets. It is a schematic discovery map, not a legal-boundary GIS layer.
 
 Thailand coverage includes the 8 February 2026 general election, with all 400 single-member constituency contests and all 3,527 candidates across 77 provinces:
 
@@ -407,6 +420,9 @@ data/canada_2021_fpp.csv                   # Elections Canada GE2021 results for
 data/canada_2021_federal_boundaries.geojson # Elections Canada 44th-election riding boundaries
 data/thailand_2026_fpp.csv                  # ECT/Thai PBS candidate results for all 400 constituency seats
 data/thailand_2026_constituency_cartogram.geojson # Thai PBS equal-area seat cartogram (not legal boundaries)
+data/japan_2026_house_fpp.csv                # Japan 2026 single-member constituency candidate results
+data/japan_2024_house_fpp.csv                # Japan 2024 single-member constituency candidate results
+data/japan_2022_house_constituency_schematic.geojson # Shared post-2022 schematic with metro insets
 data/philippines_2022_president_fpp.csv     # presidential candidate totals for 107 domestic COC map areas
 data/philippines_2022_vice_president_fpp.csv # vice-presidential candidate totals for the same areas
 data/philippines_2022_coc_boundaries.geojson # PSA municipal geometry dissolved to province/city COC areas
@@ -723,6 +739,16 @@ python3 scripts/validate_thailand_2026.py
 ```
 
 The builder downloads pinned English master data and the 18 March ECT official result snapshot from Thai PBS, preserves the earlier ECT enrolment denominator for turnout, and extracts the 400 keyed cells from Thai PBS's nationwide cartogram asset. The later-certified Suphan Buri 2 candidate result is included with a mandatory disclosure and without unavailable post-recount turnout metadata.
+
+To rebuild and validate Japan's 2026 and 2024 House constituency files:
+
+```bash
+python3 scripts/build_japan_house.py
+python3 scripts/validate_japan_house.py --year 2026
+python3 scripts/validate_japan_house.py --year 2024
+```
+
+The builder checksum-pins the official Ministry candidate publications, the structured candidate transcription, an independent 2024 academic audit, and the post-2022 schematic source. It requires all 289 constituencies, exact candidate and winner counts, national whole-vote totals, and a one-to-one result/map match.
 
 To rebuild and validate the Philippines 2022 executive-election files:
 

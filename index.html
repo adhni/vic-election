@@ -1655,6 +1655,42 @@
         "areaLabel": "State / union territory"
       },
       {
+        "key": "japan-house-2026",
+        "label": "Japan House 2026",
+        "type": "national",
+        "jurisdiction": "Japan",
+        "year": 2026,
+        "source": "Ministry of Internal Affairs and Communications, Japan",
+        "system": "fpp",
+        "systemLabel": "Parallel voting · constituency ballot FPTP",
+        "methodNote": "Japan elected 289 members in single-member constituencies and 176 through a separate regional proportional ballot. This view covers the 289 constituency contests. The map is a post-2022 schematic with metropolitan insets, not a legal-boundary GIS layer.",
+        "csv": "data/japan_2026_house_fpp.csv",
+        "boundaries": "data/japan_2022_house_constituency_schematic.geojson",
+        "electorateSeats": 289,
+        "listSeats": 176,
+        "totalSeats": 465,
+        "areaLabel": "Prefecture",
+        "schematicMap": true
+      },
+      {
+        "key": "japan-house-2024",
+        "label": "Japan House 2024",
+        "type": "national",
+        "jurisdiction": "Japan",
+        "year": 2024,
+        "source": "Ministry of Internal Affairs and Communications, Japan",
+        "system": "fpp",
+        "systemLabel": "Parallel voting · constituency ballot FPTP",
+        "methodNote": "Japan elected 289 members in single-member constituencies and 176 through a separate regional proportional ballot. This view covers the 289 constituency contests. The map is a post-2022 schematic with metropolitan insets, not a legal-boundary GIS layer.",
+        "csv": "data/japan_2024_house_fpp.csv",
+        "boundaries": "data/japan_2022_house_constituency_schematic.geojson",
+        "electorateSeats": 289,
+        "listSeats": 176,
+        "totalSeats": 465,
+        "areaLabel": "Prefecture",
+        "schematicMap": true
+      },
+      {
         "key": "thailand-2026",
         "label": "Thailand General 2026",
         "type": "national",
@@ -2148,6 +2184,26 @@
         for (let i = 0; i < p.length; i += 1) hash = ((hash << 5) - hash + p.charCodeAt(i)) | 0;
         return palette[Math.abs(hash) % palette.length];
       }
+      if (activeElection().jurisdiction === "Japan") {
+        const japanColors = {
+          "liberal democratic party": "#3d6fb4",
+          "centrist reform alliance": "#5d4c9b",
+          "constitutional democratic party": "#1769aa",
+          "japan innovation party": "#62a744",
+          "democratic party for the people": "#e7a322",
+          "komeito": "#e987aa",
+          "japanese communist party": "#c62f3a",
+          "reiwa shinsengumi": "#d13d83",
+          "sanseitō": "#e9792d",
+          "social democratic party": "#2a8db8",
+          "conservative party of japan": "#24578f",
+          "team mirai": "#24a9a8",
+          "genzei nippon–yūkoku alliance": "#8d6d35",
+          "independent": "#737b87",
+          "other": "#8a6a3f"
+        };
+        if (japanColors[p]) return japanColors[p];
+      }
       if (activeElection().jurisdiction === "Thailand") {
         const thailandColors = {
           "bhumjaithai": "#312682", "people's party": "#ff6d21", "pheu thai": "#f11824",
@@ -2373,7 +2429,7 @@
       if (activeElection().jurisdiction === "Mexico") return count === 1 ? "federal district" : "federal districts";
       if (activeElection().jurisdiction === "South Korea") return count === 1 ? "municipality/district" : "municipalities/districts";
       if (activeElection().jurisdiction === "New Zealand") return count === 1 ? "electorate" : "electorates";
-      if (["United Kingdom", "Malaysia", "India", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
+      if (["United Kingdom", "Malaysia", "India", "Japan", "Thailand"].includes(activeElection().jurisdiction)) return count === 1 ? "constituency" : "constituencies";
       if (activeElection().jurisdiction === "Singapore") return count === 1 ? "electoral division" : "electoral divisions";
       if (activeElection().jurisdiction === "Canada") return count === 1 ? "riding" : "ridings";
       const noun = activeElectionYear.startsWith("federal-") || activeElection().jurisdiction === "Tasmania" ? "division" : "district";
@@ -3228,7 +3284,9 @@
         ? `Click a ${electorateLabel(1)} to explore its ${activeElection().localVoteLabel || "local presidential vote"}.`
         : activeElection().cartogram
           ? `Equal-area ${electorateLabel(1)} cartogram (not legal boundaries). Click a seat to explore.`
-          : "Click a seat to explore.";
+          : activeElection().schematicMap
+            ? `Schematic ${electorateLabel(1)} map with metropolitan insets (not legal boundaries). Click a seat to explore.`
+            : "Click a seat to explore.";
       document.getElementById("rankingsSubtitle").textContent = presidential
         ? `Local-result leaderboards across the selected ${electorateLabel(2)}. Click a row to open that area.`
         : "Election-wide leaderboards for the selected election. Click a row to open that district or division.";

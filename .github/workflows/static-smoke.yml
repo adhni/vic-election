@@ -80,6 +80,8 @@ jobs:
           python scripts/validate_canada_federal.py --year 2025
           python scripts/validate_canada_federal.py --year 2021
           python scripts/validate_india_federal.py
+          python scripts/validate_japan_house.py --year 2026
+          python scripts/validate_japan_house.py --year 2024
           python scripts/validate_thailand_2026.py
           python scripts/validate_philippines_2022.py
           python scripts/validate_mexico_2024.py
