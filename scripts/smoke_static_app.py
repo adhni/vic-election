@@ -268,6 +268,19 @@ REQUIRED_FINLAND_DENMARK_AUSTRIA_MARKERS = (
     'activeElection().jurisdiction === "Denmark"',
     '["Netherlands", "Norway", "Sweden", "Finland", "Austria"].includes(activeElection().jurisdiction)',
 )
+REQUIRED_ITALY_MARKERS = (
+    '"key": "italy-chamber-2022"',
+    '"key": "italy-chamber-2018"',
+    '"jurisdiction": "Italy"',
+    '"totalSeats": 400',
+    '"totalSeats": 630',
+    "Aosta Valley's separate direct seat",
+    "Compatible local turnout metadata is unavailable",
+    '"tightMapView": true',
+    '"wideMobileMap": true',
+    'activeElection().jurisdiction === "Italy"',
+    '"brothers of italy": "#173f8a"',
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -362,6 +375,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
             raise SystemExit(
                 f"{html_file}: missing Finland/Denmark/Austria marker {marker!r}"
             )
+    for marker in REQUIRED_ITALY_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Italy Chamber marker {marker!r}")
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")
@@ -565,6 +581,9 @@ def main() -> None:
             "finland-parliament-", "denmark-folketing-", "austria-national-council-",
         )):
             validate_northern_europe(str(election["key"]), Path(str(election["csv"])))
+            if sum(int(seats) for _, seats in election.get("parliament", [])) != int(election["totalSeats"]):
+                raise SystemExit(f"{election['key']}: Parliament seats do not match totalSeats")
+        if str(election["key"]).startswith("italy-chamber-"):
             if sum(int(seats) for _, seats in election.get("parliament", [])) != int(election["totalSeats"]):
                 raise SystemExit(f"{election['key']}: Parliament seats do not match totalSeats")
     print("Static app smoke passed")

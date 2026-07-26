@@ -19,6 +19,7 @@ The app is map-first and party/bloc-first:
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
 - German Erststimme and Zweitstimme results for all 299 constituencies in the 2025, 2021, and 2017 Bundestag elections
 - Netherlands, Norway, Sweden, Finland, Denmark, and Austria parliamentary results mapped by local area for two elections each
+- Italian Chamber proportional-list results for 2022 and 2018 mapped by province
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
 - United States Senate results for the 2024, 2022, 2020, 2018, and 2016 regular election cycles, with county/reporting-area and official state views; concurrent special elections are excluded
@@ -307,6 +308,15 @@ data/austria_{2024|2019}_national_council_boundaries.geojson
 ```
 
 These views map and rank the locally leading party across Dutch, Norwegian, Swedish, Finnish, Danish, and Austrian municipalities or municipal reporting areas. Local areas do not allocate national MPs: the national Parliament chips show the actual certified seat outcomes. Results come from the countries' official election authorities and statistical agencies, with annual Eurostat GISCO LAU geometry. Unmapped national components remain in the certified national outcome rather than being assigned false polygons. In particular, Finnish local turnout is unavailable in a compatible form, Austrian postal ballots are reported separately from municipalities, and Denmark's zero-voter Christiansø area is omitted in 2026.
+
+Italy coverage includes the two latest completed Chamber elections:
+
+```text
+data/italy_{2022|2018}_chamber_province_fpp.csv
+data/italy_{2022|2018}_province_boundaries.geojson
+```
+
+Italy uses a mixed system combining direct constituencies and proportional lists. These compact views aggregate municipality party-list votes to the 106 provinces covered by proportional reporting, showing the locally leading list rather than claiming that provinces elect individual deputies. Aosta Valley's separate direct-seat contest and overseas constituencies remain represented in the 400-seat or 630-seat national summaries but are not assigned false provincial party-list results. The 2022 rows use the Interior Ministry's municipality CSV directly; the 2018 rows use a checksum-pinned OnData preservation of the Ministry-format exports. Both maps use year-matched official ISTAT province boundaries.
 
 Philippines coverage includes the separate presidential and vice-presidential ballots held on 9 May 2022:
 
@@ -980,6 +990,16 @@ python3 scripts/smoke_static_app.py
 ```
 
 The builder checksum-pins Statistics Finland's parliamentary table, Statistics Denmark's municipal election table, both Austrian Interior Ministry final workbooks, and the 2019/2024 Eurostat GISCO LAU archives. It requires every local party total to reconcile, matches all result and geometry codes one-to-one, repairs invalid simplified rings, disambiguates repeated Austrian municipality names, and locks the official mapped and national control totals.
+
+To rebuild and validate the two Italian Chamber elections:
+
+```bash
+python3 scripts/build_italy_chamber.py
+python3 scripts/validate_italy_chamber.py
+python3 scripts/smoke_static_app.py
+```
+
+The builder checksum-pins the official 2022 Ministry municipality export, the preserved 2018 Ministry-format result and crosswalk files, and ISTAT's election-year administrative boundaries. It aggregates list votes to provinces, handles split-city reporting units, locks the mapped national and major-party totals, and omits Aosta Valley rather than mixing its direct-seat result into a proportional-list map. The validator independently checks all 106 areas per election, exact party totals, local leaders, 2022 turnout arithmetic, unavailable 2018 turnout metadata, valid geometry, and one-to-one CSV/boundary joins.
 
 The VEC scraper writes:
 

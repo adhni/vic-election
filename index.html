@@ -2743,6 +2743,52 @@
         "parliament": [["ÖVP",71],["SPÖ",40],["FPÖ",31],["GRÜNE",26],["NEOS",15]]
       },
       {
+        "key": "italy-chamber-2022",
+        "label": "Italy Chamber 2022",
+        "type": "national",
+        "jurisdiction": "Italy",
+        "year": 2022,
+        "source": "Italian Ministry of the Interior / ISTAT",
+        "system": "fpp",
+        "contestType": "party-list",
+        "systemLabel": "Mixed-member majoritarian · direct and proportional seats",
+        "methodNote": "Italy elected 400 deputies through direct constituencies and proportional lists. The map shows the leading proportional party list across 106 provinces; provinces do not allocate these seats. Aosta Valley's separate direct seat and overseas constituencies remain in the Parliament total but are not assigned false provincial party-list results.",
+        "candidateVoteLabel": "Proportional party-list vote",
+        "candidateFilterLabel": "Any locally leading party",
+        "localVoteLabel": "proportional party-list vote",
+        "districtLabel": "Province",
+        "csv": "data/italy_2022_chamber_province_fpp.csv",
+        "boundaries": "data/italy_2022_province_boundaries.geojson",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "totalSeats": 400,
+        "areaLabel": "Country",
+        "parliament": [["Centre-right coalition",237],["Centre-left coalition",85],["Five Star Movement",52],["Action–Italia Viva",21],["Minority/direct-seat lists",5]]
+      },
+      {
+        "key": "italy-chamber-2018",
+        "label": "Italy Chamber 2018",
+        "type": "national",
+        "jurisdiction": "Italy",
+        "year": 2018,
+        "source": "Italian Ministry data via OnData / ISTAT",
+        "system": "fpp",
+        "contestType": "party-list",
+        "systemLabel": "Mixed-member majoritarian · direct and proportional seats",
+        "methodNote": "Italy elected 630 deputies through direct constituencies and proportional lists. The map shows the leading proportional party list across 106 provinces; provinces do not allocate these seats. Aosta Valley's separate direct seat and overseas constituencies remain in the Parliament total but are not assigned false provincial party-list results. Compatible local turnout metadata is unavailable.",
+        "candidateVoteLabel": "Proportional party-list vote",
+        "candidateFilterLabel": "Any locally leading party",
+        "localVoteLabel": "proportional party-list vote",
+        "districtLabel": "Province",
+        "csv": "data/italy_2018_chamber_province_fpp.csv",
+        "boundaries": "data/italy_2018_province_boundaries.geojson",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "totalSeats": 630,
+        "areaLabel": "Country",
+        "parliament": [["Centre-right coalition",265],["Five Star Movement",227],["Centre-left coalition",122],["Free and Equal",14],["Other direct/overseas seats",2]]
+      },
+      {
         "key": "portugal-legislative-2025",
         "label": "Portugal Legislative 2025",
         "type": "national",
@@ -3423,6 +3469,19 @@
         };
         if (germanyColors[p]) return germanyColors[p];
       }
+      if (activeElection().jurisdiction === "Italy") {
+        const italyColors = {
+          "brothers of italy": "#173f8a", "democratic party": "#d71920",
+          "five star movement": "#f2c500", "lega": "#2d8a4b",
+          "forza italia": "#2f61bf", "action–italia viva": "#b33f91",
+          "greens and left alliance": "#5a9e3f", "more europe": "#e58ab5",
+          "free and equal": "#b51f2e", "svp–patt": "#333333",
+          "centre-right coalition": "#2456a6", "centre-left coalition": "#d94b49",
+          "minority/direct-seat lists": "#7a7f87",
+          "other direct/overseas seats": "#7a7f87"
+        };
+        if (italyColors[p]) return italyColors[p];
+      }
       if (activeElection().jurisdiction === "Indonesia") {
         if (p === "no digitised vote") return "#7a7f87";
         if (p === "anies–muhaimin") return "#16858c";
@@ -3888,6 +3947,7 @@
           ? (count === 1 ? "region" : "regions")
           : (count === 1 ? "department/territory" : "departments/territories");
       }
+      if (activeElection().jurisdiction === "Italy") return count === 1 ? "province" : "provinces";
       if (activeElection().jurisdiction === "Argentina") return count === 1 ? "province" : "provinces";
       if (activeElection().jurisdiction === "Brazil") return count === 1 ? "state/DF" : "states/DF";
       if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";
@@ -4261,7 +4321,7 @@
       const mapH = (maxLat - minLat) * scale;
       const offsetX = (width - mapW) / 2;
       const offsetY = (height - mapH) / 2;
-      mapBaseView = activeElection().cartogram
+      mapBaseView = activeElection().cartogram || activeElection().tightMapView
         ? {
             x: Math.max(0, offsetX - 8),
             y: Math.max(0, offsetY - 8),
