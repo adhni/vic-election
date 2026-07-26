@@ -37,6 +37,9 @@ EXCLUDED_SPECIAL_CANDIDATES = {
     2020: {"Raphael Warnock", "Kelly Loeffler"},
     2018: {"Tina Smith", "Cindy Hyde-Smith"},
 }
+NON_CANDIDATE_BALLOT_LABELS = {
+    "Absentee/Military", "Affidavit", "Spoiled", "Void",
+}
 KNOWN_COUNTY_WINNER_DIFFERENCES = {
     (2016, "New Hampshire"): ("Kelly Ayotte", "Maggie Hassan"),
 }
@@ -145,6 +148,12 @@ def validate_rows(
             state_names.add(metadata["district"])
 
     candidate_names = {row["candidate"] for row in rows}
+    leaked_ballot_labels = NON_CANDIDATE_BALLOT_LABELS & candidate_names
+    if leaked_ballot_labels:
+        raise SystemExit(
+            f"{path}: non-candidate ballot categories leaked in: "
+            f"{sorted(leaked_ballot_labels)}"
+        )
     excluded = EXCLUDED_SPECIAL_CANDIDATES.get(year, set()) & candidate_names
     if excluded:
         raise SystemExit(f"{path}: concurrent special-election candidates leaked in: {sorted(excluded)}")
@@ -206,6 +215,11 @@ def main() -> None:
         )
         if state_rows[0]["elected_member"] != winner:
             raise SystemExit(f"{year} {state}: decisive-result spot check failed")
+        if year == 2016:
+            nassau = county_groups["US-SENATE-COUNTY-36059"]
+            nassau_votes = {row["candidate"]: int(row["votes"]) for row in nassau}
+            if nassau_votes.get("Wendy Long") != 210_823 or "Wendy Ross" in nassau_votes:
+                raise SystemExit("2016 Nassau County: Wendy Long alias regression")
         validate_boundary(
             Path(f"data/us_senate_{year}_county_boundaries.geojson"),
             county_groups,

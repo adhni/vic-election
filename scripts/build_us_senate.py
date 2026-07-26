@@ -142,11 +142,11 @@ STATE_BY_ABBR = {abbr: (fips, name) for fips, (abbr, name) in STATE_INFO.items()
 EXPECTED_STATES = {2016: 34, 2018: 33, 2020: 33, 2022: 34, 2024: 33}
 EXPECTED_RECONCILIATION_SHA256 = {
     # Filled after the first checksum-pinned build; any later source or parser drift must fail.
-    2024: "24f77a3a3c5b1328a3c42c1ac27d763b5a0e40284ed4c2ec3c3e667e790206a4",
+    2024: "1812ac7c9b834193e8ac6b1d051f56813c1d9179d75e335fc080285d71e935e4",
     2022: "6cffeb59eb60a6bb13e81bb337674969786bcdc0e93a43e80a9316b6defeddca",
     2020: "d0acc36e2a60fa5d0b2718c451eb55b795569d0af3c8378764045bd3bc593210",
-    2018: "cea60dfed8b1ee83e759ceb4b8b8782ff8c9edb7387f32b5cf38dc33f390ef26",
-    2016: "98178e2f7e825d2547a37f29cf9e0172ac28536e8ce14720a8f71b0b9cd0d972",
+    2018: "413a7831ab16ff0c3a6cc56013ea10f2625d06ec0df2109e91a34a86eafb7b56",
+    2016: "515943a2a3afebd6e7059d72a1f3244193d735d447ed2b6056809fddbc6e4a87",
 }
 
 FEC_SHEETS = {
@@ -165,9 +165,11 @@ FIELDS = (
 )
 
 NON_CANDIDATES = {
+    "ABSENTEE/MILITARY", "AFFIDAVIT",
     "", "BLANK", "BLANKS", "NO VOTE", "OVERVOTE", "OVERVOTES", "OVER VOTES",
+    "SPOILED",
     "UNDERVOTE", "UNDERVOTES", "UNDER VOTES", "FEDERAL BALLOTS", "PUBLIC COUNTER",
-    "TOTAL", "TOTAL VOTES", "VOTES CAST",
+    "TOTAL", "TOTAL VOTES", "VOID", "VOTES CAST",
 }
 CODE_MERGES = {
     "29380": "29095",
@@ -449,6 +451,11 @@ def aggregate_mit_frame(
         if key_column
         else rows["candidate"].map(normalized)
     )
+    if year == 2016:
+        rows.loc[
+            (rows["_state"] == "NY") & (rows["_candidate_key"] == "WENDYROSS"),
+            "_candidate_key",
+        ] = "WENDYLONG"
     rows["_candidate_key"] = rows["_candidate_key"].where(
         ~rows["candidate"].astype(str).str.upper().isin({"[WRITE-IN]", "WRITEIN", "WRITE-IN", "SCATTERING"}),
         "WRITEINS",
