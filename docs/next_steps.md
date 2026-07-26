@@ -101,6 +101,7 @@ This should be compact and data-first, not a broad dashboard.
 Completed international presidential depth:
 
 - added the 2024, 2020, 2016, 2012, and 2008 United States presidential elections
+- added the 2024, 2022, 2020, 2018, and 2016 regular United States Senate election cycles at county/reporting-area and state level, excluding concurrent special elections
 - provided county/reporting-area and state/DC views without cross-election boundary matching
 - added a red–blue winning-margin scale for rapid geographic comparison within each selected election
 - retained exact official national/state totals and disclosed the compiled county-level source
