@@ -25,6 +25,8 @@ The app is map-first and party/bloc-first:
 - United States governor results for 2024, 2022, 2020, 2018, and 2016, with county/reporting-area and state-race views
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
+- Argentine presidential results for 2023 and 2019 by province, including the 2023 runoff
+- Brazilian presidential results for 2022 and 2018 by state, with both rounds shown separately
 - Separate Philippine presidential and vice-presidential results for 2022, mapped by domestic province/city certificate of canvass
 - Mexican presidential results for 2024, mapped across all 300 federal electoral districts
 
@@ -262,6 +264,19 @@ data/france_{year}_region_boundaries.geojson
 ```
 
 Each contest can switch between departments/department-equivalent overseas territories and regions. Results are definitive French Ministry of the Interior returns. The 2007 and 2012 maps preserve the pre-2016 metropolitan region structure, while 2017 and 2022 use the later regions. French citizens voting abroad contribute to the official national shares but are not assigned a false map polygon. Overseas areas are moved into compact schematic insets so metropolitan France remains legible; the inset positions and scales are explicitly disclosed as non-geographic.
+
+Argentina and Brazil coverage includes the two latest completed presidential elections in each country:
+
+```text
+data/argentina_{2023|2019}_president_round_{round}_province_fpp.csv
+data/argentina_province_boundaries.geojson
+data/brazil_{2022|2018}_president_round_{1|2}_state_fpp.csv
+data/brazil_state_boundaries.geojson
+```
+
+Argentina 2023 exposes the general election and runoff separately; the 2019 election has one view because Alberto Fernández cleared the first-round threshold. DINE polling-table returns are aggregated to all 24 provinces with candidate, ballot, electorate, turnout, winner, and margin checks. The polygon layer is the official IGN province archive, clipped north of 60°S so the Antarctic claim does not shrink the interactive South American map.
+
+Brazil exposes both rounds for 2022 and 2018 across all 26 states and the Federal District. The first-round state files preserve the four leading candidates and combine minor candidates into `Other candidates`; second rounds retain both candidates. Overseas voters remain in the official TSE national shares but are not assigned a state polygon. The shared state geometry comes from IBGE's official mesh API.
 
 Portugal and Spain coverage includes two recent legislative elections from each country:
 
@@ -928,6 +943,15 @@ python3 scripts/validate_france_presidential.py
 ```
 
 The builder downloads checksum-pinned definitive Ministry result tables and a version-pinned data.gouv.fr administrative boundary release. It parses published department and region tables directly where available, aggregates the official 2012 commune workbook, locks national candidate totals, and emits election-time region maps with compact overseas insets. The validator checks all 16 CSV views, candidate sets, ballot arithmetic, turnout, winners, margins, area codes, matching valid geometry, and polygon overlaps.
+
+To rebuild and validate the Argentina and Brazil presidential files:
+
+```bash
+python3 scripts/build_argentina_brazil_presidential.py
+python3 scripts/validate_argentina_brazil_presidential.py
+```
+
+The builder checksum-pins DINE's three Argentina result archives, IGN's province polygons, pinned TSE-attributed Brazil state tables, and IBGE state geometry. It locks Argentina's national candidate totals, requires 24 province or 27 state rows per candidate view, and emits seven compact election options. The validator independently checks candidate totals, ballot arithmetic, winners, margins, unique codes, and one-to-one CSV/boundary joins.
 
 To rebuild the two Portuguese and two Spanish legislative elections:
 

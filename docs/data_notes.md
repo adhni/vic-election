@@ -38,6 +38,10 @@ Source targets:
 - Instituto Nacional Electoral national federal-district cartography archive
 - National Election Commission of the Republic of Korea presidential polling-district returns for 2025 and 2022
 - Statistics Korea SGIS 2025 Q2 municipal boundaries
+- Argentina Dirección Nacional Electoral 2023 and 2019 provisional polling-table returns
+- Argentina Instituto Geográfico Nacional province boundary archive
+- Brazil Tribunal Superior Eleitoral 2022 and 2018 presidential results
+- Brazil IBGE official state boundary API
 
 This repo is built around three levels of data:
 
@@ -167,6 +171,14 @@ The France 2022, 2017, 2012, and 2007 presidential entries expose each first and
 The department view contains metropolitan departments, overseas departments, and department-equivalent overseas reporting territories. French citizens established abroad remain in the official national share cards but have no geographic polygon and are therefore excluded from local leaderboards and maps. Saint-Martin and Saint-Barthélemy share their published combined reporting unit from 2012 onward; in 2007 their geometry is retained with Guadeloupe, matching that workbook's reporting structure.
 
 France's metropolitan regions changed in 2016. The 2007 and 2012 region files therefore use the 22-region metropolitan structure plus the overseas regions applicable in each year; 2017 and 2022 use the 13-region metropolitan structure plus five overseas regions. Boundaries are derived from the version-pinned 2025 data.gouv.fr administrative contours and dissolved to the historical groupings. Overseas geometry is scaled and moved into compact insets near metropolitan France for usability. These inset positions and scales are schematic, a limitation repeated in the app and every result row.
+
+Argentina's 2023 general election and runoff and its 2019 general election come from checksum-pinned provisional polling-table archives published by the Dirección Nacional Electoral. The builder keeps only the presidential office, maps alliance labels to the named presidential candidates for the relevant year, counts each polling table once for enrolment, and aggregates positive and non-candidate ballot types to all 24 provinces. Every generated election is locked to the national candidate totals in its source archive. Argentina held no 2019 runoff because Alberto Fernández passed the constitutional first-round threshold.
+
+Argentina's polygons come from the checksum-pinned IGN province Shapefile. The province codes and names join one-to-one to each CSV. The interactive map clips geometry south of 60°S, omitting the Antarctic claim so the populated South American provinces remain legible; the result note discloses that presentation choice. No votes are removed because the election data is already reported at province level.
+
+Brazil's 2022 and 2018 first- and second-round state views use state totals transcribed in pinned result tables attributed to the Tribunal Superior Eleitoral, with national shares fixed to the official TSE totals. The mapped scope is the 26 states plus the Federal District. Overseas votes remain in the national cards but have no false domestic polygon. To keep the static files compact and candid about the source table's published grouping, each first-round view shows the four leading candidates separately and combines all remaining candidacies as `Other candidates`; both runoff candidates are preserved individually.
+
+Brazil's shared boundaries come from IBGE's official minimum-detail state mesh API and are keyed by the 27 official UF codes. The validator requires exact mapped candidate totals from the pinned state tables, correct local winners and margins, unique UF codes, and a one-to-one result/geometry join. Local turnout is not present in the compact state transcription and is therefore not invented.
 
 The Portugal 2025 and 2024 legislative rows come from the official Ministry of Internal Administration election applications. The builder pins one manifest covering the domestic-district list, the official inset map, the national result, and each of the 20 domestic electoral-district result files. Party-list votes plus blank and null ballots must equal ballots cast in every district, and the district mandates must sum to 226. The remaining four seats are elected by the Europe and outside-Europe constituencies; they are included in the locked 230-seat Parliament summary but are not placed on Portugal's domestic map.
 
