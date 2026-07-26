@@ -101,9 +101,14 @@ FIELDS = (
     "contest_status", "result_note",
 )
 NON_CANDIDATES = {
-    "", "BLANK", "BLANKS", "NO VOTE", "OVERVOTE", "OVERVOTES", "OVER VOTES",
-    "UNDERVOTE", "UNDERVOTES", "UNDER VOTES", "TOTAL", "TOTAL VOTES",
-    "TOTAL VOTES CAST", "VOTES CAST",
+    "", "ABSENTEE / MILITARY", "AFFIDAVIT", "BALLOTS CAST", "BLANK",
+    "BLANK BALLOTS", "BLANK VOTES", "BLANK/VOID", "BLANKS", "CAST VOTES",
+    "ELIGIBLE", "FEDERAL", "FEDERAL BALLOTS", "INVALID VOTES",
+    "MANUALLY COUNTED EMERGENCY", "NAN", "NO VOTE", "OVERVOTE", "OVERVOTES",
+    "OVER VOTES", "PUBLIC COUNTER", "REGISTERED VOTERS", "SPECIAL VOTES",
+    "STATE BALLOTS", "STATE VOTES", "TIMES BLANK VOTED", "TOTAL",
+    "TOTAL VOTES", "TOTAL VOTES CAST", "UNDERVOTE", "UNDERVOTES",
+    "UNDER VOTES", "VOID", "VOIDS", "VOTES CAST",
 }
 CODE_MERGES = {
     "29380": "29095", "2938000": "29095", "36122": "36123",
@@ -113,6 +118,14 @@ PARTY_OVERRIDES = {
     (2022, "MN", "TIMWALZ"): "Democratic",
     (2022, "NM", "MICHELLELUJANGRISHAM"): "Democratic",
     (2016, "ND", "DOUGBURGUMBRENTSANFORD"): "Republican",
+}
+CANDIDATE_ALIASES = {
+    (2016, "IN", "BELLTATGENHORST"): "REXBELL",
+    (2016, "IN", "GREGGHALE"): "JOHNGREGG",
+    (2016, "IN", "HOLCOMBCROUCH"): "ERICHOLCOMB",
+    (2016, "IN", "JOHNRGREGG"): "JOHNGREGG",
+    (2016, "UT", "GRAYHERBERT"): "GARYHERBERT",
+    (2016, "UT", "HERBERT"): "GARYHERBERT",
 }
 NAME_OVERRIDES = {
     (2020, "MT", "GREGGIANYES"): "Greg Gianforte",
@@ -196,7 +209,7 @@ def canonical_party(detailed: object, simplified: object = "") -> str:
         or value.startswith(("D/", "DEM/"))
     ):
         return "Democratic"
-    if "REPUBLICAN" in value or value in {"R", "R*"} or value.startswith("R/"):
+    if "REPUBLICAN" in value or value in {"R", "R*", "REP"} or value.startswith("R/"):
         return "Republican"
     if "LIBERTARIAN" in value or value == "LIB":
         return "Libertarian"
@@ -267,6 +280,10 @@ def aggregate_frame(
     ]
     rows = rows[rows["_code"] != ""]
     rows["_candidate"] = rows["candidate"].map(normalized)
+    rows["_candidate"] = [
+        CANDIDATE_ALIASES.get((year, state, candidate), candidate)
+        for state, candidate in zip(rows["_state"], rows["_candidate"])
+    ]
     writein_rows = (
         rows["writein"].astype(str).str.upper().isin({"TRUE", "1"})
         if "writein" in rows

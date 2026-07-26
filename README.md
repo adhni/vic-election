@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house and executive elections across several countries.
+A static HTML data app for exploring lower-house and executive elections across several countries, plus regular U.S. Senate races.
 
 The app is map-first and party/bloc-first:
 
@@ -21,6 +21,7 @@ The app is map-first and party/bloc-first:
 - Netherlands, Norway, Sweden, Finland, Denmark, and Austria parliamentary results mapped by local area for two elections each
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
+- United States Senate results for the 2024, 2022, 2020, 2018, and 2016 regular election cycles, with county/reporting-area and official state views; concurrent special elections are excluded
 - United States governor results for 2024, 2022, 2020, 2018, and 2016, with county/reporting-area and state-race views
 - United States congressional-district results and winner-party map for the 2024 House election
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
@@ -335,6 +336,17 @@ data/us_president_state_boundaries.geojson
 
 The same result-file pattern is used for the other four years. County rows retain the Democratic and Republican nominees plus an `Other candidates` residual, while state/DC rows are sourced from official FEC result workbooks. The 2008–2016 county rows use checksum-pinned MIT Election Data and Science Lab historical returns; 2020 and 2024 use the public state/media compilation. Every election's county aggregates are reconciled state by state against the FEC files and the exact known deltas are signature-locked. Those deltas preserve statewide write-ins, military/overseas precincts, and other non-geographic votes in the state view instead of inventing a county allocation. Alaska and DC use official statewide totals in the local view. Historical county geometry is matched to each election period, including Connecticut's transition to planning regions in 2024. The default map shades Democratic wins from pale to deep blue and Republican wins from pale to deep red according to the local winning margin.
 
+United States Senate coverage includes the five latest regular general-election cycles: 2024, 2022, 2020, 2018, and 2016. Each cycle can switch between a county/reporting-area view and a state-race view:
+
+```text
+data/us_2024_senate_county_fpp.csv
+data/us_2024_senate_state_fpp.csv
+data/us_senate_2024_county_boundaries.geojson
+data/us_senate_2024_state_boundaries.geojson
+```
+
+The same pattern is used for the other four cycles. County rows come from checksum-pinned MIT Election Data and Science Lab returns, with state-sourced OpenElections replacements for specific documented gaps and decisive regular-seat runoffs. State rows use official FEC compilations through 2022 and MIT Election Lab totals for 2024. The builder excludes concurrent special elections, uses the decisive Louisiana 2016 and Georgia 2020/2022 regular-seat runoffs, and locks the county-to-official reconciliation signature for every cycle. Alaska's 2022 ranked-choice result and Vermont's 2022 source gap use disclosed statewide fallbacks in the county view. County colours show the locally leading Senate candidate, not separate county seats; the state view shows the actual regular races won.
+
 United States governor coverage includes every regularly scheduled gubernatorial race held in 2024, 2022, 2020, 2018, and 2016. Each election can switch between the available county/reporting areas and the states holding governor races:
 
 ```text
@@ -593,6 +605,7 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 │   ├── build_philippines_2022.py
 │   ├── build_us_house.py
 │   ├── build_us_governor.py
+│   ├── build_us_senate.py
 │   ├── build_us_presidential.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
@@ -603,6 +616,7 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 │   ├── validate_philippines_2022.py
 │   ├── validate_us_house.py
 │   ├── validate_us_governor.py
+│   ├── validate_us_senate.py
 │   ├── validate_us_presidential.py
 │   └── validate_vec_csv.py
 ├── docs/
@@ -648,7 +662,7 @@ The optimizer pins Mapshaper `0.7.45` through `npx` and skips files already belo
 
 First-past-the-post CSVs are also compacted structurally. Candidate totals are stored once as `first` rows and the browser creates the identical final standing in memory. This removes about 7 MiB of duplicate rows across New Zealand, the UK, Malaysia, Singapore, Canada, and India without changing any displayed result.
 
-The 500 MiB ceiling is a project guard, not GitHub's repository limit. GitHub recommends repositories remain below 1 GB where practical and strongly recommends staying below 5 GB, while blocking individual Git objects above 100 MiB. The universal 99 MiB data-file guard prevents a single CSV or other non-boundary asset from reaching that GitHub limit; boundary files retain their much smaller 15 MiB browser-performance guard. Keeping `data/` below 500 MiB leaves room for source code and Git history within the preferred range. At the current 249.4 MiB, approximately 250 MiB remains under this guard. Large raw downloads and browser screenshots belong in the ignored `tmp/` directory and should be deleted after validation. See [GitHub's large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
+The 500 MiB ceiling is a project guard, not GitHub's repository limit. GitHub recommends repositories remain below 1 GB where practical and strongly recommends staying below 5 GB, while blocking individual Git objects above 100 MiB. The universal 99 MiB data-file guard prevents a single CSV or other non-boundary asset from reaching that GitHub limit; boundary files retain their much smaller 15 MiB browser-performance guard. Keeping `data/` below 500 MiB leaves room for source code and Git history within the preferred range. With the Senate and governor datasets included, `data/` is 274.3 MiB and approximately 225.7 MiB remains under this guard. Large raw downloads and browser screenshots belong in the ignored `tmp/` directory and should be deleted after validation. See [GitHub's large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
 
 ## CSV Format
 
@@ -706,6 +720,13 @@ To rebuild and validate the five United States governor cycles (the builder down
 ```bash
 ./.venv/bin/python scripts/build_us_governor.py
 ./.venv/bin/python scripts/validate_us_governor.py
+```
+
+To rebuild and validate the five regular United States Senate cycles:
+
+```bash
+./.venv/bin/python scripts/build_us_senate.py
+./.venv/bin/python scripts/validate_us_senate.py
 ```
 
 For historical state elections:

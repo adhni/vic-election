@@ -132,6 +132,18 @@ REQUIRED_US_PRESIDENTIAL_MARKERS = (
     '"Strong Republican"',
     'return count === 1 ? "county/reporting area" : "counties/reporting areas";',
 )
+REQUIRED_US_SENATE_MARKERS = (
+    '"key": "us-senate-2024"',
+    '"key": "us-senate-2022"',
+    '"key": "us-senate-2020"',
+    '"key": "us-senate-2018"',
+    '"key": "us-senate-2016"',
+    '"contestType": "senate"',
+    '"systemLabel": "Regular U.S. Senate general elections"',
+    "concurrent special elections are excluded",
+    'const senate = activeElection().contestType === "senate";',
+    '["presidential", "senate", "governor"].includes(activeElection().contestType)',
+)
 REQUIRED_US_GOVERNOR_MARKERS = (
     '"key": "us-governor-2024"',
     '"key": "us-governor-2022"',
@@ -298,6 +310,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_US_PRESIDENTIAL_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. presidential UI marker {marker!r}")
+    for marker in REQUIRED_US_SENATE_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing U.S. Senate UI marker {marker!r}")
     for marker in REQUIRED_US_GOVERNOR_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. governor UI marker {marker!r}")

@@ -47,6 +47,13 @@ STABLE_FIELDS = (
     "contest_status",
     "result_note",
 )
+NON_CANDIDATE_LABELS = {
+    "Absentee / Military", "Affidavit", "Ballots Cast", "Blank Ballots",
+    "Blank Votes", "Blank/Void", "Cast Votes", "Eligible", "Federal",
+    "Federal Ballots", "Invalid Votes", "Manually Counted Emergency", "Nan",
+    "Public Counter", "Registered Voters", "Special Votes", "State Ballots",
+    "State Votes", "Times Blank Voted", "Void", "Voids",
+}
 
 
 def read_groups(path: Path) -> tuple[list[dict[str, str]], dict[str, list[dict[str, str]]]]:
@@ -104,6 +111,9 @@ def validate_rows(
 
     if len(codes) != expected:
         raise SystemExit(f"{path}: constituency codes are not unique")
+    leaked = NON_CANDIDATE_LABELS & {row["candidate"] for row in rows}
+    if leaked:
+        raise SystemExit(f"{path}: administrative labels leaked into candidates: {sorted(leaked)}")
     return groups, codes, winners
 
 
@@ -186,6 +196,23 @@ def main() -> None:
         )
         if ranked[0]["candidate"] != candidate or int(ranked[0]["votes"]) != votes:
             raise SystemExit(f"{year} {state}: winner spot check failed")
+        if year == 2016:
+            indiana = {row["candidate"]: int(row["votes"]) for row in state_groups["Indiana"]}
+            utah = {row["candidate"]: int(row["votes"]) for row in state_groups["Utah"]}
+            if (
+                indiana.get("Eric Holcomb") != 1_386_034
+                or indiana.get("John Gregg") != 1_229_961
+                or indiana.get("Rex Bell") != 86_101
+                or utah.get("Gary Herbert") != 751_906
+            ):
+                raise SystemExit("2016 Indiana/Utah: candidate alias regression")
+        if year == 2022:
+            ronchetti = next(
+                row for row in state_groups["New Mexico"]
+                if row["candidate"] == "Mark V Ronchetti"
+            )
+            if ronchetti["candidate_party"] != "Republican":
+                raise SystemExit("2022 New Mexico: REP party abbreviation regression")
         total_areas += len(county_groups)
         total_races += len(state_groups)
 
