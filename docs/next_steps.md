@@ -106,6 +106,13 @@ Completed international presidential depth:
 - added a red–blue winning-margin scale for rapid geographic comparison within each selected election
 - retained exact official national/state totals and disclosed the compiled county-level source
 
+Completed United States governor depth:
+
+- added every regularly scheduled gubernatorial race in 2024, 2022, 2020, 2018, and 2016
+- provided county/reporting-area and state-race views with the same red–blue margin analysis
+- validated 106 races, 5,984 mapped areas, exact local-to-state aggregation, and boundary joins
+- disclosed the 2022 Alaska statewide ranked-choice fallback and the derived nature of state totals
+
 ## Phase 4: Generalise Later
 
 Only after the Victoria state/federal model is strong, consider other states.
@@ -233,7 +240,7 @@ Completed FPP storage optimization:
 - updated all affected builders and validators so regenerated data stays compact
 - reduced checked-in `data/` from about 177.2 MiB to 170.2 MiB without dropping an election or result
 
-Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while a universal 99 MiB per-data-file guard keeps every data Git object below GitHub's 100 MiB limit. The stricter 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. After the Finland, Denmark, and Austria batch, checked-in `data/` is about 205.6 MiB, leaving roughly 194 MiB before the warning and 294 MiB before the hard guard.
+Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while a universal 99 MiB per-data-file guard keeps every data Git object below GitHub's 100 MiB limit. The stricter 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. With the five U.S. Senate and governor cycles included, checked-in `data/` is about 274.3 MiB, leaving roughly 126 MiB before the warning and 226 MiB before the hard guard.
 
 ## Deferred: Local Council Elections
 
