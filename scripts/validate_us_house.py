@@ -18,6 +18,24 @@ SPOT_CHECKS = {
     2018: ("Maine 2nd", "Jared F. Golden", 142_440, 3_509),
     2016: ("Minnesota 1st", "Timothy J. Walz", 169_071, 2_547),
 }
+RUNOFF_SPOT_CHECKS = {
+    2020: {
+        "Louisiana 5th": [
+            ("Luke J. Letlow", 49_183),
+            ("Lance Harris", 30_124),
+        ],
+    },
+    2016: {
+        "Louisiana 3rd": [
+            ("Clay Higgins", 77_671),
+            ("Scott A. Angelle", 60_762),
+        ],
+        "Louisiana 4th": [
+            ("“Mike” Johnson", 87_370),
+            ("Marshall Jones", 46_579),
+        ],
+    },
+}
 
 
 def validate_year(year: int) -> tuple[int, Counter[str]]:
@@ -87,6 +105,18 @@ def validate_year(year: int) -> tuple[int, Counter[str]]:
         raise SystemExit(f"{year} {district}: winner spot check failed")
     if int(ranked[0]["votes"]) - int(ranked[1]["votes"]) != margin:
         raise SystemExit(f"{year} {district}: margin spot check failed")
+    for runoff_district, expected in RUNOFF_SPOT_CHECKS.get(year, {}).items():
+        actual = [
+            (row["candidate"], int(row["votes"]))
+            for row in sorted(
+                groups[runoff_district],
+                key=lambda row: (-int(row["votes"]), row["candidate"]),
+            )
+        ]
+        if actual != expected:
+            raise SystemExit(
+                f"{year} {runoff_district}: decisive runoff totals changed: {actual}"
+            )
 
     geojson = json.loads(boundary_path.read_text(encoding="utf-8"))
     features = geojson.get("features", [])

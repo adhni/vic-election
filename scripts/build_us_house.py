@@ -93,7 +93,7 @@ ELECTIONS = {
             "GeoJson/North%20Carolina_117_to_117.geojson"
         ),
         "nc_boundary_sha256": "622c4af899f2e77c8603377a15fa10422753b2a278d79d36fab0d9d8eaf916bd",
-        "expected_candidates": 1_307,
+        "expected_candidates": 1_300,
         "expected_winners": {"Democratic": 222, "Republican": 213},
     },
     2018: {
@@ -115,7 +115,7 @@ ELECTIONS = {
         "boundary_url": "https://www2.census.gov/geo/tiger/GENZ2016/shp/cb_2016_us_cd115_20m.zip",
         "boundary_sha256": "275e6a63ef8313c6d2e487388f1b61c8cccccc64c3e4cb0b209c3f154d426400",
         "boundary_filename": "cb_2016_us_cd115_20m.zip",
-        "expected_candidates": 1_288,
+        "expected_candidates": 1_272,
         "expected_winners": {"Republican": 241, "Democratic": 194},
     },
 }
@@ -171,6 +171,13 @@ PDF_FOOTNOTE_VOTE_FIXES = {
     (2016, "Louisiana", 4, 387_370): 87_370,
     (2016, "Louisiana", 4, 346_579): 46_579,
     (2016, "Ohio", 8, 187_794): 87_794,
+    (2020, "Louisiana", 5, 149_183): 49_183,
+    (2020, "Louisiana", 5, 130_124): 30_124,
+}
+RUNOFF_FINALISTS = {
+    (2016, "Louisiana", 3): {"Clay Higgins", "Scott A. Angelle"},
+    (2016, "Louisiana", 4): {"“Mike” Johnson", "Marshall Jones"},
+    (2020, "Louisiana", 5): {"Luke J. Letlow", "Lance Harris"},
 }
 
 
@@ -353,6 +360,19 @@ def parse_results(
     for key in sorted(candidates):
         state, number = key
         result = candidates[key]
+        runoff_finalists = RUNOFF_FINALISTS.get((year, state, number))
+        if runoff_finalists:
+            mixed_total = sum(int(candidate["votes"]) for candidate in result) + invalid_votes[key]
+            if official_totals.get(key) != mixed_total:
+                raise SystemExit(
+                    f"{district_name(*key)}: Clerk primary/runoff lines did not reconcile"
+                )
+            result = [
+                candidate for candidate in result
+                if str(candidate["name"]) in runoff_finalists
+            ]
+            if {str(candidate["name"]) for candidate in result} != runoff_finalists:
+                raise SystemExit(f"{district_name(*key)}: decisive runoff finalists changed")
         if year == 2022 and key == ("Maine", 2):
             all_lines = {str(candidate["name"]): int(candidate["votes"]) for candidate in result}
             round_total = ranked_choice_totals.get(key, 0)
@@ -384,12 +404,9 @@ def parse_results(
         elif year == 2022 and key == ("Maine", 2):
             if total <= formal:
                 raise SystemExit("Maine 2nd: decisive-round ballot total is invalid")
-        elif year == 2020 and key == ("Louisiana", 5):
-            # The Clerk recap's PDF text layer drops 200,000 from the Republican
-            # subtotal and total; the individual official candidate lines sum
-            # to 435,090.
-            if total != 435_090 or official_total != 235_090:
-                raise SystemExit("Louisiana 5th: known Clerk recap text-layer correction changed")
+        elif runoff_finalists:
+            if total != formal or len(result) != 2:
+                raise SystemExit(f"{district_name(*key)}: invalid decisive runoff result")
         elif year == 2018 and key == ("North Carolina", 9):
             if total != 282_717 or official_total:
                 raise SystemExit("North Carolina 9th: voided-result fixture changed")
@@ -467,7 +484,8 @@ def build_boundaries(
         key = (state, number)
         if key not in seats:
             raise SystemExit(f"Census boundary has no matching result: {key}")
-        geometry = raw_geometry.simplify(0.01, preserve_topology=True)
+        tolerance = 0.005 if year == 2024 else 0.01
+        geometry = raw_geometry.simplify(tolerance, preserve_topology=True)
         if geometry.is_empty or not geometry.is_valid:
             raise SystemExit(f"{district_name(*key)}: invalid simplified Census geometry")
         display_geometry = mapping(geometry)
