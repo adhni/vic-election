@@ -210,6 +210,20 @@ REQUIRED_FRANCE_MARKERS = (
     'activeElection().jurisdiction === "France"',
     "Foreign-resident votes are included in the national shares",
 )
+REQUIRED_ARGENTINA_BRAZIL_MARKERS = (
+    '"key": "argentina-president-2023-round-1"',
+    '"key": "argentina-president-2023-round-2"',
+    '"key": "argentina-president-2019"',
+    '"jurisdiction": "Argentina"',
+    '"key": "brazil-president-2022-round-1"',
+    '"key": "brazil-president-2022-round-2"',
+    '"key": "brazil-president-2018-round-1"',
+    '"key": "brazil-president-2018-round-2"',
+    '"jurisdiction": "Brazil"',
+    "minor candidates are grouped as Other candidates",
+    '"javier milei": "#6f42c1"',
+    '"luiz inácio lula da silva": "#d71920"',
+)
 REQUIRED_IBERIAN_MARKERS = (
     '"key": "portugal-legislative-2025"',
     '"key": "portugal-legislative-2024"',
@@ -332,6 +346,11 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_FRANCE_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing France presidential UI marker {marker!r}")
+    for marker in REQUIRED_ARGENTINA_BRAZIL_MARKERS:
+        if marker not in html:
+            raise SystemExit(
+                f"{html_file}: missing Argentina/Brazil presidential UI marker {marker!r}"
+            )
     for marker in REQUIRED_IBERIAN_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Portugal/Spain UI marker {marker!r}")
