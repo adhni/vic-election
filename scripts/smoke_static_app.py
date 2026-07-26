@@ -132,6 +132,18 @@ REQUIRED_US_PRESIDENTIAL_MARKERS = (
     '"Strong Republican"',
     'return count === 1 ? "county/reporting area" : "counties/reporting areas";',
 )
+REQUIRED_US_SENATE_MARKERS = (
+    '"key": "us-senate-2024"',
+    '"key": "us-senate-2022"',
+    '"key": "us-senate-2020"',
+    '"key": "us-senate-2018"',
+    '"key": "us-senate-2016"',
+    '"contestType": "senate"',
+    '"systemLabel": "Regular U.S. Senate general elections"',
+    "concurrent special elections are excluded",
+    'const senate = activeElection().contestType === "senate";',
+    '["presidential", "senate"].includes(activeElection().contestType)',
+)
 REQUIRED_INDONESIA_MARKERS = (
     '"key": "indonesia-president-2024"',
     '"key": "indonesia-president-2019"',
@@ -147,7 +159,7 @@ REQUIRED_INDONESIA_MARKERS = (
     "provinces and kabupaten/kota do not elect separate presidents",
     "Later-created districts are dissolved into their election-time parents",
     "No digitised vote",
-    'if (activeElection().contestType === "presidential") return winningParty(d);',
+    'if (["presidential", "senate"].includes(activeElection().contestType)) return winningParty(d);',
     ': winningParty(d)))]',
 )
 REQUIRED_PHILIPPINES_MARKERS = (
@@ -285,6 +297,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_US_PRESIDENTIAL_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. presidential UI marker {marker!r}")
+    for marker in REQUIRED_US_SENATE_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing U.S. Senate UI marker {marker!r}")
     for marker in REQUIRED_INDONESIA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Indonesia presidential UI marker {marker!r}")
