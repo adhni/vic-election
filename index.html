@@ -3888,6 +3888,8 @@
           ? (count === 1 ? "region" : "regions")
           : (count === 1 ? "department/territory" : "departments/territories");
       }
+      if (activeElection().jurisdiction === "Argentina") return count === 1 ? "province" : "provinces";
+      if (activeElection().jurisdiction === "Brazil") return count === 1 ? "state/DF" : "states/DF";
       if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";
       if (activeElection().jurisdiction === "Mexico") return count === 1 ? "federal district" : "federal districts";
       if (activeElection().jurisdiction === "South Korea") return count === 1 ? "municipality/district" : "municipalities/districts";

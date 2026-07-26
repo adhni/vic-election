@@ -382,11 +382,14 @@ def build_argentina(
     ).to_crs("EPSG:4326")
     if len(provinces) != 24:
         raise SystemExit(f"Argentina boundary archive: expected 24 provinces, got {len(provinces)}")
-    mainland_frame = box(-76, -60, -25, -20)
+    # Retain the South American province geometry (including the Falkland/
+    # Malvinas polygons) while excluding Antarctica and the much farther-east
+    # South Atlantic islands that would otherwise dominate the map extent.
+    south_america_frame = box(-76, -60, -52, -20)
     output_features = []
     features_by_name: dict[str, dict[str, object]] = {}
     for _, row in provinces.iterrows():
-        geometry = force_2d(row.geometry).intersection(mainland_frame).simplify(
+        geometry = force_2d(row.geometry).intersection(south_america_frame).simplify(
             0.02, preserve_topology=True
         ).buffer(0)
         if geometry.is_empty:
@@ -443,8 +446,8 @@ def build_argentina(
                 code=code,
                 note=(
                     "Provisional DINE presidential result aggregated from polling-table rows. "
-                    "Province boundaries come from IGN; Antarctic geometry is omitted from this "
-                    "interactive map for legibility."
+                    "Province boundaries come from IGN; Antarctic and remote South Atlantic "
+                    "geometry is omitted from this interactive map for legibility."
                 ),
             ))
         write_csv(

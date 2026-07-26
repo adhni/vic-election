@@ -274,7 +274,7 @@ data/brazil_{2022|2018}_president_round_{1|2}_state_fpp.csv
 data/brazil_state_boundaries.geojson
 ```
 
-Argentina 2023 exposes the general election and runoff separately; the 2019 election has one view because Alberto Fernández cleared the first-round threshold. DINE polling-table returns are aggregated to all 24 provinces with candidate, ballot, electorate, turnout, winner, and margin checks. The polygon layer is the official IGN province archive, clipped north of 60°S so the Antarctic claim does not shrink the interactive South American map.
+Argentina 2023 exposes the general election and runoff separately; the 2019 election has one view because Alberto Fernández cleared the first-round threshold. DINE polling-table returns are aggregated to all 24 provinces with candidate, ballot, electorate, turnout, winner, and margin checks. The polygon layer is the official IGN province archive, clipped to the South American frame so Antarctic and remote South Atlantic geometry do not shrink the interactive map.
 
 Brazil exposes both rounds for 2022 and 2018 across all 26 states and the Federal District. The first-round state files preserve the four leading candidates and combine minor candidates into `Other candidates`; second rounds retain both candidates. Overseas voters remain in the official TSE national shares but are not assigned a state polygon. The shared state geometry comes from IBGE's official mesh API.
 

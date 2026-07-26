@@ -132,12 +132,20 @@ def validate(data_dir: Path, csv_name: str, boundary_name: str, expected_areas: 
         raise SystemExit(f"{boundary_path}: expected {expected_areas} unique boundary codes")
     if set(boundary_codes) != set(by_area):
         raise SystemExit(f"{csv_path}: CSV/boundary code mismatch")
+    geometry_bounds = []
     for feature in boundary["features"]:
         geometry = shape(feature["geometry"])
         if geometry.is_empty or not geometry.is_valid:
             raise SystemExit(
                 f"{boundary_path}: invalid geometry for "
                 f"{feature['properties'].get('constituency_code')}"
+            )
+        geometry_bounds.append(geometry.bounds)
+    if boundary_name == "argentina_province_boundaries.geojson":
+        eastern_extent = max(bounds[2] for bounds in geometry_bounds)
+        if eastern_extent >= -52:
+            raise SystemExit(
+                f"{boundary_path}: remote South Atlantic geometry expands the map extent"
             )
     print(f"{csv_name}: {expected_areas} areas, {len(rows)} rows")
 
