@@ -109,6 +109,10 @@ REQUIRED_GERMANY_MARKERS = (
 )
 REQUIRED_US_MARKERS = (
     '"key": "us-house-2024"',
+    '"key": "us-house-2022"',
+    '"key": "us-house-2020"',
+    '"key": "us-house-2018"',
+    '"key": "us-house-2016"',
     '"jurisdiction": "United States"',
     '"totalSeats": 435',
     '"areaLabel": "State"',
