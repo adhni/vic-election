@@ -3132,6 +3132,90 @@
         "boundaries": "data/federal_2010_vic_division_boundaries.geojson"
       },
       {
+        "key": "turkiye-president-2023-round-1",
+        "label": "Türkiye President 2023 — Round 1",
+        "type": "national",
+        "jurisdiction": "Türkiye",
+        "year": 2023,
+        "source": "Yüksek Seçim Kurulu (YSK)",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · first round",
+        "methodNote": "Türkiye elects one president nationally. This map shows the first-round leader in each of the 81 provinces; provinces do not elect separate presidents. No candidate exceeded 50%, so a runoff followed. Muharrem İnce withdrew after ballots were printed and remains in YSK's official result. Overseas and customs votes contribute to the national shares but have no province polygon.",
+        "candidateVoteLabel": "First-round candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "first-round presidential vote",
+        "csv": "data/turkiye_2023_president_round_1_province_fpp.csv",
+        "boundaries": "data/turkiye_province_boundaries.geojson",
+        "areaLabel": "Province",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "nationalResults": [["Recep Tayyip Erdoğan",49.52],["Kemal Kılıçdaroğlu",44.88],["Sinan Oğan",5.17],["Muharrem İnce",0.43]]
+      },
+      {
+        "key": "turkiye-president-2023-round-2",
+        "label": "Türkiye President 2023 — Round 2",
+        "type": "national",
+        "jurisdiction": "Türkiye",
+        "year": 2023,
+        "source": "Yüksek Seçim Kurulu (YSK)",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Two-round presidential election · runoff",
+        "methodNote": "Türkiye elects one president nationally. This map shows the runoff leader in each of the 81 provinces; provinces do not elect separate presidents. Overseas and customs votes contribute to the national shares but have no province polygon.",
+        "candidateVoteLabel": "Runoff candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "runoff presidential vote",
+        "csv": "data/turkiye_2023_president_round_2_province_fpp.csv",
+        "boundaries": "data/turkiye_province_boundaries.geojson",
+        "areaLabel": "Province",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "nationalResults": [["Recep Tayyip Erdoğan",52.18],["Kemal Kılıçdaroğlu",47.82]]
+      },
+      {
+        "key": "turkiye-president-2018",
+        "label": "Türkiye President 2018",
+        "type": "national",
+        "jurisdiction": "Türkiye",
+        "year": 2018,
+        "source": "Yüksek Seçim Kurulu (YSK)",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Presidential election · decided in first round",
+        "methodNote": "Türkiye elects one president nationally. Recep Tayyip Erdoğan exceeded 50%, so no runoff was held. The map shows the local leader in each of the 81 provinces. Overseas and customs votes contribute to the national shares but have no province polygon.",
+        "candidateVoteLabel": "Candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "presidential vote",
+        "csv": "data/turkiye_2018_president_province_fpp.csv",
+        "boundaries": "data/turkiye_province_boundaries.geojson",
+        "areaLabel": "Province",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "nationalResults": [["Recep Tayyip Erdoğan",52.59],["Muharrem İnce",30.64],["Selahattin Demirtaş",8.40],["Meral Akşener",7.29],["Temel Karamollaoğlu",0.89],["Doğu Perinçek",0.20]]
+      },
+      {
+        "key": "turkiye-president-2014",
+        "label": "Türkiye President 2014",
+        "type": "national",
+        "jurisdiction": "Türkiye",
+        "year": 2014,
+        "source": "Yüksek Seçim Kurulu (YSK)",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Presidential election · decided in first round",
+        "methodNote": "Türkiye elects one president nationally. Recep Tayyip Erdoğan exceeded 50%, so no runoff was held. The map shows the local leader in each of the 81 provinces. Overseas and customs votes contribute to the national shares but have no province polygon.",
+        "candidateVoteLabel": "Candidate vote",
+        "candidateFilterLabel": "Any presidential candidate",
+        "localVoteLabel": "presidential vote",
+        "csv": "data/turkiye_2014_president_province_fpp.csv",
+        "boundaries": "data/turkiye_province_boundaries.geojson",
+        "areaLabel": "Province",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "nationalResults": [["Recep Tayyip Erdoğan",51.79],["Ekmeleddin Mehmet İhsanoğlu",38.44],["Selahattin Demirtaş",9.76]]
+      },
+      {
         "key": "argentina-president-2023-round-1",
         "label": "Argentina President 2023 — Round 1",
         "type": "national",
@@ -3481,6 +3565,22 @@
           "other direct/overseas seats": "#7a7f87"
         };
         if (italyColors[p]) return italyColors[p];
+      }
+      if (activeElection().jurisdiction === "Türkiye") {
+        const turkiyeColors = {
+          "recep tayyip erdoğan": "#e78a18",
+          "kemal kılıçdaroğlu": "#c92b35",
+          "sinan oğan": "#365f9d",
+          "muharrem i̇nce": "#b13c58",
+          "muharrem ince": "#b13c58",
+          "selahattin demirtaş": "#7b3f92",
+          "meral akşener": "#258c91",
+          "temel karamollaoğlu": "#7e5144",
+          "doğu perinçek": "#355f86",
+          "ekmeleddin mehmet i̇hsanoğlu": "#4e857a",
+          "ekmeleddin mehmet ihsanoğlu": "#4e857a"
+        };
+        if (turkiyeColors[p]) return turkiyeColors[p];
       }
       if (activeElection().jurisdiction === "Indonesia") {
         if (p === "no digitised vote") return "#7a7f87";
@@ -3948,6 +4048,7 @@
           : (count === 1 ? "department/territory" : "departments/territories");
       }
       if (activeElection().jurisdiction === "Italy") return count === 1 ? "province" : "provinces";
+      if (activeElection().jurisdiction === "Türkiye") return count === 1 ? "province" : "provinces";
       if (activeElection().jurisdiction === "Argentina") return count === 1 ? "province" : "provinces";
       if (activeElection().jurisdiction === "Brazil") return count === 1 ? "state/DF" : "states/DF";
       if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";

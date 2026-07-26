@@ -20,6 +20,7 @@ The app is map-first and party/bloc-first:
 - German Erststimme and Zweitstimme results for all 299 constituencies in the 2025, 2021, and 2017 Bundestag elections
 - Netherlands, Norway, Sweden, Finland, Denmark, and Austria parliamentary results mapped by local area for two elections each
 - Italian Chamber proportional-list results for 2022 and 2018 mapped by province
+- Türkiye presidential results for 2023, 2018, and 2014 mapped across all 81 provinces, including both 2023 rounds
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
 - United States Senate results for the 2024, 2022, 2020, 2018, and 2016 regular election cycles, with county/reporting-area and official state views; concurrent special elections are excluded
@@ -278,6 +279,16 @@ data/brazil_state_boundaries.geojson
 Argentina 2023 exposes the general election and runoff separately; the 2019 election has one view because Alberto Fernández cleared the first-round threshold. DINE polling-table returns are aggregated to all 24 provinces with candidate, ballot, electorate, turnout, winner, and margin checks. The polygon layer is the official IGN province archive, clipped to the South American frame so Antarctic and remote South Atlantic geometry do not shrink the interactive map.
 
 Brazil exposes both rounds for 2022 and 2018 across all 26 states and the Federal District. The first-round state files preserve the four leading candidates and combine minor candidates into `Other candidates`; second rounds retain both candidates. Overseas voters remain in the official TSE national shares but are not assigned a state polygon. The shared state geometry comes from IBGE's official mesh API.
+
+Türkiye coverage includes the three latest completed presidential elections:
+
+```text
+data/turkiye_2023_president_round_{1|2}_province_fpp.csv
+data/turkiye_{2018|2014}_president_province_fpp.csv
+data/turkiye_province_boundaries.geojson
+```
+
+The 2023 first round and runoff are separate views; the 2018 and 2014 elections ended in the first round. All four maps use official YSK domestic totals for the same 81 provinces, with exact candidate, valid-ballot, invalid-ballot, turnout, winner, and margin checks. Overseas and customs votes remain in the official national shares without being assigned to a false province polygon. The shared compact boundary layer comes from the Turkish Ministry of Agriculture and Forestry's official province service.
 
 Portugal and Spain coverage includes two recent legislative elections from each country:
 
@@ -550,6 +561,11 @@ data/france_2022_president_round_1_department_fpp.csv # French presidential depa
 data/france_2022_president_round_1_region_fpp.csv # matching election-time region results
 data/france_2022_department_boundaries.geojson # compact department/territory map with overseas insets
 data/france_2022_region_boundaries.geojson # compact election-time region map
+data/turkiye_2023_president_round_1_province_fpp.csv # YSK domestic totals for 81 provinces
+data/turkiye_2023_president_round_2_province_fpp.csv # YSK runoff totals for the same provinces
+data/turkiye_2018_president_province_fpp.csv # YSK 2018 province totals
+data/turkiye_2014_president_province_fpp.csv # YSK 2014 province totals
+data/turkiye_province_boundaries.geojson # official Ministry province boundaries shared by all four views
 data/netherlands_2025_house_fpp.csv         # Kiesraad party-list totals for 342 municipalities
 data/netherlands_2025_house_boundaries.geojson # Eurostat GISCO municipality boundaries
 data/norway_2025_storting_fpp.csv           # Valgdirektoratet party totals for 357 municipalities
@@ -634,6 +650,7 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 │   ├── build_us_governor.py
 │   ├── build_us_senate.py
 │   ├── build_us_presidential.py
+│   ├── build_turkiye_presidential.py
 │   ├── scrape_vec_2022_preferences.py
 │   ├── validate_federal.py
 │   ├── validate_france_presidential.py
@@ -645,6 +662,7 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 │   ├── validate_us_governor.py
 │   ├── validate_us_senate.py
 │   ├── validate_us_presidential.py
+│   ├── validate_turkiye_presidential.py
 │   └── validate_vec_csv.py
 ├── docs/
 │   └── data_notes.md
@@ -962,6 +980,15 @@ python3 scripts/validate_argentina_brazil_presidential.py
 ```
 
 The builder checksum-pins DINE's three Argentina result archives, IGN's province polygons, pinned TSE-attributed Brazil state tables, and IBGE state geometry. It locks Argentina's national candidate totals, requires 24 province or 27 state rows per candidate view, and emits seven compact election options. The validator independently checks candidate totals, ballot arithmetic, winners, margins, unique codes, and one-to-one CSV/boundary joins.
+
+To rebuild and validate the four Türkiye presidential views:
+
+```bash
+python3 scripts/build_turkiye_presidential.py
+python3 scripts/validate_turkiye_presidential.py
+```
+
+The builder downloads checksum-pinned YSK domestic province aggregates and a compact official province boundary snapshot. The validator checks all 81 provinces in every view, exact candidate totals, ballot arithmetic, turnout, local winners and margins, valid geometry, and one-to-one CSV/boundary joins.
 
 To rebuild the two Portuguese and two Spanish legislative elections:
 

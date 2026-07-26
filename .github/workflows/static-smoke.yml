@@ -91,6 +91,7 @@ jobs:
           python scripts/validate_france_presidential.py
           python scripts/validate_argentina_brazil_presidential.py
           python scripts/validate_italy_chamber.py
+          python scripts/validate_turkiye_presidential.py
           python scripts/validate_us_house.py
           python scripts/validate_us_presidential.py
           python scripts/validate_us_senate.py
