@@ -281,6 +281,17 @@ REQUIRED_ITALY_MARKERS = (
     'activeElection().jurisdiction === "Italy"',
     '"brothers of italy": "#173f8a"',
 )
+REQUIRED_TURKIYE_MARKERS = (
+    '"key": "turkiye-president-2023-round-1"',
+    '"key": "turkiye-president-2023-round-2"',
+    '"key": "turkiye-president-2018"',
+    '"key": "turkiye-president-2014"',
+    '"jurisdiction": "Türkiye"',
+    "Muharrem İnce withdrew after ballots were printed",
+    "Overseas and customs votes contribute to the national shares",
+    'activeElection().jurisdiction === "Türkiye"',
+    '"recep tayyip erdoğan": "#e78a18"',
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -378,6 +389,11 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_ITALY_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Italy Chamber marker {marker!r}")
+    for marker in REQUIRED_TURKIYE_MARKERS:
+        if marker not in html:
+            raise SystemExit(
+                f"{html_file}: missing Türkiye presidential marker {marker!r}"
+            )
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")
