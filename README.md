@@ -358,14 +358,16 @@ data/us_governor_{year}_state_boundaries.geojson
 
 The five cycles contain 106 state races across 5,984 mapped local areas. Results are compiled from checksum- or revision-pinned MIT Election Data and Science Lab state precinct returns; Tennessee's omitted 2022 governor contest is supplied from the official Secretary of State county table. Cross-endorsed lines are combined by candidate and named write-ins are compacted into a single row. The state view is an exact aggregation of the mapped local returns, not a separate claim of official statewide certification. Counties are analytical reporting areas and do not elect governors. Alaska 2022 is shown as a clearly labelled statewide fallback because its ranked-choice source cannot be assigned safely to county polygons.
 
-United States House coverage currently includes the 2024 election, covering all 435 voting congressional districts across the 50 states:
+United States House coverage includes the five latest general-election cycles from 2016 through 2024, each covering all 435 voting congressional districts across the 50 states:
 
 ```text
-data/us_2024_house_fpp.csv
-data/us_2024_congressional_boundaries.geojson
+data/us_{year}_house_fpp.csv
+data/us_{year}_congressional_boundaries.geojson
 ```
 
-The dataset parses the U.S. House Clerk's official candidate totals and reconciles every district against its published recapitulation. New York and Connecticut fusion-party lines are combined with their candidates, Maine's duplicated continuing-ballot subtotal is excluded, and all unopposed returns are retained without invented votes. Alaska's published lines are first-choice totals, while Maine's 2nd district reports the final continuing candidates; transfer rounds are not reconstructed. Registered-voter and turnout values remain unavailable because the nationwide Clerk publication does not provide a consistent electorate denominator. Boundaries are the Census Bureau's 119th Congress cartographic districts used for the 2024 election cycle; Alaska's Aleutian coordinates are unwrapped across the antimeridian for the app's map projection. DC and territorial delegate districts are outside this 435-seat scope.
+The builder parses the U.S. House Clerk's official candidate totals and reconciles each published district against its recapitulation. Fusion-party lines are combined with their candidates, ranked-choice subtotals and PDF footnote markers are handled explicitly, and unopposed returns are retained without invented votes. The void 2018 North Carolina 9th contest preserves the State Board's apparent vote totals but is clearly marked as having no certified winner. Registered-voter and turnout values remain unavailable because the nationwide Clerk publications do not provide a consistent electorate denominator.
+
+Election-matched Census congressional maps are used for the 115th, 116th, 118th, and 119th Congresses. Census did not issue a national 117th Congress file, so the 2020 map uses the otherwise unchanged 116th districts with North Carolina replaced by its 2020 remedial plan. Alaska's Aleutian coordinates are unwrapped for the app's map projection. DC and territorial delegate districts remain outside this 435-seat scope.
 
 Indonesia coverage includes the 2024, 2019, and 2014 presidential elections at both province and kabupaten/kota level:
 
@@ -701,10 +703,10 @@ python scripts/build_india_federal.py
 python scripts/validate_india_federal.py
 ```
 
-To rebuild and validate the United States House 2024 dataset (the builder downloads the official Clerk and Census files):
+To rebuild and validate all five United States House cycles (the builder defaults to 2024; the historical command downloads checksum-pinned Clerk and Census files):
 
 ```bash
-./.venv/bin/python scripts/build_us_house.py
+./.venv/bin/python scripts/build_us_house.py --years 2024 2022 2020 2018 2016
 ./.venv/bin/python scripts/validate_us_house.py
 ```
 

@@ -2079,6 +2079,66 @@
         "areaLabel": "State"
       },
       {
+        "key": "us-house-2022",
+        "label": "United States House 2022",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2022,
+        "source": "U.S. House Clerk / U.S. Census Bureau",
+        "system": "fpp",
+        "systemLabel": "Plurality / state-specific rules",
+        "methodNote": "Most districts use plurality voting; Alaska and Maine use ranked-choice voting. The app shows the Clerk's published candidate totals, using the decisive round for Maine's 2nd district, without reconstructing transfers.",
+        "csv": "data/us_2022_house_fpp.csv",
+        "boundaries": "data/us_2022_congressional_boundaries.geojson",
+        "totalSeats": 435,
+        "areaLabel": "State"
+      },
+      {
+        "key": "us-house-2020",
+        "label": "United States House 2020",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2020,
+        "source": "U.S. House Clerk / U.S. Census Bureau",
+        "system": "fpp",
+        "systemLabel": "Plurality / state-specific rules",
+        "methodNote": "Most districts use plurality voting; Maine uses ranked-choice voting when no candidate wins a first-round majority. The app shows the Clerk's published candidate totals without reconstructing transfer rounds.",
+        "csv": "data/us_2020_house_fpp.csv",
+        "boundaries": "data/us_2020_congressional_boundaries.geojson",
+        "totalSeats": 435,
+        "areaLabel": "State"
+      },
+      {
+        "key": "us-house-2018",
+        "label": "United States House 2018",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2018,
+        "source": "U.S. House Clerk / U.S. Census Bureau / North Carolina State Board of Elections",
+        "system": "fpp",
+        "systemLabel": "Plurality / state-specific rules",
+        "methodNote": "Most districts use plurality voting; Maine's 2nd district reports its decisive ranked-choice round. North Carolina's 9th district preserves the apparent vote totals but is marked as void because no winner was certified and a new election was ordered.",
+        "csv": "data/us_2018_house_fpp.csv",
+        "boundaries": "data/us_2018_congressional_boundaries.geojson",
+        "totalSeats": 435,
+        "areaLabel": "State"
+      },
+      {
+        "key": "us-house-2016",
+        "label": "United States House 2016",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2016,
+        "source": "U.S. House Clerk / U.S. Census Bureau",
+        "system": "fpp",
+        "systemLabel": "Plurality / state-specific rules",
+        "methodNote": "Districts use plurality or state-specific general-election rules. The app shows the House Clerk's published candidate totals and retains unopposed contests without inventing votes.",
+        "csv": "data/us_2016_house_fpp.csv",
+        "boundaries": "data/us_2016_congressional_boundaries.geojson",
+        "totalSeats": 435,
+        "areaLabel": "State"
+      },
+      {
         "key": "germany-bundestag-2025",
         "label": "Germany Bundestag 2025",
         "type": "national",
@@ -3634,6 +3694,7 @@
     }
 
     function winningParty(d) {
+      if (d.contest_status === "void") return "No certified winner";
       if (activeElection().contestType === "presidential" && !d.formal_votes) return "No digitised vote";
       if (activeElection().contestType === "party-list") {
         const state = localResultState(d);
@@ -3644,6 +3705,7 @@
     }
 
     function winningBloc(d) {
+      if (d.contest_status === "void") return "No certified winner";
       if (isMultiMemberElection()) return leadingElectedBloc(d);
       if (activeElection().contestType === "party-list") return winningParty(d);
       if (["presidential", "senate", "governor"].includes(activeElection().contestType)) return winningParty(d);
@@ -3890,6 +3952,14 @@
           <span>Constituency vote total not published.</span>
         `;
       }
+      if (d.contest_status === "void") {
+        const [leader] = getWinnerFromFinal(d);
+        return `
+          <strong>${d.district}</strong>
+          <div>No certified winner</div>
+          <span>Apparent leader ${shortName(leader)} · election voided.</span>
+        `;
+      }
       if (activeElection().contestType === "party-list") {
         const state = localResultState(d);
         if (state.status === "aggregated") {
@@ -4106,9 +4176,11 @@
           ? `${d.district} · ${electedSeatSummary(d)}`
           : isFppElection()
             ? `${d.district} · ${
-                d.contest_status === "cancelled"
-                  ? "electorate vote cancelled"
-                  : d.contest_status === "unavailable"
+                d.contest_status === "void"
+                  ? "no certified winner · election voided"
+                  : d.contest_status === "cancelled"
+                    ? "electorate vote cancelled"
+                    : d.contest_status === "unavailable"
                     ? "no digitised vote"
                     : d.contest_status === "single-candidate"
                       ? `elected deputy ${shortName(winner)} · vote total not published`
@@ -4388,6 +4460,7 @@
       if (isFppElection()) {
         const contested = allDistricts.filter(d =>
           d.contest_status !== "cancelled"
+          && d.contest_status !== "void"
           && d.formal_votes > 0
           && localResultState(d).status !== "aggregated"
         );
@@ -4988,6 +5061,20 @@
           ? (uncontested ? "The only nominated team was returned without a poll." : d.electorate_type === "GRC" ? `Voters selected a party team; the team with the most votes filled all ${members.length} seats.` : "The candidate with the most votes was elected.")
           : "The candidate with the most votes was elected.";
         const methodNote = activeElection().methodNote || `${pluralityNote} This election does not use preference transfers.`;
+        if (d.contest_status === "void") {
+          document.getElementById("districtSummary").innerHTML = `
+            <h2 class="result-district">${d.district}</h2>
+            <div class="result-facts">
+              <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
+              <div class="fact-item"><span class="fact-label">Result</span><span class="fact-value">No certified winner</span></div>
+              <div class="fact-item"><span class="fact-label">Apparent leader</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
+              <div class="fact-item"><span class="fact-label">Apparent margin</span><span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}</span></div>
+              <div class="fact-item"><span class="fact-label">Valid votes reported</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
+            </div>
+            <p class="pref-impact">The 2018 North Carolina 9th district result was not certified and the election was voided. These are the State Board's apparent totals, not an elected-member result.</p>
+          `;
+          return;
+        }
         document.getElementById("districtSummary").innerHTML = `
           <h2 class="result-district">${d.district}</h2>
           <div class="result-facts">
