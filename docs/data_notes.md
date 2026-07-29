@@ -42,6 +42,8 @@ Source targets:
 - Argentina Instituto Geográfico Nacional province boundary archive
 - Brazil Tribunal Superior Eleitoral 2022 and 2018 presidential results
 - Brazil IBGE official state boundary API
+- Taiwan Central Election Commission 2024, 2020, and 2016 presidential results
+- Taiwan NLSC/MOI official township and urban-district boundary archive
 
 This repo is built around three levels of data:
 
@@ -211,6 +213,10 @@ The 2022 rows come directly from the Interior Ministry's national municipality C
 The Türkiye presidential views cover the 2023 first round and runoff plus the single-round 2018 and 2014 elections. Rows come from checksum-pinned YSK open-data API responses for all 81 domestic provinces. Every province independently reconciles candidate votes to valid ballots and valid plus invalid ballots to ballots cast; electorate, turnout, local leader, and margin fields are derived only after those equalities pass. The official national shares include overseas and customs votes, but those votes are not assigned to province polygons. Muharrem İnce's 2023 first-round votes remain in the official data because his withdrawal came after ballots were printed.
 
 All four Türkiye views share the current 81-province layer from the Ministry of Agriculture and Forestry's official ArcGIS service. Province IDs match YSK IDs 1–81 one-to-one. The builder requests a compact generalized geometry, repairs only polygon validity introduced by generalisation, and rejects missing, duplicate, empty, or non-polygon province features.
+
+The Taiwan presidential views cover 2024, 2020, and 2016 at the 368-township/urban-district level. The builder reads the Central Election Commission's immutable-theme `tickets` and `profiles` JSON for every county and city. It keeps one row per presidential ticket rather than duplicating its vice-presidential member, signature-locks each complete source bundle, and requires the mapped totals to equal the official national candidate totals exactly. Within every area, ticket votes must equal valid ballots, and valid plus invalid ballots must equal ballots cast before turnout, local leader, and margin metadata are emitted.
+
+All three elections share the official Ministry of the Interior/NLSC township boundary archive. The eight-digit township codes join directly to the CEC geographic codes one-to-one. Geometry is simplified for the static app; distant uninhabited claimed-island components are omitted so they do not collapse the interactive extent, while Taiwan, Penghu, Kinmen, and Matsu remain mapped. This display-only treatment removes no result area or votes.
 
 The United States House rows for 2016, 2018, 2020, 2022, and 2024 are parsed from the U.S. House Clerk's official Statistics of the Presidential and Congressional Election publications. Every cycle covers all 435 voting districts. Published districts reconcile candidate lines with district recapitulations, including fusion-line aggregation, unopposed returns, ranked-choice reporting, and checksum-locked corrections for PDF footnote markers joined to vote figures. Maine's 2022 2nd district and Louisiana's 2016 3rd/4th and 2020 5th districts store only the decisive round rather than mixing eliminated first-round lines into the final tally. The 2018 North Carolina 9th contest is absent from the Clerk's certified-result publication; the app preserves the State Board's three apparent totals and marks the contest void with no certified winner. The source does not contain a consistent registered-voter denominator, so enrolment and turnout remain unavailable rather than inferred.
 

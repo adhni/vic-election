@@ -292,6 +292,15 @@ REQUIRED_TURKIYE_MARKERS = (
     'activeElection().jurisdiction === "Türkiye"',
     '"recep tayyip erdoğan": "#e78a18"',
 )
+REQUIRED_TAIWAN_MARKERS = (
+    '"key": "taiwan-president-2024"',
+    '"key": "taiwan-president-2020"',
+    '"key": "taiwan-president-2016"',
+    '"jurisdiction": "Taiwan"',
+    "each of the 368 townships and urban districts",
+    '"democratic progressive party": "#1b9431"',
+    'activeElection().jurisdiction === "Taiwan"',
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -393,6 +402,11 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
         if marker not in html:
             raise SystemExit(
                 f"{html_file}: missing Türkiye presidential marker {marker!r}"
+            )
+    for marker in REQUIRED_TAIWAN_MARKERS:
+        if marker not in html:
+            raise SystemExit(
+                f"{html_file}: missing Taiwan presidential marker {marker!r}"
             )
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:

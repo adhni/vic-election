@@ -21,6 +21,7 @@ The app is map-first and party/bloc-first:
 - Netherlands, Norway, Sweden, Finland, Denmark, and Austria parliamentary results mapped by local area for two elections each
 - Italian Chamber proportional-list results for 2022 and 2018 mapped by province
 - Türkiye presidential results for 2023, 2018, and 2014 mapped across all 81 provinces, including both 2023 rounds
+- Taiwan presidential results for 2024, 2020, and 2016 mapped across all 368 townships and urban districts
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
 - United States Senate results for the 2024, 2022, 2020, 2018, and 2016 regular election cycles, with county/reporting-area and official state views; concurrent special elections are excluded
@@ -289,6 +290,20 @@ data/turkiye_province_boundaries.geojson
 ```
 
 The 2023 first round and runoff are separate views; the 2018 and 2014 elections ended in the first round. All four maps use official YSK domestic totals for the same 81 provinces, with exact candidate, valid-ballot, invalid-ballot, turnout, winner, and margin checks. Overseas and customs votes remain in the official national shares without being assigned to a false province polygon. The shared compact boundary layer comes from the Turkish Ministry of Agriculture and Forestry's official province service.
+
+Taiwan coverage includes the 2024, 2020, and 2016 presidential elections:
+
+```text
+data/taiwan_{2024|2020|2016}_president_township_fpp.csv
+data/taiwan_township_boundaries.geojson
+```
+
+Each view maps the leading president–vice-president ticket across all 368
+townships and urban districts while retaining the complete official national
+result. Candidate votes, ballot arithmetic, turnout, local winners, margins,
+and the result-to-boundary join are validated independently. Results come from
+Taiwan's Central Election Commission and geometry from the official NLSC
+township boundary release.
 
 Portugal and Spain coverage includes two recent legislative elections from each country:
 
@@ -989,6 +1004,19 @@ python3 scripts/validate_turkiye_presidential.py
 ```
 
 The builder downloads checksum-pinned YSK domestic province aggregates and a compact official province boundary snapshot. The validator checks all 81 provinces in every view, exact candidate totals, ballot arithmetic, turnout, local winners and margins, valid geometry, and one-to-one CSV/boundary joins.
+
+To rebuild and validate the three Taiwan presidential views:
+
+```bash
+python3 scripts/build_taiwan_presidential.py
+python3 scripts/validate_taiwan_presidential.py
+python3 scripts/smoke_static_app.py
+```
+
+The builder downloads immutable-theme CEC township result and turnout JSON,
+signature-locks each election's complete source bundle, and checksum-pins the
+official NLSC boundary archive. It requires exactly 368 areas and exact national
+candidate totals before writing the compact CSVs.
 
 To rebuild the two Portuguese and two Spanish legislative elections:
 
