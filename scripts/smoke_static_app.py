@@ -157,6 +157,7 @@ REQUIRED_AUSTRALIA_SENATE_MARKERS = (
     "Full transfer counts are outside this compact view",
     "function isSenateStvElection()",
     "function electedParty(d, candidate)",
+    'p === "david pocock"',
     "Closest first-preference leads",
     "senators elected at this election",
     "elected_parties: firstRow.elected_parties",
