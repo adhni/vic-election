@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house and executive elections across several countries, plus regular U.S. Senate races.
+A static HTML data app for exploring lower-house and executive elections across several countries, plus Australian and U.S. Senate races.
 
 The app is map-first and party/bloc-first:
 
@@ -18,6 +18,7 @@ The app is map-first and party/bloc-first:
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
 - Indian constituency results and winner-party map for the 2024 Lok Sabha election
 - German Erststimme and Zweitstimme results for all 299 constituencies in the 2025, 2021, and 2017 Bundestag elections
+- Australian Senate results for 2025, 2022, and 2019, with official first-preference group totals and all 40 senators elected in each cycle
 - Netherlands, Norway, Sweden, Finland, Denmark, and Austria parliamentary results mapped by local area for two elections each
 - Italian Chamber proportional-list results for 2022 and 2018 mapped by province
 - Türkiye presidential results for 2023, 2018, and 2014 mapped across all 81 provinces, including both 2023 rounds
@@ -446,6 +447,17 @@ data/federal_2016_au_district_summary.csv
 data/federal_2016_au_division_boundaries.geojson
 ```
 
+Australian Senate `2025`, `2022`, and `2019` options use official AEC state/territory first-preference group totals, turnout metadata, and elected-senator lists:
+
+```text
+data/australia_senate_2025_state_fpp.csv
+data/australia_senate_2022_state_fpp.csv
+data/australia_senate_2019_state_fpp.csv
+data/australia_senate_state_boundaries.geojson
+```
+
+The Senate view covers the 40 senators elected in each federal election: six in every state and two in each mainland territory. The map shows the group leading first preferences, while the detail view shows the final elected senators and seat split. It does not reconstruct the full distribution of preferences or represent the continuing half of the 76-seat chamber.
+
 These national files replace the former duplicate Victoria-only copies for the same four years. Select the Australia-wide election to access Victorian divisions alongside the rest of the country.
 
 Victoria-only federal options remain available for `2013`, `2010`, and `2007`, where Australia-wide datasets have not yet been added. For `2016`, `2019`, `2022`, and `2025`, use the Australia-wide option, which already contains every Victorian division:
@@ -602,6 +614,10 @@ data/federal_2019_au_division_boundaries.geojson  # AEC 2019 national federal di
 data/federal_2016_au_preferences_long.csv         # AEC 2016 federal House preference rows, Australia-wide
 data/federal_2016_au_district_summary.csv         # AEC 2016 federal House division summary, Australia-wide
 data/federal_2016_au_division_boundaries.geojson  # AEC 2016 election-period national division polygons assembled from official jurisdiction files
+data/australia_senate_2025_state_fpp.csv           # AEC 2025 Senate group first preferences and elected senators by state/territory
+data/australia_senate_2022_state_fpp.csv           # AEC 2022 Senate group first preferences and elected senators by state/territory
+data/australia_senate_2019_state_fpp.csv           # AEC 2019 Senate group first preferences and elected senators by state/territory
+data/australia_senate_state_boundaries.geojson     # ABS 2021 state/territory polygons shared by the Senate views
 data/federal_2013_vic_preferences_long.csv        # AEC 2013 federal House preference rows, Victoria only
 data/federal_2013_vic_district_summary.csv        # AEC 2013 federal House division summary, Victoria only
 data/federal_2013_vic_division_boundaries.geojson # AEC December 2010 federal division polygons, Victoria
@@ -772,6 +788,13 @@ To rebuild and validate the five regular United States Senate cycles:
 ```bash
 ./.venv/bin/python scripts/build_us_senate.py
 ./.venv/bin/python scripts/validate_us_senate.py
+```
+
+To rebuild and validate the three Australian Senate cycles:
+
+```bash
+./.venv/bin/python scripts/build_australia_senate.py
+./.venv/bin/python scripts/validate_australia_senate.py
 ```
 
 For historical state elections:

@@ -4,7 +4,9 @@ Source targets:
 
 - Victorian Electoral Commission State Election results pages
 - Australian Electoral Commission Federal Election House of Representatives downloads
+- Australian Electoral Commission Senate group first-preference, elected-senator, representation, informal-vote, and turnout downloads
 - Australian Electoral Commission federal division GIS boundaries
+- Australian Bureau of Statistics ASGS 2021 state and territory boundaries
 - Tasmanian Electoral Commission House of Assembly result workbooks
 - New Zealand Electoral Commission 2023 and 2020 General Election result pages
 - Stats NZ 2020 general and Māori electorate boundaries
@@ -235,6 +237,10 @@ The Indonesia 2019 local results come from a preserved scrape of KPU's final rec
 The Indonesia 2014 province rows use the certified KPU domestic totals for the 33 reporting provinces. North Kalimantan is included in East Kalimantan, following the official recapitulation. The 497 kabupaten/kota rows aggregate the public KawalPemilu archive of digitised KPU polling-station C1 scans. Candidate totals cover 130,562,272 valid votes, or 98.24% of the 132,896,420 certified domestic valid votes; missing scans are not estimated or redistributed, and each local detail page carries that disclosure. Yahukimo, Mamberamo Tengah, Dogiyai, and Intan Jaya have zero digitised candidate totals in the archive and are shown as unavailable rather than assigned a winner. For the map, 17 local governments that appear in the modern KPU boundary layer but not the 2014 reporting hierarchy are dissolved into their historical parents. Renamed areas are matched explicitly. This preserves the 2014 units instead of assigning one old result to several modern children.
 
 All `fpp` and `mmp-fpp` CSVs use this compact single-copy representation. Their validators reject duplicated final rows, while the browser synthesizes a final round from the candidate rows before calculating winners, margins, rankings, maps, and detail views. Preferential and Hare-Clark datasets retain their distinct published final-count rows.
+
+The Australian Senate 2025, 2022, and 2019 views are built from the AEC's official state-by-group first-preference totals, senators-elected list, party-representation summary, informal-vote totals, and turnout totals for event IDs `31496`, `27966`, and `24310`. The builder checksum-pins every input, reconciles group votes to formal totals, requires formal plus informal to equal ballot papers issued, checks turnout, validates the elected order and party representation, and requires exactly 40 senators per election. Six senators were elected in each state and two in each mainland territory under proportional STV.
+
+These compact views do not reconstruct the full transfer distribution. The map therefore colours each state/territory by the group leading first preferences, not by a winner-take-all result; details separately show the final elected senators, their party seat split, and the official Droop quota. The 40-seat summary is the cohort elected at that election, not the full 76-seat Senate, which also includes continuing state senators. One shared simplified ABS ASGS 2021 state/territory boundary file is used because the eight Senate constituencies did not change across these cycles.
 
 The 2025 federal Australia boundary file is adapted from the AEC `AUS-March-2025-esri.zip` shapefile, linked from the AEC federal electoral boundary GIS download page. The result rows are generated from the AEC 2025 House of Representatives Distribution of Preferences by Division CSV, event `31496`, with no `StateAb` filtering.
 

@@ -148,6 +148,19 @@ REQUIRED_US_SENATE_MARKERS = (
     'const senate = activeElection().contestType === "senate";',
     '["presidential", "senate", "governor"].includes(activeElection().contestType)',
 )
+REQUIRED_AUSTRALIA_SENATE_MARKERS = (
+    '"key": "federal-senate-2025-au"',
+    '"key": "federal-senate-2022-au"',
+    '"key": "federal-senate-2019-au"',
+    '"system": "senate-stv"',
+    '"Senate proportional representation · STV"',
+    "Full transfer counts are outside this compact view",
+    "function isSenateStvElection()",
+    "function electedParty(d, candidate)",
+    "Closest first-preference leads",
+    "senators elected at this election",
+    "elected_parties: firstRow.elected_parties",
+)
 REQUIRED_US_GOVERNOR_MARKERS = (
     '"key": "us-governor-2024"',
     '"key": "us-governor-2022"',
@@ -293,7 +306,7 @@ REQUIRED_TURKIYE_MARKERS = (
     '"recep tayyip erdoğan": "#e78a18"',
 )
 REQUIRED_COMPACT_FPP_MARKERS = (
-    "if (isFppElection() && !d.rounds.length && Object.keys(d.first).length)",
+    "if ((isFppElection() || isSenateStvElection()) && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
 )
 EXPECTED_ELECTION_ALIASES = {
@@ -355,6 +368,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_US_SENATE_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. Senate UI marker {marker!r}")
+    for marker in REQUIRED_AUSTRALIA_SENATE_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Australian Senate UI marker {marker!r}")
     for marker in REQUIRED_US_GOVERNOR_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. governor UI marker {marker!r}")
@@ -487,7 +503,7 @@ def smoke_election(key: str, csv_path: Path, boundary_path: Path, system: str) -
     if len([path for path in paths if path.startswith("M") and len(path) > 20]) != len(features):
         raise SystemExit(f"{key}: map path generation failed")
     row_types = {row["row_type"] for row in rows}
-    if system in {"fpp", "mmp-fpp"}:
+    if system in {"fpp", "mmp-fpp", "senate-stv"}:
         if "first" not in row_types or "final" in row_types:
             raise SystemExit(f"{key}: FPP data should contain compact first rows without duplicate final rows")
     elif "final" not in row_types:
