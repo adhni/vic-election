@@ -3216,6 +3216,69 @@
         "nationalResults": [["Recep Tayyip Erdoğan",51.79],["Ekmeleddin Mehmet İhsanoğlu",38.44],["Selahattin Demirtaş",9.76]]
       },
       {
+        "key": "taiwan-president-2024",
+        "label": "Taiwan President 2024",
+        "type": "national",
+        "jurisdiction": "Taiwan",
+        "year": 2024,
+        "source": "Central Election Commission (CEC)",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National presidential election · single-round plurality",
+        "methodNote": "Taiwan elects one president and vice-president ticket nationally. This map shows the local ticket leader in each of the 368 townships and urban districts; these areas do not elect separate presidents. Results are official CEC township totals.",
+        "candidateVoteLabel": "Presidential ticket vote",
+        "candidateFilterLabel": "Any presidential ticket",
+        "localVoteLabel": "presidential ticket vote",
+        "csv": "data/taiwan_2024_president_township_fpp.csv",
+        "boundaries": "data/taiwan_township_boundaries.geojson",
+        "areaLabel": "County / city",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "nationalResults": [["Lai Ching-te–Hsiao Bi-khim",40.05],["Hou Yu-ih–Jaw Shaw-kong",33.49],["Ko Wen-je–Cynthia Wu",26.46]]
+      },
+      {
+        "key": "taiwan-president-2020",
+        "label": "Taiwan President 2020",
+        "type": "national",
+        "jurisdiction": "Taiwan",
+        "year": 2020,
+        "source": "Central Election Commission (CEC)",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National presidential election · single-round plurality",
+        "methodNote": "Taiwan elects one president and vice-president ticket nationally. This map shows the local ticket leader in each of the 368 townships and urban districts; these areas do not elect separate presidents. Results are official CEC township totals.",
+        "candidateVoteLabel": "Presidential ticket vote",
+        "candidateFilterLabel": "Any presidential ticket",
+        "localVoteLabel": "presidential ticket vote",
+        "csv": "data/taiwan_2020_president_township_fpp.csv",
+        "boundaries": "data/taiwan_township_boundaries.geojson",
+        "areaLabel": "County / city",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "nationalResults": [["Tsai Ing-wen–Lai Ching-te",57.13],["Han Kuo-yu–Chang San-cheng",38.61],["James Soong–Sandra Yu",4.26]]
+      },
+      {
+        "key": "taiwan-president-2016",
+        "label": "Taiwan President 2016",
+        "type": "national",
+        "jurisdiction": "Taiwan",
+        "year": 2016,
+        "source": "Central Election Commission (CEC)",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "National presidential election · single-round plurality",
+        "methodNote": "Taiwan elects one president and vice-president ticket nationally. This map shows the local ticket leader in each of the 368 townships and urban districts; these areas do not elect separate presidents. Results are official CEC township totals.",
+        "candidateVoteLabel": "Presidential ticket vote",
+        "candidateFilterLabel": "Any presidential ticket",
+        "localVoteLabel": "presidential ticket vote",
+        "csv": "data/taiwan_2016_president_township_fpp.csv",
+        "boundaries": "data/taiwan_township_boundaries.geojson",
+        "areaLabel": "County / city",
+        "tightMapView": true,
+        "wideMobileMap": true,
+        "nationalResults": [["Tsai Ing-wen–Chen Chien-jen",56.12],["Eric Chu–Jennifer Wang",31.04],["James Soong–Hsu Hsin-ying",12.84]]
+      },
+      {
         "key": "argentina-president-2023-round-1",
         "label": "Argentina President 2023 — Round 1",
         "type": "national",
@@ -3581,6 +3644,24 @@
           "ekmeleddin mehmet ihsanoğlu": "#4e857a"
         };
         if (turkiyeColors[p]) return turkiyeColors[p];
+      }
+      if (activeElection().jurisdiction === "Taiwan") {
+        const taiwanColors = {
+          "democratic progressive party": "#1b9431",
+          "kuomintang": "#2456a6",
+          "taiwan people's party": "#28a9ad",
+          "people first party": "#ef8b22",
+          "lai ching-te–hsiao bi-khim": "#1b9431",
+          "tsai ing-wen–lai ching-te": "#1b9431",
+          "tsai ing-wen–chen chien-jen": "#1b9431",
+          "hou yu-ih–jaw shaw-kong": "#2456a6",
+          "han kuo-yu–chang san-cheng": "#2456a6",
+          "eric chu–jennifer wang": "#2456a6",
+          "ko wen-je–cynthia wu": "#28a9ad",
+          "james soong–sandra yu": "#ef8b22",
+          "james soong–hsu hsin-ying": "#ef8b22"
+        };
+        if (taiwanColors[p]) return taiwanColors[p];
       }
       if (activeElection().jurisdiction === "Indonesia") {
         if (p === "no digitised vote") return "#7a7f87";
@@ -4049,6 +4130,7 @@
       }
       if (activeElection().jurisdiction === "Italy") return count === 1 ? "province" : "provinces";
       if (activeElection().jurisdiction === "Türkiye") return count === 1 ? "province" : "provinces";
+      if (activeElection().jurisdiction === "Taiwan") return count === 1 ? "township/district" : "townships/districts";
       if (activeElection().jurisdiction === "Argentina") return count === 1 ? "province" : "provinces";
       if (activeElection().jurisdiction === "Brazil") return count === 1 ? "state/DF" : "states/DF";
       if (activeElection().jurisdiction === "Philippines") return count === 1 ? "province/city" : "provinces/cities";
