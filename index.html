@@ -3062,6 +3062,72 @@
         "areaLabel": "Province / territory"
       },
       {
+        "key": "federal-senate-2025-au",
+        "label": "Federal Senate 2025 - Australia",
+        "type": "federal",
+        "jurisdiction": "Australia",
+        "year": 2025,
+        "source": "AEC",
+        "system": "senate-stv",
+        "contestType": "senate",
+        "membersPerDistrict": 6,
+        "systemLabel": "Senate proportional representation · STV",
+        "methodNote": "Each state elected six senators and each mainland territory elected two by proportional single transferable vote. The map colours each contest by its first-preference group leader; the elected list and seat split are final AEC results. Full transfer counts are outside this compact view.",
+        "candidateVoteLabel": "Senate group first-preference vote",
+        "candidateFilterLabel": "Any elected bloc",
+        "localVoteLabel": "Senate group first-preference result",
+        "districtLabel": "State / territory",
+        "areaLabel": "Senate contest",
+        "mapModeLabel": "First preference",
+        "csv": "data/australia_senate_2025_state_fpp.csv",
+        "boundaries": "data/australia_senate_state_boundaries.geojson",
+        "wideMobileMap": true
+      },
+      {
+        "key": "federal-senate-2022-au",
+        "label": "Federal Senate 2022 - Australia",
+        "type": "federal",
+        "jurisdiction": "Australia",
+        "year": 2022,
+        "source": "AEC",
+        "system": "senate-stv",
+        "contestType": "senate",
+        "membersPerDistrict": 6,
+        "systemLabel": "Senate proportional representation · STV",
+        "methodNote": "Each state elected six senators and each mainland territory elected two by proportional single transferable vote. The map colours each contest by its first-preference group leader; the elected list and seat split are final AEC results. Full transfer counts are outside this compact view.",
+        "candidateVoteLabel": "Senate group first-preference vote",
+        "candidateFilterLabel": "Any elected bloc",
+        "localVoteLabel": "Senate group first-preference result",
+        "districtLabel": "State / territory",
+        "areaLabel": "Senate contest",
+        "mapModeLabel": "First preference",
+        "csv": "data/australia_senate_2022_state_fpp.csv",
+        "boundaries": "data/australia_senate_state_boundaries.geojson",
+        "wideMobileMap": true
+      },
+      {
+        "key": "federal-senate-2019-au",
+        "label": "Federal Senate 2019 - Australia",
+        "type": "federal",
+        "jurisdiction": "Australia",
+        "year": 2019,
+        "source": "AEC",
+        "system": "senate-stv",
+        "contestType": "senate",
+        "membersPerDistrict": 6,
+        "systemLabel": "Senate proportional representation · STV",
+        "methodNote": "Each state elected six senators and each mainland territory elected two by proportional single transferable vote. The map colours each contest by its first-preference group leader; the elected list and seat split are final AEC results. Full transfer counts are outside this compact view.",
+        "candidateVoteLabel": "Senate group first-preference vote",
+        "candidateFilterLabel": "Any elected bloc",
+        "localVoteLabel": "Senate group first-preference result",
+        "districtLabel": "State / territory",
+        "areaLabel": "Senate contest",
+        "mapModeLabel": "First preference",
+        "csv": "data/australia_senate_2019_state_fpp.csv",
+        "boundaries": "data/australia_senate_state_boundaries.geojson",
+        "wideMobileMap": true
+      },
+      {
         "key": "federal-2025-au",
         "label": "Federal 2025 - Australia",
         "type": "federal",
@@ -3534,7 +3600,7 @@
         };
         if (indiaParties[p]) return indiaParties[p];
       }
-      if (upper === "ALP") return "Labor";
+      if (upper === "ALP" || upper === "A.L.P.") return "Labor";
       if (upper === "CL") return "Country Labor";
       if (p === "Australian Labor Party - Victorian Branch") return "Labor";
       if (p === "Australian Labor Party (NSW Branch)") return "Labor";
@@ -3584,9 +3650,9 @@
       if (p === "coalition") return "Coalition";
       if (p === "other") return "Other";
       if (p.includes("labor")) return "Labor";
-      if (p.includes("liberal") || p.includes("national")) return "Coalition";
+      if (p === "lnp" || p === "nt clp" || p.includes("liberal") || p.includes("national") || p.includes("country liberal")) return "Coalition";
       if (p.includes("greens")) return "Greens";
-      if (p.includes("independent")) return "Independent";
+      if (p === "david pocock" || p.includes("independent")) return "Independent";
       return "Other";
     }
 
@@ -3963,9 +4029,13 @@
       return d.partyMap?.[candidate] || "Independent";
     }
 
+    function isSenateStvElection() {
+      return activeElection().system === "senate-stv";
+    }
+
     function isMultiMemberElection() {
       const election = activeElection();
-      return election.system === "hare-clark" || Number(election.membersPerDistrict || 1) > 1;
+      return election.system === "hare-clark" || election.system === "senate-stv" || Number(election.membersPerDistrict || 1) > 1;
     }
 
     function isFppElection() {
@@ -3993,6 +4063,15 @@
       return source.split(";").map(name => name.trim()).filter(Boolean);
     }
 
+    function electedParty(d, candidate) {
+      const index = electedMembers(d).indexOf(candidate);
+      const parties = (d.elected_parties || d.elected_party || "")
+        .split(";")
+        .map(party => party.trim())
+        .filter(Boolean);
+      return parties[index] || getParty(d, candidate);
+    }
+
     function isElectedCandidate(d, candidate) {
       return Boolean(d.electedSet?.has(candidate) || electedMembers(d).includes(candidate));
     }
@@ -4000,7 +4079,7 @@
     function electedSeatCounts(d, labeler = partyBloc) {
       const counts = new Map();
       electedMembers(d).forEach(candidate => {
-        const label = labeler(getParty(d, candidate));
+        const label = labeler(electedParty(d, candidate));
         counts.set(label, (counts.get(label) || 0) + 1);
       });
       return counts;
@@ -4113,6 +4192,7 @@
     }
 
     function electorateLabel(count = 0) {
+      if (isSenateStvElection()) return count === 1 ? "state/territory contest" : "state/territory contests";
       if (activeElection().jurisdiction === "United States" && ["presidential", "senate", "governor"].includes(activeElection().contestType)) {
         if (activeGeography === "state") {
           if (["senate", "governor"].includes(activeElection().contestType)) return count === 1 ? "state race" : "state races";
@@ -4209,7 +4289,9 @@
       const geography = electionYears[year]?.geographies?.[requestedGeography] ? requestedGeography : "";
       const allowedMapModes = system === "mmp-fpp"
         ? ["party", "party-vote", "close"]
-        : system === "fpp" ? (membersOnly ? ["party"] : ["party", "close"]) : ["party", "close", "changed"];
+        : system === "fpp"
+          ? (membersOnly ? ["party"] : ["party", "close"])
+          : system === "senate-stv" ? ["party"] : ["party", "close", "changed"];
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
@@ -4282,6 +4364,16 @@
         const color = partyColor(party);
         return { color, fill: hexToRgba(color, .68), label: partyLabel(party) };
       }
+      if (isSenateStvElection()) {
+        const [leader] = getFirstLeader(d);
+        const party = getParty(d, leader);
+        const color = blocColor(party);
+        return {
+          color,
+          fill: hexToRgba(color, .68),
+          label: `${partyLabel(party)} first-preference lead`
+        };
+      }
       if (activeElection().contestType === "party-list" && localResultState(d).status === "aggregated") {
         const color = "#7a7f87";
         return { color, fill: hexToRgba(color, .35), label: "N/A" };
@@ -4335,6 +4427,14 @@
     }
 
     function tooltipHtml(d) {
+      if (isSenateStvElection()) {
+        const [leader, leaderVotes] = getFirstLeader(d);
+        return `
+          <strong>${d.district}</strong>
+          <div>${partyLabel(getParty(d, leader))} led first preferences · ${pct(leaderVotes, d.formal_votes)}</div>
+          <span>${electedSeatSummary(d)} · quota ${fmt.format(d.quota || 0)}</span>
+        `;
+      }
       if (isMultiMemberElection()) {
         return `
           <strong>${d.district}</strong>
@@ -4700,6 +4800,26 @@
         target.innerHTML = "";
         return;
       }
+      if (isSenateStvElection()) {
+        const blocCounts = new Map();
+        allDistricts.forEach(d => {
+          electedSeatCounts(d, partyBloc).forEach((count, bloc) => {
+            blocCounts.set(bloc, (blocCounts.get(bloc) || 0) + count);
+          });
+        });
+        const totalSenators = [...blocCounts.values()].reduce((sum, count) => sum + count, 0);
+        const chips = [
+          `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`,
+          `<span class="summary-chip"><strong>${fmt.format(totalSenators)}</strong> senators elected at this election</span>`
+        ];
+        ["Labor", "Coalition", "Greens", "Independent", "Other"].forEach(bloc => {
+          const count = blocCounts.get(bloc) || 0;
+          if (!count) return;
+          chips.push(`<span class="summary-chip"><span class="dot" style="background:${blocColor(bloc)}"></span>${bloc} <strong>${fmt.format(count)}</strong></span>`);
+        });
+        target.innerHTML = chips.join("");
+        return;
+      }
       if (isMmpElection()) {
         const election = activeElection();
         const chips = usesBoundaryTypeLayers()
@@ -4862,6 +4982,34 @@
       }
 
       const topCount = Math.min(5, allDistricts.length);
+      if (isSenateStvElection()) {
+        const closest = [...allDistricts]
+          .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || a.district.localeCompare(b.district))
+          .slice(0, topCount);
+        const largest = [...allDistricts]
+          .sort((a, b) => finalMarginShare(b) - finalMarginShare(a) || a.district.localeCompare(b.district))
+          .slice(0, topCount);
+        const cards = [
+          ["Closest first-preference leads", closest],
+          ["Largest first-preference leads", largest]
+        ];
+        target.innerHTML = cards.map(([title, items]) => `
+          <section class="ranking-card">
+            <div class="section-title">${title}</div>
+            ${rankingsListHtml(
+              items,
+              d => {
+                const [leader] = getFirstLeader(d);
+                const runnerUp = ranked(d.first)[1]?.[0] || "—";
+                return `${partyLabel(getParty(d, leader))} over ${partyLabel(getParty(d, runnerUp))} · ${electedSeatSummary(d)}`;
+              },
+              d => pct(finalMargin(d), d.formal_votes),
+              "No Senate contests loaded."
+            )}
+          </section>
+        `).join("");
+        return;
+      }
       if (isFppElection()) {
         const contested = allDistricts.filter(d =>
           d.contest_status !== "cancelled"
@@ -5092,6 +5240,8 @@
     function updateElectionSpecificUi() {
       const fpp = isFppElection();
       const mmp = isMmpElection();
+      const senateStv = isSenateStvElection();
+      const compactAnalytical = fpp || senateStv;
       const presidential = activeElection().contestType === "presidential";
       const senate = activeElection().contestType === "senate";
       const governor = activeElection().contestType === "governor";
@@ -5108,19 +5258,19 @@
       document.getElementById("partyVoteMapMode").classList.toggle("hidden", !mmp);
       document.querySelector('[data-map-mode="party"]').textContent = activeElection().mapModeLabel || (activeElection().jurisdiction === "Germany" ? "Erststimme" : "Winner");
       document.getElementById("partyVoteMapMode").textContent = activeElection().jurisdiction === "Germany" ? "Zweitstimme" : "Party vote";
-      document.getElementById("changedMapMode").classList.toggle("hidden", fpp);
-      document.querySelector('[data-map-mode="close"]').classList.toggle("hidden", Boolean(activeElection().membersOnly));
+      document.getElementById("changedMapMode").classList.toggle("hidden", compactAnalytical);
+      document.querySelector('[data-map-mode="close"]').classList.toggle("hidden", Boolean(activeElection().membersOnly) || senateStv);
       document.getElementById("boundaryTypeModes").classList.toggle("hidden", !usesBoundaryTypeLayers());
       geographyModes.classList.toggle("hidden", !activeElection().geographies);
       document.querySelectorAll("[data-geography]").forEach(button => {
         button.classList.toggle("active", button.dataset.geography === activeGeography);
       });
-      document.getElementById("roundsTabButton").classList.toggle("hidden", fpp);
-      document.getElementById("chartTabButton").classList.toggle("hidden", fpp);
-      document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", fpp);
-      document.getElementById("closeOnly").closest(".check-pill").classList.toggle("hidden", Boolean(activeElection().membersOnly));
+      document.getElementById("roundsTabButton").classList.toggle("hidden", compactAnalytical);
+      document.getElementById("chartTabButton").classList.toggle("hidden", compactAnalytical);
+      document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", compactAnalytical);
+      document.getElementById("closeOnly").closest(".check-pill").classList.toggle("hidden", Boolean(activeElection().membersOnly) || senateStv);
       document.getElementById("partyFilter").closest(".ctrl-group").classList.toggle("hidden", Boolean(activeElection().membersOnly));
-      document.querySelector('label[for="partyFilter"]').textContent = activeElection().membersOnly ? "Deputy affiliation" : analyticalLocalVote ? "Local winner" : fpp ? "Winner party" : "Bloc";
+      document.querySelector('label[for="partyFilter"]').textContent = activeElection().membersOnly ? "Deputy affiliation" : activeElection().candidateFilterLabel || (analyticalLocalVote ? "Local winner" : fpp ? "Winner party" : "Bloc");
       document.getElementById("primaryVoteTitle").textContent = analyticalLocalVote ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? activeElection().partyVoteLabel || "Party vote" : "Final standing";
       document.getElementById("finalVotePanel").classList.toggle("hidden", analyticalLocalVote || Boolean(activeElection().membersOnly));
@@ -5138,7 +5288,7 @@
         : analyticalLocalVote
         ? `Local-result leaderboards across the selected ${electorateLabel(2)}. Click a row to open that area.`
         : "Election-wide leaderboards for the selected election. Click a row to open that district or division.";
-      if (fpp && (activeTab === "rounds" || activeTab === "chart")) activeTab = "overview";
+      if (compactAnalytical && (activeTab === "rounds" || activeTab === "chart")) activeTab = "overview";
       document.querySelectorAll(".tab-btn").forEach(button => {
         button.classList.toggle("active", button.dataset.tab === activeTab);
         button.setAttribute("aria-selected", String(button.dataset.tab === activeTab));
@@ -5499,10 +5649,55 @@
       if (isMultiMemberElection()) {
         const members = electedMembers(d);
         const memberHtml = members.map((candidate, index) => {
-          const party = getParty(d, candidate);
+          const party = electedParty(d, candidate);
           const color = partyColor(party);
           return `<span class="party-chip" style="background:${hexToRgba(color,.1)};color:${color};border-color:${hexToRgba(color,.2)}"><span class="dot" style="background:${color}"></span>${index + 1}. ${shortName(candidate)} · ${partyLabel(party)}</span>`;
         }).join("");
+        if (isSenateStvElection()) {
+          const rankedGroups = ranked(d.first);
+          const [runnerUp] = rankedGroups[1] || ["—", 0];
+          document.getElementById("districtSummary").innerHTML = `
+            <h2 class="result-district">${d.district}</h2>
+            <div class="result-facts">
+              <div class="fact-item">
+                <span class="fact-label">System</span>
+                <span class="fact-value">${activeElection().systemLabel}</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">Senators elected</span>
+                <span class="fact-value">${fmt.format(members.length)} of ${fmt.format(d.members_to_elect || members.length)}</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">Seat split</span>
+                <span class="fact-value">${electedSeatSummary(d)}</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">First-preference leader</span>
+                <span class="fact-value">${badgeHtml(leaderParty)}</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">First-preference lead</span>
+                <span class="fact-value">${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${partyLabel(getParty(d, runnerUp))}</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">Quota</span>
+                <span class="fact-value">${fmt.format(d.quota || 0)}</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">Valid votes</span>
+                <span class="fact-value">${fmt.format(d.formal_votes)}</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">Turnout</span>
+                <span class="fact-value">${Number(d.turnout_pct).toFixed(1)}%</span>
+              </div>
+            </div>
+            <p class="pref-impact">${activeElection().methodNote}</p>
+            ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}
+            <div class="summary-chips">${memberHtml}</div>
+          `;
+          return;
+        }
         const outsideTop = (() => {
           const topPrimary = new Set(ranked(d.first).slice(0, Number(d.members_to_elect || members.length || 1)).map(([candidate]) => candidate));
           return members.filter(candidate => !topPrimary.has(candidate)).length;
@@ -5848,7 +6043,7 @@
         renderBars("finalBars", activeDistrict.partyVote, partyVoteTotal, partyVoteWinner, partyVoteDistrict);
       } else {
         renderBars("finalBars", getFinal(activeDistrict), activeDistrict.formal_votes, winner, activeDistrict);
-        if (!isFppElection()) {
+        if (!isFppElection() && !isSenateStvElection()) {
           populateRoundSelect();
           renderRound();
         }
@@ -5898,6 +6093,7 @@
           elected_member: firstRow.elected_member || "",
           elected_party: firstRow.elected_party || "Independent",
           elected_members: firstRow.elected_members || firstRow.elected_member || "",
+          elected_parties: firstRow.elected_parties || firstRow.elected_party || "",
           members_to_elect: Number(firstRow.members_to_elect || 1),
           district_seats: Number(firstRow.district_seats || 0),
           quota: Number(firstRow.quota || 0),
@@ -5950,7 +6146,7 @@
           const final = rr.some(r => r.row_type === "final");
           d.rounds.push({ round: n, excluded, transfers, totals, final });
         }
-        if (isFppElection() && !d.rounds.length && Object.keys(d.first).length) {
+        if ((isFppElection() || isSenateStvElection()) && !d.rounds.length && Object.keys(d.first).length) {
           d.rounds.push({ round: 1, excluded: "", transfers: {}, totals: { ...d.first }, final: true, synthetic: true });
         }
         out.push(d);
