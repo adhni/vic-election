@@ -257,6 +257,7 @@ def build_rows(
         "&dataLevel=C&prvCode=00&cityCode=000&areaCode=00&deptCode=000&liCode=0000"
     )
     for county in counties:
+        county_name = COUNTY_ENGLISH[str(county["area_name"])]
         county_code = (
             f"{county['prv_code']}_{county['city_code']}_"
             "00_000_0000"
@@ -315,7 +316,7 @@ def build_rows(
                 "row_type": "first",
                 "excluded_candidate": "",
                 "excluded_party": "",
-                "electorate_type": "Township / district",
+                "electorate_type": county_name,
                 "constituency_code": f"TW-{code}",
                 "contest_status": "official",
                 "result_note": (

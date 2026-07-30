@@ -299,6 +299,7 @@ REQUIRED_TAIWAN_MARKERS = (
     '"jurisdiction": "Taiwan"',
     "each of the 368 townships and urban districts",
     '"democratic progressive party": "#1b9431"',
+    '"lai ching-te–hsiao bi-khim": "#1b9431"',
     'activeElection().jurisdiction === "Taiwan"',
 )
 REQUIRED_COMPACT_FPP_MARKERS = (

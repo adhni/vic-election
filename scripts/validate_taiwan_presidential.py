@@ -39,7 +39,8 @@ def integer(row: dict[str, str], field: str) -> int:
 
 
 def validate_csv(
-    data_dir: Path, name: str, expected: dict[str, int], boundary_codes: set[str]
+    data_dir: Path, name: str, expected: dict[str, int],
+    boundary_counties: dict[str, str],
 ) -> None:
     path = data_dir / name
     with path.open(newline="", encoding="utf-8") as handle:
@@ -57,7 +58,7 @@ def validate_csv(
         if votes < 0:
             raise SystemExit(f"{path}: negative votes in {row['district']}")
         totals[row["candidate"]] += votes
-    if set(by_township) != boundary_codes:
+    if set(by_township) != set(boundary_counties):
         raise SystemExit(f"{path}: CSV/boundary code mismatch")
     if dict(totals) != expected:
         raise SystemExit(
@@ -76,6 +77,8 @@ def validate_csv(
             if len({row[field] for row in township_rows}) != 1:
                 raise SystemExit(f"{path}: inconsistent {field} for {code}")
         first = township_rows[0]
+        if first["electorate_type"] != boundary_counties[code]:
+            raise SystemExit(f"{path}: county/city mismatch for {code}")
         ordered = sorted(
             (integer(row, "votes"), row["candidate"], row["candidate_party"])
             for row in township_rows
@@ -106,10 +109,7 @@ def main() -> None:
     data_dir = Path("data")
     boundary = json.loads((data_dir / BOUNDARY_NAME).read_text(encoding="utf-8"))
     features = boundary.get("features", [])
-    codes = [
-        feature.get("properties", {}).get("constituency_code")
-        for feature in features
-    ]
+    codes = [feature.get("properties", {}).get("constituency_code") for feature in features]
     if len(codes) != 368 or len(set(codes)) != 368:
         raise SystemExit(f"{BOUNDARY_NAME}: expected 368 unique township codes")
     for feature in features:
@@ -119,8 +119,12 @@ def main() -> None:
                 f"{BOUNDARY_NAME}: invalid geometry for "
                 f"{feature['properties'].get('constituency_code')}"
             )
+    boundary_counties = {
+        feature["properties"]["constituency_code"]: feature["properties"]["county"]
+        for feature in features
+    }
     for name, expected in CONFIG.items():
-        validate_csv(data_dir, name, expected, set(codes))
+        validate_csv(data_dir, name, expected, boundary_counties)
     print("Taiwan presidential validation passed.")
 
 
