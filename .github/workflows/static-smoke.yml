@@ -101,6 +101,7 @@ jobs:
           python scripts/validate_indonesia_historical_presidential.py
           python scripts/validate_finland_denmark_austria.py
           python scripts/validate_australia_senate.py
+          python scripts/validate_south_africa_national.py
 
       - name: Smoke test static app
         run: |
