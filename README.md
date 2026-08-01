@@ -348,7 +348,7 @@ Italy uses a mixed system combining direct constituencies and proportional lists
 
 South Africa coverage includes the 2024, 2019, and 2014 National Assembly elections. Each election switches between municipality and province views, while the national summary shows the actual certified 400-seat Assembly result. These are analytical local party-leader maps: municipalities and provinces do not elect separate winner-take-all MPs. The 2024 view uses only the newly separate national ballot and never combines it with the regional ballot.
 
-Results come from checksum-pinned Electoral Commission voting-district archives and are aggregated only after each voting district's repeated metadata and party totals reconcile. The parser explicitly handles unquoted commas in the IEC's 2019 voting-station names and filters the combined 2014 archive to the national election. Overseas votes remain represented in the certified seat result but are not assigned domestic polygons. Boundaries are official nationwide Municipal Demarcation Board layers: the 2011 municipal structure for 2014 and the 2016 structure for 2019 and 2024.
+Results come from checksum-pinned Electoral Commission voting-district archives and are aggregated only after each voting district's repeated metadata and party totals reconcile. The parser explicitly handles unquoted commas in the IEC's 2019 voting-station names and filters the combined 2014 archive to the national election. Overseas votes remain represented in the certified seat result but are not assigned domestic polygons. Boundaries are official nationwide Municipal Demarcation Board layers: the 2011 municipal structure for 2014 and the technically adjusted 2018 structure for 2019 and 2024.
 
 Philippines coverage includes the separate presidential and vice-presidential ballots held on 9 May 2022:
 
@@ -611,7 +611,7 @@ data/austria_2024_national_council_boundaries.geojson # Eurostat GISCO municipal
 data/south_africa_2024_national_municipality_fpp.csv # IEC 2024 national-ballot totals by municipality
 data/south_africa_2019_national_municipality_fpp.csv # IEC 2019 National Assembly totals by municipality
 data/south_africa_2014_national_municipality_fpp.csv # IEC 2014 National Assembly totals by municipality
-data/south_africa_{2011|2016}_municipality_boundaries.geojson # official election-era MDB boundaries
+data/south_africa_{2011|2018}_municipality_boundaries.geojson # official election-era MDB boundaries
 data/south_africa_province_boundaries.geojson # nine provinces dissolved from MDB geometry
 data/philippines_2022_president_fpp.csv     # presidential candidate totals for 107 domestic COC map areas
 data/philippines_2022_vice_president_fpp.csv # vice-presidential candidate totals for the same areas

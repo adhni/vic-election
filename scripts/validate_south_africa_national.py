@@ -10,9 +10,9 @@ from shapely.geometry import shape
 
 SPECS = {
     2024: {"areas": 213, "rows": 10_538, "formal": 16_039_009, "informal": 213_391,
-           "enrolment": 27_723_279, "boundary": "data/south_africa_2016_municipality_boundaries.geojson"},
+           "enrolment": 27_723_279, "boundary": "data/south_africa_2018_municipality_boundaries.geojson"},
     2019: {"areas": 213, "rows": 9_708, "formal": 17_417_497, "informal": 235_445,
-           "enrolment": 26_748_966, "boundary": "data/south_africa_2016_municipality_boundaries.geojson"},
+           "enrolment": 26_748_966, "boundary": "data/south_africa_2018_municipality_boundaries.geojson"},
     2014: {"areas": 234, "rows": 6_596, "formal": 18_384_365, "informal": 251_960,
            "enrolment": 25_381_293, "boundary": "data/south_africa_2011_municipality_boundaries.geojson"},
 }

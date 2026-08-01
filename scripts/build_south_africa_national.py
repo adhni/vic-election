@@ -37,18 +37,31 @@ BOUNDARY_URLS = {
         "outFields=ProvinceCode%2CProvinceName%2CLocalMunicipalityCode%2C"
         "LocalMunicipalityName&returnGeometry=true&outSR=4326&f=geojson"
     ),
-    2016: (
+    2018: (
         "https://services7.arcgis.com/oeoyTUJC8HEeYsRB/arcgis/rest/services/"
-        "MDB_Local_Municipal_Boundary_2016/FeatureServer/0/query?where=1%3D1&"
-        "outFields=ProvinceCode%2CProvinceName%2CLocalMunicipalityCode%2C"
-        "LocalMunicipalityName&returnGeometry=true&outSR=4326&f=geojson"
+        "LocalMunicipalities2018_Final/FeatureServer/0/query?where=1%3D1&"
+        "outFields=PROVINCE%2CCAT_B%2CMUNICNAME&returnGeometry=true&outSR=4326&f=geojson"
     ),
 }
 BOUNDARY_SHA256 = {
     2011: "5e0d251f80e186ebddea9ceed76b5dfd2d4b2c2eb01c69e918157f3c3ae905e3",
-    2016: "e1758b48d4eb55f555e636b212f8dca57cb7a58a9723bc978655a95e06282dd3",
+    2018: "869f24fb98052ecca629bc04691aa6b13f1fac28631f99a8cd93c73fc19903ef",
 }
 EXPECTED_AREAS = {2024: 213, 2019: 213, 2014: 234}
+PROVINCE_NAMES = {
+    "EC": "Eastern Cape", "FS": "Free State", "GT": "Gauteng",
+    "KZN": "KwaZulu-Natal", "LIM": "Limpopo", "MP": "Mpumalanga",
+    "NC": "Northern Cape", "NW": "North West", "WC": "Western Cape",
+}
+# Keep the established shared-map labels while swapping only the geometry
+# vintage. Several attributes in the 2018 service were refreshed after the
+# election period even though the municipality codes and polygons are stable.
+RESULT_DISPLAY_NAMES = {
+    "EC137": "Engcobo", "EC443": "Mbizana", "FS194": "Maluti a Phofung",
+    "LIM345": "New", "LIM355": "Lepele-Nkumpi", "LIM368": "Modimolle/Mookgophong",
+    "LIM476": "Greater Tubatse/Fetakgomo", "NW397": "Kagisano/Molopo",
+    "NW405": "Ventersdorp/Tlokwe",
+}
 
 FIELDS = (
     "district", "district_url", "distribution_url", "elected_member", "elected_party",
@@ -219,13 +232,16 @@ def load_boundaries(path: Path) -> tuple[dict[str, dict[str, object]], dict[str,
     properties: dict[str, dict[str, str]] = {}
     for feature in raw["features"]:
         props = feature["properties"]
-        code = str(props["LocalMunicipalityCode"]).upper()
+        code = str(props.get("LocalMunicipalityCode") or props["CAT_B"]).upper()
+        province_code = str(props.get("ProvinceCode") or props["PROVINCE"])
         geom = shape(feature["geometry"])
         geometries[code] = mapping(geom)
         properties[code] = {
-            "name": str(props["LocalMunicipalityName"]),
-            "province_code": str(props["ProvinceCode"]),
-            "province_name": str(props["ProvinceName"]),
+            "name": RESULT_DISPLAY_NAMES.get(
+                code, str(props.get("LocalMunicipalityName") or props["MUNICNAME"])
+            ),
+            "province_code": province_code,
+            "province_name": str(props.get("ProvinceName") or PROVINCE_NAMES[province_code]),
         }
     return geometries, properties
 
@@ -272,7 +288,7 @@ def build_boundaries(
             },
             "geometry": simplified_geometry(geometries[code]),
         })
-    vintage = 2011 if year == 2014 else 2016
+    vintage = 2011 if year == 2014 else 2018
     write_geojson(output_dir / f"south_africa_{vintage}_municipality_boundaries.geojson", features)
 
 
@@ -384,11 +400,11 @@ def main() -> None:
 
     for year in (2024, 2019, 2014):
         areas, _ = read_results(result_paths[year], year)
-        vintage = 2011 if year == 2014 else 2016
+        vintage = 2011 if year == 2014 else 2018
         geometries, props = boundary_sets[vintage]
         build_boundaries(year, geometries, props, set(areas), args.output_dir)
         build_results(year, areas, props, args.output_dir)
-    province_boundaries(*boundary_sets[2016], args.output_dir)
+    province_boundaries(*boundary_sets[2018], args.output_dir)
 
 
 if __name__ == "__main__":
