@@ -162,6 +162,16 @@ REQUIRED_AUSTRALIA_SENATE_MARKERS = (
     "senators elected at this election",
     "elected_parties: firstRow.elected_parties",
 )
+REQUIRED_SOUTH_AFRICA_MARKERS = (
+    '"key": "south-africa-national-2024"',
+    '"key": "south-africa-national-2019"',
+    '"key": "south-africa-national-2014"',
+    '"jurisdiction": "South Africa"',
+    '"defaultGeography": "municipality"',
+    '"province": {"label": "Provinces"',
+    "This view maps only the national ballot and does not combine the two vote types",
+    'activeElection().jurisdiction === "South Africa"',
+)
 REQUIRED_US_GOVERNOR_MARKERS = (
     '"key": "us-governor-2024"',
     '"key": "us-governor-2022"',
@@ -382,6 +392,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_AUSTRALIA_SENATE_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Australian Senate UI marker {marker!r}")
+    for marker in REQUIRED_SOUTH_AFRICA_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing South Africa UI marker {marker!r}")
     for marker in REQUIRED_US_GOVERNOR_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. governor UI marker {marker!r}")
@@ -632,6 +645,9 @@ def main() -> None:
             if sum(int(seats) for _, seats in election.get("parliament", [])) != int(election["totalSeats"]):
                 raise SystemExit(f"{election['key']}: Parliament seats do not match totalSeats")
         if str(election["key"]).startswith("italy-chamber-"):
+            if sum(int(seats) for _, seats in election.get("parliament", [])) != int(election["totalSeats"]):
+                raise SystemExit(f"{election['key']}: Parliament seats do not match totalSeats")
+        if str(election["key"]).startswith("south-africa-national-"):
             if sum(int(seats) for _, seats in election.get("parliament", [])) != int(election["totalSeats"]):
                 raise SystemExit(f"{election['key']}: Parliament seats do not match totalSeats")
     print("Static app smoke passed")

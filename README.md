@@ -23,6 +23,7 @@ The app is map-first and party/bloc-first:
 - Italian Chamber proportional-list results for 2022 and 2018 mapped by province
 - Türkiye presidential results for 2023, 2018, and 2014 mapped across all 81 provinces, including both 2023 rounds
 - Taiwan presidential results for 2024, 2020, and 2016 mapped across all 368 townships and urban districts
+- South Africa National Assembly results for 2024, 2019, and 2014, with municipality and province views
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
 - United States Senate results for the 2024, 2022, 2020, 2018, and 2016 regular election cycles, with county/reporting-area and official state views; concurrent special elections are excluded
@@ -345,6 +346,10 @@ data/italy_{2022|2018}_province_boundaries.geojson
 
 Italy uses a mixed system combining direct constituencies and proportional lists. These compact views aggregate municipality party-list votes to the 106 provinces covered by proportional reporting, showing the locally leading list rather than claiming that provinces elect individual deputies. Aosta Valley's separate direct-seat contest and overseas constituencies remain represented in the 400-seat or 630-seat national summaries but are not assigned false provincial party-list results. The 2022 rows use the Interior Ministry's municipality CSV directly; the 2018 rows use a checksum-pinned OnData preservation of the Ministry-format exports. Both maps use year-matched official ISTAT province boundaries.
 
+South Africa coverage includes the 2024, 2019, and 2014 National Assembly elections. Each election switches between municipality and province views, while the national summary shows the actual certified 400-seat Assembly result. These are analytical local party-leader maps: municipalities and provinces do not elect separate winner-take-all MPs. The 2024 view uses only the newly separate national ballot and never combines it with the regional ballot.
+
+Results come from checksum-pinned Electoral Commission voting-district archives and are aggregated only after each voting district's repeated metadata and party totals reconcile. The parser explicitly handles unquoted commas in the IEC's 2019 voting-station names and filters the combined 2014 archive to the national election. Overseas votes remain represented in the certified seat result but are not assigned domestic polygons. Boundaries are official nationwide Municipal Demarcation Board layers: the 2011 municipal structure for 2014 and the technically adjusted 2018 structure for 2019 and 2024.
+
 Philippines coverage includes the separate presidential and vice-presidential ballots held on 9 May 2022:
 
 ```text
@@ -603,6 +608,11 @@ data/finland_2023_parliament_fpp.csv         # Statistics Finland party totals f
 data/denmark_2026_folketing_fpp.csv          # Statistics Denmark party and ballot totals for 98 municipalities
 data/austria_2024_national_council_fpp.csv   # Interior Ministry assigned municipality totals
 data/austria_2024_national_council_boundaries.geojson # Eurostat GISCO municipality boundaries
+data/south_africa_2024_national_municipality_fpp.csv # IEC 2024 national-ballot totals by municipality
+data/south_africa_2019_national_municipality_fpp.csv # IEC 2019 National Assembly totals by municipality
+data/south_africa_2014_national_municipality_fpp.csv # IEC 2014 National Assembly totals by municipality
+data/south_africa_{2011|2018}_municipality_boundaries.geojson # official election-era MDB boundaries
+data/south_africa_province_boundaries.geojson # nine provinces dissolved from MDB geometry
 data/philippines_2022_president_fpp.csv     # presidential candidate totals for 107 domestic COC map areas
 data/philippines_2022_vice_president_fpp.csv # vice-presidential candidate totals for the same areas
 data/philippines_2022_coc_boundaries.geojson # PSA municipal geometry dissolved to province/city COC areas
