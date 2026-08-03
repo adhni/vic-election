@@ -200,7 +200,7 @@ REQUIRED_INDONESIA_MARKERS = (
     "provinces and kabupaten/kota do not elect separate presidents",
     "Later-created districts are dissolved into their election-time parents",
     "No digitised vote",
-    'if (["presidential", "senate", "governor"].includes(activeElection().contestType)) return winningParty(d);',
+    'if (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType)) return winningParty(d);',
     ': winningParty(d)))]',
 )
 REQUIRED_PHILIPPINES_MARKERS = (
@@ -326,6 +326,16 @@ REQUIRED_TAIWAN_MARKERS = (
     '"lai ching-te–hsiao bi-khim": "#1b9431"',
     'activeElection().jurisdiction === "Taiwan"',
 )
+REQUIRED_UK_REFERENDUM_MARKERS = (
+    '"key": "uk-eu-referendum-2016"',
+    '"key": "scotland-independence-referendum-2014"',
+    '"contestType": "referendum"',
+    '"counting-area": {"label": "Counting areas"',
+    '"nationalResults": [["Leave", 51.89], ["Remain", 48.11]]',
+    '"nationalResults": [["No", 55.30], ["Yes", 44.70]]',
+    'activeElection().contestType === "referendum"',
+    '"referendum", "party-list"',
+)
 REQUIRED_COMPACT_FPP_MARKERS = (
     "if ((isFppElection() || isSenateStvElection()) && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
@@ -439,6 +449,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
             raise SystemExit(
                 f"{html_file}: missing Taiwan presidential marker {marker!r}"
             )
+    for marker in REQUIRED_UK_REFERENDUM_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing UK referendum marker {marker!r}")
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")

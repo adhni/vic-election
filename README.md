@@ -1,6 +1,6 @@
 # International Election Results Explorer
 
-A static HTML data app for exploring lower-house and executive elections across several countries, plus Australian and U.S. Senate races.
+A static HTML data app for exploring lower-house and executive elections and national referendums across several countries, plus Australian and U.S. Senate races.
 
 The app is map-first and party/bloc-first:
 
@@ -13,6 +13,7 @@ The app is map-first and party/bloc-first:
 - exact party and candidate detail preserved inside each seat
 - New Zealand candidate-vote and party-vote views with separate general and Māori electorate map layers
 - United Kingdom constituency results and winner-party maps for the 2024, 2019, and 2017 general elections
+- United Kingdom EU referendum 2016 by all 382 counting areas and 12 regions, plus the Scottish independence referendum 2014 by all 32 council areas
 - Malaysian constituency results and winner-party maps for the 2022, 2018, and 2013 general elections (GE15–GE13)
 - Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025, 2020, and 2015 general elections
 - Canadian riding results and winner-party maps for the 2025 and 2021 federal elections
@@ -174,6 +175,19 @@ data/uk_2017_constituency_boundaries.geojson
 ```
 
 The UK election uses first past the post, so preference-transfer views are hidden. Each candidate result is stored once; the app reconstructs the identical final standing in memory. Results come from UK Parliament and boundaries from the Office for National Statistics.
+
+United Kingdom referendum coverage includes the 2016 EU membership vote and the 2014 Scottish independence vote:
+
+```text
+data/uk_2016_eu_referendum_counting_area_fpp.csv
+data/uk_2016_eu_referendum_counting_area_boundaries.geojson
+data/uk_2016_eu_referendum_region_fpp.csv
+data/uk_2016_eu_referendum_region_boundaries.geojson
+data/scotland_2014_independence_council_fpp.csv
+data/scotland_2014_independence_council_boundaries.geojson
+```
+
+These views treat referendum options as the two local result choices, not as parties or elected representatives. The Brexit result switches between 382 official counting areas and 12 official regions; Northern Ireland is one counting area, and Gibraltar is a disclosed schematic inset included in South West's regional total. The Scottish result uses all 32 official council counting areas. Rebuild with `python3 scripts/build_uk_referendums.py` and validate with `python3 scripts/validate_uk_referendums.py`.
 
 Malaysia coverage currently includes the 2022 GE15, 2018 GE14, and 2013 GE13 elections, each with all 222 Dewan Rakyat constituencies:
 
@@ -566,6 +580,12 @@ data/uk_2019_fpp.csv                       # UK Parliament 2019 candidate result
 data/uk_2019_constituency_boundaries.geojson # ONS December 2019 Westminster constituency boundaries
 data/uk_2017_fpp.csv                       # UK Parliament 2017 candidate results for all 650 constituencies
 data/uk_2017_constituency_boundaries.geojson # ONS December 2019 layer for the unchanged 2017 constituencies
+data/uk_2016_eu_referendum_counting_area_fpp.csv # Electoral Commission results for all 382 counting areas
+data/uk_2016_eu_referendum_counting_area_boundaries.geojson # ONS-derived 2016 counting-area map
+data/uk_2016_eu_referendum_region_fpp.csv  # exact aggregation to all 12 referendum regions
+data/uk_2016_eu_referendum_region_boundaries.geojson # dissolved referendum-region map
+data/scotland_2014_independence_council_fpp.csv # official Yes/No result for all 32 council areas
+data/scotland_2014_independence_council_boundaries.geojson # ONS-derived Scottish council-area map
 data/malaysia_2022_fpp.csv                 # SPR Malaysia GE15 candidate results for all 222 constituencies
 data/malaysia_2022_parliamentary_boundaries.geojson # GE15 parliamentary boundaries from three delimitation sets
 data/malaysia_2018_fpp.csv                 # ElectionData.MY GE14 results for all 222 constituencies

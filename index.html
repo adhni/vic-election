@@ -862,7 +862,7 @@
   <div class="page-wrap">
     <header class="page-header">
       <h1>Election · Results Explorer</h1>
-      <p>Explore elections across multiple countries — candidate votes, party votes, preference counts, and final results.</p>
+      <p>Explore elections and referendums across multiple countries — candidate votes, party votes, preference counts, and final results.</p>
     </header>
 
     <nav class="controls" aria-label="Controls">
@@ -1419,6 +1419,63 @@
         "totalSeats": 650,
         "areaLabel": "Country",
         "summaryRegions": ["England", "Scotland", "Wales", "Northern Ireland"]
+      },
+      {
+        "key": "uk-eu-referendum-2016",
+        "label": "United Kingdom EU Referendum 2016",
+        "type": "national",
+        "jurisdiction": "United Kingdom",
+        "year": 2016,
+        "source": "UK Electoral Commission / ONS",
+        "system": "fpp",
+        "contestType": "referendum",
+        "systemLabel": "UK-wide referendum · simple majority",
+        "methodNote": "Leave won the referendum across the United Kingdom and Gibraltar. Local counting areas and regions show where each option led; they did not decide separate outcomes. Northern Ireland was one counting area. Gibraltar is included in South West regional totals and appears as a compact schematic inset.",
+        "candidateVoteLabel": "Referendum option vote",
+        "candidateFilterLabel": "Any local outcome",
+        "localVoteLabel": "local EU referendum result",
+        "localLeaderLabel": "Local majority",
+        "localMarginLabel": "Outcome margin",
+        "validVotesLabel": "Valid referendum votes",
+        "districtLabel": "Counting area",
+        "mapModeLabel": "Local outcome",
+        "csv": "data/uk_2016_eu_referendum_counting_area_fpp.csv",
+        "boundaries": "data/uk_2016_eu_referendum_counting_area_boundaries.geojson",
+        "defaultGeography": "counting-area",
+        "geographyLabels": {"counting-area": "Counting areas", "region": "Regions"},
+        "geographies": {
+          "counting-area": {"label": "Counting areas", "csv": "data/uk_2016_eu_referendum_counting_area_fpp.csv", "boundaries": "data/uk_2016_eu_referendum_counting_area_boundaries.geojson", "areaLabel": "Referendum region", "districtLabel": "Counting area", "unitSingular": "counting area", "unitPlural": "counting areas"},
+          "region": {"label": "Regions", "csv": "data/uk_2016_eu_referendum_region_fpp.csv", "boundaries": "data/uk_2016_eu_referendum_region_boundaries.geojson", "areaLabel": "Area type", "districtLabel": "Region", "unitSingular": "region", "unitPlural": "regions"}
+        },
+        "compactMobileMap": true,
+        "nationalResults": [["Leave", 51.89], ["Remain", 48.11]]
+      },
+      {
+        "key": "scotland-independence-referendum-2014",
+        "label": "United Kingdom Scottish Independence Referendum 2014",
+        "type": "national",
+        "jurisdiction": "United Kingdom",
+        "year": 2014,
+        "source": "UK Electoral Commission / ONS",
+        "system": "fpp",
+        "contestType": "referendum",
+        "systemLabel": "Scotland-wide referendum · simple majority",
+        "methodNote": "No won the Scotland-wide referendum. Council areas show where Yes or No led locally; they did not decide separate outcomes. The map uses the 32 council areas in which the official count was declared.",
+        "candidateVoteLabel": "Referendum option vote",
+        "candidateFilterLabel": "Any local outcome",
+        "localVoteLabel": "local independence referendum result",
+        "localLeaderLabel": "Local majority",
+        "localMarginLabel": "Outcome margin",
+        "validVotesLabel": "Valid referendum votes",
+        "districtLabel": "Council area",
+        "mapModeLabel": "Local outcome",
+        "unitSingular": "council area",
+        "unitPlural": "council areas",
+        "csv": "data/scotland_2014_independence_council_fpp.csv",
+        "boundaries": "data/scotland_2014_independence_council_boundaries.geojson",
+        "areaLabel": "Area type",
+        "compactMobileMap": true,
+        "nationalResults": [["No", 55.30], ["Yes", 44.70]]
       },
       {
         "key": "malaysia-2022",
@@ -3752,6 +3809,16 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      if (activeElection().contestType === "referendum") {
+        if (activeElection().key === "uk-eu-referendum-2016") {
+          if (p === "leave") return "#2f61a8";
+          if (p === "remain") return "#d5a928";
+        }
+        if (activeElection().key === "scotland-independence-referendum-2014") {
+          if (p === "yes") return "#2f7ebc";
+          if (p === "no") return "#c64b57";
+        }
+      }
       if (activeElection().jurisdiction === "Germany") {
         const germanyColors = {
           "cdu": "#1f1f1f",
@@ -4282,11 +4349,17 @@
       if (d.contest_status === "void") return "No certified winner";
       if (isMultiMemberElection()) return leadingElectedBloc(d);
       if (activeElection().contestType === "party-list") return winningParty(d);
-      if (["presidential", "senate", "governor"].includes(activeElection().contestType)) return winningParty(d);
+      if (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType)) return winningParty(d);
       return partyBloc(getParty(d, getWinnerFromFinal(d)[0]));
     }
 
     function electorateLabel(count = 0) {
+      const dataset = activeDataset();
+      if (dataset.unitSingular || activeElection().unitSingular) {
+        return count === 1
+          ? (dataset.unitSingular || activeElection().unitSingular)
+          : (dataset.unitPlural || activeElection().unitPlural || `${dataset.unitSingular || activeElection().unitSingular}s`);
+      }
       if (isSenateStvElection()) return count === 1 ? "state/territory contest" : "state/territory contests";
       if (activeElection().jurisdiction === "United States" && ["presidential", "senate", "governor"].includes(activeElection().contestType)) {
         if (activeGeography === "state") {
@@ -4362,7 +4435,7 @@
     function districtMatchesFilters(d, filters) {
       const matchesQuery = !filters.query
         || d.district.toLowerCase().includes(filters.query)
-        || (["presidential", "senate", "governor"].includes(activeElection().contestType) && d.electorate_type.toLowerCase().includes(filters.query));
+        || (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType) && d.electorate_type.toLowerCase().includes(filters.query));
       const matchesParty = filters.party === "all" || electedBlocs(d).includes(filters.party);
       const matchesChanged = !filters.changedOnly || resultChanged(d);
       const matchesClose = !filters.closeOnly || (d.formal_votes && finalMargin(d) / d.formal_votes <= 0.05);
@@ -4559,6 +4632,14 @@
           <strong>${d.district}</strong>
           <div>No certified winner</div>
           <span>Apparent leader ${shortName(leader)} · election voided.</span>
+        `;
+      }
+      if (activeElection().contestType === "referendum") {
+        const [winner, winnerVotes] = getWinnerFromFinal(d);
+        return `
+          <strong>${d.district}</strong>
+          <div>${partyLabel(winner)} led locally · ${pct(winnerVotes, d.formal_votes)}</div>
+          <span>Margin ${pct(finalMargin(d), d.formal_votes)} · ${fmt.format(d.formal_votes)} valid votes</span>
         `;
       }
       if (activeElection().contestType === "party-list") {
@@ -4937,7 +5018,7 @@
         target.innerHTML = chips.join("");
         return;
       }
-      if (["presidential", "senate", "governor"].includes(activeElection().contestType)) {
+      if (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType)) {
         const winnerCounts = new Map();
         allDistricts.forEach(d => {
           const ticket = winningParty(d);
@@ -4949,7 +5030,9 @@
         [...winnerCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([ticket, areas]) => {
-            const winsLabel = activeElection().contestType === "governor" && activeGeography === "state" ? "race wins" : "area wins";
+            const winsLabel = activeElection().contestType === "governor" && activeGeography === "state"
+              ? "race wins"
+              : activeElection().contestType === "referendum" ? "local leads" : "area wins";
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> ${winsLabel}</span>`);
           });
         (activeElection().nationalResults || []).forEach(([ticket, share]) => {
@@ -5341,8 +5424,9 @@
       const presidential = activeElection().contestType === "presidential";
       const senate = activeElection().contestType === "senate";
       const governor = activeElection().contestType === "governor";
+      const referendum = activeElection().contestType === "referendum";
       const partyList = activeElection().contestType === "party-list";
-      const analyticalLocalVote = presidential || senate || governor || partyList;
+      const analyticalLocalVote = presidential || senate || governor || referendum || partyList;
       const geographyModes = document.getElementById("geographyModes");
       const geographyLabels = activeElection().geographyLabels || {};
       geographyModes.innerHTML = Object.entries(activeElection().geographies || {})
@@ -5370,7 +5454,7 @@
       document.getElementById("primaryVoteTitle").textContent = analyticalLocalVote ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? activeElection().partyVoteLabel || "Party vote" : "Final standing";
       document.getElementById("finalVotePanel").classList.toggle("hidden", analyticalLocalVote || Boolean(activeElection().membersOnly));
-      document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeElection().districtLabel || activeDataset().label : activeElection().districtLabel || "Seat";
+      document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeDataset().districtLabel || activeElection().districtLabel || activeDataset().label : activeDataset().districtLabel || activeElection().districtLabel || "Seat";
       document.getElementById("districtSearch").placeholder = analyticalLocalVote || activeElection().membersOnly ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
       document.getElementById("mapSubtitle").textContent = analyticalLocalVote
         ? `Click ${/^[aeiou]/i.test(electorateLabel(1)) ? "an" : "a"} ${electorateLabel(1)} to explore its ${activeElection().localVoteLabel || "local presidential vote"}.${activeElection().schematicMap ? ` ${activeElection().schematicMapLabel || "This is a schematic map, not legal boundaries."}` : ""}`
@@ -5402,7 +5486,7 @@
         ? [...new Set(allDistricts.flatMap(d => electedBlocs(d)))].sort()
         : ["Labor", "Coalition", "Greens", "Independent", "Other"];
       const winningBlocs = blocOrder.filter(bloc => allDistricts.some(d => electedBlocs(d).includes(bloc)));
-      partyFilter.innerHTML = [`<option value="all">${activeElection().membersOnly ? "Any affiliation" : ["presidential", "senate", "governor", "party-list"].includes(activeElection().contestType) ? activeElection().candidateFilterLabel || "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
+      partyFilter.innerHTML = [`<option value="all">${activeElection().membersOnly ? "Any affiliation" : ["presidential", "senate", "governor", "referendum", "party-list"].includes(activeElection().contestType) ? activeElection().candidateFilterLabel || "Any candidate pair" : isFppElection() ? "Any party" : "Any bloc"}</option>`].concat(
         winningBlocs.map(p => `<option value="${p}">${p}</option>`)
       ).join("");
       partyFilter.value = winningBlocs.includes(selectedParty) ? selectedParty : "all";
@@ -5670,7 +5754,7 @@
           `;
           return;
         }
-        if (["presidential", "senate", "governor"].includes(activeElection().contestType)) {
+        if (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType)) {
           const [winner] = getWinnerFromFinal(d);
           const winnerTicket = getParty(d, winner);
           const [runnerUp] = getSecondFromFinal(d);
@@ -5683,9 +5767,9 @@
             <div class="result-facts">
               <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
               <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
-              <div class="fact-item"><span class="fact-label">Local vote leader</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) : "No digitised vote"}</span></div>
-              <div class="fact-item"><span class="fact-label">Local margin</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
-              <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
+              <div class="fact-item"><span class="fact-label">${activeElection().localLeaderLabel || "Local vote leader"}</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) : "No digitised vote"}</span></div>
+              <div class="fact-item"><span class="fact-label">${activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
+              <div class="fact-item"><span class="fact-label">${activeElection().validVotesLabel || "Valid votes"}</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
               <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available"}</span></div>
             </div>
             <p class="pref-impact">${activeElection().methodNote}</p>
