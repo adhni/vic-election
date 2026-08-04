@@ -5,6 +5,7 @@ A static HTML data app for exploring lower-house and executive elections and nat
 The app is map-first and party/bloc-first:
 
 - winner map with Labor, Coalition, Greens, Independent, and Other grouping
+- Greater Melbourne 2024 local elections across 30 single-member ward councils, plus Melbourne's leadership-team and nine-councillor ballots
 - zoomable/pannable seat boundary map for the selected election year
 - election-wide rankings for closest seats, largest margins, changed results, and winner transfer gains
 - paired country and election selectors, with Australian elections grouped by federal or state/territory jurisdiction
@@ -76,6 +77,19 @@ data/vic_2010_district_boundaries.geojson
 data/vic_2006_preferences_long.csv
 data/vic_2006_district_boundaries.geojson
 ```
+
+Victorian local-government coverage includes the 2024 general elections for the standard 31 Greater Melbourne councils. Thirty councils contribute 288 single-member ward contests; Melbourne's paired leadership election and citywide proportional councillor election are separate views inside the same election entry:
+
+```text
+data/vic_local_2024_wards.csv
+data/vic_local_2024_ward_boundaries.geojson
+data/melbourne_2024_leadership.csv
+data/melbourne_2024_leadership_boundary.geojson
+data/melbourne_2024_councillors.csv
+data/melbourne_2024_councillors_boundary.geojson
+```
+
+Use the Council selector to filter and zoom the metropolitan ward map. Ordinary result pages do not state candidate party affiliations, so the app does not infer them; it uses a neutral winning-margin scale instead. Rebuild with `python3 scripts/build_vic_local_2024.py` and validate with `python3 scripts/validate_vic_local_2024.py`.
 
 NSW state coverage currently includes `2023`, `2019`, `2015`, and `2011`:
 

@@ -272,6 +272,16 @@ The 2010 federal Victoria boundary file is adapted from the AEC `national-esri-2
 
 The 2007 federal Victoria entry reuses the 2010 boundary file because both were generated from the same AEC `national-esri-2010.zip` shapefile and are byte-identical. The result rows are generated from the AEC 2007 House of Representatives Distribution of Preferences by Division CSV, event `13745`, filtered to `StateAb == VIC`.
 
+## Victorian local councils 2024
+
+The Victorian local-government entry covers the standard 31 Greater Melbourne councils. Thirty councils use 288 single-councillor wards. The builder discovers their canonical result pages from the VEC's 2024 council index, parses enrolment and formal/informal totals, and retains complete downloadable preference distributions where the VEC publishes them. Eight wards were uncontested and are explicitly represented as elected unopposed with no invented poll totals. Where a recount replaced an earlier workbook, the final recount figures displayed by the VEC take precedence.
+
+Melbourne City Council is structurally different. Its Lord Mayor and Deputy Lord Mayor nominate as a paired leadership team under preferential voting, while nine councillors are elected citywide by proportional representation. These are exposed as separate internal views. The councillor view preserves the official distribution workbook's candidate first preferences—including allocated above-the-line ticket votes—and final count standing, elected order, and quota.
+
+Ordinary VEC ward result pages do not state candidate party affiliation. The generated rows therefore say `Affiliation not stated`; the app does not infer affiliation from biographies, endorsements, media coverage, or later council behaviour. The metropolitan map uses a neutral winning-margin scale. Melbourne team/group labels are retained because the official result page publishes them.
+
+Ward geometry comes from the official Vicmap Admin `WARD_2024` WFS layer produced for the 2024 local elections. The builder filters it to the 30 warded metropolitan councils, uses council-plus-ward identifiers to prevent duplicate-name collisions, and requires all 288 results to join one-to-one. Melbourne's citywide contests use the official Vicmap LGA polygon. Mitchell is excluded because it is not one of the standard 31 metropolitan municipalities, despite being partly included in some planning definitions. Later by-elections and vacancies are not merged into the 2024 general-election snapshot.
+
 ## Why long format?
 
 The VEC pages are visually wide tables. Long format is better for:

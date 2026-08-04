@@ -1,19 +1,24 @@
-# Next Steps: Victoria-First Election Depth
+# Next Steps: Election Coverage And Analysis
 
-Bismillah, the project should stay focused on state and federal lower-house elections before considering local council data.
+Bismillah, the project now covers state, federal, international, referendum, Senate, and Victorian local-government results. New additions should keep using official, reproducible sources and compact generated files.
 
 ## Direction
 
-Do not add local council elections yet.
-
-Local elections are a separate data problem: many councils, wards, candidate groups, inconsistent boundaries, large candidate counts, and weaker comparability with state and federal lower-house electorates. Adding them now would broaden the project into council-specific data cleaning before the state/federal explorer is mature.
-
-The stronger path is to deepen Victoria first:
+The current path remains data-first:
 
 - go further back in Victorian state elections
 - expand federal elections within Victoria
 - add comparison and rankings views
-- generalise only after the Victoria-focused model is stable
+- generalise shared UI only when an added election needs it
+
+Completed Greater Melbourne local-government work:
+
+- added the 2024 general elections for the standard 31 metropolitan councils
+- loaded all 288 single-member ward contests across 30 councils, including 8 uncontested wards
+- added Melbourne's paired Lord Mayor/Deputy Lord Mayor election and nine-member proportional councillor election as internal views
+- added a council selector that filters and zooms the ward map
+- used neutral margin shading because ordinary VEC result pages do not state party affiliations
+- kept 2020 out of scope because electoral structures and ward boundaries differ materially
 
 ## Phase 1: Victorian State Depth
 

@@ -80,7 +80,7 @@ REQUIRED_NORTH_KOREA_MARKERS = (
     '"nationalSupportPct": 99.93',
     '"cartogramLabel": "Equal-area seat grid ordered by official constituency number',
     'd.contest_status === "single-candidate"',
-    'document.getElementById("partyFilter").closest(".ctrl-group").classList.toggle("hidden", Boolean(activeElection().membersOnly))',
+    'document.getElementById("partyFilter").closest(".ctrl-group").classList.toggle("hidden", Boolean(activeElection().membersOnly) || Boolean(activeElection().localElection))',
     "Constituency margins unavailable",
     "State-reported candidate support",
 )
@@ -340,6 +340,18 @@ REQUIRED_COMPACT_FPP_MARKERS = (
     "if ((isFppElection() || isSenateStvElection()) && !d.rounds.length && Object.keys(d.first).length)",
     'totals: { ...d.first }, final: true, synthetic: true',
 )
+REQUIRED_VIC_LOCAL_MARKERS = (
+    '"key": "vic-local-2024"',
+    '"localElection": true',
+    '"localCouncilFilter": true',
+    '"wards": "30 ward councils"',
+    '"melbourne-leadership": "Melbourne leadership"',
+    '"melbourne-councillors": "Melbourne councillors"',
+    'id="councilSelect"',
+    'params.set("council", activeCouncil)',
+    'feature.properties?.council === activeCouncil',
+    'Candidate affiliations are shown only when stated',
+)
 EXPECTED_ELECTION_ALIASES = {
     "federal-2025-vic": "federal-2025-au",
     "federal-2022-vic": "federal-2022-au",
@@ -455,6 +467,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_COMPACT_FPP_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing compact FPP reconstruction marker {marker!r}")
+    for marker in REQUIRED_VIC_LOCAL_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Victorian local-election marker {marker!r}")
     if html.count("syncBoundaryTypeToActiveDistrict();") < 2:
         raise SystemExit(f"{html_file}: NZ map layer is not synchronized after filters and reset")
     match = re.search(r"const electionDefinitions = (\[.*?\]);", html, flags=re.S)
