@@ -41,6 +41,7 @@ jobs:
           python scripts/validate_vec_csv.py data/vic_2014_preferences_long.csv
           python scripts/validate_vec_csv.py data/vic_2010_preferences_long.csv
           python scripts/validate_vec_csv.py data/vic_2006_preferences_long.csv
+          python scripts/validate_vic_local_2024.py
           python scripts/validate_vec_csv.py data/federal_2025_au_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2022_au_preferences_long.csv
           python scripts/validate_vec_csv.py data/federal_2019_au_preferences_long.csv

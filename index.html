@@ -846,9 +846,9 @@
       .bar-row .track, .transfer-row .mini-track { display: none; }
       .story-row .track { display: none; }
       .map-toolbar { align-items: stretch; }
-      .map-actions { flex-direction: column; align-items: stretch; }
-      .map-modes { width: 100%; }
-      .map-mode { flex: 1; }
+      .map-actions { flex-direction: column; align-items: stretch; width: 100%; min-width: 0; }
+      .map-modes { width: 100%; min-width: 0; flex-wrap: wrap; }
+      .map-mode { flex: 1 1 auto; min-width: 0; }
       .geo-map.compact-mobile-map, .geo-map.wide-mobile-map { height: 380px; }
     }
 
@@ -876,6 +876,10 @@
             <label class="ctrl-label" for="electionYear">Election</label>
             <select id="electionYear"></select>
           </div>
+        </div>
+        <div id="councilControl" class="ctrl-group grow hidden">
+          <label class="ctrl-label" for="councilSelect">Council</label>
+          <select id="councilSelect"></select>
         </div>
         <div class="ctrl-group grow">
           <label id="districtSearchLabel" class="ctrl-label" for="districtSearch">Search</label>
@@ -1178,6 +1182,70 @@
         "source": "VEC",
         "csv": "data/vic_2006_preferences_long.csv",
         "boundaries": "data/vic_2006_district_boundaries.geojson"
+      },
+      {
+        "key": "vic-local-2024",
+        "label": "Victorian Local Councils 2024",
+        "type": "local",
+        "jurisdiction": "Victoria",
+        "year": 2024,
+        "source": "VEC / Vicmap",
+        "localElection": true,
+        "csv": "data/vic_local_2024_wards.csv",
+        "boundaries": "data/vic_local_2024_ward_boundaries.geojson",
+        "defaultGeography": "wards",
+        "geographyLabels": {
+          "wards": "30 ward councils",
+          "melbourne-leadership": "Melbourne leadership",
+          "melbourne-councillors": "Melbourne councillors"
+        },
+        "geographies": {
+          "wards": {
+            "label": "Metropolitan ward contests",
+            "csv": "data/vic_local_2024_wards.csv",
+            "boundaries": "data/vic_local_2024_ward_boundaries.geojson",
+            "localCouncilFilter": true,
+            "systemLabel": "Single-member preferential voting",
+            "methodNote": "Each ward elects one councillor by preferential voting. Candidate affiliations are shown only when stated in the official VEC result; ordinary ward pages do not state affiliations.",
+            "mapModeLabel": "Winning margin",
+            "areaLabel": "Council",
+            "districtLabel": "Ward",
+            "unitSingular": "ward contest",
+            "unitPlural": "ward contests",
+            "compactMobileMap": true
+          },
+          "melbourne-leadership": {
+            "label": "Melbourne leadership team",
+            "csv": "data/melbourne_2024_leadership.csv",
+            "boundaries": "data/melbourne_2024_leadership_boundary.geojson",
+            "systemLabel": "Preferential voting · paired leadership team",
+            "methodNote": "Candidates for Lord Mayor and Deputy Lord Mayor nominate and are elected as a paired leadership team.",
+            "mapModeLabel": "Winning margin",
+            "teamElection": true,
+            "areaLabel": "Council",
+            "districtLabel": "Contest",
+            "unitSingular": "leadership contest",
+            "unitPlural": "leadership contests",
+            "tightMapView": true,
+            "compactMobileMap": true
+          },
+          "melbourne-councillors": {
+            "label": "Melbourne councillors",
+            "csv": "data/melbourne_2024_councillors.csv",
+            "boundaries": "data/melbourne_2024_councillors_boundary.geojson",
+            "system": "hare-clark",
+            "systemLabel": "Proportional representation · STV",
+            "methodNote": "Nine councillors are elected citywide by proportional representation. The compact view preserves official first preferences and final count standings.",
+            "mapModeLabel": "Final seat gap",
+            "areaLabel": "Council",
+            "districtLabel": "Contest",
+            "unitSingular": "councillor contest",
+            "unitPlural": "councillor contests",
+            "membersPerDistrict": 9,
+            "tightMapView": true,
+            "compactMobileMap": true
+          }
+        }
       },
       {
         "key": "nsw-2023",
@@ -3642,8 +3710,24 @@
       "federal-2019-vic": "federal-2019-au",
       "federal-2016-vic": "federal-2016-au"
     };
-    const activeElection = () => electionYears[activeElectionYear] || electionYears["2022"];
-    const activeDataset = () => activeElection().geographies?.[activeGeography] || activeElection();
+    const selectedElection = () => electionYears[activeElectionYear] || electionYears["2022"];
+    const activeDataset = () => selectedElection().geographies?.[activeGeography] || selectedElection();
+    const activeElection = () => {
+      const election = selectedElection();
+      const dataset = activeDataset();
+      if (dataset === election) return election;
+      return {
+        ...election,
+        ...dataset,
+        key: election.key,
+        label: election.label,
+        jurisdiction: election.jurisdiction,
+        year: election.year,
+        source: election.source,
+        geographies: election.geographies,
+        geographyLabels: election.geographyLabels
+      };
+    };
     const electionCountry = election => australianJurisdictions.has(election.jurisdiction)
       ? "Australia"
       : election.jurisdiction;
@@ -3667,6 +3751,7 @@
     let storyStep = 0;
     let activeTab = "overview";
     let activeMapMode = "party";
+    let activeCouncil = "all";
     let activeBoundaryType = "General";
     let boundaryFeatures = [];
     let boundaryShapes = [];
@@ -3676,6 +3761,7 @@
     let suppressUrlUpdate = false;
     let electionLoadId = 0;
     let pendingDistrictFromUrl = "";
+    let pendingCouncilFromUrl = "";
     let datasetMeta = {
       label: "Embedded sample data",
       rowCount: countRowsFromDistricts(allDistricts)
@@ -4426,6 +4512,7 @@
     function getFilterState() {
       return {
         query: document.getElementById("districtSearch")?.value.trim().toLowerCase() || "",
+        council: activeCouncil,
         party: document.getElementById("partyFilter")?.value || "all",
         changedOnly: Boolean(document.getElementById("changedOnly")?.checked),
         closeOnly: Boolean(document.getElementById("closeOnly")?.checked)
@@ -4435,11 +4522,14 @@
     function districtMatchesFilters(d, filters) {
       const matchesQuery = !filters.query
         || d.district.toLowerCase().includes(filters.query)
+        || (d.council || "").toLowerCase().includes(filters.query)
+        || (d.ward || "").toLowerCase().includes(filters.query)
         || (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType) && d.electorate_type.toLowerCase().includes(filters.query));
+      const matchesCouncil = filters.council === "all" || d.council === filters.council;
       const matchesParty = filters.party === "all" || electedBlocs(d).includes(filters.party);
       const matchesChanged = !filters.changedOnly || resultChanged(d);
       const matchesClose = !filters.closeOnly || (d.formal_votes && finalMargin(d) / d.formal_votes <= 0.05);
-      return matchesQuery && matchesParty && matchesChanged && matchesClose;
+      return matchesQuery && matchesCouncil && matchesParty && matchesChanged && matchesClose;
     }
 
     function filteredDistricts() {
@@ -4452,10 +4542,13 @@
       const mode = params.get("mode");
       const requestedYear = params.get("year");
       const year = electionYearAliases[requestedYear] || requestedYear;
-      const system = electionYears[year]?.system;
-      const membersOnly = Boolean(electionYears[year]?.membersOnly);
       const requestedGeography = params.get("geo");
       const geography = electionYears[year]?.geographies?.[requestedGeography] ? requestedGeography : "";
+      const definition = electionYears[year];
+      const dataset = definition?.geographies?.[geography || definition?.defaultGeography];
+      const config = definition && dataset ? { ...definition, ...dataset } : definition;
+      const system = config?.system;
+      const membersOnly = Boolean(config?.membersOnly);
       const allowedMapModes = system === "mmp-fpp"
         ? ["party", "party-vote", "close"]
         : system === "fpp"
@@ -4464,6 +4557,7 @@
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
+        council: params.get("council") || "",
         mode: allowedMapModes.includes(mode) ? mode : "",
         geography
       };
@@ -4482,6 +4576,8 @@
       }
       if (activeDistrict?.district) params.set("district", activeDistrict.district);
       else params.delete("district");
+      if (activeElection().localCouncilFilter && activeCouncil !== "all") params.set("council", activeCouncil);
+      else params.delete("council");
       if (activeMapMode && activeMapMode !== "party") params.set("mode", activeMapMode);
       else params.delete("mode");
       const query = params.toString();
@@ -4506,6 +4602,23 @@
           b.classList.toggle("active", b.dataset.mapMode === activeMapMode);
         });
       }
+      const availableCouncils = new Set(allDistricts.map(d => d.council).filter(Boolean));
+      if (activeElection().localCouncilFilter && state.council) {
+        if (availableCouncils.has(state.council)) {
+          activeCouncil = state.council;
+          pendingCouncilFromUrl = "";
+        } else {
+          activeCouncil = "all";
+          pendingCouncilFromUrl = state.council;
+        }
+      } else {
+        activeCouncil = "all";
+        pendingCouncilFromUrl = "";
+      }
+      districts = filteredDistricts();
+      if (!districts.some(d => d.district === activeDistrict?.district)) {
+        activeDistrict = districts[0] || null;
+      }
       if (state.district) {
         const selected = allDistricts.find(d => d.district.toLowerCase() === state.district.toLowerCase());
         if (selected) {
@@ -4514,7 +4627,7 @@
           document.getElementById("partyFilter").value = "all";
           document.getElementById("changedOnly").checked = false;
           document.getElementById("closeOnly").checked = false;
-          districts = [...allDistricts];
+          districts = filteredDistricts();
           activeDistrict = selected;
           focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
         } else {
@@ -4524,10 +4637,21 @@
       suppressUrlUpdate = false;
       populateControls();
       render();
-      if (!pendingDistrictFromUrl) updateUrlState(replace);
+      if (!pendingDistrictFromUrl && !pendingCouncilFromUrl) updateUrlState(replace);
     }
 
     function mapVisual(d) {
+      if (activeElection().localElection && activeMapMode === "party") {
+        if (d.contest_status === "uncontested") {
+          return { color: "#8b9098", fill: hexToRgba("#8b9098", .42), label: "Uncontested" };
+        }
+        const marginPct = d.formal_votes ? finalMargin(d) / d.formal_votes : 0;
+        const color = marginPct <= .02 ? "#e1d7f1"
+          : marginPct <= .05 ? "#c1a9df"
+            : marginPct <= .10 ? "#9874c5"
+              : marginPct <= .20 ? "#714ca7" : "#4f317d";
+        return { color, fill: hexToRgba(color, .9), label: `Margin ${pct(finalMargin(d), d.formal_votes)}` };
+      }
       if (activeMapMode === "party-vote" && isMmpElection()) {
         const [party] = getPartyVoteLeader(d);
         const color = partyColor(party);
@@ -4596,6 +4720,17 @@
     }
 
     function tooltipHtml(d) {
+      if (activeElection().localElection) {
+        const [winner] = getWinnerFromFinal(d);
+        if (d.contest_status === "uncontested") {
+          return `<strong>${d.district}</strong><div>${shortName(winner)} elected unopposed</div><span>No poll held</span>`;
+        }
+        return `
+          <strong>${d.district}</strong>
+          <div>${shortName(winner)} elected</div>
+          <span>${isMultiMemberElection() ? `${electedMembers(d).length} councillors · final seat gap` : "Winning margin"} ${pct(finalMargin(d), d.formal_votes)}</span>
+        `;
+      }
       if (isSenateStvElection()) {
         const [leader, leaderVotes] = getFirstLeader(d);
         return `
@@ -4695,6 +4830,17 @@
 
     function renderMapLegend() {
       const legend = document.getElementById("mapLegend");
+      if (activeElection().localElection && activeMapMode === "party") {
+        legend.innerHTML = [
+          ["#e1d7f1", "Under 2%"],
+          ["#c1a9df", "2–5%"],
+          ["#9874c5", "5–10%"],
+          ["#714ca7", "10–20%"],
+          ["#4f317d", "Over 20%"],
+          ["#8b9098", "Uncontested"]
+        ].map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
+        return;
+      }
       if (activeElection().bipartisanMarginScale && activeMapMode === "party") {
         legend.innerHTML = [
           ["#2166ac", "Strong Democratic"],
@@ -4854,7 +5000,9 @@
         const [winner] = getWinnerFromFinal(d);
         const winnerParty = getParty(d, winner);
         const localState = activeElection().contestType === "party-list" ? localResultState(d) : null;
-        const mapTitle = isMultiMemberElection()
+        const mapTitle = activeElection().localElection
+          ? `${d.district} · ${d.contest_status === "uncontested" ? "uncontested" : `${shortName(winner)} · margin ${pct(finalMargin(d), d.formal_votes)}`}`
+          : isMultiMemberElection()
           ? `${d.district} · ${electedSeatSummary(d)}`
           : isFppElection()
             ? `${d.district} · ${
@@ -4975,6 +5123,27 @@
       if (!target) return;
       if (!allDistricts.length) {
         target.innerHTML = "";
+        return;
+      }
+      if (activeElection().localElection) {
+        const pool = activeElection().localCouncilFilter && activeCouncil !== "all"
+          ? allDistricts.filter(d => d.council === activeCouncil)
+          : allDistricts;
+        const contested = pool.filter(d => d.contest_status !== "uncontested" && d.formal_votes > 0);
+        const councilCount = new Set(pool.map(d => d.council).filter(Boolean)).size;
+        const electedCount = pool.reduce((sum, d) => sum + electedMembers(d).length, 0);
+        const changedCount = contested.filter(d => resultChanged(d)).length;
+        const closeCount = contested.filter(d => finalMarginShare(d) <= .05).length;
+        const uncontestedCount = pool.filter(d => d.contest_status === "uncontested").length;
+        const chips = [
+          `<span class="summary-chip"><strong>${fmt.format(pool.length)}</strong> ${electorateLabel(pool.length)}</span>`,
+          `<span class="summary-chip"><strong>${fmt.format(electedCount)}</strong> people elected</span>`
+        ];
+        if (councilCount > 1) chips.splice(1, 0, `<span class="summary-chip"><strong>${fmt.format(councilCount)}</strong> councils</span>`);
+        if (changedCount) chips.push(`<span class="summary-chip"><strong>${fmt.format(changedCount)}</strong> changed on preferences</span>`);
+        if (closeCount) chips.push(`<span class="summary-chip"><strong>${fmt.format(closeCount)}</strong> margins under 5%</span>`);
+        if (uncontestedCount) chips.push(`<span class="summary-chip"><strong>${fmt.format(uncontestedCount)}</strong> uncontested</span>`);
+        target.innerHTML = chips.join("");
         return;
       }
       if (isSenateStvElection()) {
@@ -5160,12 +5329,18 @@
         return;
       }
 
-      const topCount = Math.min(5, allDistricts.length);
+      const councilPool = activeElection().localCouncilFilter && activeCouncil !== "all"
+        ? allDistricts.filter(d => d.council === activeCouncil)
+        : allDistricts;
+      const rankingPool = activeElection().localElection
+        ? councilPool.filter(d => d.contest_status !== "uncontested" && d.formal_votes > 0)
+        : councilPool;
+      const topCount = Math.min(5, rankingPool.length);
       if (isSenateStvElection()) {
-        const closest = [...allDistricts]
+        const closest = [...rankingPool]
           .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || a.district.localeCompare(b.district))
           .slice(0, topCount);
-        const largest = [...allDistricts]
+        const largest = [...rankingPool]
           .sort((a, b) => finalMarginShare(b) - finalMarginShare(a) || a.district.localeCompare(b.district))
           .slice(0, topCount);
         const cards = [
@@ -5190,7 +5365,7 @@
         return;
       }
       if (isFppElection()) {
-        const contested = allDistricts.filter(d =>
+        const contested = rankingPool.filter(d =>
           d.contest_status !== "cancelled"
           && d.contest_status !== "void"
           && d.formal_votes > 0
@@ -5219,17 +5394,17 @@
         return;
       }
       if (isMultiMemberElection()) {
-        const byClosest = [...allDistricts]
+        const byClosest = [...rankingPool]
           .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || finalMargin(a) - finalMargin(b) || a.district.localeCompare(b.district))
           .slice(0, topCount);
-        const byPrimaryLeader = [...allDistricts]
+        const byPrimaryLeader = [...rankingPool]
           .sort((a, b) => getFirstLeader(b)[1] / b.formal_votes - getFirstLeader(a)[1] / a.formal_votes || a.district.localeCompare(b.district))
           .slice(0, topCount);
-        const byChanged = [...allDistricts]
+        const byChanged = [...rankingPool]
           .filter(d => resultChanged(d))
           .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || a.district.localeCompare(b.district))
           .slice(0, topCount);
-        const byTransferGain = [...allDistricts]
+        const byTransferGain = [...rankingPool]
           .sort((a, b) => biggestElectedGain(b).gain - biggestElectedGain(a).gain || a.district.localeCompare(b.district))
           .slice(0, topCount);
         const outsideTopCount = d => {
@@ -5290,17 +5465,17 @@
         `).join("");
         return;
       }
-      const byClosest = [...allDistricts]
+      const byClosest = [...rankingPool]
         .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || finalMargin(a) - finalMargin(b) || a.district.localeCompare(b.district))
         .slice(0, topCount);
-      const byLargest = [...allDistricts]
+      const byLargest = [...rankingPool]
         .sort((a, b) => finalMarginShare(b) - finalMarginShare(a) || finalMargin(b) - finalMargin(a) || a.district.localeCompare(b.district))
         .slice(0, topCount);
-      const byChanged = [...allDistricts]
+      const byChanged = [...rankingPool]
         .filter(d => resultChanged(d))
         .sort((a, b) => finalMarginShare(a) - finalMarginShare(b) || finalMargin(a) - finalMargin(b) || a.district.localeCompare(b.district))
         .slice(0, topCount);
-      const byTransferGain = [...allDistricts]
+      const byTransferGain = [...rankingPool]
         .sort((a, b) => winnerGain(b) - winnerGain(a) || finalMarginShare(a) - finalMarginShare(b) || a.district.localeCompare(b.district))
         .slice(0, topCount);
 
@@ -5427,6 +5602,7 @@
       const referendum = activeElection().contestType === "referendum";
       const partyList = activeElection().contestType === "party-list";
       const analyticalLocalVote = presidential || senate || governor || referendum || partyList;
+      document.getElementById("councilControl").classList.toggle("hidden", !activeElection().localCouncilFilter);
       const geographyModes = document.getElementById("geographyModes");
       const geographyLabels = activeElection().geographyLabels || {};
       geographyModes.innerHTML = Object.entries(activeElection().geographies || {})
@@ -5449,15 +5625,17 @@
       document.getElementById("chartTabButton").classList.toggle("hidden", compactAnalytical);
       document.getElementById("changedOnly").closest(".check-pill").classList.toggle("hidden", compactAnalytical);
       document.getElementById("closeOnly").closest(".check-pill").classList.toggle("hidden", Boolean(activeElection().membersOnly) || senateStv);
-      document.getElementById("partyFilter").closest(".ctrl-group").classList.toggle("hidden", Boolean(activeElection().membersOnly));
+      document.getElementById("partyFilter").closest(".ctrl-group").classList.toggle("hidden", Boolean(activeElection().membersOnly) || Boolean(activeElection().localElection));
       document.querySelector('label[for="partyFilter"]').textContent = activeElection().membersOnly ? "Deputy affiliation" : activeElection().candidateFilterLabel || (analyticalLocalVote ? "Local winner" : fpp ? "Winner party" : "Bloc");
       document.getElementById("primaryVoteTitle").textContent = analyticalLocalVote ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? activeElection().partyVoteLabel || "Party vote" : "Final standing";
       document.getElementById("finalVotePanel").classList.toggle("hidden", analyticalLocalVote || Boolean(activeElection().membersOnly));
       document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeDataset().districtLabel || activeElection().districtLabel || activeDataset().label : activeDataset().districtLabel || activeElection().districtLabel || "Seat";
-      document.getElementById("districtSearch").placeholder = analyticalLocalVote || activeElection().membersOnly ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
+      document.getElementById("districtSearch").placeholder = analyticalLocalVote || activeElection().membersOnly || activeElection().localElection ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
       document.getElementById("mapSubtitle").textContent = analyticalLocalVote
         ? `Click ${/^[aeiou]/i.test(electorateLabel(1)) ? "an" : "a"} ${electorateLabel(1)} to explore its ${activeElection().localVoteLabel || "local presidential vote"}.${activeElection().schematicMap ? ` ${activeElection().schematicMapLabel || "This is a schematic map, not legal boundaries."}` : ""}`
+        : activeElection().localElection
+          ? `Click a ${electorateLabel(1)} to explore its official result and preference count.`
         : activeElection().cartogram
           ? activeElection().cartogramLabel || `Equal-area ${electorateLabel(1)} cartogram (not legal boundaries). Click a seat to explore.`
           : activeElection().schematicMap
@@ -5465,6 +5643,8 @@
             : "Click a seat to explore.";
       document.getElementById("rankingsSubtitle").textContent = activeElection().membersOnly
         ? "Constituency-level margins are unavailable in the published result."
+        : activeElection().localElection
+        ? `${activeCouncil === "all" ? "Metropolitan" : activeCouncil} leaderboards. Click a row to open that contest.`
         : analyticalLocalVote
         ? `Local-result leaderboards across the selected ${electorateLabel(2)}. Click a row to open that area.`
         : "Election-wide leaderboards for the selected election. Click a row to open that district or division.";
@@ -5480,7 +5660,18 @@
     function populateControls() {
       updateElectionSpecificUi();
       const districtSelect = document.getElementById("districtSelect");
+      const councilSelect = document.getElementById("councilSelect");
       const partyFilter = document.getElementById("partyFilter");
+      const councils = [...new Set(allDistricts.map(d => d.council).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      if (!activeElection().localCouncilFilter || !councils.includes(activeCouncil)) activeCouncil = "all";
+      councilSelect.innerHTML = [`<option value="all">All 30 councils</option>`]
+        .concat(councils.map(council => `<option value="${council}">${council}</option>`))
+        .join("");
+      councilSelect.value = activeCouncil;
+      councilSelect.onchange = () => {
+        activeCouncil = councilSelect.value;
+        applyFilters();
+      };
       const selectedParty = partyFilter.value || "all";
       const blocOrder = isFppElection()
         ? [...new Set(allDistricts.flatMap(d => electedBlocs(d)))].sort()
@@ -5552,6 +5743,12 @@
       const previous = activeDistrict?.district;
       districts = filteredDistricts();
       activeDistrict = districts.find(d => d.district === previous) || districts[0] || null;
+      if (activeElection().localCouncilFilter && boundaryFeatures.length) {
+        const visible = activeCouncil === "all"
+          ? boundaryFeatures
+          : boundaryFeatures.filter(feature => feature.properties?.council === activeCouncil);
+        boundaryShapes = makeBoundaryShapes(visible);
+      }
       syncBoundaryTypeToActiveDistrict();
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
@@ -5562,11 +5759,16 @@
 
     function resetView() {
       document.getElementById("districtSearch").value = "";
+      activeCouncil = "all";
+      pendingCouncilFromUrl = "";
       document.getElementById("partyFilter").value = "all";
       document.getElementById("changedOnly").checked = false;
       document.getElementById("closeOnly").checked = false;
       districts = [...allDistricts];
       activeDistrict = districts[0] || null;
+      if (activeElection().localCouncilFilter && boundaryFeatures.length) {
+        boundaryShapes = makeBoundaryShapes(boundaryFeatures);
+      }
       syncBoundaryTypeToActiveDistrict();
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
@@ -5888,7 +6090,7 @@
           <div class="result-facts">
             <div class="fact-item">
               <span class="fact-label">System</span>
-              <span class="fact-value">Hare-Clark STV</span>
+              <span class="fact-value">${activeElection().systemLabel || "Hare-Clark STV"}</span>
             </div>
             <div class="fact-item">
               <span class="fact-label">Members elected</span>
@@ -5915,7 +6117,8 @@
               <span class="fact-value">${Number(d.turnout_pct).toFixed(1)}%</span>
             </div>
           </div>
-          <p class="pref-impact">${outsideTop ? `<strong>${fmt.format(outsideTop)}</strong> elected member${outsideTop === 1 ? "" : "s"} finished outside the primary top ${d.members_to_elect || members.length} before preferences.` : `The elected members all started inside the primary top ${d.members_to_elect || members.length}.`}</p>
+          <p class="pref-impact">${activeElection().localElection ? activeElection().methodNote : outsideTop ? `<strong>${fmt.format(outsideTop)}</strong> elected member${outsideTop === 1 ? "" : "s"} finished outside the primary top ${d.members_to_elect || members.length} before preferences.` : `The elected members all started inside the primary top ${d.members_to_elect || members.length}.`}</p>
+          ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}
           <div class="summary-chips">${memberHtml}</div>
         `;
         return;
@@ -5924,6 +6127,28 @@
       const winnerParty = getParty(d, winner);
       const changed = resultChanged(d);
       const margin = finalMargin(d);
+
+      if (activeElection().localElection) {
+        const [runnerUp] = getSecondFromFinal(d);
+        const uncontested = d.contest_status === "uncontested";
+        const members = electedMembers(d);
+        const winnerLabel = activeElection().teamElection ? members.join(" · ") : winner;
+        document.getElementById("districtSummary").innerHTML = `
+          <h2 class="result-district">${d.district}</h2>
+          <div class="result-facts">
+            <div class="fact-item"><span class="fact-label">Council</span><span class="fact-value">${d.council}</span></div>
+            <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
+            <div class="fact-item"><span class="fact-label">Elected</span><span class="fact-value">${winnerLabel}</span></div>
+            <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${uncontested ? "Uncontested" : `${fmt.format(margin)} (${pct(margin, d.formal_votes)}) over ${runnerUp}`}</span></div>
+            <div class="fact-item"><span class="fact-label">Formal votes</span><span class="fact-value">${uncontested ? "No poll held" : fmt.format(d.formal_votes)}</span></div>
+            <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${uncontested ? "No poll held" : `${Number(d.turnout_pct).toFixed(1)}%`}</span></div>
+            <div class="fact-item"><span class="fact-label">Preference result</span><span class="fact-value">${uncontested ? "Elected unopposed" : changed ? "Changed winner" : "Primary leader held"}</span></div>
+          </div>
+          <p class="pref-impact">${uncontested ? "The only nominated candidate was elected without a poll." : changed ? `${leader} led on first preferences, but ${winner} won after preferences.` : `${winner} led on first preferences and was elected.`}</p>
+          ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}
+        `;
+        return;
+      }
 
       // Preference impact line
       let impactLine = "";
@@ -6269,6 +6494,8 @@
         const firstRow = entries[0];
         const d = {
           district,
+          council: firstRow.council || "",
+          ward: firstRow.ward || "",
           source,
           elected_member: firstRow.elected_member || "",
           elected_party: firstRow.elected_party || "Independent",
@@ -6373,7 +6600,8 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const rows = parseCSV(await response.text());
         if (!isCurrentElectionLoad(year, loadId)) return false;
-        loadRows(rows, `${election.source || "Election"} ${election.label} CSV`, options);
+        const datasetLabel = dataset !== election && dataset.label ? ` · ${dataset.label}` : "";
+        loadRows(rows, `${election.source || "Election"} ${election.label}${datasetLabel} CSV`, options);
         return true;
       } catch (err) {
         if (!isCurrentElectionLoad(year, loadId)) return false;
@@ -6405,7 +6633,9 @@
         activeBoundaryType = initialType;
         const visible = usesBoundaryTypeLayers()
           ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
-          : boundaryFeatures;
+          : activeElection().localCouncilFilter && activeCouncil !== "all"
+            ? boundaryFeatures.filter(feature => feature.properties?.council === activeCouncil)
+            : boundaryFeatures;
         boundaryShapes = makeBoundaryShapes(visible);
         document.querySelectorAll("[data-boundary-type]").forEach(button => {
           button.classList.toggle("active", button.dataset.boundaryType === activeBoundaryType);
@@ -6431,6 +6661,7 @@
       if (requestedYear !== previousYear || !election.geographies?.[activeGeography]) {
         activeGeography = election.defaultGeography || "";
       }
+      activeCouncil = "all";
       activeMapMode = "party";
       activeBoundaryType = "General";
       boundaryFeatures = [];
@@ -6448,6 +6679,8 @@
       if (!election.geographies?.[geography] || geography === activeGeography) return;
       const loadId = ++electionLoadId;
       activeGeography = geography;
+      activeCouncil = "all";
+      pendingCouncilFromUrl = "";
       activeMapMode = "party";
       pendingDistrictFromUrl = "";
       boundaryFeatures = [];
