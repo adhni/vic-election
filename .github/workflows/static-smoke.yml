@@ -73,6 +73,7 @@ jobs:
           python scripts/validate_uk_federal.py --year 2024
           python scripts/validate_uk_federal.py --year 2019
           python scripts/validate_uk_federal.py --year 2017
+          python scripts/validate_london_2024.py
           python scripts/validate_uk_referendums.py
           python scripts/validate_malaysia_federal.py --year 2022
           python scripts/validate_malaysia_federal.py --year 2018

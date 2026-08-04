@@ -45,6 +45,15 @@ REQUIRED_INTERNATIONAL_HISTORY_MARKERS = (
     '"key": "malaysia-2018"',
     '"key": "malaysia-2013"',
 )
+REQUIRED_LONDON_MARKERS = (
+    '"key": "london-2024"',
+    '"mayor": "Mayor"',
+    '"constituency-assembly": "Assembly constituencies"',
+    '"london-wide-assembly": "London-wide Assembly"',
+    '"seatBodyLabel": "Assembly seats"',
+    "first London mayoral election held by first-past-the-post",
+    "taking the 14 constituency seats into account",
+)
 REQUIRED_CANADA_MARKERS = (
     '"key": "canada-2025"',
     '"key": "canada-2021"',
@@ -384,6 +393,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_INTERNATIONAL_HISTORY_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing international history marker {marker!r}")
+    for marker in REQUIRED_LONDON_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing London 2024 marker {marker!r}")
     for marker in REQUIRED_CANADA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Canada FPTP UI marker {marker!r}")
