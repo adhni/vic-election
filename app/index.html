@@ -1461,6 +1461,81 @@
         "summaryRegions": ["England", "Scotland", "Wales", "Northern Ireland"]
       },
       {
+        "key": "london-2024",
+        "label": "London Mayor and Assembly 2024",
+        "type": "regional",
+        "jurisdiction": "United Kingdom",
+        "year": 2024,
+        "source": "London Elects / Greater London Authority",
+        "system": "fpp",
+        "csv": "data/london_2024_mayor_fpp.csv",
+        "boundaries": "data/london_2024_assembly_constituencies.geojson",
+        "defaultGeography": "mayor",
+        "geographyLabels": {
+          "mayor": "Mayor",
+          "constituency-assembly": "Assembly constituencies",
+          "london-wide-assembly": "London-wide Assembly"
+        },
+        "geographies": {
+          "mayor": {
+            "label": "Mayor of London",
+            "system": "fpp",
+            "contestType": "presidential",
+            "systemLabel": "London-wide mayoral election · first-past-the-post",
+            "methodNote": "The Mayor is elected across London as one contest. The map shows the candidate leading in each of the 14 Assembly constituencies; constituencies do not elect separate mayors. This was the first London mayoral election held by first-past-the-post.",
+            "candidateVoteLabel": "Mayoral candidate vote",
+            "candidateFilterLabel": "Any locally leading candidate",
+            "filterByWinnerCandidate": true,
+            "localVoteLabel": "mayoral vote",
+            "districtLabel": "Assembly constituency",
+            "unitSingular": "Assembly constituency",
+            "unitPlural": "Assembly constituencies",
+            "csv": "data/london_2024_mayor_fpp.csv",
+            "boundaries": "data/london_2024_assembly_constituencies.geojson",
+            "areaLabel": "City",
+            "resultScopeLabel": "London-wide",
+            "nationalResults": [["Labour",43.80],["Conservative",32.70],["Liberal Democrats",5.84],["Green Party",5.84],["Reform UK",3.17],["Other candidates",8.65]]
+          },
+          "constituency-assembly": {
+            "label": "Assembly constituency members",
+            "system": "fpp",
+            "systemLabel": "14 single-member constituencies · first-past-the-post",
+            "methodNote": "Each of London's 14 Assembly constituencies directly elects one member. The separate London-wide ballot allocates another 11 members and is available in the London-wide Assembly view.",
+            "candidateVoteLabel": "Assembly candidate vote",
+            "candidateFilterLabel": "Any winning party",
+            "winnerLabel": "Assembly member elected",
+            "localVoteLabel": "constituency vote",
+            "districtLabel": "Assembly constituency",
+            "unitSingular": "Assembly constituency",
+            "unitPlural": "Assembly constituencies",
+            "csv": "data/london_2024_assembly_constituency_fpp.csv",
+            "boundaries": "data/london_2024_assembly_constituencies.geojson",
+            "totalSeats": 14,
+            "areaLabel": "City"
+          },
+          "london-wide-assembly": {
+            "label": "London-wide Assembly vote",
+            "system": "fpp",
+            "contestType": "party-list",
+            "systemLabel": "11 London-wide members · modified D'Hondt",
+            "methodNote": "The map shows the locally leading London-wide list in each Assembly constituency. Eleven London-wide seats are allocated across London by modified D'Hondt, taking the 14 constituency seats into account and applying a 5% threshold. The summary shows the complete 25-member Assembly.",
+            "candidateVoteLabel": "London-wide list vote",
+            "candidateFilterLabel": "Any locally leading list",
+            "localVoteLabel": "London-wide list vote",
+            "districtLabel": "Assembly constituency",
+            "unitSingular": "Assembly constituency",
+            "unitPlural": "Assembly constituencies",
+            "csv": "data/london_2024_assembly_london_wide_fpp.csv",
+            "boundaries": "data/london_2024_assembly_constituencies.geojson",
+            "totalSeats": 25,
+            "seatBodyLabel": "Assembly seats",
+            "areaLabel": "City",
+            "parliament": [["Labour",11],["Conservative",8],["Green Party",3],["Liberal Democrats",2],["Reform UK",1]]
+          }
+        },
+        "compactMobileMap": true
+      },
+      {
         "key": "uk-2019",
         "label": "United Kingdom General 2019",
         "type": "national",
@@ -4334,6 +4409,7 @@
     }
 
     function electedBlocs(d) {
+      if (activeElection().filterByWinnerCandidate) return [getWinnerFromFinal(d)[0]];
       if (!isMultiMemberElection()) return [winningBloc(d)];
       return [...electedSeatCounts(d, partyBloc).keys()];
     }
@@ -5205,7 +5281,7 @@
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> ${winsLabel}</span>`);
           });
         (activeElection().nationalResults || []).forEach(([ticket, share]) => {
-          chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> national</span>`);
+          chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> ${activeElection().resultScopeLabel || "national"}</span>`);
         });
         target.innerHTML = chips.join("");
         return;
@@ -5215,7 +5291,7 @@
         if (election.contestType === "party-list") {
           const chips = [
             `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`,
-            `<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> Parliament seats</span>`
+            `<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> ${election.seatBodyLabel || "Parliament seats"}</span>`
           ];
           (election.parliament || []).forEach(([party, seats]) => {
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${fmt.format(seats)}</strong></span>`);
@@ -6017,7 +6093,7 @@
           <div class="result-facts">
             <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
             <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${systemLabel}</span></div>
-            <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
+            <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : activeElection().winnerLabel || "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
             ${teamElection ? `<div class="fact-item"><span class="fact-label">Members elected</span><span class="fact-value">${memberList}</span></div>` : ""}
             <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${uncontested ? "Uncontested" : singleCandidate ? "Not published" : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`}</span></div>
             <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${singleCandidate ? "Not published" : fmt.format(d.formal_votes)}</span></div>

@@ -20,6 +20,15 @@ Completed Greater Melbourne local-government work:
 - used neutral margin shading because ordinary VEC result pages do not state party affiliations
 - kept 2020 out of scope because electoral structures and ward boundaries differ materially
 
+Completed London regional work:
+
+- added the 2024 Mayor of London vote across all 14 Assembly constituencies
+- added all 14 directly elected Assembly constituency contests
+- added the London-wide list ballot and complete 25-member Assembly composition
+- preserved all 11 London-wide elected members in official allocation order
+- reused one official GLA constituency boundary layer across the three internal views
+- kept London borough council elections and older supplementary-vote mayoral elections out of this first scope
+
 ## Phase 1: Victorian State Depth
 
 Victorian Legislative Assembly support now includes `2022`, `2018`, `2014`, `2010`, and `2006`.

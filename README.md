@@ -14,6 +14,7 @@ The app is map-first and party/bloc-first:
 - exact party and candidate detail preserved inside each seat
 - New Zealand candidate-vote and party-vote views with separate general and Māori electorate map layers
 - United Kingdom constituency results and winner-party maps for the 2024, 2019, and 2017 general elections
+- London 2024 Mayor and Assembly results, with mayoral, constituency-member, and London-wide list views across all 14 Assembly constituencies
 - United Kingdom EU referendum 2016 by all 382 counting areas and 12 regions, plus the Scottish independence referendum 2014 by all 32 council areas
 - Malaysian constituency results and winner-party maps for the 2022, 2018, and 2013 general elections (GE15–GE13)
 - Singapore electoral-division results, GRC team membership, and winner-party maps for the 2025, 2020, and 2015 general elections
@@ -189,6 +190,18 @@ data/uk_2017_constituency_boundaries.geojson
 ```
 
 The UK election uses first past the post, so preference-transfer views are hidden. Each candidate result is stored once; the app reconstructs the identical final standing in memory. Results come from UK Parliament and boundaries from the Office for National Statistics.
+
+London coverage includes all three ballots from the 2024 Mayor and Assembly election:
+
+```text
+data/london_2024_mayor_fpp.csv
+data/london_2024_assembly_constituency_fpp.csv
+data/london_2024_assembly_london_wide_fpp.csv
+data/london_2024_assembly_members.csv
+data/london_2024_assembly_constituencies.geojson
+```
+
+The Mayor view maps the locally leading mayoral candidate across the 14 Assembly constituencies while preserving the London-wide result. The constituency view shows the 14 directly elected Assembly members. The London-wide view maps local list leaders and shows the complete 25-seat Assembly after the 11 proportional seats are allocated by modified D'Hondt. Rebuild with `python3 scripts/build_london_2024.py` and validate with `python3 scripts/validate_london_2024.py`.
 
 United Kingdom referendum coverage includes the 2016 EU membership vote and the 2014 Scottish independence vote:
 
@@ -594,6 +607,11 @@ data/uk_2019_fpp.csv                       # UK Parliament 2019 candidate result
 data/uk_2019_constituency_boundaries.geojson # ONS December 2019 Westminster constituency boundaries
 data/uk_2017_fpp.csv                       # UK Parliament 2017 candidate results for all 650 constituencies
 data/uk_2017_constituency_boundaries.geojson # ONS December 2019 layer for the unchanged 2017 constituencies
+data/london_2024_mayor_fpp.csv             # London Elects mayoral totals across 14 Assembly constituencies
+data/london_2024_assembly_constituency_fpp.csv # 14 directly elected Assembly constituency contests
+data/london_2024_assembly_london_wide_fpp.csv # London-wide list vote by Assembly constituency
+data/london_2024_assembly_members.csv       # complete 14 constituency plus 11 London-wide member roster
+data/london_2024_assembly_constituencies.geojson # official GLA Assembly constituency boundaries
 data/uk_2016_eu_referendum_counting_area_fpp.csv # Electoral Commission results for all 382 counting areas
 data/uk_2016_eu_referendum_counting_area_boundaries.geojson # ONS-derived 2016 counting-area map
 data/uk_2016_eu_referendum_region_fpp.csv  # exact aggregation to all 12 referendum regions
