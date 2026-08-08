@@ -51,6 +51,9 @@ REQUIRED_LONDON_MARKERS = (
     '"constituency-assembly": "Assembly constituencies"',
     '"london-wide-assembly": "London-wide Assembly"',
     '"seatBodyLabel": "Assembly seats"',
+    '"filterByWinnerCandidate": true',
+    '"resultScopeLabel": "London-wide"',
+    '"winnerLabel": "Assembly member elected"',
     "first London mayoral election held by first-past-the-post",
     "taking the 14 constituency seats into account",
 )

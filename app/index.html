@@ -1485,6 +1485,7 @@
             "methodNote": "The Mayor is elected across London as one contest. The map shows the candidate leading in each of the 14 Assembly constituencies; constituencies do not elect separate mayors. This was the first London mayoral election held by first-past-the-post.",
             "candidateVoteLabel": "Mayoral candidate vote",
             "candidateFilterLabel": "Any locally leading candidate",
+            "filterByWinnerCandidate": true,
             "localVoteLabel": "mayoral vote",
             "districtLabel": "Assembly constituency",
             "unitSingular": "Assembly constituency",
@@ -1492,6 +1493,7 @@
             "csv": "data/london_2024_mayor_fpp.csv",
             "boundaries": "data/london_2024_assembly_constituencies.geojson",
             "areaLabel": "City",
+            "resultScopeLabel": "London-wide",
             "nationalResults": [["Labour",43.80],["Conservative",32.70],["Liberal Democrats",5.84],["Green Party",5.84],["Reform UK",3.17],["Other candidates",8.65]]
           },
           "constituency-assembly": {
@@ -1501,6 +1503,7 @@
             "methodNote": "Each of London's 14 Assembly constituencies directly elects one member. The separate London-wide ballot allocates another 11 members and is available in the London-wide Assembly view.",
             "candidateVoteLabel": "Assembly candidate vote",
             "candidateFilterLabel": "Any winning party",
+            "winnerLabel": "Assembly member elected",
             "localVoteLabel": "constituency vote",
             "districtLabel": "Assembly constituency",
             "unitSingular": "Assembly constituency",
@@ -4406,6 +4409,7 @@
     }
 
     function electedBlocs(d) {
+      if (activeElection().filterByWinnerCandidate) return [getWinnerFromFinal(d)[0]];
       if (!isMultiMemberElection()) return [winningBloc(d)];
       return [...electedSeatCounts(d, partyBloc).keys()];
     }
@@ -5277,7 +5281,7 @@
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> ${winsLabel}</span>`);
           });
         (activeElection().nationalResults || []).forEach(([ticket, share]) => {
-          chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> national</span>`);
+          chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> ${activeElection().resultScopeLabel || "national"}</span>`);
         });
         target.innerHTML = chips.join("");
         return;
@@ -6089,7 +6093,7 @@
           <div class="result-facts">
             <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
             <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${systemLabel}</span></div>
-            <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
+            <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : activeElection().winnerLabel || "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
             ${teamElection ? `<div class="fact-item"><span class="fact-label">Members elected</span><span class="fact-value">${memberList}</span></div>` : ""}
             <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${uncontested ? "Uncontested" : singleCandidate ? "Not published" : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`}</span></div>
             <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${singleCandidate ? "Not published" : fmt.format(d.formal_votes)}</span></div>
