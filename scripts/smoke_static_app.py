@@ -184,6 +184,22 @@ REQUIRED_SOUTH_AFRICA_MARKERS = (
     "This view maps only the national ballot and does not combine the two vote types",
     'activeElection().jurisdiction === "South Africa"',
 )
+REQUIRED_GREECE_POLAND_BELGIUM_MARKERS = (
+    '"key": "poland-president-2025-round-1"',
+    '"key": "poland-president-2025-round-2"',
+    '"key": "poland-president-2020-round-1"',
+    '"key": "poland-president-2020-round-2"',
+    '"key": "greece-parliament-2023"',
+    '"key": "greece-parliament-2019"',
+    '"key": "belgium-chamber-2024"',
+    '"key": "belgium-chamber-2019"',
+    '"jurisdiction": "Poland"',
+    '"jurisdiction": "Greece"',
+    '"jurisdiction": "Belgium"',
+    "voivodeships do not elect separate presidents",
+    "they are not geodetic boundaries",
+    "facility-municipality ballots cross the reporting boundary",
+)
 REQUIRED_US_GOVERNOR_MARKERS = (
     '"key": "us-governor-2024"',
     '"key": "us-governor-2022"',
@@ -432,6 +448,11 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_SOUTH_AFRICA_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing South Africa UI marker {marker!r}")
+    for marker in REQUIRED_GREECE_POLAND_BELGIUM_MARKERS:
+        if marker not in html:
+            raise SystemExit(
+                f"{html_file}: missing Greece/Poland/Belgium UI marker {marker!r}"
+            )
     for marker in REQUIRED_US_GOVERNOR_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing U.S. governor UI marker {marker!r}")
