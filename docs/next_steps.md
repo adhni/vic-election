@@ -29,6 +29,14 @@ Completed London regional work:
 - reused one official GLA constituency boundary layer across the three internal views
 - kept London borough council elections and older supplementary-vote mayoral elections out of this first scope
 
+Completed Greece, Poland, and Belgium batch:
+
+- added both rounds of the 2025 and 2020 Polish presidential elections across all 16 voivodeships
+- added the June 2023 and 2019 Greek parliamentary elections across all 59 domestic constituencies, with the source site's schematic map explicitly labelled
+- added the 2024 and 2019 Belgian Chamber elections across all 11 multi-member constituencies
+- preserved complete nationwide presidential and parliamentary outcomes without treating local reporting areas as separate winner-take-all elections
+- added one independent validator covering all eight selector entries, 198 mapped areas, ballot arithmetic, winners, margins, seats, and boundary joins
+
 ## Phase 1: Victorian State Depth
 
 Victorian Legislative Assembly support now includes `2022`, `2018`, `2014`, `2010`, and `2006`.
@@ -254,7 +262,7 @@ Completed FPP storage optimization:
 - updated all affected builders and validators so regenerated data stays compact
 - reduced checked-in `data/` from about 177.2 MiB to 170.2 MiB without dropping an election or result
 
-Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while a universal 99 MiB per-data-file guard keeps every data Git object below GitHub's 100 MiB limit. The stricter 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. With the five U.S. Senate and governor cycles included, checked-in `data/` is about 274.3 MiB, leaving roughly 126 MiB before the warning and 226 MiB before the hard guard.
+Repository capacity was subsequently reviewed after the Netherlands, Norway, and Sweden batch. The old 190 MiB `data/` ceiling was a conservative project setting rather than a GitHub limit. It is now 500 MiB, with a warning at 400 MiB, while a universal 99 MiB per-data-file guard keeps every data Git object below GitHub's 100 MiB limit. The stricter 15 MiB per-boundary and 8 MiB optimized-boundary protections remain unchanged. With the Greece, Poland, and Belgium batch included, checked-in `data/` is 306.9 MiB, leaving about 93.1 MiB before the warning and 193.1 MiB before the hard guard.
 
 ## Deferred: Local Council Elections
 
@@ -272,7 +280,7 @@ Reasons:
 
 ## Recommended Next Concrete Task
 
-The Finland, Denmark, and Austria six-election batch is complete. The next source-discovery candidates are Belgium and the Czech Republic, again limited to two recent elections each unless source or boundary complexity argues for a smaller batch.
+The Greece, Poland, and Belgium eight-view batch is complete. The next source-discovery candidates are the Czech Republic and Switzerland, limited to two recent elections each unless source or boundary complexity argues for a smaller batch.
 
 Insyallah, the best sequence is:
 

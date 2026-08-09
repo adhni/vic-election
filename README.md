@@ -27,6 +27,9 @@ The app is map-first and party/bloc-first:
 - Türkiye presidential results for 2023, 2018, and 2014 mapped across all 81 provinces, including both 2023 rounds
 - Taiwan presidential results for 2024, 2020, and 2016 mapped across all 368 townships and urban districts
 - South Africa National Assembly results for 2024, 2019, and 2014, with municipality and province views
+- Polish presidential results for 2025 and 2020, with both rounds mapped across all 16 voivodeships
+- Greek parliamentary results for June 2023 and 2019 across all 59 domestic electoral constituencies
+- Belgian Federal Chamber results for 2024 and 2019 across all 11 multi-member constituencies
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
 - United States Senate results for the 2024, 2022, 2020, 2018, and 2016 regular election cycles, with county/reporting-area and official state views; concurrent special elections are excluded
@@ -39,6 +42,14 @@ The app is map-first and party/bloc-first:
 - Mexican presidential results for 2024, mapped across all 300 federal electoral districts
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
+
+## Greece, Poland, and Belgium
+
+Poland's 2025 and 2020 presidential elections each have separate first-round and runoff views. Official National Electoral Commission candidate and ballot totals are aggregated to all 16 voivodeships and joined to Eurostat GISCO geometry. The shared map reunites the two NUTS components of Mazowieckie. Voivodeship colours show local leaders; Poland elects one president from the nationwide result.
+
+Greece's June 2023 and July 2019 parliamentary views preserve the Ministry of Interior election archive's 59 domestic electoral constituencies. The map is the Ministry site's schematic constituency inset, not a geographic boundary map. Local party totals, ballot metadata, constituency seats, and the complete 300-seat Parliament outcome are validated separately; nationwide list seats are included only in the Parliament summary.
+
+Belgium's 2024 and 2019 Chamber views preserve the official Interior result workbooks for all 11 multi-member constituencies and the complete 150-seat outcome. The map uses matching Eurostat GISCO provincial geometry. Brussels and Flemish Brabant share some counting-canton turnout reporting, so only their enrolment and invalid-ballot metadata are proportionally allocated from the exact joint total; official valid party votes and seats are unchanged.
 
 ## Open the app
 
@@ -800,7 +811,7 @@ The optimizer pins Mapshaper `0.7.45` through `npx` and skips files already belo
 
 First-past-the-post CSVs are also compacted structurally. Candidate totals are stored once as `first` rows and the browser creates the identical final standing in memory. This removes about 7 MiB of duplicate rows across New Zealand, the UK, Malaysia, Singapore, Canada, and India without changing any displayed result.
 
-The 500 MiB ceiling is a project guard, not GitHub's repository limit. GitHub recommends repositories remain below 1 GB where practical and strongly recommends staying below 5 GB, while blocking individual Git objects above 100 MiB. The universal 99 MiB data-file guard prevents a single CSV or other non-boundary asset from reaching that GitHub limit; boundary files retain their much smaller 15 MiB browser-performance guard. Keeping `data/` below 500 MiB leaves room for source code and Git history within the preferred range. With the Senate and governor datasets included, `data/` is 274.3 MiB and approximately 225.7 MiB remains under this guard. Large raw downloads and browser screenshots belong in the ignored `tmp/` directory and should be deleted after validation. See [GitHub's large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
+The 500 MiB ceiling is a project guard, not GitHub's repository limit. GitHub recommends repositories remain below 1 GB where practical and strongly recommends staying below 5 GB, while blocking individual Git objects above 100 MiB. The universal 99 MiB data-file guard prevents a single CSV or other non-boundary asset from reaching that GitHub limit; boundary files retain their much smaller 15 MiB browser-performance guard. Keeping `data/` below 500 MiB leaves room for source code and Git history within the preferred range. With the Greece, Poland, and Belgium batch included, `data/` is 306.9 MiB and approximately 193.1 MiB remains under this guard. Large raw downloads and browser screenshots belong in the ignored `tmp/` directory and should be deleted after validation. See [GitHub's large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
 
 ## CSV Format
 
