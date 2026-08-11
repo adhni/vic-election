@@ -15,6 +15,20 @@ REQUIRED_RANKINGS_MARKERS = (
     "Changed on preferences",
     "Biggest winner transfer gains",
 )
+REQUIRED_VISUAL_REFRESH_MARKERS = (
+    "<title>VIC ELEC · Election Results Explorer</title>",
+    '<h1>VIC <span class="brand-accent">ELEC</span></h1>',
+    'id="filterTools" class="filter-tools"',
+    'class="explorer-grid"',
+    'class="detail-panel"',
+    'id="explorerMap"',
+    'function setupResponsiveFilters()',
+    'button.setAttribute("aria-pressed", String(active));',
+    'tabindex="${!isMuted && d.district === keyboardDistrict ? "0" : "-1"}"',
+    'role="group" aria-label="${activeElection().label} interactive',
+    'selectDistrictByName(district, true);',
+    '["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"]',
+)
 REQUIRED_ELECTION_PICKER_MARKERS = (
     'id="electionCountry"',
     'id="electionYear"',
@@ -403,6 +417,11 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_RANKINGS_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing rankings UI marker {marker!r}")
+    for marker in REQUIRED_VISUAL_REFRESH_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing visual refresh marker {marker!r}")
+    if 'tabindex="${isMuted ? "-1" : "0"}"' in html:
+        raise SystemExit(f"{html_file}: every visible map district must not be a page-wide tab stop")
     for marker in REQUIRED_NZ_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing NZ MMP UI marker {marker!r}")
@@ -668,6 +687,8 @@ def validate_northern_europe(key: str, csv_path: Path) -> None:
 
 def main() -> None:
     html_files = [Path("index.html"), Path("app/index.html")]
+    if html_files[0].read_text(encoding="utf-8") != html_files[1].read_text(encoding="utf-8"):
+        raise SystemExit(f"{html_files[1]} must stay synchronized with {html_files[0]}")
     definitions_by_file = {html_file: load_election_definitions(html_file) for html_file in html_files}
     aliases_by_file = {html_file: load_election_aliases(html_file) for html_file in html_files}
     first = definitions_by_file[html_files[0]]
