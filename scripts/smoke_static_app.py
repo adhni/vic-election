@@ -24,6 +24,10 @@ REQUIRED_VISUAL_REFRESH_MARKERS = (
     'id="explorerMap"',
     'function setupResponsiveFilters()',
     'button.setAttribute("aria-pressed", String(active));',
+    'tabindex="${!isMuted && d.district === keyboardDistrict ? "0" : "-1"}"',
+    'role="group" aria-label="${activeElection().label} interactive',
+    'selectDistrictByName(district, true);',
+    '["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"]',
 )
 REQUIRED_ELECTION_PICKER_MARKERS = (
     'id="electionCountry"',
@@ -416,6 +420,8 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_VISUAL_REFRESH_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing visual refresh marker {marker!r}")
+    if 'tabindex="${isMuted ? "-1" : "0"}"' in html:
+        raise SystemExit(f"{html_file}: every visible map district must not be a page-wide tab stop")
     for marker in REQUIRED_NZ_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing NZ MMP UI marker {marker!r}")

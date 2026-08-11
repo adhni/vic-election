@@ -5366,7 +5366,7 @@
       }).join("");
     }
 
-    function selectDistrictByName(name) {
+    function selectDistrictByName(name, focusMap = false) {
       const selected = allDistricts.find(d => d.district === name);
       if (!selected) return;
       if (!districtMatchesFilters(selected, getFilterState())) {
@@ -5382,6 +5382,11 @@
       storyStep = 0;
       populateControls();
       render();
+      if (focusMap) {
+        [...document.querySelectorAll(".district-shape")]
+          .find(shape => shape.dataset.district === name)
+          ?.focus();
+      }
       updateUrlState();
     }
 
@@ -5476,6 +5481,10 @@
       }
       const byName = new Map(allDistricts.map(d => [d.district, d]));
       const shown = new Set(districts.map(d => d.district));
+      const shapeIndexes = new Map(boundaryShapes.map((shape, index) => [shape.district, index]));
+      const keyboardDistrict = shown.has(activeDistrict?.district)
+        ? activeDistrict.district
+        : boundaryShapes.find(shape => shown.has(shape.district))?.district || "";
       const shapeHtml = shape => {
         const d = byName.get(shape.district);
         if (!d) return "";
@@ -5510,7 +5519,8 @@
           <path
             class="district-shape${isActive ? " active" : ""}${isMuted ? " muted" : ""}"
             data-district="${d.district}"
-            tabindex="${isMuted ? "-1" : "0"}"
+            data-map-index="${shapeIndexes.get(d.district)}"
+            tabindex="${!isMuted && d.district === keyboardDistrict ? "0" : "-1"}"
             role="button"
             aria-label="${mapTitle}"
             d="${shape.path}"
@@ -5531,7 +5541,7 @@
       const mapClass = `geo-map${activeElection().compactMobileMap ? " compact-mobile-map" : ""}${activeElection().wideMobileMap ? " wide-mobile-map" : ""}`;
       target.className = mapClass;
       target.innerHTML = `
-        <svg class="${mapClass}" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" preserveAspectRatio="${activeElection().compactMobileMap ? "xMidYMid slice" : "xMidYMid meet"}" role="img" aria-label="${activeElection().label} ${electorateLabel(2)} map">
+        <svg class="${mapClass}" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" preserveAspectRatio="${activeElection().compactMobileMap ? "xMidYMid slice" : "xMidYMid meet"}" role="group" aria-label="${activeElection().label} interactive ${electorateLabel(2)} map. Use arrow keys to move between areas and Enter to select.">
           <rect x="0" y="0" width="960" height="560" fill="#f2f4f0"></rect>
           ${inactiveShapes}
           ${activeShape}
@@ -5591,10 +5601,28 @@
       });
       svg.addEventListener("keydown", event => {
         const district = event.target?.dataset?.district;
-        if (!district || !["Enter", " "].includes(event.key)) return;
+        if (!district) return;
+        if (["Enter", " "].includes(event.key)) {
+          event.preventDefault();
+          hideTooltip();
+          selectDistrictByName(district, true);
+          return;
+        }
+        const navigationKeys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
+        if (!navigationKeys.includes(event.key)) return;
+        const shapes = [...svg.querySelectorAll(".district-shape:not(.muted)")]
+          .sort((a, b) => Number(a.dataset.mapIndex) - Number(b.dataset.mapIndex));
+        if (!shapes.length) return;
+        const current = shapes.indexOf(event.target);
+        const nextIndex = event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? shapes.length - 1
+            : (current + (["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1) + shapes.length) % shapes.length;
         event.preventDefault();
-        hideTooltip();
-        selectDistrictByName(district);
+        event.target.tabIndex = -1;
+        shapes[nextIndex].tabIndex = 0;
+        shapes[nextIndex].focus();
       });
       target.querySelectorAll(".district-shape").forEach(shape => {
         const d = byName.get(shape.dataset.district);
