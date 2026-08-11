@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Election Results Explorer</title>
+  <title>VIC ELEC · Election Results Explorer</title>
   <style>
     :root {
-      --bg: #f8f7f5;
+      --bg: #f4f2ee;
       --surface: #ffffff;
-      --ink: #1a1814;
-      --muted: #6b6560;
-      --line: #e2ddd7;
-      --accent: #2d4b73;
-      --radius: 12px;
+      --surface-soft: #f8f7f4;
+      --ink: #171a1f;
+      --muted: #67645f;
+      --line: #ded9d1;
+      --accent: #294f7c;
+      --accent-strong: #173d6a;
+      --radius: 14px;
+      --shadow: 0 12px 36px rgba(31, 38, 46, .07);
     }
 
     * { box-sizing: border-box; }
@@ -24,34 +27,74 @@
       color: var(--ink);
       background: var(--bg);
       line-height: 1.5;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .page-wrap {
-      max-width: 1100px;
+      max-width: 1380px;
       margin: 0 auto;
-      padding: 0 16px 48px;
+      padding: 0 24px 56px;
     }
+
+    .skip-link {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 100;
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 800;
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
 
     /* ── Header ── */
     .page-header {
-      padding: 24px 0 12px;
+      padding: 28px 0 18px;
       border-bottom: 1px solid var(--line);
       margin-bottom: 0;
     }
 
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .page-header h1 {
       margin: 0;
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -.02em;
+      font-size: clamp(30px, 3vw, 42px);
+      font-weight: 900;
+      letter-spacing: -.065em;
+      line-height: .95;
       color: var(--ink);
     }
 
+    .brand-accent { color: var(--accent); }
+
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      border: 1px solid rgba(41, 79, 124, .22);
+      border-radius: 999px;
+      background: rgba(41, 79, 124, .08);
+      color: var(--accent-strong);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
     .page-header p {
-      margin: 2px 0 0;
+      margin: 8px 0 0;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
     }
 
     /* ── Controls ── */
@@ -59,16 +102,16 @@
       position: sticky;
       top: 0;
       z-index: 20;
-      background: rgba(248,247,245,.96);
+      background: rgba(244,242,238,.96);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line);
-      padding: 10px 0;
+      padding: 12px 0 10px;
     }
 
     .controls-inner {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       align-items: flex-end;
     }
 
@@ -79,11 +122,13 @@
       min-width: 0;
     }
 
-    .ctrl-group.grow { flex: 1 1 160px; }
+    .ctrl-group.grow { flex: 1 1 180px; }
     .ctrl-group.shrink { flex: 0 0 auto; }
 
+    .search-control { flex: 1 1 210px; }
+
     .election-picker {
-      flex: 1 1 330px;
+      flex: 1.3 1 390px;
       display: grid;
       grid-template-columns: minmax(120px, .8fr) minmax(190px, 1.4fr);
       gap: 8px;
@@ -101,8 +146,9 @@
     select,
     input[type="search"],
     input[type="file"] {
-      padding: 7px 9px;
-      border-radius: 8px;
+      min-height: 40px;
+      padding: 8px 10px;
+      border-radius: 9px;
       border: 1px solid var(--line);
       background: var(--surface);
       color: var(--ink);
@@ -111,13 +157,26 @@
       width: 100%;
     }
 
-    select:focus, input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    select:focus, input:focus {
+      outline: 3px solid rgba(41,79,124,.24);
+      outline-offset: 1px;
+      border-color: var(--accent);
+    }
+
+    button:focus-visible,
+    summary:focus-visible,
+    .district-shape:focus-visible,
+    .tab-btn:focus-visible {
+      outline: 3px solid rgba(41,79,124,.32);
+      outline-offset: 2px;
+    }
 
     .check-pill {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 6px 10px;
+      min-height: 40px;
+      padding: 7px 10px;
       border: 1px solid var(--line);
       border-radius: 999px;
       background: var(--surface);
@@ -136,7 +195,8 @@
       font: inherit;
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 7px 12px;
+      min-height: 40px;
+      padding: 8px 12px;
       font-size: 12px;
       font-weight: 700;
       background: var(--surface);
@@ -147,7 +207,7 @@
 
     button:hover { background: #f0ede8; }
     button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    button.primary:hover { background: #243d5f; }
+    button.primary:hover { background: var(--accent-strong); }
 
     .filters-row {
       display: flex;
@@ -156,12 +216,35 @@
       align-items: center;
     }
 
+    details.filter-tools {
+      flex: 2 1 540px;
+      min-width: 0;
+    }
+
+    details.filter-tools > summary {
+      display: none;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    details.filter-tools > summary::-webkit-details-marker { display: none; }
+
+    .filter-tools-content {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      min-width: 0;
+    }
+
+    .filter-tools-content .ctrl-group { flex: 1 1 140px; }
+    .filter-tools-content .ctrl-group.shrink { flex: 0 0 auto; }
+
     .data-status {
       font-size: 12px;
       color: var(--muted);
-      padding: 6px 0 2px;
+      padding: 7px 0 0;
       display: flex;
-      gap: 16px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
@@ -172,8 +255,8 @@
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
-      padding: 10px 0 0;
-      min-height: 42px;
+      padding: 14px 0 0;
+      min-height: 48px;
     }
 
     .summary-chip {
@@ -195,28 +278,45 @@
       font-weight: 800;
     }
 
+    .explorer-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(380px, .85fr);
+      gap: 18px;
+      align-items: start;
+      padding-top: 14px;
+    }
+
+    .detail-panel {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
     .rankings-panel {
-      padding: 14px 0 12px;
-      border-bottom: 1px solid var(--line);
+      padding: 24px 0 8px;
     }
 
     .rankings-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
+      gap: 14px;
     }
 
     .ranking-card {
       border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border-radius: 16px;
       background: var(--surface);
-      padding: 12px;
+      padding: 14px;
       min-width: 0;
+      box-shadow: 0 8px 24px rgba(31, 38, 46, .04);
     }
 
     .ranking-list {
       display: grid;
-      gap: 6px;
+      gap: 0;
     }
 
     .ranking-row {
@@ -226,18 +326,22 @@
       gap: 10px;
       align-items: center;
       text-align: left;
-      padding: 8px 9px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fff;
+      min-height: 54px;
+      padding: 9px 4px;
+      border: 0;
+      border-top: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
       white-space: normal;
     }
+
+    .ranking-row:first-child { border-top: 0; }
 
     .ranking-row:hover { background: #f5f1eb; }
 
     .ranking-row.active {
-      border-color: rgba(44, 74, 110, .36);
-      background: #eef2f7;
+      border-radius: 9px;
+      background: #edf3f9;
     }
 
     .ranking-main {
@@ -279,9 +383,11 @@
     }
 
     details.data-tools {
-      margin-top: 8px;
-      padding-top: 6px;
-      border-top: 1px solid var(--line);
+      margin-top: 22px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.62);
     }
 
     details.data-tools summary {
@@ -292,7 +398,7 @@
       text-transform: uppercase;
       letter-spacing: .05em;
       list-style: none;
-      width: max-content;
+      width: 100%;
     }
 
     details.data-tools summary::-webkit-details-marker { display: none; }
@@ -313,8 +419,12 @@
 
     /* -- Map -- */
     .map-panel {
-      padding: 14px 0 10px;
-      border-bottom: 1px solid var(--line);
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
     }
 
     .map-toolbar {
@@ -332,13 +442,13 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: .06em;
-      color: var(--muted);
+      color: var(--ink);
     }
 
     .map-subtitle {
       margin: 1px 0 0;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 13px;
     }
 
     .map-modes {
@@ -404,7 +514,8 @@
     .geo-map {
       display: block;
       width: 100%;
-      height: 620px;
+      height: min(64vh, 650px);
+      min-height: 500px;
       cursor: grab;
       touch-action: none;
       user-select: none;
@@ -455,6 +566,12 @@
       stroke-width: 1.1;
     }
 
+    .district-shape:focus {
+      opacity: 1;
+      stroke: var(--ink);
+      stroke-width: 2;
+    }
+
     .district-shape.active {
       stroke: var(--ink);
       stroke-width: 2.4;
@@ -474,12 +591,12 @@
 
     /* ── Result summary ── */
     .result-summary {
-      padding: 18px 0 14px;
+      padding: 22px 20px 18px;
       border-bottom: 1px solid var(--line);
     }
 
     .result-district {
-      font-size: 26px;
+      font-size: 30px;
       font-weight: 800;
       letter-spacing: -.04em;
       line-height: 1;
@@ -558,7 +675,8 @@
     }
 
     .tab-btn {
-      padding: 10px 16px;
+      min-height: 44px;
+      padding: 11px 14px;
       font-size: 13px;
       font-weight: 600;
       border: none;
@@ -574,7 +692,7 @@
     .tab-btn:hover { color: var(--ink); background: transparent; }
     .tab-btn.active { color: var(--ink); border-bottom-color: var(--accent); font-weight: 700; }
 
-    .tab-panel { padding: 18px 0; }
+    .tab-panel { padding: 20px; }
     .tab-panel.hidden { display: none; }
 
     /* ── Overview ── */
@@ -583,6 +701,14 @@
       grid-template-columns: 1fr 1fr;
       gap: 24px;
       align-items: start;
+    }
+
+    .detail-panel .overview-cols { grid-template-columns: 1fr; }
+
+    .detail-panel .bar-row,
+    .detail-panel .transfer-row {
+      grid-template-columns: minmax(108px, 145px) 1fr 56px;
+      gap: 8px;
     }
 
     .section-title {
@@ -835,37 +961,130 @@
     .right { text-align: right; }
     .hidden { display: none; }
 
+    @media (max-width: 1050px) {
+      .explorer-grid { grid-template-columns: 1fr; }
+      .detail-panel .overview-cols { grid-template-columns: 1fr 1fr; }
+      .detail-panel .bar-row,
+      .detail-panel .transfer-row { grid-template-columns: minmax(120px, 200px) 1fr 56px; }
+    }
+
     @media (max-width: 720px) {
-      .overview-cols { grid-template-columns: 1fr; }
-      .controls { position: static; }
+      .page-wrap { padding: 0 12px 40px; }
+      .page-header { padding: 20px 4px 16px; }
+      .page-header h1 { font-size: 30px; }
+      .brand-tag { min-height: 24px; font-size: 10px; }
+      .page-header p { max-width: 34ch; }
+      .controls { position: static; padding: 12px 4px; }
       .controls-inner { flex-direction: column; align-items: stretch; }
-      .ctrl-group.grow, .ctrl-group.shrink { flex: none; }
+      .ctrl-group.grow, .ctrl-group.shrink, .search-control { flex: none; }
       .election-picker { flex: none; grid-template-columns: 1fr; }
-      .bar-row, .transfer-row { grid-template-columns: 1fr auto; }
-      .story-row { grid-template-columns: 1fr auto; }
-      .bar-row .track, .transfer-row .mini-track { display: none; }
-      .story-row .track { display: none; }
+
+      details.filter-tools { flex: none; width: 100%; }
+      details.filter-tools > summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 44px;
+        padding: 9px 11px;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        background: var(--surface);
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .filter-summary {
+        margin-left: auto;
+        margin-right: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      details.filter-tools > summary::after { content: "+"; color: var(--accent); font-size: 18px; }
+      details.filter-tools[open] > summary::after { content: "−"; }
+      .filter-tools-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding-top: 10px;
+      }
+      .filter-tools-content .ctrl-group,
+      .filter-tools-content .ctrl-group.shrink { flex: none; }
+      .filter-tools-content .filters-row { grid-column: 1 / -1; }
+
+      select, input[type="search"], button, .check-pill { min-height: 44px; }
+      .data-status { gap: 2px 8px; line-height: 1.35; }
+      .data-status .status-detail { width: 100%; }
+      .state-summary {
+        min-height: 52px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 12px 4px 4px;
+        scrollbar-width: none;
+      }
+      .state-summary::-webkit-scrollbar { display: none; }
+
+      .explorer-grid { gap: 12px; padding-top: 10px; }
+      .map-panel { padding: 11px; border-radius: 15px; }
       .map-toolbar { align-items: stretch; }
       .map-actions { flex-direction: column; align-items: stretch; width: 100%; min-width: 0; }
       .map-modes { width: 100%; min-width: 0; flex-wrap: wrap; }
-      .map-mode { flex: 1 1 auto; min-width: 0; }
-      .geo-map.compact-mobile-map, .geo-map.wide-mobile-map { height: 380px; }
+      .map-mode { flex: 1 1 auto; min-width: 44px; min-height: 44px; }
+      .geo-map,
+      .geo-map.compact-mobile-map,
+      .geo-map.wide-mobile-map {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 16 / 10;
+      }
+
+      .detail-panel { border-radius: 15px; }
+      .result-summary { padding: 18px 14px 16px; }
+      .result-district { font-size: 26px; }
+      .tabs { padding: 0 4px; }
+      .tab-panel { padding: 17px 14px; }
+      .overview-cols,
+      .detail-panel .overview-cols { grid-template-columns: 1fr; }
+      .bar-row,
+      .transfer-row,
+      .detail-panel .bar-row,
+      .detail-panel .transfer-row {
+        grid-template-columns: minmax(92px, 118px) 1fr 48px;
+        gap: 7px;
+      }
+      .story-row { grid-template-columns: minmax(105px, 140px) 1fr 62px; gap: 7px; }
+      .rankings-panel { padding-top: 20px; }
+      .rankings-grid { grid-template-columns: 1fr; gap: 10px; }
+      .ranking-card { padding: 12px; }
     }
 
     @media (max-width: 480px) {
-      .result-district { font-size: 20px; }
-      .tab-btn { padding: 8px 11px; font-size: 12px; }
+      .filter-tools-content { grid-template-columns: 1fr; }
+      .filter-tools-content .filters-row { grid-column: 1; }
+      .result-district { font-size: 24px; }
+      .tab-btn { padding: 9px 10px; font-size: 12px; }
+      .party-line { font-size: 12px; }
+      .candidate-line { font-size: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
     }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#explorerMap">Skip to election map</a>
   <div class="page-wrap">
     <header class="page-header">
-      <h1>Election · Results Explorer</h1>
-      <p>Explore elections and referendums across multiple countries — candidate votes, party votes, preference counts, and final results.</p>
+      <div class="brand-row">
+        <h1>VIC <span class="brand-accent">ELEC</span></h1>
+        <span class="brand-tag">Results explorer</span>
+      </div>
+      <p>Maps, margins and preference flows — seat by seat.</p>
     </header>
 
-    <nav class="controls" aria-label="Controls">
+    <nav class="controls" aria-label="Election controls">
       <div class="controls-inner">
         <div class="election-picker">
           <div class="ctrl-group">
@@ -877,68 +1096,57 @@
             <select id="electionYear"></select>
           </div>
         </div>
-        <div id="councilControl" class="ctrl-group grow hidden">
-          <label class="ctrl-label" for="councilSelect">Council</label>
-          <select id="councilSelect"></select>
-        </div>
-        <div class="ctrl-group grow">
+        <div class="ctrl-group search-control">
           <label id="districtSearchLabel" class="ctrl-label" for="districtSearch">Search</label>
           <input id="districtSearch" type="search" placeholder="Find a district or division…" autocomplete="off" />
         </div>
-        <div class="ctrl-group grow">
-          <label id="districtSelectLabel" class="ctrl-label" for="districtSelect">Seat</label>
-          <select id="districtSelect"></select>
-        </div>
-        <div class="ctrl-group grow">
-          <label class="ctrl-label" for="partyFilter">Bloc</label>
-          <select id="partyFilter">
-            <option value="all">Any bloc</option>
-          </select>
-        </div>
-        <div class="ctrl-group shrink">
-          <label class="ctrl-label">&nbsp;</label>
-          <div class="filters-row">
-            <label class="check-pill" for="changedOnly"><input id="changedOnly" type="checkbox" /> Changed result</label>
-            <label class="check-pill" for="closeOnly"><input id="closeOnly" type="checkbox" /> Close margin</label>
-            <button id="resetView" type="button">Reset</button>
+        <details id="filterTools" class="filter-tools" open>
+          <summary>Filters <span class="filter-summary">Seat, bloc and margins</span></summary>
+          <div class="filter-tools-content">
+            <div id="councilControl" class="ctrl-group grow hidden">
+              <label class="ctrl-label" for="councilSelect">Council</label>
+              <select id="councilSelect"></select>
+            </div>
+            <div class="ctrl-group grow">
+              <label id="districtSelectLabel" class="ctrl-label" for="districtSelect">Seat</label>
+              <select id="districtSelect"></select>
+            </div>
+            <div class="ctrl-group grow">
+              <label class="ctrl-label" for="partyFilter">Bloc</label>
+              <select id="partyFilter">
+                <option value="all">Any bloc</option>
+              </select>
+            </div>
+            <div class="ctrl-group shrink">
+              <label class="ctrl-label">Refine</label>
+              <div class="filters-row">
+                <label class="check-pill" for="changedOnly"><input id="changedOnly" type="checkbox" /> Changed result</label>
+                <label class="check-pill" for="closeOnly"><input id="closeOnly" type="checkbox" /> Close margin</label>
+                <button id="resetView" type="button">Reset</button>
+              </div>
+            </div>
           </div>
-        </div>
+        </details>
       </div>
-      <div id="dataStatus" class="data-status"></div>
-      <details class="data-tools">
-        <summary>Data tools</summary>
-        <div class="upload-row">
-          <span class="upload-label">Upload CSV</span>
-          <input id="csvUpload" type="file" accept=".csv,text/csv" style="width:auto;flex:0 1 auto;" />
-          <button id="downloadSample" type="button">Sample CSV</button>
-        </div>
-      </details>
+      <div id="dataStatus" class="data-status" aria-live="polite"></div>
     </nav>
 
-    <section id="stateSummary" class="state-summary" aria-label="Election summary"></section>
+    <main>
+      <section id="stateSummary" class="state-summary" aria-label="Election summary"></section>
 
-    <section class="rankings-panel" aria-label="Election rankings">
+      <div class="explorer-grid">
+        <section id="explorerMap" class="map-panel" aria-label="Seat map">
       <div class="map-toolbar">
         <div>
-          <h2 class="map-title">Rankings</h2>
-          <p id="rankingsSubtitle" class="map-subtitle">Election-wide leaderboards for the selected election. Click a row to open that district or division.</p>
-        </div>
-      </div>
-      <div id="rankingsPanel" class="rankings-grid"></div>
-    </section>
-
-    <section class="map-panel" aria-label="Seat map">
-      <div class="map-toolbar">
-        <div>
-          <h2 class="map-title">Map</h2>
+          <h2 class="map-title">Election map</h2>
           <p id="mapSubtitle" class="map-subtitle">Click a seat to explore.</p>
         </div>
         <div class="map-actions">
           <div class="map-modes" role="group" aria-label="Map colour mode">
-            <button class="map-mode active" type="button" data-map-mode="party">Winner</button>
-            <button id="partyVoteMapMode" class="map-mode hidden" type="button" data-map-mode="party-vote">Party vote</button>
-            <button class="map-mode" type="button" data-map-mode="close">Close</button>
-            <button id="changedMapMode" class="map-mode" type="button" data-map-mode="changed">Changed</button>
+            <button class="map-mode active" type="button" data-map-mode="party" aria-pressed="true">Winner</button>
+            <button id="partyVoteMapMode" class="map-mode hidden" type="button" data-map-mode="party-vote" aria-pressed="false">Party vote</button>
+            <button class="map-mode" type="button" data-map-mode="close" aria-pressed="false">Close</button>
+            <button id="changedMapMode" class="map-mode" type="button" data-map-mode="changed" aria-pressed="false">Changed</button>
           </div>
           <div id="boundaryTypeModes" class="map-modes hidden" role="group" aria-label="Electorate map layer">
             <button class="map-mode active" type="button" data-boundary-type="General">General</button>
@@ -946,8 +1154,8 @@
           </div>
           <div id="geographyModes" class="map-modes hidden" role="group" aria-label="Result geography"></div>
           <div class="map-modes" role="group" aria-label="Map zoom">
-            <button id="mapZoomOut" class="map-mode" type="button">-</button>
-            <button id="mapZoomIn" class="map-mode" type="button">+</button>
+            <button id="mapZoomOut" class="map-mode" type="button" aria-label="Zoom map out">−</button>
+            <button id="mapZoomIn" class="map-mode" type="button" aria-label="Zoom map in">+</button>
             <button id="mapZoomReset" class="map-mode" type="button">Reset</button>
           </div>
         </div>
@@ -957,19 +1165,20 @@
         <div id="seatMap" class="map-empty">Loading map…</div>
         <div id="mapTooltip" class="map-tooltip"></div>
       </div>
-    </section>
+        </section>
 
-    <section class="result-summary" id="districtSummary"></section>
+        <section class="detail-panel" aria-label="Selected seat result">
+          <section class="result-summary" id="districtSummary"></section>
 
     <div class="tabs" role="tablist" aria-label="Seat data views">
-      <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="overview">Overview</button>
-      <button id="roundsTabButton" class="tab-btn" role="tab" aria-selected="false" data-tab="rounds">Preference rounds</button>
-      <button id="chartTabButton" class="tab-btn" role="tab" aria-selected="false" data-tab="chart">Round totals</button>
-      <button class="tab-btn"        role="tab" aria-selected="false" data-tab="raw">Raw data</button>
+      <button id="tabButtonOverview" class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-overview" data-tab="overview">Overview</button>
+      <button id="roundsTabButton" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-rounds" data-tab="rounds">Preference rounds</button>
+      <button id="chartTabButton" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-chart" data-tab="chart">Round totals</button>
+      <button id="tabButtonRaw" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-raw" data-tab="raw">Raw data</button>
     </div>
 
     <!-- Overview tab -->
-    <div class="tab-panel" id="tab-overview" role="tabpanel">
+    <div class="tab-panel" id="tab-overview" role="tabpanel" aria-labelledby="tabButtonOverview">
       <div class="overview-cols">
         <div>
           <div id="primaryVoteTitle" class="section-title">First-preference vote</div>
@@ -983,7 +1192,7 @@
     </div>
 
     <!-- Rounds tab -->
-    <div class="tab-panel hidden" id="tab-rounds" role="tabpanel">
+    <div class="tab-panel hidden" id="tab-rounds" role="tabpanel" aria-labelledby="roundsTabButton">
       <div class="round-nav">
         <button id="prevRound" type="button">&#8592; Prev</button>
         <select id="roundSelect"></select>
@@ -993,14 +1202,36 @@
     </div>
 
     <!-- Round totals tab -->
-    <div class="tab-panel hidden" id="tab-chart" role="tabpanel">
+    <div class="tab-panel hidden" id="tab-chart" role="tabpanel" aria-labelledby="chartTabButton">
       <div id="preferenceStory"></div>
     </div>
 
     <!-- Raw data tab -->
-    <div class="tab-panel hidden" id="tab-raw" role="tabpanel">
+    <div class="tab-panel hidden" id="tab-raw" role="tabpanel" aria-labelledby="tabButtonRaw">
       <div class="table-wrap" id="rawTable"></div>
     </div>
+        </section>
+      </div>
+
+      <section class="rankings-panel" aria-label="Election rankings">
+        <div class="map-toolbar">
+          <div>
+            <h2 class="map-title">Election insights</h2>
+            <p id="rankingsSubtitle" class="map-subtitle">Election-wide leaderboards for the selected election. Click a row to open that district or division.</p>
+          </div>
+        </div>
+        <div id="rankingsPanel" class="rankings-grid"></div>
+      </section>
+
+      <details class="data-tools">
+        <summary>Data tools</summary>
+        <div class="upload-row">
+          <span class="upload-label">Upload CSV</span>
+          <input id="csvUpload" type="file" accept=".csv,text/csv" style="width:auto;flex:0 1 auto;" />
+          <button id="downloadSample" type="button">Sample CSV</button>
+        </div>
+      </details>
+    </main>
   </div>
 
   <script>
@@ -4851,7 +5082,9 @@
       if (state.mode) {
         activeMapMode = state.mode;
         document.querySelectorAll("[data-map-mode]").forEach(b => {
-          b.classList.toggle("active", b.dataset.mapMode === activeMapMode);
+          const active = b.dataset.mapMode === activeMapMode;
+          b.classList.toggle("active", active);
+          b.setAttribute("aria-pressed", String(active));
         });
       }
       const availableCouncils = new Set(allDistricts.map(d => d.council).filter(Boolean));
@@ -5277,6 +5510,9 @@
           <path
             class="district-shape${isActive ? " active" : ""}${isMuted ? " muted" : ""}"
             data-district="${d.district}"
+            tabindex="${isMuted ? "-1" : "0"}"
+            role="button"
+            aria-label="${mapTitle}"
             d="${shape.path}"
             fill="${visual.fill}"
             title="${mapTitle}">
@@ -5353,6 +5589,13 @@
         }
         setTimeout(() => { mapDrag = null; }, 0);
       });
+      svg.addEventListener("keydown", event => {
+        const district = event.target?.dataset?.district;
+        if (!district || !["Enter", " "].includes(event.key)) return;
+        event.preventDefault();
+        hideTooltip();
+        selectDistrictByName(district);
+      });
       target.querySelectorAll(".district-shape").forEach(shape => {
         const d = byName.get(shape.dataset.district);
         shape.addEventListener("pointerenter", event => showTooltip(event, d));
@@ -5367,7 +5610,7 @@
       const total = allDistricts.length;
       const rows = fmt.format(datasetMeta.rowCount || countRowsFromDistricts(allDistricts));
       const filterText = shown === total ? "" : ` · Showing ${fmt.format(shown)} of ${fmt.format(total)}`;
-      status.innerHTML = `<span class="status-em">${datasetMeta.label}</span> · ${fmt.format(total)} ${electorateLabel(total)} · ${rows} rows${filterText}`;
+      status.innerHTML = `<span class="status-em">${datasetMeta.label}</span><span class="status-detail">${fmt.format(total)} ${electorateLabel(total)} · ${rows} rows${filterText}</span>`;
     }
 
     function renderStateSummary() {
@@ -5904,9 +6147,14 @@
       document.querySelectorAll(".tab-btn").forEach(button => {
         button.classList.toggle("active", button.dataset.tab === activeTab);
         button.setAttribute("aria-selected", String(button.dataset.tab === activeTab));
+        button.tabIndex = button.dataset.tab === activeTab ? 0 : -1;
       });
       document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.toggle("hidden", panel.id !== `tab-${activeTab}`));
-      document.querySelectorAll("[data-map-mode]").forEach(button => button.classList.toggle("active", button.dataset.mapMode === activeMapMode));
+      document.querySelectorAll("[data-map-mode]").forEach(button => {
+        const active = button.dataset.mapMode === activeMapMode;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
     }
 
     function populateControls() {
@@ -6031,21 +6279,42 @@
 
     // Tab switching
     function setupTabs() {
-      document.querySelectorAll(".tab-btn").forEach(btn => {
+      const tabs = [...document.querySelectorAll(".tab-btn")];
+      const activateTab = btn => {
+        if (!btn || btn.classList.contains("hidden")) return;
+        activeTab = btn.dataset.tab;
+        tabs.forEach(b => {
+          const active = b.dataset.tab === activeTab;
+          b.classList.toggle("active", active);
+          b.setAttribute("aria-selected", String(active));
+          b.tabIndex = active ? 0 : -1;
+        });
+        document.querySelectorAll(".tab-panel").forEach(p => {
+          p.classList.toggle("hidden", p.id !== `tab-${activeTab}`);
+        });
+        if (activeTab === "rounds") { populateRoundSelect(); renderRound(); }
+        if (activeTab === "chart") renderPreferenceStory(activeDistrict);
+        if (activeTab === "raw") renderRawTable(activeDistrict);
+      };
+      tabs.forEach(btn => {
         btn.addEventListener("click", () => {
-          activeTab = btn.dataset.tab;
-          document.querySelectorAll(".tab-btn").forEach(b => {
-            b.classList.toggle("active", b.dataset.tab === activeTab);
-            b.setAttribute("aria-selected", String(b.dataset.tab === activeTab));
-          });
-          document.querySelectorAll(".tab-panel").forEach(p => {
-            p.classList.toggle("hidden", p.id !== `tab-${activeTab}`);
-          });
-          if (activeTab === "rounds") { populateRoundSelect(); renderRound(); }
-          if (activeTab === "chart") renderPreferenceStory(activeDistrict);
-          if (activeTab === "raw") renderRawTable(activeDistrict);
+          activateTab(btn);
+        });
+        btn.addEventListener("keydown", event => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+          const available = tabs.filter(tab => !tab.classList.contains("hidden"));
+          const current = available.indexOf(btn);
+          const next = event.key === "Home"
+            ? available[0]
+            : event.key === "End"
+              ? available.at(-1)
+              : available[(current + (event.key === "ArrowRight" ? 1 : -1) + available.length) % available.length];
+          event.preventDefault();
+          activateTab(next);
+          next.focus();
         });
       });
+      tabs.forEach(btn => { btn.tabIndex = btn.classList.contains("active") ? 0 : -1; });
     }
 
     function setupMapModes() {
@@ -6053,7 +6322,9 @@
         btn.addEventListener("click", () => {
           activeMapMode = btn.dataset.mapMode;
           document.querySelectorAll("[data-map-mode]").forEach(b => {
-            b.classList.toggle("active", b.dataset.mapMode === activeMapMode);
+            const active = b.dataset.mapMode === activeMapMode;
+            b.classList.toggle("active", active);
+            b.setAttribute("aria-pressed", String(active));
           });
           renderSeatMap();
           updateUrlState();
@@ -7010,6 +7281,18 @@
       URL.revokeObjectURL(url);
     }
 
+    function setupResponsiveFilters() {
+      const tools = document.getElementById("filterTools");
+      const mobile = window.matchMedia("(max-width: 720px)");
+      const sync = event => {
+        if (event.matches) tools.removeAttribute("open");
+        else tools.setAttribute("open", "");
+      };
+      sync(mobile);
+      mobile.addEventListener?.("change", sync);
+    }
+
+    setupResponsiveFilters();
     setupTabs();
     setupMapModes();
     setupRankings();
