@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VIC ELEC · Election Results Explorer</title>
+  <title>Election Results Explorer</title>
   <style>
     :root {
       --bg: #f4f2ee;
@@ -74,7 +74,7 @@
       color: var(--ink);
     }
 
-    .brand-accent { color: var(--accent); }
+    .brand-accent { color: var(--accent); margin-left: .12em; }
 
     .brand-tag {
       display: inline-flex;
@@ -136,7 +136,7 @@
     }
 
     label.ctrl-label {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--muted);
       text-transform: uppercase;
@@ -208,6 +208,7 @@
     button:hover { background: #f0ede8; }
     button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
     button.primary:hover { background: var(--accent-strong); }
+    button:disabled { cursor: not-allowed; opacity: .48; }
 
     .filters-row {
       display: flex;
@@ -240,15 +241,32 @@
     .filter-tools-content .ctrl-group.shrink { flex: 0 0 auto; }
 
     .data-status {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
-      padding: 7px 0 0;
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
     }
 
     .status-em { color: var(--ink); font-weight: 600; }
+    .status-warning { color: #8a4b13; }
+
+    .election-context {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 0 0;
+    }
+
+    .election-heading {
+      margin: 0 0 3px;
+      color: var(--ink);
+      font-size: clamp(22px, 2.2vw, 30px);
+      font-weight: 850;
+      letter-spacing: -.035em;
+      line-height: 1.1;
+    }
 
     .state-summary {
       display: flex;
@@ -277,6 +295,26 @@
       color: var(--ink);
       font-weight: 800;
     }
+
+    .summary-more { display: inline-flex; align-items: flex-start; }
+    .summary-more summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 4px 8px;
+      border: 1px dashed var(--line);
+      border-radius: 999px;
+      color: var(--accent-strong);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .summary-more summary::-webkit-details-marker { display: none; }
+    .summary-more .more-open { display: none; }
+    .summary-more[open] .more-closed { display: none; }
+    .summary-more[open] .more-open { display: inline; }
+    .summary-more[open],
+    .summary-more-items { display: contents; }
 
     .explorer-grid {
       display: grid;
@@ -362,7 +400,7 @@
     .ranking-detail {
       display: block;
       margin-top: 2px;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       line-height: 1.35;
     }
@@ -382,6 +420,18 @@
       font-size: 12px;
     }
 
+    .ranking-more {
+      display: none;
+      width: 100%;
+      min-height: 40px;
+      margin-top: 4px;
+      border: 0;
+      border-top: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+      color: var(--accent-strong);
+    }
+
     details.data-tools {
       margin-top: 22px;
       padding: 14px 16px;
@@ -392,7 +442,7 @@
 
     details.data-tools summary {
       cursor: pointer;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       font-weight: 700;
       text-transform: uppercase;
@@ -402,6 +452,9 @@
     }
 
     details.data-tools summary::-webkit-details-marker { display: none; }
+    details.data-tools summary span { float: right; font-size: 0; }
+    details.data-tools summary span::before { content: "+"; font-size: 16px; color: var(--accent); }
+    details.data-tools[open] summary span::before { content: "−"; }
 
     .upload-row {
       display: flex;
@@ -412,9 +465,15 @@
     }
 
     .upload-label {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       font-weight: 600;
+    }
+
+    .upload-status {
+      width: 100%;
+      color: #9b2c2c;
+      font-size: 12px;
     }
 
     /* -- Map -- */
@@ -467,6 +526,19 @@
       flex-wrap: wrap;
     }
 
+    .map-action-group {
+      display: grid;
+      gap: 3px;
+    }
+
+    .map-control-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
     .map-mode {
       border: 0;
       border-radius: 6px;
@@ -493,7 +565,7 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--muted);
       padding: 3px 7px;
@@ -502,6 +574,24 @@
       background: var(--surface);
       white-space: nowrap;
     }
+
+    .legend-more { display: inline-flex; align-items: flex-start; }
+    .legend-more summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 3px 7px;
+      border: 1px dashed var(--line);
+      border-radius: 999px;
+      color: var(--accent-strong);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .legend-more summary::-webkit-details-marker { display: none; }
+    .legend-more .more-open { display: none; }
+    .legend-more[open] .more-closed { display: none; }
+    .legend-more[open] .more-open { display: inline; }
+    .legend-more[open] { display: contents; }
+    .legend-more-items { display: contents; }
 
     .map-wrap {
       position: relative;
@@ -574,8 +664,15 @@
 
     .district-shape.active {
       stroke: var(--ink);
-      stroke-width: 2.4;
-      filter: drop-shadow(0 0 2px rgba(255,255,255,.95)) drop-shadow(0 1px 3px rgba(0,0,0,.25));
+      stroke-width: 2;
+    }
+
+    .selection-halo {
+      fill: none;
+      stroke: rgba(255,255,255,.98);
+      stroke-width: 4;
+      vector-effect: non-scaling-stroke;
+      pointer-events: none;
     }
 
     .district-shape.muted {
@@ -593,7 +690,36 @@
     .result-summary {
       padding: 22px 20px 18px;
       border-bottom: 1px solid var(--line);
+      scroll-margin-top: 110px;
     }
+
+    .detail-panel.state-message .result-summary {
+      min-height: 190px;
+      display: grid;
+      align-content: center;
+      border-bottom: 0;
+    }
+
+    .detail-panel.state-message .tabs,
+    .detail-panel.state-message .tab-panel { display: none; }
+
+    .empty-state {
+      max-width: 38ch;
+    }
+
+    .empty-state h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      letter-spacing: -.02em;
+    }
+
+    .empty-state p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .empty-state button { margin-top: 14px; }
 
     .result-district {
       font-size: 30px;
@@ -601,6 +727,24 @@
       letter-spacing: -.04em;
       line-height: 1;
       margin: 0 0 10px;
+    }
+
+    .result-lead {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 0 0 12px;
+      padding-left: 12px;
+      border-left: 4px solid var(--winner-color, var(--accent));
+      font-size: 15px;
+    }
+
+    .result-lead strong { font-size: 17px; }
+
+    .result-lead-note {
+      color: var(--muted);
+      font-size: 12px;
     }
 
     .result-facts {
@@ -618,7 +762,7 @@
 
     .fact-label {
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .04em;
@@ -634,10 +778,9 @@
       margin-top: 10px;
       font-size: 13px;
       color: var(--muted);
-      font-style: italic;
     }
 
-    .pref-impact strong { color: var(--ink); font-style: normal; }
+    .pref-impact strong { color: var(--ink); }
 
     .summary-chips {
       display: flex;
@@ -656,6 +799,7 @@
       font-size: 12px;
       font-weight: 700;
       border: 1px solid rgba(0,0,0,.06);
+      color: var(--ink);
     }
 
     .dot {
@@ -744,7 +888,7 @@
 
     .candidate-line {
       margin-top: 1px;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       white-space: nowrap;
       overflow: hidden;
@@ -769,9 +913,15 @@
     .bar-value {
       text-align: right;
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
+    }
+
+    .metric-subvalue {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
     }
 
     /* ── Round view ── */
@@ -944,7 +1094,7 @@
       background: var(--surface);
       color: var(--muted);
       z-index: 4;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .05em;
@@ -971,8 +1121,8 @@
     @media (max-width: 720px) {
       .page-wrap { padding: 0 12px 40px; }
       .page-header { padding: 20px 4px 16px; }
-      .page-header h1 { font-size: 30px; }
-      .brand-tag { min-height: 24px; font-size: 10px; }
+      .page-header h1 { font-size: 28px; }
+      .brand-tag { display: none; }
       .page-header p { max-width: 34ch; }
       .controls { position: static; padding: 12px 4px; }
       .controls-inner { flex-direction: column; align-items: stretch; }
@@ -1015,21 +1165,25 @@
       select, input[type="search"], button, .check-pill { min-height: 44px; }
       .data-status { gap: 2px 8px; line-height: 1.35; }
       .data-status .status-detail { width: 100%; }
+      .election-context { padding: 18px 4px 0; }
+      .election-heading { font-size: 23px; }
       .state-summary {
         min-height: 52px;
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        flex-wrap: wrap;
+        overflow: visible;
         padding: 12px 4px 4px;
-        scrollbar-width: none;
       }
-      .state-summary::-webkit-scrollbar { display: none; }
 
       .explorer-grid { gap: 12px; padding-top: 10px; }
       .map-panel { padding: 11px; border-radius: 15px; }
       .map-toolbar { align-items: stretch; }
       .map-actions { flex-direction: column; align-items: stretch; width: 100%; min-width: 0; }
+      .map-action-group { width: 100%; }
       .map-modes { width: 100%; min-width: 0; flex-wrap: wrap; }
       .map-mode { flex: 1 1 auto; min-width: 44px; min-height: 44px; }
+      .map-action-group.map-view-controls { width: auto; align-self: flex-end; }
+      .map-view-controls .map-modes { width: auto; flex-wrap: nowrap; }
+      .map-view-controls .map-mode { flex: 0 0 auto; }
       .geo-map,
       .geo-map.compact-mobile-map,
       .geo-map.wide-mobile-map {
@@ -1041,7 +1195,8 @@
       .detail-panel { border-radius: 15px; }
       .result-summary { padding: 18px 14px 16px; }
       .result-district { font-size: 26px; }
-      .tabs { padding: 0 4px; }
+      .tabs { overflow-x: hidden; padding: 0 4px; }
+      .tab-btn { flex: 1 1 0; min-width: 0; padding: 9px 6px; }
       .tab-panel { padding: 17px 14px; }
       .overview-cols,
       .detail-panel .overview-cols { grid-template-columns: 1fr; }
@@ -1056,15 +1211,17 @@
       .rankings-panel { padding-top: 20px; }
       .rankings-grid { grid-template-columns: 1fr; gap: 10px; }
       .ranking-card { padding: 12px; }
+      .ranking-card:not(.expanded) .ranking-row:nth-child(n + 4):not(.active) { display: none; }
+      .ranking-more { display: block; }
     }
 
     @media (max-width: 480px) {
       .filter-tools-content { grid-template-columns: 1fr; }
       .filter-tools-content .filters-row { grid-column: 1; }
       .result-district { font-size: 24px; }
-      .tab-btn { padding: 9px 10px; font-size: 12px; }
+      .tab-btn { font-size: 12px; }
       .party-line { font-size: 12px; }
-      .candidate-line { font-size: 10px; }
+      .candidate-line { font-size: 12px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1078,10 +1235,10 @@
   <div class="page-wrap">
     <header class="page-header">
       <div class="brand-row">
-        <h1>VIC <span class="brand-accent">ELEC</span></h1>
-        <span class="brand-tag">Results explorer</span>
+        <h1>ELECTION <span class="brand-accent">EXPLORER</span></h1>
+        <span class="brand-tag">Interactive results</span>
       </div>
-      <p>Maps, margins and preference flows — seat by seat.</p>
+      <p>Maps, margins and preference flows — election by election.</p>
     </header>
 
     <nav class="controls" aria-label="Election controls">
@@ -1122,41 +1279,52 @@
               <div class="filters-row">
                 <label class="check-pill" for="changedOnly"><input id="changedOnly" type="checkbox" /> Changed result</label>
                 <label class="check-pill" for="closeOnly"><input id="closeOnly" type="checkbox" /> Close margin</label>
-                <button id="resetView" type="button">Reset</button>
+                <button id="resetView" type="button" aria-label="Clear all filters">Clear filters</button>
               </div>
             </div>
           </div>
         </details>
       </div>
-      <div id="dataStatus" class="data-status" aria-live="polite"></div>
     </nav>
 
     <main>
+      <section class="election-context" aria-labelledby="electionHeading">
+        <div>
+          <h2 id="electionHeading" class="election-heading">Victorian State 2022</h2>
+          <div id="dataStatus" class="data-status" role="status" aria-live="polite" aria-atomic="true"></div>
+        </div>
+      </section>
       <section id="stateSummary" class="state-summary" aria-label="Election summary"></section>
 
-      <div class="explorer-grid">
-        <section id="explorerMap" class="map-panel" aria-label="Seat map">
+      <div id="explorerGrid" class="explorer-grid" aria-busy="false">
+        <section id="explorerMap" class="map-panel" aria-label="Seat map" aria-busy="true">
       <div class="map-toolbar">
         <div>
           <h2 class="map-title">Election map</h2>
           <p id="mapSubtitle" class="map-subtitle">Click a seat to explore.</p>
         </div>
         <div class="map-actions">
-          <div class="map-modes" role="group" aria-label="Map colour mode">
-            <button class="map-mode active" type="button" data-map-mode="party" aria-pressed="true">Winner</button>
-            <button id="partyVoteMapMode" class="map-mode hidden" type="button" data-map-mode="party-vote" aria-pressed="false">Party vote</button>
-            <button class="map-mode" type="button" data-map-mode="close" aria-pressed="false">Close</button>
-            <button id="changedMapMode" class="map-mode" type="button" data-map-mode="changed" aria-pressed="false">Changed</button>
+          <div class="map-action-group">
+            <span class="map-control-label">Colour map by</span>
+            <div class="map-modes" role="group" aria-label="Map colour mode">
+              <button class="map-mode active" type="button" data-map-mode="party" aria-pressed="true">Winner</button>
+              <button id="partyVoteMapMode" class="map-mode hidden" type="button" data-map-mode="party-vote" aria-pressed="false">Party vote</button>
+              <button class="map-mode" type="button" data-map-mode="close" aria-pressed="false" aria-label="Highlight margins under 5%">Close races</button>
+              <button id="changedMapMode" class="map-mode" type="button" data-map-mode="changed" aria-pressed="false">Preference flips</button>
+            </div>
           </div>
           <div id="boundaryTypeModes" class="map-modes hidden" role="group" aria-label="Electorate map layer">
-            <button class="map-mode active" type="button" data-boundary-type="General">General</button>
-            <button class="map-mode" type="button" data-boundary-type="Māori">Māori</button>
+            <button class="map-mode active" type="button" data-boundary-type="General" aria-pressed="true">General</button>
+            <button class="map-mode" type="button" data-boundary-type="Māori" aria-pressed="false">Māori</button>
           </div>
           <div id="geographyModes" class="map-modes hidden" role="group" aria-label="Result geography"></div>
-          <div class="map-modes" role="group" aria-label="Map zoom">
-            <button id="mapZoomOut" class="map-mode" type="button" aria-label="Zoom map out">−</button>
-            <button id="mapZoomIn" class="map-mode" type="button" aria-label="Zoom map in">+</button>
-            <button id="mapZoomReset" class="map-mode" type="button">Reset</button>
+          <div class="map-action-group map-view-controls">
+            <span class="map-control-label">Map view</span>
+            <div class="map-modes" role="group" aria-label="Map zoom">
+              <button id="mapZoomOut" class="map-mode" type="button" aria-label="Zoom map out">−</button>
+              <button id="mapZoomIn" class="map-mode" type="button" aria-label="Zoom map in">+</button>
+              <button id="mapZoomReset" class="map-mode" type="button" aria-label="Reset map view">Fit map</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1167,14 +1335,14 @@
       </div>
         </section>
 
-        <section class="detail-panel" aria-label="Selected seat result">
-          <section class="result-summary" id="districtSummary"></section>
+        <section class="detail-panel" aria-label="Selected seat result" tabindex="-1">
+          <section class="result-summary" id="districtSummary" tabindex="-1"></section>
 
     <div class="tabs" role="tablist" aria-label="Seat data views">
       <button id="tabButtonOverview" class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-overview" data-tab="overview">Overview</button>
-      <button id="roundsTabButton" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-rounds" data-tab="rounds">Preference rounds</button>
-      <button id="chartTabButton" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-chart" data-tab="chart">Round totals</button>
-      <button id="tabButtonRaw" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-raw" data-tab="raw">Raw data</button>
+      <button id="roundsTabButton" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-rounds" data-tab="rounds" aria-label="Preference rounds">Rounds</button>
+      <button id="chartTabButton" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-chart" data-tab="chart" aria-label="Round totals">Totals</button>
+      <button id="tabButtonRaw" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-raw" data-tab="raw" aria-label="Raw data">Data</button>
     </div>
 
     <!-- Overview tab -->
@@ -1195,7 +1363,7 @@
     <div class="tab-panel hidden" id="tab-rounds" role="tabpanel" aria-labelledby="roundsTabButton">
       <div class="round-nav">
         <button id="prevRound" type="button">&#8592; Prev</button>
-        <select id="roundSelect"></select>
+        <select id="roundSelect" aria-label="Preference round"></select>
         <button id="nextRound" type="button">Next &#8594;</button>
       </div>
       <div id="roundDisplay"></div>
@@ -1224,11 +1392,12 @@
       </section>
 
       <details class="data-tools">
-        <summary>Data tools</summary>
+        <summary>Data tools <span aria-hidden="true">+</span></summary>
         <div class="upload-row">
-          <span class="upload-label">Upload CSV</span>
+          <label class="upload-label" for="csvUpload">Upload CSV</label>
           <input id="csvUpload" type="file" accept=".csv,text/csv" style="width:auto;flex:0 1 auto;" />
           <button id="downloadSample" type="button">Sample CSV</button>
+          <span id="uploadStatus" class="upload-status" role="status" aria-live="polite"></span>
         </div>
       </details>
     </main>
@@ -4244,14 +4413,26 @@
     let electionLoadId = 0;
     let pendingDistrictFromUrl = "";
     let pendingCouncilFromUrl = "";
-    let datasetMeta = {
-      label: "Embedded sample data",
-      rowCount: countRowsFromDistricts(allDistricts)
-    };
+    let dataLoadState = "ready";
+    let mapLoadState = "loading";
+    let datasetMeta = { kind: "sample" };
 
     const fmt = new Intl.NumberFormat("en-AU");
     const pct = (n, d) => d ? ((n / d) * 100).toFixed(1) + "%" : "—";
     const byVotesDesc = (a, b) => b[1] - a[1];
+
+    function syncBusyState() {
+      const dataBusy = dataLoadState === "loading";
+      const mapBusy = mapLoadState === "loading";
+      document.getElementById("explorerGrid")?.setAttribute("aria-busy", String(dataBusy));
+      document.getElementById("explorerMap")?.setAttribute("aria-busy", String(mapBusy));
+    }
+
+    function setLoadingState() {
+      dataLoadState = "loading";
+      mapLoadState = "loading";
+      syncBusyState();
+    }
 
     function shortName(name) {
       if (!name) return "—";
@@ -4734,12 +4915,12 @@
     function blocBadgeHtml(party) {
       const label = partyBloc(party);
       const color = blocColor(party);
-      return `<span class="party-chip" style="background:${hexToRgba(color, .12)}; color:${color}; border-color:${hexToRgba(color, .18)}"><span class="dot" style="background:${color}"></span>${label}</span>`;
+      return `<span class="party-chip" style="background:${hexToRgba(color, .12)}; border-color:${hexToRgba(color, .18)}"><span class="dot" style="background:${color}"></span>${label}</span>`;
     }
 
     function badgeHtml(party) {
       const label = partyLabel(party);
-      return `<span class="party-chip" style="background:${hexToRgba(partyColor(party), .12)}; color:${partyColor(party)}; border-color:${hexToRgba(partyColor(party), .18)}"><span class="dot" style="background:${partyColor(party)}"></span>${label}</span>`;
+      return `<span class="party-chip" style="background:${hexToRgba(partyColor(party), .12)}; border-color:${hexToRgba(partyColor(party), .18)}"><span class="dot" style="background:${partyColor(party)}"></span>${label}</span>`;
     }
 
     function hexToRgba(hex, alpha) {
@@ -4984,14 +5165,6 @@
       return gains[0] || { candidate: "", gain: 0 };
     }
 
-    function countRowsFromDistricts(list) {
-      return list.reduce((total, d) => {
-        const firstRows = Object.keys(d.first || {}).length;
-        const roundRows = (d.rounds || []).reduce((sum, r) => sum + Object.keys(r.transfers || {}).length + Object.keys(r.totals || {}).length, 0);
-        return total + firstRows + roundRows;
-      }, 0);
-    }
-
     function getFilterState() {
       return {
         query: document.getElementById("districtSearch")?.value.trim().toLowerCase() || "",
@@ -5000,6 +5173,16 @@
         changedOnly: Boolean(document.getElementById("changedOnly")?.checked),
         closeOnly: Boolean(document.getElementById("closeOnly")?.checked)
       };
+    }
+
+    function updateFilterSummary() {
+      const filters = getFilterState();
+      const activeCount = Number(filters.council !== "all")
+        + Number(filters.party !== "all")
+        + Number(filters.changedOnly)
+        + Number(filters.closeOnly);
+      const summary = document.querySelector(".filter-summary");
+      if (summary) summary.textContent = activeCount ? `${activeCount} active` : "Seat, party and margins";
     }
 
     function districtMatchesFilters(d, filters) {
@@ -5079,14 +5262,12 @@
         activeGeography = state.geography || electionYears[state.year].defaultGeography || "";
         syncElectionPicker();
       }
-      if (state.mode) {
-        activeMapMode = state.mode;
-        document.querySelectorAll("[data-map-mode]").forEach(b => {
-          const active = b.dataset.mapMode === activeMapMode;
-          b.classList.toggle("active", active);
-          b.setAttribute("aria-pressed", String(active));
-        });
-      }
+      activeMapMode = state.mode || "party";
+      document.querySelectorAll("[data-map-mode]").forEach(b => {
+        const active = b.dataset.mapMode === activeMapMode;
+        b.classList.toggle("active", active);
+        b.setAttribute("aria-pressed", String(active));
+      });
       const availableCouncils = new Set(allDistricts.map(d => d.council).filter(Boolean));
       if (activeElection().localCouncilFilter && state.council) {
         if (availableCouncils.has(state.council)) {
@@ -5115,10 +5296,18 @@
           districts = filteredDistricts();
           activeDistrict = selected;
           focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+          storyStep = 0;
         } else {
           pendingDistrictFromUrl = state.district;
         }
       }
+      if (activeElection().localCouncilFilter && boundaryFeatures.length) {
+        const visible = activeCouncil === "all"
+          ? boundaryFeatures
+          : boundaryFeatures.filter(feature => feature.properties?.council === activeCouncil);
+        boundaryShapes = makeBoundaryShapes(visible);
+      }
+      syncBoundaryTypeToActiveDistrict();
       suppressUrlUpdate = false;
       populateControls();
       render();
@@ -5337,10 +5526,21 @@
         return;
       }
       if (isFppElection() && (activeMapMode === "party" || activeMapMode === "party-vote")) {
-        const parties = [...new Set(allDistricts.map(d => activeMapMode === "party-vote" ? getPartyVoteLeader(d)[0] : winningParty(d)))]
-          .filter(party => party && party !== "Cancelled")
-          .sort((a, b) => partyLabel(a).localeCompare(partyLabel(b)));
-        legend.innerHTML = parties.map(party => `<span class="legend-item"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)}</span>`).join("");
+        const partyCounts = new Map();
+        allDistricts.forEach(d => {
+          const party = activeMapMode === "party-vote" ? getPartyVoteLeader(d)[0] : winningParty(d);
+          if (!party || party === "Cancelled") return;
+          partyCounts.set(party, (partyCounts.get(party) || 0) + 1);
+        });
+        const parties = [...partyCounts]
+          .sort((a, b) => b[1] - a[1] || partyLabel(a[0]).localeCompare(partyLabel(b[0])))
+          .map(([party]) => party);
+        const item = party => `<span class="legend-item"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)}</span>`;
+        const visible = parties.slice(0, 7).map(item).join("");
+        const remaining = parties.slice(7);
+        legend.innerHTML = visible + (remaining.length
+          ? `<details class="legend-more"><summary><span class="more-closed">+${remaining.length} more</span><span class="more-open">Show less</span></summary><span class="legend-more-items">${remaining.map(item).join("")}</span></details>`
+          : "");
         return;
       }
       if (activeMapMode === "close") {
@@ -5366,7 +5566,23 @@
       }).join("");
     }
 
-    function selectDistrictByName(name, focusMap = false) {
+    function revealSelectedResult(moveFocus = false) {
+      const target = document.getElementById("districtSummary");
+      if (!target) return;
+      requestAnimationFrame(() => {
+        const rect = target.getBoundingClientRect();
+        const outsideViewport = rect.bottom < 80 || rect.top > window.innerHeight - 80;
+        if (outsideViewport) {
+          target.scrollIntoView({
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+            block: "start"
+          });
+        }
+        if (moveFocus) target.focus({ preventScroll: true });
+      });
+    }
+
+    function selectDistrictByName(name, { focusMap = false, revealResult = false, focusResult = false } = {}) {
       const selected = allDistricts.find(d => d.district === name);
       if (!selected) return;
       if (!districtMatchesFilters(selected, getFilterState())) {
@@ -5387,6 +5603,7 @@
           .find(shape => shape.dataset.district === name)
           ?.focus();
       }
+      if (revealResult) revealSelectedResult(focusResult);
       updateUrlState();
     }
 
@@ -5454,7 +5671,9 @@
     function setBoundaryType(type, shouldRender = true) {
       activeBoundaryType = type;
       document.querySelectorAll("[data-boundary-type]").forEach(button => {
-        button.classList.toggle("active", button.dataset.boundaryType === activeBoundaryType);
+        const active = button.dataset.boundaryType === activeBoundaryType;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
       });
       const visible = usesBoundaryTypeLayers()
         ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
@@ -5473,12 +5692,28 @@
     function renderSeatMap() {
       const target = document.getElementById("seatMap");
       if (!target) return;
-      renderMapLegend();
-      if (!boundaryShapes.length) {
+      document.getElementById("mapLegend").innerHTML = "";
+      if (dataLoadState === "error") {
         target.className = "map-empty";
-        target.innerHTML = "Loading map…";
+        target.textContent = "Map unavailable because the results did not load.";
         return;
       }
+      if (mapLoadState === "loading") {
+        target.className = "map-empty";
+        target.textContent = "Loading map…";
+        return;
+      }
+      if (mapLoadState === "error") {
+        target.className = "map-empty";
+        target.textContent = "Map unavailable. Use search or the area selector to explore results.";
+        return;
+      }
+      if (!boundaryShapes.length) {
+        target.className = "map-empty";
+        target.textContent = "No map is available for this view.";
+        return;
+      }
+      renderMapLegend();
       const byName = new Map(allDistricts.map(d => [d.district, d]));
       const shown = new Set(districts.map(d => d.district));
       const shapeIndexes = new Map(boundaryShapes.map((shape, index) => [shape.district, index]));
@@ -5538,12 +5773,17 @@
         .filter(shape => shape.district === activeDistrict?.district)
         .map(shapeHtml)
         .join("");
+      const selectionHalo = boundaryShapes
+        .filter(shape => shape.district === activeDistrict?.district)
+        .map(shape => `<path class="selection-halo" d="${shape.path}"></path>`)
+        .join("");
       const mapClass = `geo-map${activeElection().compactMobileMap ? " compact-mobile-map" : ""}${activeElection().wideMobileMap ? " wide-mobile-map" : ""}`;
       target.className = mapClass;
       target.innerHTML = `
         <svg class="${mapClass}" viewBox="${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}" preserveAspectRatio="${activeElection().compactMobileMap ? "xMidYMid slice" : "xMidYMid meet"}" role="group" aria-label="${activeElection().label} interactive ${electorateLabel(2)} map. Use arrow keys to move between areas and Enter to select.">
           <rect x="0" y="0" width="960" height="560" fill="#f2f4f0"></rect>
           ${inactiveShapes}
+          ${selectionHalo}
           ${activeShape}
         </svg>
       `;
@@ -5594,7 +5834,7 @@
           const district = mapDrag.district;
           mapDrag = null;
           hideTooltip();
-          selectDistrictByName(district);
+          selectDistrictByName(district, { revealResult: true });
           return;
         }
         setTimeout(() => { mapDrag = null; }, 0);
@@ -5605,7 +5845,7 @@
         if (["Enter", " "].includes(event.key)) {
           event.preventDefault();
           hideTooltip();
-          selectDistrictByName(district, true);
+          selectDistrictByName(district, { focusMap: true });
           return;
         }
         const navigationKeys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"];
@@ -5634,11 +5874,37 @@
 
     function updateDataStatus() {
       const status = document.getElementById("dataStatus");
+      if (!status) return;
+      if (dataLoadState === "loading") {
+        status.innerHTML = `<span class="status-em">Loading results…</span><span class="status-detail">Fetching ${activeElection().label}</span>`;
+        return;
+      }
+      if (dataLoadState === "error") {
+        status.innerHTML = `<span class="status-em status-warning">Results unavailable</span><span class="status-detail">${activeElection().label} could not be loaded</span>`;
+        return;
+      }
       const shown = districts.length;
       const total = allDistricts.length;
-      const rows = fmt.format(datasetMeta.rowCount || countRowsFromDistricts(allDistricts));
-      const filterText = shown === total ? "" : ` · Showing ${fmt.format(shown)} of ${fmt.format(total)}`;
-      status.innerHTML = `<span class="status-em">${datasetMeta.label}</span><span class="status-detail">${fmt.format(total)} ${electorateLabel(total)} · ${rows} rows${filterText}</span>`;
+      const countText = shown === total
+        ? ""
+        : `${fmt.format(shown)} of ${fmt.format(total)} ${electorateLabel(total)} shown`;
+      if (datasetMeta.kind === "sample") {
+        status.innerHTML = `${countText ? `<span class="status-em">${countText}</span>` : ""}<span class="status-detail status-warning">Official results unavailable · showing sample data</span>`;
+        return;
+      }
+      const source = datasetMeta.kind === "uploaded"
+        ? "Uploaded data"
+        : activeElection().source ? `Source: ${activeElection().source}` : "Official results";
+      status.innerHTML = `${countText ? `<span class="status-em">${countText}</span>` : ""}<span class="status-detail">${source}</span>`;
+    }
+
+    function setSummaryChips(target, chips) {
+      const visibleLimit = window.matchMedia("(max-width: 720px)").matches ? 4 : 7;
+      const visible = chips.slice(0, visibleLimit).join("");
+      const remaining = chips.slice(visibleLimit);
+      target.innerHTML = visible + (remaining.length
+        ? `<details class="summary-more"><summary><span class="more-closed">+${remaining.length} more</span><span class="more-open">Show less</span></summary><span class="summary-more-items">${remaining.join("")}</span></details>`
+        : "");
     }
 
     function renderStateSummary() {
@@ -5666,7 +5932,7 @@
         if (changedCount) chips.push(`<span class="summary-chip"><strong>${fmt.format(changedCount)}</strong> changed on preferences</span>`);
         if (closeCount) chips.push(`<span class="summary-chip"><strong>${fmt.format(closeCount)}</strong> margins under 5%</span>`);
         if (uncontestedCount) chips.push(`<span class="summary-chip"><strong>${fmt.format(uncontestedCount)}</strong> uncontested</span>`);
-        target.innerHTML = chips.join("");
+        setSummaryChips(target, chips);
         return;
       }
       if (isSenateStvElection()) {
@@ -5686,7 +5952,7 @@
           if (!count) return;
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${blocColor(bloc)}"></span>${bloc} <strong>${fmt.format(count)}</strong></span>`);
         });
-        target.innerHTML = chips.join("");
+        setSummaryChips(target, chips);
         return;
       }
       if (isMmpElection()) {
@@ -5707,7 +5973,7 @@
         (election.parliament || []).forEach(([party, seats]) => {
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${seats}</strong></span>`);
         });
-        target.innerHTML = chips.join("");
+        setSummaryChips(target, chips);
         return;
       }
       if (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType)) {
@@ -5730,7 +5996,7 @@
         (activeElection().nationalResults || []).forEach(([ticket, share]) => {
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> ${activeElection().resultScopeLabel || "national"}</span>`);
         });
-        target.innerHTML = chips.join("");
+        setSummaryChips(target, chips);
         return;
       }
       if (activeElection().system === "fpp") {
@@ -5743,7 +6009,7 @@
           (election.parliament || []).forEach(([party, seats]) => {
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${fmt.format(seats)}</strong></span>`);
           });
-          target.innerHTML = chips.join("");
+          setSummaryChips(target, chips);
           return;
         }
         const countryCounts = new Map();
@@ -5774,7 +6040,7 @@
           .forEach(([party, seats]) => {
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${party} <strong>${fmt.format(seats)}</strong></span>`);
           });
-        target.innerHTML = chips.join("");
+        setSummaryChips(target, chips);
         return;
       }
 
@@ -5819,12 +6085,12 @@
       if (veryCloseCount) {
         chips.push(`<span class="summary-chip"><strong>${fmt.format(veryCloseCount)}</strong> under 2%</span>`);
       }
-      target.innerHTML = chips.join("");
+      setSummaryChips(target, chips);
     }
 
     function rankingsListHtml(items, detailHtml, metricHtml, emptyText) {
       if (!items.length) return `<p class="ranking-empty">${emptyText}</p>`;
-      return `<div class="ranking-list">${items.map(d => `
+      const rows = `<div class="ranking-list">${items.map(d => `
         <button class="ranking-row${d.district === activeDistrict?.district ? " active" : ""}" type="button" data-district="${d.district}">
           <span class="ranking-main">
             <span class="ranking-seat">${d.district}</span>
@@ -5833,6 +6099,10 @@
           <span class="ranking-metric">${metricHtml(d)}</span>
         </button>
       `).join("")}</div>`;
+      const more = items.length > 3
+        ? `<button class="ranking-more" type="button" aria-expanded="false" data-collapsed-label="Show ${items.length - 3} more">Show ${items.length - 3} more</button>`
+        : "";
+      return rows + more;
     }
 
     function renderRankings() {
@@ -6125,11 +6395,13 @@
       const referendum = activeElection().contestType === "referendum";
       const partyList = activeElection().contestType === "party-list";
       const analyticalLocalVote = presidential || senate || governor || referendum || partyList;
+      document.getElementById("electionHeading").textContent = activeElection().label;
+      document.title = `${activeElection().label} · Election Results Explorer`;
       document.getElementById("councilControl").classList.toggle("hidden", !activeElection().localCouncilFilter);
       const geographyModes = document.getElementById("geographyModes");
       const geographyLabels = activeElection().geographyLabels || {};
       geographyModes.innerHTML = Object.entries(activeElection().geographies || {})
-        .map(([key, dataset]) => `<button class="map-mode${key === activeGeography ? " active" : ""}" type="button" data-geography="${key}">${geographyLabels[key] || dataset.label || key}</button>`)
+        .map(([key, dataset]) => `<button class="map-mode${key === activeGeography ? " active" : ""}" type="button" data-geography="${key}" aria-pressed="${key === activeGeography}">${geographyLabels[key] || dataset.label || key}</button>`)
         .join("");
       geographyModes.querySelectorAll("[data-geography]").forEach(button => {
         button.onclick = () => setGeography(button.dataset.geography);
@@ -6142,7 +6414,9 @@
       document.getElementById("boundaryTypeModes").classList.toggle("hidden", !usesBoundaryTypeLayers());
       geographyModes.classList.toggle("hidden", !activeElection().geographies);
       document.querySelectorAll("[data-geography]").forEach(button => {
-        button.classList.toggle("active", button.dataset.geography === activeGeography);
+        const active = button.dataset.geography === activeGeography;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
       });
       document.getElementById("roundsTabButton").classList.toggle("hidden", compactAnalytical);
       document.getElementById("chartTabButton").classList.toggle("hidden", compactAnalytical);
@@ -6219,11 +6493,8 @@
         districtSelect.value = String(Math.max(0, activeIndex));
       }
       districtSelect.onchange = () => {
-        activeDistrict = districts[Number(districtSelect.value)];
-        if (usesBoundaryTypeLayers() && activeDistrict?.electorate_type) setBoundaryType(activeDistrict.electorate_type, false);
-        focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
-        render();
-        updateUrlState();
+        const selected = districts[Number(districtSelect.value)];
+        if (selected) selectDistrictByName(selected.district, { revealResult: true, focusResult: true });
       };
       document.getElementById("districtSearch").oninput = () => applyFilters();
       partyFilter.onchange = () => applyFilters();
@@ -6235,6 +6506,7 @@
       const electionYear = document.getElementById("electionYear");
       electionYear.value = activeElectionYear;
       electionYear.onchange = () => loadElection(electionYear.value);
+      updateFilterSummary();
       updateDataStatus();
     }
 
@@ -6243,6 +6515,8 @@
       if (!activeDistrict || !activeDistrict.rounds.length) {
         roundSelect.innerHTML = `<option>No rounds</option>`;
         roundSelect.disabled = true;
+        document.getElementById("prevRound").disabled = true;
+        document.getElementById("nextRound").disabled = true;
         return;
       }
       roundSelect.disabled = false;
@@ -6252,6 +6526,9 @@
         return `<option value="${r.round}">Round ${r.round} — ${excludedParty} excluded${r.final ? " (final)" : ""}</option>`;
       }).join("");
       roundSelect.value = String(focusRound);
+      const currentIndex = activeDistrict.rounds.findIndex(r => r.round === focusRound);
+      document.getElementById("prevRound").disabled = currentIndex <= 0;
+      document.getElementById("nextRound").disabled = currentIndex >= activeDistrict.rounds.length - 1;
       roundSelect.onchange = () => {
         focusRound = Number(roundSelect.value);
         storyStep = activeDistrict.rounds.findIndex(r => r.round === focusRound) + 1;
@@ -6370,9 +6647,17 @@
       const panel = document.getElementById("rankingsPanel");
       if (!panel) return;
       panel.addEventListener("click", event => {
+        const more = event.target.closest(".ranking-more");
+        if (more) {
+          const card = more.closest(".ranking-card");
+          const expanded = card.classList.toggle("expanded");
+          more.setAttribute("aria-expanded", String(expanded));
+          more.textContent = expanded ? "Show fewer" : more.dataset.collapsedLabel;
+          return;
+        }
         const row = event.target.closest(".ranking-row");
         if (!row) return;
-        selectDistrictByName(row.dataset.district);
+        selectDistrictByName(row.dataset.district, { revealResult: true, focusResult: true });
       });
     }
 
@@ -6421,17 +6706,57 @@
       document.getElementById("mapZoomReset").onclick = resetMapZoom;
     }
 
-    function renderNoMatches() {
-      document.getElementById("districtSummary").innerHTML = `<p style="color:var(--muted);margin:0;">No ${electorateLabel(2)} match the current filters. Try adjusting your search.</p>`;
+    function clearSeatDataViews() {
       document.getElementById("primaryBars").innerHTML = "";
       document.getElementById("finalBars").innerHTML = "";
       document.getElementById("roundDisplay").innerHTML = "";
       document.getElementById("preferenceStory").innerHTML = "";
       document.getElementById("rawTable").innerHTML = "";
+    }
+
+    function renderLoadState() {
+      const loading = dataLoadState === "loading";
+      const detailPanel = document.querySelector(".detail-panel");
+      detailPanel.classList.add("state-message");
+      document.querySelector(".rankings-panel").classList.add("hidden");
+      document.getElementById("stateSummary").innerHTML = "";
+      document.getElementById("districtSummary").innerHTML = loading
+        ? `<div class="empty-state" data-empty-state="loading">
+            <h2>Loading results…</h2>
+            <p>Fetching ${activeElection().label}. Large maps may take a moment.</p>
+          </div>`
+        : `<div class="empty-state" data-empty-state="error" role="alert">
+            <h2>Results could not be loaded</h2>
+            <p>Check your connection, then try this election again.</p>
+            <button id="retryResults" class="primary" type="button">Retry</button>
+          </div>`;
+      clearSeatDataViews();
+      renderSeatMap();
+      updateDataStatus();
+      document.getElementById("retryResults")?.addEventListener("click", async () => {
+        const current = await loadElection(activeElectionYear, true);
+        if (current) revealSelectedResult(true);
+      });
+    }
+
+    function renderNoMatches() {
+      document.querySelector(".detail-panel").classList.add("state-message");
+      document.querySelector(".rankings-panel").classList.remove("hidden");
+      document.getElementById("districtSummary").innerHTML = `
+        <div class="empty-state" data-empty-state="filters">
+          <h2>No matching ${electorateLabel(2)}</h2>
+          <p>Clear the search or filters to see every ${electorateLabel(1)}.</p>
+          <button type="button" data-empty-reset>Clear filters</button>
+        </div>`;
+      clearSeatDataViews();
       renderRankings();
       renderSeatMap();
       updateDataStatus();
       renderStateSummary();
+      document.querySelector("[data-empty-reset]")?.addEventListener("click", () => {
+        resetView();
+        revealSelectedResult(true);
+      });
     }
 
     function renderSummary(d) {
@@ -6584,7 +6909,7 @@
         const memberHtml = members.map((candidate, index) => {
           const party = electedParty(d, candidate);
           const color = partyColor(party);
-          return `<span class="party-chip" style="background:${hexToRgba(color,.1)};color:${color};border-color:${hexToRgba(color,.2)}"><span class="dot" style="background:${color}"></span>${index + 1}. ${shortName(candidate)} · ${partyLabel(party)}</span>`;
+          return `<span class="party-chip" style="background:${hexToRgba(color,.1)};border-color:${hexToRgba(color,.2)}"><span class="dot" style="background:${color}"></span>${index + 1}. ${shortName(candidate)} · ${partyLabel(party)}</span>`;
         }).join("");
         if (isSenateStvElection()) {
           const rankedGroups = ranked(d.first);
@@ -6712,34 +7037,23 @@
 
       document.getElementById("districtSummary").innerHTML = `
         <h2 class="result-district">${d.district}</h2>
+        <div class="result-lead" style="--winner-color:${partyColor(winnerParty)}">
+          <strong>${shortName(winner)}</strong>
+          <span class="result-lead-note">elected for</span>
+          ${badgeHtml(winnerParty)}
+        </div>
         <div class="result-facts">
-          <div class="fact-item">
-            <span class="fact-label">Winner</span>
-            <span class="fact-value">${blocBadgeHtml(winnerParty)}</span>
-          </div>
-          <div class="fact-item">
-            <span class="fact-label">Party</span>
-            <span class="fact-value">${badgeHtml(winnerParty)}</span>
-          </div>
-          <div class="fact-item">
-            <span class="fact-label">Elected</span>
-            <span class="fact-value">${shortName(winner)}</span>
-          </div>
-          <div class="fact-item">
-            <span class="fact-label">Primary leader</span>
-            <span class="fact-value">${blocBadgeHtml(leaderParty)}</span>
-          </div>
+          ${changed ? `<div class="fact-item">
+            <span class="fact-label">First-preference leader</span>
+            <span class="fact-value">${badgeHtml(leaderParty)} ${shortName(leader)}</span>
+          </div>` : ""}
           <div class="fact-item">
             <span class="fact-label">Final margin</span>
-            <span class="fact-value">${fmt.format(margin)} <span style="color:var(--muted);font-weight:400">(${pct(margin, d.formal_votes)})</span></span>
+            <span class="fact-value">${fmt.format(margin)} (${pct(margin, d.formal_votes)})</span>
           </div>
           <div class="fact-item">
             <span class="fact-label">Turnout</span>
             <span class="fact-value">${Number(d.turnout_pct).toFixed(1)}%</span>
-          </div>
-          <div class="fact-item">
-            <span class="fact-label">Preference result</span>
-            <span class="fact-value">${changed ? "Changed winner" : "Leader held"}</span>
           </div>
         </div>
         <p class="pref-impact">${impactLine}</p>
@@ -6748,7 +7062,6 @@
 
     function renderBars(target, obj, denominator, highlightName, d) {
       const rows = ranked(obj);
-      const max = rows[0]?.[1] || 1;
       const votesUnavailable = d.contest_status === "single-candidate";
       document.getElementById(target).innerHTML = rows.map(([candidate, votes]) => {
         const party = getParty(d, candidate);
@@ -6761,8 +7074,8 @@
               <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
               <div class="candidate-line">${shortName(candidate)}${status ? ` · elected ${d.electedOrder?.[candidate]}` : ""}</div>
             </div>
-            <div class="track"><div class="fill" style="width:${votesUnavailable ? 100 : Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${votesUnavailable ? .28 : isHighlight ? 1 : .72};"></div></div>
-            <div class="bar-value">${votesUnavailable ? "—" : fmt.format(votes)}<br><span style="font-size:10px">${votesUnavailable ? "not published" : pct(votes, denominator)}</span></div>
+            <div class="track"><div class="fill" style="width:${votesUnavailable ? 100 : denominator > 0 ? Math.max(0, Math.min(100, votes / denominator * 100)) : 0}%; background:${color}; opacity:${votesUnavailable ? .28 : isHighlight ? 1 : .72};"></div></div>
+            <div class="bar-value">${votesUnavailable ? "—" : fmt.format(votes)}<br><span class="metric-subvalue">${votesUnavailable ? "not published" : pct(votes, denominator)}</span></div>
           </div>
         `;
       }).join("");
@@ -6776,7 +7089,6 @@
       const transfers = ranked(r.transfers);
       if (isMultiMemberElection() && !transfers.length) {
         const rows = ranked(r.totals);
-        const max = rows[0]?.[1] || 1;
         document.getElementById("roundDisplay").innerHTML = `
           <div class="round-card">
             <div class="round-header">
@@ -6800,8 +7112,8 @@
                       <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
                       <div class="candidate-line">${shortName(candidate)}${elected ? ` · elected ${d.electedOrder?.[candidate] || ""}` : ""}</div>
                     </div>
-                    <div class="mini-track"><div class="mini-fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${elected ? 1 : .5};"></div></div>
-                    <div class="bar-value">${fmt.format(votes)}<br><span style="font-size:10px">${pct(votes, d.formal_votes)}</span></div>
+                    <div class="mini-track"><div class="mini-fill" style="width:${d.formal_votes > 0 ? Math.max(0, Math.min(100, votes / d.formal_votes * 100)) : 0}%; background:${color}; opacity:${elected ? 1 : .5};"></div></div>
+                    <div class="bar-value">${fmt.format(votes)}<br><span class="metric-subvalue">${pct(votes, d.formal_votes)}</span></div>
                   </div>
                 `;
               }).join("")}
@@ -6810,7 +7122,6 @@
         `;
         return;
       }
-      const max = transfers[0]?.[1] || 1;
       const total = Object.values(r.transfers).reduce((a, b) => a + Number(b || 0), 0);
       const excludedParty = getParty(d, r.excluded);
       const excludedColor = partyColor(excludedParty);
@@ -6823,7 +7134,7 @@
             <div>
               <p class="round-title">Round ${r.round}${r.final ? " — Final count" : ""}</p>
               <div class="round-meta">
-                <span>Excluded: <span class="party-chip" style="background:${hexToRgba(excludedColor,.1)};color:${excludedColor};border-color:${hexToRgba(excludedColor,.2)}"><span class="dot" style="background:${excludedColor}"></span>${partyLabel(excludedParty)}</span> ${shortName(r.excluded)}</span>
+                <span>Excluded: <span class="party-chip" style="background:${hexToRgba(excludedColor,.1)};border-color:${hexToRgba(excludedColor,.2)}"><span class="dot" style="background:${excludedColor}"></span>${partyLabel(excludedParty)}</span> ${shortName(r.excluded)}</span>
                 <span>${fmt.format(total)} votes transferred</span>
                 <span>Largest gain: <strong>${partyLabel(topParty)} +${fmt.format(topVotes)}</strong></span>
               </div>
@@ -6839,8 +7150,8 @@
                     <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
                     <div class="candidate-line">${shortName(candidate)}</div>
                   </div>
-                  <div class="mini-track"><div class="mini-fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color};"></div></div>
-                  <div class="bar-value">${fmt.format(votes)}<br><span style="font-size:10px">${pct(votes, total)}</span></div>
+                  <div class="mini-track"><div class="mini-fill" style="width:${total > 0 ? Math.max(0, Math.min(100, votes / total * 100)) : 0}%; background:${color};"></div></div>
+                  <div class="bar-value">${fmt.format(votes)}<br><span class="metric-subvalue">${pct(votes, total)}</span></div>
                 </div>
               `;
             }).join("")}
@@ -6849,7 +7160,7 @@
       `;
     }
 
-    function storyRow(d, candidate, votes, max, denominator, options = {}) {
+    function storyRow(d, candidate, votes, denominator, options = {}) {
       const party = getParty(d, candidate);
       const color = partyColor(party);
       const classes = ["story-row"];
@@ -6861,8 +7172,8 @@
             <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
             <div class="candidate-line">${shortName(candidate)}</div>
           </div>
-          <div class="track"><div class="fill" style="width:${Math.max(1.5, votes / max * 100)}%; background:${color}; opacity:${options.leader ? 1 : .72};"></div></div>
-          <div class="story-total">${fmt.format(votes)}<br><span style="font-size:10px;color:var(--muted);font-weight:600">${pct(votes, denominator)}</span></div>
+          <div class="track"><div class="fill" style="width:${denominator > 0 ? Math.max(0, Math.min(100, votes / denominator * 100)) : 0}%; background:${color}; opacity:${options.leader ? 1 : .72};"></div></div>
+          <div class="story-total">${fmt.format(votes)}<br><span class="metric-subvalue">${pct(votes, denominator)}</span></div>
         </div>
       `;
     }
@@ -6880,7 +7191,6 @@
       storyStep = Math.max(0, Math.min(storyStep, steps.length - 1));
       const step = steps[storyStep];
       const rows = ranked(step.totals);
-      const max = rows[0]?.[1] || 1;
       const [leader, leaderVotes] = rows[0] || ["", 0];
       const [second, secondVotes] = rows[1] || ["", 0];
       const leaderParty = leader ? getParty(d, leader) : "";
@@ -6914,7 +7224,7 @@
             <button id="storyNextRound" type="button"${storyStep >= steps.length - 1 ? " disabled" : ""}>Next</button>
           </div>
           <div class="story-standings">
-            ${rows.map(([candidate, votes], i) => storyRow(d, candidate, votes, max, d.formal_votes, { leader: i === 0 || (isMultiMemberElection() && isElectedCandidate(d, candidate)) })).join("")}
+            ${rows.map(([candidate, votes], i) => storyRow(d, candidate, votes, d.formal_votes, { leader: i === 0 || (isMultiMemberElection() && isElectedCandidate(d, candidate)) })).join("")}
           </div>
           ${eliminated.length ? `<div class="story-eliminated">Eliminated: ${eliminated.map(name => `${partyLabel(getParty(d, name))} ${shortName(name)}`).join(", ")}</div>` : ""}
         </div>
@@ -6979,10 +7289,16 @@
     }
 
     function render() {
+      if (dataLoadState !== "ready") {
+        renderLoadState();
+        return;
+      }
       if (!activeDistrict) {
         renderNoMatches();
         return;
       }
+      document.querySelector(".detail-panel").classList.remove("state-message");
+      document.querySelector(".rankings-panel").classList.remove("hidden");
       renderRankings();
       renderSummary(activeDistrict);
       const [rankedPrimaryLeader] = getFirstLeader(activeDistrict);
@@ -7124,7 +7440,9 @@
       if (activeDistrict?.district?.toLowerCase() === pendingDistrictFromUrl.toLowerCase()) {
         pendingDistrictFromUrl = "";
       }
-      datasetMeta = { label: source === "Uploaded CSV" ? "Loaded uploaded CSV" : `Loaded ${source}`, rowCount: rows.length };
+      datasetMeta = { kind: source === "Uploaded CSV" ? "uploaded" : "official" };
+      dataLoadState = "ready";
+      syncBusyState();
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
       document.getElementById("districtSearch").value = "";
@@ -7143,11 +7461,16 @@
       return loadId === electionLoadId && year === activeElectionYear;
     }
 
+    function dataAssetPath(path) {
+      const inAppDirectory = /\/app\/(?:index\.html)?$/.test(window.location.pathname);
+      return inAppDirectory ? `../${path}` : path;
+    }
+
     async function autoLoadCSV(year = activeElectionYear, loadId = electionLoadId, options = {}) {
       const election = electionYears[year] || electionYears["2022"];
       const dataset = election.geographies?.[activeGeography] || election;
       try {
-        const response = await fetch(dataset.csv, { cache: "no-store" });
+        const response = await fetch(dataAssetPath(dataset.csv), { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const rows = parseCSV(await response.text());
         if (!isCurrentElectionLoad(year, loadId)) return false;
@@ -7157,12 +7480,29 @@
       } catch (err) {
         if (!isCurrentElectionLoad(year, loadId)) return false;
         if (year === "2022") {
+          allDistricts = structuredClone(sampleDistricts);
+          districts = [...allDistricts];
+          activeDistrict = districts[0] || null;
+          focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
+          storyStep = 0;
+          datasetMeta = { kind: "sample" };
+          dataLoadState = "ready";
+          syncBusyState();
+          if (options.applyState) {
+            applyUrlState(true);
+          } else {
+            populateControls();
+            render();
+          }
           console.info("Using embedded sample data; generated CSV was not auto-loaded.", err);
         } else {
           allDistricts = [];
           districts = [];
           activeDistrict = null;
-          datasetMeta = { label: `${election.label} CSV unavailable`, rowCount: 0 };
+          datasetMeta = { kind: "official" };
+          dataLoadState = "error";
+          mapLoadState = "error";
+          syncBusyState();
           populateControls();
           render();
           console.info(`${election.label} CSV was not auto-loaded.`, err);
@@ -7175,7 +7515,7 @@
       const election = electionYears[year] || electionYears["2022"];
       const dataset = election.geographies?.[activeGeography] || election;
       try {
-        const response = await fetch(dataset.boundaries, { cache: "no-store" });
+        const response = await fetch(dataAssetPath(dataset.boundaries), { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const geojson = await response.json();
         if (!isCurrentElectionLoad(year, loadId)) return false;
@@ -7189,62 +7529,112 @@
             : boundaryFeatures;
         boundaryShapes = makeBoundaryShapes(visible);
         document.querySelectorAll("[data-boundary-type]").forEach(button => {
-          button.classList.toggle("active", button.dataset.boundaryType === activeBoundaryType);
+          const active = button.dataset.boundaryType === activeBoundaryType;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
         });
+        mapLoadState = "ready";
+        syncBusyState();
         renderSeatMap();
         return true;
       } catch (err) {
         if (!isCurrentElectionLoad(year, loadId)) return false;
         boundaryFeatures = [];
         boundaryShapes = [];
-        document.getElementById("seatMap").innerHTML = "Map unavailable.";
+        mapLoadState = "error";
+        syncBusyState();
+        renderSeatMap();
         console.info("District boundary map was not auto-loaded.", err);
         return false;
       }
     }
 
-    async function loadElection(year, replaceUrl = false) {
+    async function loadElection(year, replaceUrl = false, requestedGeography = "") {
       const requestedYear = electionYears[year] ? year : "2022";
       const previousYear = activeElectionYear;
       const loadId = ++electionLoadId;
       activeElectionYear = requestedYear;
       const election = electionYears[requestedYear];
-      if (requestedYear !== previousYear || !election.geographies?.[activeGeography]) {
+      if (requestedGeography && election.geographies?.[requestedGeography]) {
+        activeGeography = requestedGeography;
+      } else if (requestedYear !== previousYear || !election.geographies?.[activeGeography]) {
         activeGeography = election.defaultGeography || "";
       }
+      setLoadingState();
       activeCouncil = "all";
       activeMapMode = "party";
       activeBoundaryType = "General";
       boundaryFeatures = [];
       boundaryShapes = [];
+      allDistricts = [];
+      districts = [];
+      activeDistrict = null;
+      datasetMeta = { kind: "official" };
       mapBaseView = { x: 0, y: 0, w: 960, h: 560 };
       resetMapZoom();
       syncElectionPicker();
+      populateControls();
+      render();
       await autoLoadCSV(requestedYear, loadId, { applyState: replaceUrl });
+      if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
+      if (dataLoadState === "error") {
+        updateUrlState(replaceUrl);
+        return true;
+      }
       await autoLoadBoundaries(requestedYear, loadId);
-      if (isCurrentElectionLoad(requestedYear, loadId)) updateUrlState(replaceUrl);
+      if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
+      updateUrlState(replaceUrl);
+      return true;
+    }
+
+    async function restoreUrlState() {
+      const state = readUrlState();
+      const requestedYear = state.year || "2022";
+      const election = electionYears[requestedYear] || electionYears["2022"];
+      const requestedGeography = state.geography || election.defaultGeography || "";
+      if (requestedYear !== activeElectionYear || requestedGeography !== activeGeography) {
+        pendingDistrictFromUrl = state.district;
+        pendingCouncilFromUrl = state.council;
+        await loadElection(requestedYear, true, requestedGeography);
+        return;
+      }
+      applyUrlState(true);
     }
 
     async function setGeography(geography, replaceUrl = false) {
       const election = activeElection();
-      if (!election.geographies?.[geography] || geography === activeGeography) return;
+      if (!election.geographies?.[geography] || geography === activeGeography) return false;
       const loadId = ++electionLoadId;
       activeGeography = geography;
+      setLoadingState();
       activeCouncil = "all";
       pendingCouncilFromUrl = "";
       activeMapMode = "party";
       pendingDistrictFromUrl = "";
       boundaryFeatures = [];
       boundaryShapes = [];
+      allDistricts = [];
+      districts = [];
+      activeDistrict = null;
+      datasetMeta = { kind: "official" };
       resetMapZoom();
-      updateElectionSpecificUi();
+      populateControls();
+      render();
       await autoLoadCSV(activeElectionYear, loadId, { applyState: false });
+      if (!isCurrentElectionLoad(activeElectionYear, loadId)) return false;
+      if (dataLoadState === "error") {
+        updateUrlState(replaceUrl);
+        return false;
+      }
       await autoLoadBoundaries(activeElectionYear, loadId);
-      if (isCurrentElectionLoad(activeElectionYear, loadId)) updateUrlState(replaceUrl);
+      if (!isCurrentElectionLoad(activeElectionYear, loadId)) return false;
+      updateUrlState(replaceUrl);
+      return dataLoadState === "ready";
     }
 
     async function drillDownProvince(province) {
-      await setGeography("kabupaten-kota", true);
+      const loaded = await setGeography("kabupaten-kota", true);
+      if (!loaded) return;
       districts = allDistricts.filter(d => d.electorate_type === province);
       activeDistrict = districts[0] || allDistricts[0] || null;
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
@@ -7256,12 +7646,25 @@
     async function handleUpload(event) {
       const file = event.target.files?.[0];
       if (!file) return;
-      const text = await file.text();
+      const status = document.getElementById("uploadStatus");
+      status.textContent = "";
+      const expectedYear = activeElectionYear;
+      const expectedGeography = activeGeography;
+      const expectedLoadId = electionLoadId;
       try {
+        const text = await file.text();
+        if (expectedLoadId !== electionLoadId || expectedYear !== activeElectionYear || expectedGeography !== activeGeography) return;
         const rows = parseCSV(text);
         loadRows(rows, "Uploaded CSV");
+        const loadId = ++electionLoadId;
+        if (mapLoadState !== "ready" || !boundaryShapes.length) {
+          mapLoadState = "loading";
+          syncBusyState();
+          await autoLoadBoundaries(expectedYear, loadId);
+        }
+        if (isCurrentElectionLoad(expectedYear, loadId)) updateUrlState(true);
       } catch (err) {
-        alert("Could not parse CSV: " + err.message);
+        status.textContent = `Could not load this CSV: ${err.message}`;
       }
     }
 
@@ -7325,6 +7728,7 @@
     setupMapModes();
     setupRankings();
     setupMapZoom();
+    window.addEventListener("popstate", restoreUrlState);
     populateElectionSelect();
     populateControls();
     applyUrlState(true);

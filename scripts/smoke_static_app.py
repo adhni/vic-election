@@ -16,8 +16,8 @@ REQUIRED_RANKINGS_MARKERS = (
     "Biggest winner transfer gains",
 )
 REQUIRED_VISUAL_REFRESH_MARKERS = (
-    "<title>VIC ELEC · Election Results Explorer</title>",
-    '<h1>VIC <span class="brand-accent">ELEC</span></h1>',
+    "<title>Election Results Explorer</title>",
+    '<h1>ELECTION <span class="brand-accent">EXPLORER</span></h1>',
     'id="filterTools" class="filter-tools"',
     'class="explorer-grid"',
     'class="detail-panel"',
@@ -26,8 +26,30 @@ REQUIRED_VISUAL_REFRESH_MARKERS = (
     'button.setAttribute("aria-pressed", String(active));',
     'tabindex="${!isMuted && d.district === keyboardDistrict ? "0" : "-1"}"',
     'role="group" aria-label="${activeElection().label} interactive',
-    'selectDistrictByName(district, true);',
+    'selectDistrictByName(district, { focusMap: true });',
     '["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"]',
+)
+REQUIRED_UX_POLISH_MARKERS = (
+    '<button id="resetView" type="button" aria-label="Clear all filters">Clear filters</button>',
+    '<button id="mapZoomReset" class="map-mode" type="button" aria-label="Reset map view">Fit map</button>',
+    'id="dataStatus" class="data-status" role="status" aria-live="polite" aria-atomic="true"',
+    "function setLoadingState()",
+    'setAttribute("aria-busy", String(dataBusy))',
+    'setAttribute("aria-busy", String(mapBusy))',
+    'data-empty-state="filters"',
+    "data-empty-reset",
+    "function revealSelectedResult(",
+    "function dataAssetPath(",
+    "function restoreUrlState()",
+    'window.addEventListener("popstate", restoreUrlState)',
+    'activeMapMode = state.mode || "party"',
+    "const expectedLoadId = electionLoadId",
+    "if (expectedLoadId !== electionLoadId",
+    "if (current) revealSelectedResult(true)",
+    "function setSummaryChips(",
+    'class="selection-halo"',
+    'class="legend-more"',
+    'class="ranking-more"',
 )
 REQUIRED_ELECTION_PICKER_MARKERS = (
     'id="electionCountry"',
@@ -243,7 +265,7 @@ REQUIRED_INDONESIA_MARKERS = (
     "Later-created districts are dissolved into their election-time parents",
     "No digitised vote",
     'if (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType)) return winningParty(d);',
-    ': winningParty(d)))]',
+    'const party = activeMapMode === "party-vote" ? getPartyVoteLeader(d)[0] : winningParty(d);',
 )
 REQUIRED_PHILIPPINES_MARKERS = (
     '"key": "philippines-president-2022"',
@@ -420,6 +442,14 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_VISUAL_REFRESH_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing visual refresh marker {marker!r}")
+    for marker in REQUIRED_UX_POLISH_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing UX-polish marker {marker!r}")
+    render_bars = html.split("function renderBars(", 1)[-1].split("function renderRound()", 1)[0]
+    if "votes / denominator * 100" not in render_bars:
+        raise SystemExit(f"{html_file}: overview bars must scale against total votes")
+    if "votes / max * 100" in render_bars:
+        raise SystemExit(f"{html_file}: overview bars still scale against the leading candidate")
     if 'tabindex="${isMuted ? "-1" : "0"}"' in html:
         raise SystemExit(f"{html_file}: every visible map district must not be a page-wide tab stop")
     for marker in REQUIRED_NZ_MARKERS:
