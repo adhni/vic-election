@@ -815,7 +815,7 @@
 
     function populateCountries() {
       countryOrder = [...electionsByCountry.keys()].sort(countrySort);
-      countrySelect.replaceChildren(createOption("", "Choose a country", false, true));
+      countrySelect.replaceChildren(createOption("", "Choose a country", true, true));
       countryOrder.forEach(country => countrySelect.append(createOption(country, country)));
       countrySelect.disabled = false;
       document.getElementById("countryCount").textContent = countryOrder.length.toLocaleString("en-AU");

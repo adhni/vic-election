@@ -17,6 +17,7 @@ REQUIRED_HOMEPAGE_MARKERS = (
     'role="listbox"',
     'data/election_catalog.json',
     'data/world_countries_simplified.geojson',
+    'createOption("", "Choose a country", true, true)',
     'window.location.replace(`app/${window.location.search}${window.location.hash}`)',
     'href="app/"',
 )
