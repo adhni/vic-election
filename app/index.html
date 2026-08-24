@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23294f7c'/%3E%3Cpath d='M18 17h30v8H27v7h18v8H27v7h21v8H18z' fill='white'/%3E%3C/svg%3E" />
   <title>Election Results Explorer</title>
   <style>
     :root {
@@ -46,10 +47,11 @@
       background: var(--ink);
       color: #fff;
       font-weight: 800;
+      clip-path: inset(50%);
       transform: translateY(-160%);
     }
 
-    .skip-link:focus { transform: translateY(0); }
+    .skip-link:focus { clip-path: none; transform: translateY(0); }
 
     /* ── Header ── */
     .page-header {
@@ -64,6 +66,23 @@
       gap: 12px;
       flex-wrap: wrap;
     }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      margin-left: auto;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .home-link:hover { background: #f0ede8; }
 
     .page-header h1 {
       margin: 0;
@@ -1123,6 +1142,7 @@
       .page-header { padding: 20px 4px 16px; }
       .page-header h1 { font-size: 28px; }
       .brand-tag { display: none; }
+      .home-link { min-height: 44px; }
       .page-header p { max-width: 34ch; }
       .controls { position: static; padding: 12px 4px; }
       .controls-inner { flex-direction: column; align-items: stretch; }
@@ -1237,6 +1257,7 @@
       <div class="brand-row">
         <h1>ELECTION <span class="brand-accent">EXPLORER</span></h1>
         <span class="brand-tag">Interactive results</span>
+        <a class="home-link" href="../">Home</a>
       </div>
       <p>Maps, margins and preference flows — election by election.</p>
     </header>

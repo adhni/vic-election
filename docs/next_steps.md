@@ -11,6 +11,14 @@ The current path remains data-first:
 - add comparison and rankings views
 - generalise shared UI only when an added election needs it
 
+Completed homepage work:
+
+- added a lightweight root homepage while retaining the full explorer under `app/`
+- added a clickable, keyboard-operable world coverage map with neutral colours
+- added paired country and election controls plus direct links to recent views for the selected country
+- generated the homepage catalogue from the explorer definitions so coverage stays synchronized
+- preserved older root query-string links by redirecting them to the explorer
+
 Completed Greater Melbourne local-government work:
 
 - added the 2024 general elections for the standard 31 metropolitan councils
@@ -111,7 +119,7 @@ Completed single-election rankings work:
 - changed-on-preferences seats
 - biggest winner transfer gains
 - click-through from ranking rows into the existing district/division view
-- compact smoke-covered UI in both `index.html` and `app/index.html`
+- compact smoke-covered UI in the full explorer at `app/index.html`
 
 Still useful next views:
 
@@ -146,7 +154,7 @@ Completed small config cleanup:
 - kept election definitions inside the existing app JavaScript
 - added a richer election definition object with `type`, `jurisdiction`, `year`, `source`, `label`, `csv`, and `boundaries`
 - generated the election selector from those definitions instead of hand-maintaining duplicate option lists
-- kept `index.html` and `app/index.html` behaviour identical
+- kept the full explorer self-contained in `app/index.html`
 - updated `scripts/smoke_static_app.py` so it validates the same definitions and data files
 
 Do not move to external JSON yet. A separate `data/elections.json` can wait until the app is ready to support multiple states or a larger election catalogue.

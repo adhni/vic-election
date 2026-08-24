@@ -4,6 +4,7 @@ A static HTML data app for exploring lower-house and executive elections and nat
 
 The app is map-first and party/bloc-first:
 
+- lightweight homepage with a clickable world coverage map and country/election finder
 - winner map with Labor, Coalition, Greens, Independent, and Other grouping
 - Greater Melbourne 2024 local elections across 30 single-member ward councils, plus Melbourne's leadership-team and nine-councillor ballots
 - zoomable/pannable seat boundary map for the selected election year
@@ -59,6 +60,12 @@ Live site:
 https://adhni.github.io/vic-election/
 ```
 
+The homepage opens at the site root. The full results explorer is also available directly at:
+
+```text
+https://adhni.github.io/vic-election/app/
+```
+
 Serve the folder locally so the CSV and GeoJSON files can auto-load:
 
 ```bash
@@ -70,6 +77,8 @@ Then open:
 ```text
 http://localhost:8000/
 ```
+
+Use `http://localhost:8000/app/` to bypass the homepage and open the explorer directly.
 
 The app auto-loads the selected election:
 
@@ -743,7 +752,10 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 ├── app/
 │   └── index.html
 ├── data/
+│   ├── election_catalog.json
+│   └── world_countries_simplified.geojson
 ├── scripts/
+│   ├── build_home_assets.py
 │   ├── build_aec_federal.py
 │   ├── build_india_federal.py
 │   ├── build_france_presidential.py
@@ -777,20 +789,27 @@ Tasmania 2025 and 2024 result rows are generated from Tasmanian Electoral Commis
 └── codex_prompt.md
 ```
 
-`index.html` and `app/index.html` are kept in sync.
+`index.html` is the lightweight homepage. `app/index.html` contains the full explorer and supports direct, shareable result URLs. Legacy root URLs containing explorer query parameters redirect into `app/`.
 
 ## Election Definitions
 
-Election options are driven by the in-app `electionDefinitions` list in `index.html` and `app/index.html`. Each entry defines the key, label, election type, jurisdiction, year, source, preference CSV, and boundary GeoJSON. The election selector is generated from this list. Indonesia additionally uses a `geographies` map so one election can switch between its province and kabupaten/kota datasets.
+Election options are driven by the `electionDefinitions` list in `app/index.html`. Each entry defines the key, label, election type, jurisdiction, year, source, preference CSV, and boundary GeoJSON. The explorer selector is generated from this list. Indonesia additionally uses a `geographies` map so one election can switch between its province and kabupaten/kota datasets.
 
-When adding an election, add the data files, add one election definition to both HTML entry points, then run:
+The homepage loads a compact generated catalogue plus a simplified Natural Earth coverage map. Rebuild both homepage assets after changing the explorer definitions:
 
 ```bash
+python scripts/build_home_assets.py
+```
+
+When adding an election, add the data files, add one definition to `app/index.html`, rebuild the homepage assets, then run:
+
+```bash
+python scripts/build_home_assets.py
 python scripts/smoke_static_app.py
 ```
 
-The smoke test reads `electionDefinitions` from the HTML files and validates that the configured CSV and boundary files exist, load, and match by district name.
-It also checks that the compact rankings UI markers are present in both HTML entry points.
+The smoke test reads `electionDefinitions` from the explorer and validates that the configured CSV and boundary files exist, load, and match by district name. It also checks that the homepage catalogue and map coverage match the explorer definitions.
+It checks that the compact rankings UI markers remain present in the explorer.
 For elections configured as `fpp` or `mmp-fpp`, it requires compact candidate rows with no duplicated `final` copies.
 
 ## Asset size guardrails

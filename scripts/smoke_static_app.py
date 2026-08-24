@@ -8,6 +8,18 @@ from pathlib import Path
 
 
 REQUIRED_ELECTION_FIELDS = {"key", "label", "type", "jurisdiction", "year", "source", "csv", "boundaries"}
+REQUIRED_HOMEPAGE_MARKERS = (
+    "<title>Election Explorer · Interactive election results</title>",
+    'id="electionFinder"',
+    'id="countrySelect"',
+    'id="electionSelect"',
+    'id="coverageMap"',
+    'role="listbox"',
+    'data/election_catalog.json',
+    'data/world_countries_simplified.geojson',
+    'window.location.replace(`app/${window.location.search}${window.location.hash}`)',
+    'href="app/"',
+)
 REQUIRED_RANKINGS_MARKERS = (
     'id="rankingsPanel"',
     "Closest ${electorateLabel(2)}",
@@ -716,21 +728,60 @@ def validate_northern_europe(key: str, csv_path: Path) -> None:
 
 
 def main() -> None:
-    html_files = [Path("index.html"), Path("app/index.html")]
-    if html_files[0].read_text(encoding="utf-8") != html_files[1].read_text(encoding="utf-8"):
-        raise SystemExit(f"{html_files[1]} must stay synchronized with {html_files[0]}")
-    definitions_by_file = {html_file: load_election_definitions(html_file) for html_file in html_files}
-    aliases_by_file = {html_file: load_election_aliases(html_file) for html_file in html_files}
-    first = definitions_by_file[html_files[0]]
-    for html_file, definitions in definitions_by_file.items():
-        if definitions != first:
-            raise SystemExit(f"{html_file}: electionDefinitions does not match {html_files[0]}")
-        keys = {str(election["key"]) for election in definitions}
-        for old_key, new_key in aliases_by_file[html_file].items():
-            if old_key in keys:
-                raise SystemExit(f"{html_file}: aliased key {old_key} should not remain selectable")
-            if new_key not in keys:
-                raise SystemExit(f"{html_file}: alias target {new_key} is not selectable")
+    homepage = Path("index.html")
+    explorer = Path("app/index.html")
+    homepage_html = homepage.read_text(encoding="utf-8")
+    for marker in REQUIRED_HOMEPAGE_MARKERS:
+        if marker not in homepage_html:
+            raise SystemExit(f"{homepage}: missing homepage marker {marker!r}")
+
+    first = load_election_definitions(explorer)
+    aliases = load_election_aliases(explorer)
+    keys = {str(election["key"]) for election in first}
+    for old_key, new_key in aliases.items():
+        if old_key in keys:
+            raise SystemExit(f"{explorer}: aliased key {old_key} should not remain selectable")
+        if new_key not in keys:
+            raise SystemExit(f"{explorer}: alias target {new_key} is not selectable")
+
+    catalogue_path = Path("data/election_catalog.json")
+    world_map_path = Path("data/world_countries_simplified.geojson")
+    catalogue = json.loads(catalogue_path.read_text(encoding="utf-8"))
+    if len(catalogue) != len(first):
+        raise SystemExit(f"{catalogue_path}: expected {len(first)} entries, found {len(catalogue)}")
+    catalogue_by_key = {str(election["key"]): election for election in catalogue}
+    if set(catalogue_by_key) != keys:
+        raise SystemExit(f"{catalogue_path}: election keys do not match {explorer}")
+
+    australian_jurisdictions = {
+        "Australia", "Victoria", "New South Wales", "Queensland", "South Australia",
+        "Western Australia", "Northern Territory", "Tasmania",
+    }
+    for election in first:
+        key = str(election["key"])
+        item = catalogue_by_key[key]
+        expected_country = "Australia" if election["jurisdiction"] in australian_jurisdictions else election["jurisdiction"]
+        expected = {
+            "label": election["label"],
+            "country": expected_country,
+            "jurisdiction": election["jurisdiction"],
+            "year": election["year"],
+            "type": election["type"],
+            "source": election["source"],
+        }
+        for field, value in expected.items():
+            if item.get(field) != value:
+                raise SystemExit(f"{catalogue_path}: {key} has stale {field!r}")
+
+    world_map = json.loads(world_map_path.read_text(encoding="utf-8"))
+    mapped_countries = {
+        str(feature.get("properties", {}).get("catalogueCountry", ""))
+        for feature in world_map.get("features", [])
+        if feature.get("properties", {}).get("catalogueCountry")
+    }
+    catalogue_countries = {str(election["country"]) for election in catalogue}
+    if mapped_countries != catalogue_countries:
+        raise SystemExit(f"{world_map_path}: covered countries do not match the homepage catalogue")
 
     for election in first:
         geographies = election.get("geographies")
