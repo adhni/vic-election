@@ -16,7 +16,13 @@ Open:
 http://localhost:8000/
 ```
 
-Opening `index.html` directly may fall back to embedded sample data because browsers usually block local `fetch()` calls.
+That opens the homepage and its clickable election-coverage map. Open the full explorer directly at:
+
+```text
+http://localhost:8000/app/
+```
+
+Opening the HTML files directly usually blocks the homepage catalogue and explorer data requests. Use the local server above; if the explorer CSV cannot load, only its embedded sample may appear.
 
 ## What The App Does
 
@@ -132,9 +138,10 @@ python scripts/scrape_vec_2022_preferences.py --year 2022 --out data --limit 3 -
 
 ## Add Another Election
 
-Election options are generated from the `electionDefinitions` list in both `index.html` and `app/index.html`. Add the new CSV and boundary files, add one definition with its `key`, `label`, `type`, `jurisdiction`, `year`, `source`, `csv`, and `boundaries`, then run:
+Election options are generated from the `electionDefinitions` list in `app/index.html`. Add the new CSV and boundary files, add one definition with its `key`, `label`, `type`, `jurisdiction`, `year`, `source`, `csv`, and `boundaries`, rebuild the homepage catalogue and coverage map, then run:
 
 ```bash
+python scripts/build_home_assets.py
 python scripts/smoke_static_app.py
 ```
 
