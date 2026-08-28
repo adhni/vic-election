@@ -429,6 +429,19 @@ REQUIRED_VIC_LOCAL_MARKERS = (
     'feature.properties?.council === activeCouncil',
     'Candidate affiliations are shown only when stated',
 )
+REQUIRED_GEOGRAPHY_ANALYSIS_MARKERS = (
+    'id="voteShareMapMode"',
+    'id="swingMapMode"',
+    'id="clusterMapMode"',
+    'id="geographyBlocSelect"',
+    'id="geographyAnalysis"',
+    'id="geographyHistoryChart"',
+    'id="geographyProfileChart"',
+    'function buildSpatialAnalysis()',
+    'function renderGeographyAnalysis()',
+    'data/australia_geography_analysis.json',
+    'Areas are electoral districts or federal divisions, not neighbourhoods.',
+)
 EXPECTED_ELECTION_ALIASES = {
     "federal-2025-vic": "federal-2025-au",
     "federal-2022-vic": "federal-2022-au",
@@ -568,6 +581,9 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
     for marker in REQUIRED_VIC_LOCAL_MARKERS:
         if marker not in html:
             raise SystemExit(f"{html_file}: missing Victorian local-election marker {marker!r}")
+    for marker in REQUIRED_GEOGRAPHY_ANALYSIS_MARKERS:
+        if marker not in html:
+            raise SystemExit(f"{html_file}: missing Australian geography-analysis marker {marker!r}")
     if html.count("syncBoundaryTypeToActiveDistrict();") < 2:
         raise SystemExit(f"{html_file}: NZ map layer is not synchronized after filters and reset")
     match = re.search(r"const electionDefinitions = (\[.*?\]);", html, flags=re.S)

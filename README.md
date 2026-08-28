@@ -528,6 +528,28 @@ data/federal_2016_au_district_summary.csv
 data/federal_2016_au_division_boundaries.geojson
 ```
 
+### Australian political geography
+
+Australian single-member lower-house views include an electorate-level political-geography layer with:
+
+- continuous Labor, Coalition, Greens, independent, and Other first-preference share maps
+- same-boundary swing maps for Victoria 2006–2010 and 2014–2018, NSW 2015–2019, Queensland 2020–2024, and federal Victoria 2007–2010
+- nearest-electorate cluster maps using the four closest mapped electorate centres
+- linked area-history and area-versus-election charts
+
+The compact generated asset covers 24 state and federal House elections. Long-run charts retain same-named electorates across redistributions but display a boundary warning; only the configured pairs above are described as swing. Areas are districts or divisions, not suburbs or neighbourhoods.
+
+```text
+data/australia_geography_analysis.json
+```
+
+Rebuild and validate it with:
+
+```bash
+python3 scripts/build_australia_geography_analysis.py
+python3 scripts/validate_australia_geography_analysis.py
+```
+
 Australian Senate `2025`, `2022`, and `2019` options use official AEC state/territory first-preference group totals, turnout metadata, and elected-senator lists:
 
 ```text
