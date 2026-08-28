@@ -249,6 +249,26 @@ data/malaysia_2013_parliamentary_boundaries.geojson
 
 Malaysia also uses first past the post, so preference-transfer views are hidden. GE15 uses official SPR result files; GE14 and GE13 use the CC0 Malaysian Election Corpus to retain complete candidate and turnout metadata where SPR's older export is incomplete. Each map combines the Peninsular, Sabah, and Sarawak delimitation datasets in force for that election.
 
+### UK and Malaysia political geography
+
+The UK and Malaysian general-election views also include adaptive vote-share maps, four-nearest-seat spatial clusters, linked constituency histories, and constituency-versus-election profiles. The selector uses country-specific political groupings rather than Australian blocs:
+
+- UK: Labour, Conservative, Liberal Democrats, Reform/UKIP, Greens, national/regional parties, and Other
+- Malaysia: PH/PKR-DAP, BN, PN/PAS, East Malaysian parties, independents, and Other
+
+UK 2017–2019 is exposed as an exact same-boundary swing pair. The UK 2024 redistribution and Malaysia's changing regional delimitations are shown only in longer history charts with a boundary warning. Adaptive colour bands are calculated separately for each selected grouping and election; where a grouping did not field a candidate, zero-vote seats are separated before contested seats are split into equal-count bands. This preserves geographic contrast for both large and small parties.
+
+```text
+data/uk_malaysia_geography_analysis.json
+```
+
+Rebuild and validate it with:
+
+```bash
+python3 scripts/build_uk_malaysia_geography_analysis.py
+python3 scripts/validate_uk_malaysia_geography_analysis.py
+```
+
 Singapore coverage currently includes the 2025, 2020, and 2015 general elections, preserving their different SMC/GRC maps and 97-, 93-, and 89-member Parliaments:
 
 ```text

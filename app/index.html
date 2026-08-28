@@ -1489,13 +1489,7 @@
           </div>
           <div id="geographyMetricControl" class="map-action-group geography-metric-control hidden">
             <label class="map-control-label" for="geographyBlocSelect">Analyse bloc</label>
-            <select id="geographyBlocSelect">
-              <option value="Labor">Labor</option>
-              <option value="Coalition">Coalition</option>
-              <option value="Greens">Greens</option>
-              <option value="Independent">Independent</option>
-              <option value="Other">Other</option>
-            </select>
+            <select id="geographyBlocSelect"></select>
           </div>
           <div id="boundaryTypeModes" class="map-modes hidden" role="group" aria-label="Electorate map layer">
             <button class="map-mode active" type="button" data-boundary-type="General" aria-pressed="true">General</button>
@@ -1585,7 +1579,7 @@
             <div id="geographyClusterSummary" class="cluster-summary"></div>
           </article>
         </div>
-        <p class="analysis-method-note">Areas are electoral districts or federal divisions, not neighbourhoods. Cluster labels compare each electorate with its four nearest mapped electorates and describe spatial patterns; they are not significance tests.</p>
+        <p class="analysis-method-note">Areas are legally defined election seats, not neighbourhoods. Cluster labels compare each seat with its four nearest mapped seats and describe spatial patterns; they are not significance tests.</p>
       </section>
 
       <section class="rankings-panel" aria-label="Election rankings">
@@ -4558,6 +4552,12 @@
       "Australia", "Victoria", "New South Wales", "Queensland", "South Australia",
       "Western Australia", "Northern Territory", "Tasmania"
     ]);
+    const geographyJurisdictions = new Set([...australianJurisdictions, "United Kingdom", "Malaysia"]);
+    const geographyBlocSets = {
+      Australia: ["Labor", "Coalition", "Greens", "Independent", "Other"],
+      "United Kingdom": ["Labour", "Conservative", "Liberal Democrats", "Reform / UKIP", "Greens", "National / regional", "Other"],
+      Malaysia: ["PH / PKR-DAP", "BN", "PN / PAS", "East Malaysian parties", "Independent", "Other"]
+    };
     const australianJurisdictionOrder = [
       "Australia", "Victoria", "New South Wales", "Queensland", "South Australia",
       "Western Australia", "Northern Territory", "Tasmania"
@@ -5201,7 +5201,16 @@
       Coalition: ["#edf3ff", "#c7d8f8", "#8db3ec", "#5185d4", "#2859a9", "#112f69"],
       Greens: ["#eef8eb", "#c3e5ba", "#84ca77", "#43a45a", "#19743c", "#07502c"],
       Independent: ["#f0f3f7", "#d2dae4", "#a7b4c4", "#74869c", "#495b72", "#26364b"],
-      Other: ["#fff5d9", "#f5dda0", "#e5b957", "#bf8728", "#895819", "#53330f"]
+      Other: ["#fff5d9", "#f5dda0", "#e5b957", "#bf8728", "#895819", "#53330f"],
+      Labour: ["#fff0ef", "#fac8c5", "#f2928d", "#df5753", "#b72d32", "#75151f"],
+      Conservative: ["#edf3ff", "#c7d8f8", "#8db3ec", "#5185d4", "#2859a9", "#112f69"],
+      "Liberal Democrats": ["#fff6d9", "#fce39a", "#f5c84f", "#dea51c", "#a8750d", "#684400"],
+      "Reform / UKIP": ["#e6faf9", "#afe7e4", "#6dcfca", "#28aaa9", "#087d82", "#045157"],
+      "National / regional": ["#f5effb", "#ddc7f0", "#bb91dd", "#915ac1", "#683493", "#421c64"],
+      "PH / PKR-DAP": ["#fff0eb", "#fbc9b8", "#f29173", "#dc593d", "#aa3026", "#6b1718"],
+      BN: ["#eef2ff", "#cbd4f6", "#94a9e8", "#5b7bd0", "#3450a4", "#1d2c66"],
+      "PN / PAS": ["#ecf8ed", "#bde4c0", "#7bc986", "#39a55a", "#14733c", "#064d2a"],
+      "East Malaysian parties": ["#f6effb", "#dec9ef", "#bc94da", "#915fc0", "#673893", "#401f62"]
     };
 
     function analysisBlocColor(bloc) {
@@ -5210,7 +5219,16 @@
         Coalition: "#2f61bf",
         Greens: "#2d8a4b",
         Independent: "#667184",
-        Other: "#8a6a3f"
+        Other: "#8a6a3f",
+        Labour: "#d94b49",
+        Conservative: "#2f61bf",
+        "Liberal Democrats": "#d99b16",
+        "Reform / UKIP": "#118f91",
+        "National / regional": "#7c48aa",
+        "PH / PKR-DAP": "#dc593d",
+        BN: "#3450a4",
+        "PN / PAS": "#21844b",
+        "East Malaysian parties": "#7c48aa"
       }[bloc] || "#667184";
     }
 
@@ -5218,11 +5236,24 @@
       return geographyAnalysisData?.elections?.[activeElectionYear] || null;
     }
 
+    function geographyBlocs(election = currentGeographyElection()) {
+      return election?.blocs
+        || geographyBlocSets[electionCountry(activeElection())]
+        || geographyAnalysisData?.blocs
+        || geographyBlocSets.Australia;
+    }
+
+    function geographyDefaultBloc(election = currentGeographyElection()) {
+      return election?.defaultBloc || geographyBlocs(election)[0];
+    }
+
     function geographyDefinitionSupported(election = activeElection()) {
-      return australianJurisdictions.has(election?.jurisdiction)
-        && ["state", "federal"].includes(election?.type)
+      return geographyJurisdictions.has(election?.jurisdiction)
+        && ["state", "federal", "national"].includes(election?.type)
         && !["hare-clark", "senate-stv"].includes(election?.system)
-        && !election?.localElection;
+        && !election?.localElection
+        && !election?.contestType
+        && !election?.geographies;
     }
 
     function geographyAnalysisSupported() {
@@ -5258,14 +5289,20 @@
         .filter(Number.isFinite)
         .sort((a, b) => a - b);
       if (!values.length) return null;
-      const quantile = fraction => {
-        const position = (values.length - 1) * fraction;
+      const quantile = (source, fraction) => {
+        const position = (source.length - 1) * fraction;
         const lower = Math.floor(position);
         const remainder = position - lower;
-        return values[lower] + (values[Math.min(lower + 1, values.length - 1)] - values[lower]) * remainder;
+        return source[lower] + (source[Math.min(lower + 1, source.length - 1)] - source[lower]) * remainder;
       };
-      const bandCount = Math.min(6, new Set(values.map(value => value.toFixed(6))).size);
-      const breaks = Array.from({ length: Math.max(0, bandCount - 1) }, (_, index) => quantile((index + 1) / bandCount));
+      const positiveValues = values.filter(value => value > 0);
+      const separatesZero = values[0] === 0 && positiveValues.length > 0;
+      const source = separatesZero ? positiveValues : values;
+      const sourceBandCount = Math.min(separatesZero ? 5 : 6, new Set(source.map(value => value.toFixed(6))).size);
+      const rawBreaks = Array.from({ length: Math.max(0, sourceBandCount - 1) }, (_, index) => quantile(source, (index + 1) / sourceBandCount));
+      if (separatesZero) rawBreaks.unshift(0);
+      const breaks = rawBreaks.filter((boundary, index) => index === 0 || boundary > rawBreaks[index - 1] + 1e-9);
+      const bandCount = breaks.length + 1;
       const palette = voteSharePalettes[bloc] || voteSharePalettes.Independent;
       const colors = bandCount === 1
         ? [palette[Math.floor(palette.length / 2)]]
@@ -5275,6 +5312,7 @@
         colors,
         minimum: values[0],
         maximum: values.at(-1),
+        separatesZero,
         bin(value) {
           const index = breaks.findIndex(boundary => value <= boundary);
           return index === -1 ? breaks.length : index;
@@ -5395,7 +5433,7 @@
         target.innerHTML = `<p class="analysis-empty">No matching historical electorate name is available.</p>`;
         return;
       }
-      const blocs = geographyAnalysisData.blocs;
+      const blocs = geographyBlocs();
       const width = 720, height = 280;
       const margin = { left: 42, right: 16, top: 18, bottom: 42 };
       const plotW = width - margin.left - margin.right;
@@ -5437,14 +5475,15 @@
         target.innerHTML = `<p class="analysis-empty">No geographic profile is available for this area.</p>`;
         return;
       }
-      const blocs = geographyAnalysisData.blocs;
+      const blocs = geographyBlocs(election);
       const values = blocs.map(bloc => ({
         bloc,
         area: Number(area.blocs?.[bloc] || 0),
         average: Number(geographyElectionAverage(election, bloc) || 0)
       }));
-      const width = 520, height = 245;
-      const margin = { left: 92, right: 54, top: 24, bottom: 30 };
+      const width = 620;
+      const margin = { left: 166, right: 54, top: 24, bottom: 30 };
+      const height = Math.max(245, margin.top + 18 + Math.max(0, values.length - 1) * 38 + 42);
       const plotW = width - margin.left - margin.right;
       const maximum = Math.max(...values.flatMap(value => [value.area, value.average]));
       const xMax = Math.min(100, Math.max(40, Math.ceil(maximum / 10) * 10));
@@ -5483,8 +5522,8 @@
       const electionAverage = geographyElectionAverage(currentGeographyElection(), activeAnalysisBloc);
       target.innerHTML = `
         <span class="cluster-badge" style="background:${hexToRgba(style.color, .14)}"><span class="dot" style="background:${style.color}"></span>${style.label}</span>
-        <p class="analysis-card-note"><strong>${activeAnalysisBloc}:</strong> ${info.value.toFixed(1)}% here · ${Number(electionAverage).toFixed(1)}% election-wide · ${info.neighbourMean.toFixed(1)}% across four nearest electorates.</p>
-        <p class="analysis-card-note"><strong>Nearest electorates:</strong> ${info.neighbours.join(", ")}.</p>
+        <p class="analysis-card-note"><strong>${activeAnalysisBloc}:</strong> ${info.value.toFixed(1)}% here · ${Number(electionAverage).toFixed(1)}% election-wide · ${info.neighbourMean.toFixed(1)}% across four nearest ${electorateLabel(2)}.</p>
+        <p class="analysis-card-note"><strong>Nearest ${electorateLabel(2)}:</strong> ${info.neighbours.join(", ")}.</p>
       `;
     }
 
@@ -5497,7 +5536,7 @@
       if (!supported) return;
       const records = geographyHistory(activeDistrict.district);
       const boundaryGroups = new Set(records.map(record => record.boundaryGroup));
-      document.getElementById("geographyAnalysisSubtitle").textContent = `${activeDistrict.district} · electorate-level first-preference geography`;
+      document.getElementById("geographyAnalysisSubtitle").textContent = `${activeDistrict.district} · ${electorateLabel(1)}-level vote geography`;
       document.getElementById("geographyHistoryTitle").textContent = `${activeDistrict.district} vote history`;
       document.getElementById("geographyHistoryNote").textContent = boundaryGroups.size > 1
         ? `${records.length} elections are shown. Boundaries changed during this series, so treat lines across redistribution years as indicative.`
@@ -5767,12 +5806,13 @@
         ? [...baseMapModes, "vote-share", "swing", "clusters"]
         : baseMapModes;
       const bloc = params.get("bloc");
+      const supportedBlocs = geographyBlocSets[electionCountry(config)] || geographyBlocSets.Australia;
       return {
         year: electionYears[year] ? year : "",
         district: params.get("district") || "",
         council: params.get("council") || "",
         mode: allowedMapModes.includes(mode) ? mode : "",
-        bloc: ["Labor", "Coalition", "Greens", "Independent", "Other"].includes(bloc) ? bloc : "Labor",
+        bloc: supportedBlocs.includes(bloc) ? bloc : supportedBlocs[0],
         geography
       };
     }
@@ -5794,7 +5834,7 @@
       else params.delete("council");
       if (activeMapMode && activeMapMode !== "party") params.set("mode", activeMapMode);
       else params.delete("mode");
-      if (geographyDefinitionSupported() && activeAnalysisBloc !== "Labor") params.set("bloc", activeAnalysisBloc);
+      if (geographyDefinitionSupported() && activeAnalysisBloc !== geographyDefaultBloc()) params.set("bloc", activeAnalysisBloc);
       else params.delete("bloc");
       const query = params.toString();
       const next = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
@@ -5813,7 +5853,7 @@
         syncElectionPicker();
       }
       activeMapMode = state.mode || "party";
-      activeAnalysisBloc = state.bloc || "Labor";
+      activeAnalysisBloc = state.bloc || geographyDefaultBloc();
       spatialAnalysisCache = null;
       document.querySelectorAll("[data-map-mode]").forEach(b => {
         const active = b.dataset.mapMode === activeMapMode;
@@ -5961,7 +6001,7 @@
           const style = clusterStyles[info?.category || "unavailable"];
           return `<strong>${d.district}</strong><div>${activeAnalysisBloc} ${Number.isFinite(share) ? `${share.toFixed(1)}%` : "unavailable"}</div><span>${style.label}${Number.isFinite(info?.neighbourMean) ? ` · neighbours ${info.neighbourMean.toFixed(1)}%` : ""}</span>`;
         }
-        return `<strong>${d.district}</strong><div>${activeAnalysisBloc} first preferences</div><span>${Number.isFinite(share) ? `${share.toFixed(1)}% of formal votes` : "Not available"}</span>`;
+        return `<strong>${d.district}</strong><div>${activeAnalysisBloc} vote share</div><span>${Number.isFinite(share) ? `${share.toFixed(1)}% of formal votes` : "Not available"}</span>`;
       }
       if (activeElection().localElection) {
         const [winner] = getWinnerFromFinal(d);
@@ -6076,11 +6116,11 @@
       if (activeMapMode === "vote-share" && geographyAnalysisSupported()) {
         const scale = geographyVoteShareScale();
         const labels = scale.breaks.map((boundary, index) => index === 0
-          ? `≤ ${boundary.toFixed(1)}%`
-          : `${scale.breaks[index - 1].toFixed(1)}–${boundary.toFixed(1)}%`);
+          ? (scale.separatesZero ? "0%" : `≤ ${boundary.toFixed(1)}%`)
+          : (scale.separatesZero && index === 1 ? `>0–${boundary.toFixed(1)}%` : `${scale.breaks[index - 1].toFixed(1)}–${boundary.toFixed(1)}%`));
         labels.push(scale.breaks.length ? `> ${scale.breaks.at(-1).toFixed(1)}%` : `${scale.minimum.toFixed(1)}%`);
         legend.innerHTML = scale.colors.map((color, index) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${labels[index]}</span>`).join("")
-          + `<span class="legend-item">${scale.colors.length > 1 ? "Equal-count bands" : "Vote share"} for ${activeAnalysisBloc}</span>`;
+          + `<span class="legend-item">${scale.colors.length > 1 ? (scale.separatesZero ? "Zero separated; contested seats in equal-count bands" : "Equal-count bands") : "Vote share"} for ${activeAnalysisBloc}</span>`;
         return;
       }
       if (activeMapMode === "swing" && geographyAnalysisSupported()) {
@@ -7046,7 +7086,7 @@
             : "Click a seat to explore.";
       if (geographySupported) {
         document.getElementById("mapSubtitle").textContent = geographyMapModes.has(activeMapMode)
-          ? `${activeAnalysisBloc} ${activeMapMode === "vote-share" ? "first-preference share" : activeMapMode === "swing" ? "same-boundary swing" : "nearest-electorate clusters"}. Click an area for its history.`
+          ? `${activeAnalysisBloc} ${activeMapMode === "vote-share" ? "vote share" : activeMapMode === "swing" ? "same-boundary swing" : `nearest-${electorateLabel(1)} clusters`}. Click an area for its history.`
           : "Click a seat to explore its result and political geography.";
       }
       document.getElementById("rankingsSubtitle").textContent = activeElection().membersOnly
@@ -7112,6 +7152,11 @@
       document.getElementById("changedOnly").onchange = () => applyFilters();
       document.getElementById("closeOnly").onchange = () => applyFilters();
       const geographyBlocSelect = document.getElementById("geographyBlocSelect");
+      const availableGeographyBlocs = geographyBlocs();
+      if (!availableGeographyBlocs.includes(activeAnalysisBloc)) activeAnalysisBloc = geographyDefaultBloc();
+      geographyBlocSelect.innerHTML = availableGeographyBlocs
+        .map(bloc => `<option value="${bloc}">${bloc}</option>`)
+        .join("");
       geographyBlocSelect.value = activeAnalysisBloc;
       geographyBlocSelect.onchange = () => {
         activeAnalysisBloc = geographyBlocSelect.value;
@@ -8094,11 +8139,22 @@
 
     async function autoLoadGeographyAnalysis() {
       try {
-        const response = await fetch(dataAssetPath("data/australia_geography_analysis.json"), { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const payload = await response.json();
-        if (payload?.version !== 1 || !payload?.elections) throw new Error("Unsupported geography analysis data");
-        geographyAnalysisData = payload;
+        const paths = [
+          "data/australia_geography_analysis.json",
+          "data/uk_malaysia_geography_analysis.json"
+        ];
+        const payloads = await Promise.all(paths.map(async path => {
+          const response = await fetch(dataAssetPath(path), { cache: "no-store" });
+          if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+          const payload = await response.json();
+          if (payload?.version !== 1 || !payload?.elections) throw new Error(`${path}: unsupported geography analysis data`);
+          return payload;
+        }));
+        geographyAnalysisData = {
+          version: 1,
+          blocs: payloads[0].blocs,
+          elections: Object.assign({}, ...payloads.map(payload => payload.elections))
+        };
         geographyAnalysisLoadState = "ready";
         spatialAnalysisCache = null;
         populateControls();

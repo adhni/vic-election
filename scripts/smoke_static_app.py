@@ -440,7 +440,10 @@ REQUIRED_GEOGRAPHY_ANALYSIS_MARKERS = (
     'function buildSpatialAnalysis()',
     'function renderGeographyAnalysis()',
     'data/australia_geography_analysis.json',
-    'Areas are electoral districts or federal divisions, not neighbourhoods.',
+    'data/uk_malaysia_geography_analysis.json',
+    '"United Kingdom": ["Labour", "Conservative", "Liberal Democrats"',
+    'Malaysia: ["PH / PKR-DAP", "BN", "PN / PAS"',
+    'Areas are legally defined election seats, not neighbourhoods.',
 )
 EXPECTED_ELECTION_ALIASES = {
     "federal-2025-vic": "federal-2025-au",
