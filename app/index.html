@@ -1574,7 +1574,7 @@
           </article>
           <article class="analysis-card">
             <h3 id="geographyProfileTitle">Area versus election</h3>
-            <p class="analysis-card-note">First-preference share in the selected electorate compared with the election-wide result.</p>
+            <p class="analysis-card-note">Selected-area vote share compared with the election-wide result.</p>
             <div id="geographyProfileChart" class="analysis-chart"></div>
             <div id="geographyClusterSummary" class="cluster-summary"></div>
           </article>
@@ -4552,11 +4552,59 @@
       "Australia", "Victoria", "New South Wales", "Queensland", "South Australia",
       "Western Australia", "Northern Territory", "Tasmania"
     ]);
-    const geographyJurisdictions = new Set([...australianJurisdictions, "United Kingdom", "Malaysia"]);
+    const geographyJurisdictions = new Set([
+      ...australianJurisdictions, "United Kingdom", "Malaysia", "New Zealand", "Sweden",
+      "South Africa", "Taiwan", "Türkiye", "United States", "Germany", "Poland", "Spain",
+      "Portugal", "Netherlands"
+    ]);
     const geographyBlocSets = {
       Australia: ["Labor", "Coalition", "Greens", "Independent", "Other"],
       "United Kingdom": ["Labour", "Conservative", "Liberal Democrats", "Reform / UKIP", "Greens", "National / regional", "Other"],
-      Malaysia: ["PH / PKR-DAP", "BN", "PN / PAS", "East Malaysian parties", "Independent", "Other"]
+      Malaysia: ["PH / PKR-DAP", "BN", "PN / PAS", "East Malaysian parties", "Independent", "Other"],
+      "New Zealand": ["Labour", "National", "Green", "ACT", "NZ First", "Te Pāti Māori", "Other"],
+      Sweden: ["Social Democrats", "Moderates", "Sweden Democrats", "Centre", "Left", "Christian Democrats", "Liberals", "Greens", "Other"],
+      "South Africa": ["ANC", "DA", "EFF", "MK", "IFP", "Other"],
+      Taiwan: ["DPP", "KMT", "Third party", "Other"],
+      "Türkiye": ["Erdoğan", "CHP / main opposition", "Kurdish left", "Other"],
+      "United States": ["Democratic", "Republican", "Other"],
+      Germany: ["CDU / CSU", "SPD", "Greens", "AfD", "FDP", "The Left", "BSW", "Other"],
+      Poland: ["PiS-backed", "Civic Coalition", "Confederation right", "Left", "Centre / Third Way", "Other"],
+      Spain: ["PSOE / PSC", "PP", "Vox", "Broad left", "Regional parties", "Other"],
+      Portugal: ["AD / PSD-CDS", "PS", "Chega", "Liberal Initiative", "Left Bloc", "CDU", "Livre / PAN", "Other"],
+      Netherlands: ["PVV", "GL-PvdA", "VVD", "NSC", "D66", "CDA", "BBB", "SP / PvdD", "Other"]
+    };
+    const geographyElectionKeys = new Set([
+      "2022", "2018", "2014", "2010", "2006", "nsw-2023", "nsw-2019", "nsw-2015", "nsw-2011",
+      "qld-2024", "qld-2020", "sa-2022", "sa-2018", "wa-2025", "wa-2021", "nt-2024", "nt-2020",
+      "federal-2025-au", "federal-2022-au", "federal-2019-au", "federal-2016-au", "federal-2013-vic",
+      "federal-2010-vic", "federal-2007-vic", "uk-2024", "uk-2019", "uk-2017",
+      "malaysia-2022", "malaysia-2018", "malaysia-2013", "nz-2023", "nz-2020",
+      "sweden-riksdag-2022", "sweden-riksdag-2018", "south-africa-national-2024",
+      "south-africa-national-2019", "south-africa-national-2014", "taiwan-president-2024",
+      "taiwan-president-2020", "taiwan-president-2016", "turkiye-president-2023-round-1",
+      "turkiye-president-2023-round-2", "turkiye-president-2018", "turkiye-president-2014",
+      "us-president-2024", "us-president-2020", "us-president-2016", "us-president-2012",
+      "us-president-2008", "germany-bundestag-2025", "germany-bundestag-2021",
+      "germany-bundestag-2017", "poland-president-2025-round-1", "poland-president-2025-round-2",
+      "poland-president-2020-round-1", "poland-president-2020-round-2", "spain-congress-2023",
+      "spain-congress-2019", "portugal-legislative-2025", "portugal-legislative-2024",
+      "netherlands-house-2025", "netherlands-house-2023"
+    ]);
+    const geographyAnalysisAssetPaths = {
+      Australia: "data/australia_geography_analysis.json",
+      "United Kingdom": "data/uk_malaysia_geography_analysis.json",
+      Malaysia: "data/uk_malaysia_geography_analysis.json",
+      "New Zealand": "data/new_zealand_geography_analysis.json",
+      Sweden: "data/sweden_geography_analysis.json",
+      "South Africa": "data/south_africa_geography_analysis.json",
+      Taiwan: "data/taiwan_geography_analysis.json",
+      "Türkiye": "data/turkiye_geography_analysis.json",
+      "United States": "data/us_president_geography_analysis.json",
+      Germany: "data/germany_geography_analysis.json",
+      Poland: "data/poland_geography_analysis.json",
+      Spain: "data/spain_geography_analysis.json",
+      Portugal: "data/portugal_geography_analysis.json",
+      Netherlands: "data/netherlands_geography_analysis.json"
     };
     const australianJurisdictionOrder = [
       "Australia", "Victoria", "New South Wales", "Queensland", "South Australia",
@@ -4626,6 +4674,9 @@
     let datasetMeta = { kind: "sample" };
     let geographyAnalysisData = null;
     let geographyAnalysisLoadState = "loading";
+    let activeGeographyAnalysisPath = "";
+    const loadedGeographyAnalysisAssets = new Set();
+    const loadingGeographyAnalysisAssets = new Map();
     let spatialAnalysisCache = null;
 
     const fmt = new Intl.NumberFormat("en-AU");
@@ -5154,6 +5205,13 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
+    function tintHex(hex, whiteWeight) {
+      const clean = hex.replace("#", "");
+      const value = parseInt(clean.length === 3 ? clean.split("").map(char => char + char).join("") : clean, 16);
+      const channel = shift => Math.round(((value >> shift) & 255) * (1 - whiteWeight) + 255 * whiteWeight);
+      return `#${[channel(16), channel(8), channel(0)].map(item => item.toString(16).padStart(2, "0")).join("")}`;
+    }
+
     function ranked(obj) {
       return Object.entries(obj || {}).sort(byVotesDesc);
     }
@@ -5214,7 +5272,7 @@
     };
 
     function analysisBlocColor(bloc) {
-      return {
+      return currentGeographyElection()?.colors?.[bloc] || {
         Labor: "#d94b49",
         Coalition: "#2f61bf",
         Greens: "#2d8a4b",
@@ -5232,8 +5290,20 @@
       }[bloc] || "#667184";
     }
 
+    function analysisVoteSharePalette(bloc) {
+      if (currentGeographyElection()?.colors?.[bloc]) {
+        return [.9, .72, .5, .28, .1, 0].map(weight => tintHex(analysisBlocColor(bloc), weight));
+      }
+      return voteSharePalettes[bloc] || voteSharePalettes.Independent;
+    }
+
+    function currentGeographyAnalysisKey() {
+      const composite = activeGeography ? `${activeElectionYear}:${activeGeography}` : "";
+      return composite && geographyAnalysisData?.elections?.[composite] ? composite : activeElectionYear;
+    }
+
     function currentGeographyElection() {
-      return geographyAnalysisData?.elections?.[activeElectionYear] || null;
+      return geographyAnalysisData?.elections?.[currentGeographyAnalysisKey()] || null;
     }
 
     function geographyBlocs(election = currentGeographyElection()) {
@@ -5248,16 +5318,15 @@
     }
 
     function geographyDefinitionSupported(election = activeElection()) {
-      return geographyJurisdictions.has(election?.jurisdiction)
-        && ["state", "federal", "national"].includes(election?.type)
-        && !["hare-clark", "senate-stv"].includes(election?.system)
-        && !election?.localElection
-        && !election?.contestType
-        && !election?.geographies;
+      return geographyJurisdictions.has(election?.jurisdiction) && geographyElectionKeys.has(election?.key);
     }
 
     function geographyAnalysisSupported() {
       return Boolean(currentGeographyElection());
+    }
+
+    function geographyClustersSupported() {
+      return Boolean(currentGeographyElection() && currentGeographyElection().clusters !== false);
     }
 
     function currentGeographyArea(district = activeDistrict?.district) {
@@ -5284,8 +5353,14 @@
     }
 
     function geographyVoteShareScale(bloc = activeAnalysisBloc) {
-      const values = Object.values(currentGeographyElection()?.areas || {})
-        .map(area => Number(area.blocs?.[bloc]))
+      const visibleDistricts = usesBoundaryTypeLayers() && boundaryFeatures.length
+        ? new Set(boundaryFeatures
+            .filter(feature => feature.properties?.electorate_type === activeBoundaryType)
+            .map(feature => feature.properties?.district))
+        : null;
+      const values = Object.entries(currentGeographyElection()?.areas || {})
+        .filter(([district]) => !visibleDistricts || visibleDistricts.has(district))
+        .map(([, area]) => Number(area.blocs?.[bloc]))
         .filter(Number.isFinite)
         .sort((a, b) => a - b);
       if (!values.length) return null;
@@ -5303,7 +5378,7 @@
       if (separatesZero) rawBreaks.unshift(0);
       const breaks = rawBreaks.filter((boundary, index) => index === 0 || boundary > rawBreaks[index - 1] + 1e-9);
       const bandCount = breaks.length + 1;
-      const palette = voteSharePalettes[bloc] || voteSharePalettes.Independent;
+      const palette = analysisVoteSharePalette(bloc);
       const colors = bandCount === 1
         ? [palette[Math.floor(palette.length / 2)]]
         : Array.from({ length: bandCount }, (_, index) => palette[Math.round(index * (palette.length - 1) / (bandCount - 1))]);
@@ -5349,15 +5424,23 @@
     }
 
     function buildSpatialAnalysis() {
-      const cacheKey = `${activeElectionYear}|${activeAnalysisBloc}|${boundaryFeatures.length}`;
+      const cacheKey = `${currentGeographyAnalysisKey()}|${activeBoundaryType}|${activeAnalysisBloc}|${boundaryFeatures.length}`;
       if (spatialAnalysisCache?.key === cacheKey) return spatialAnalysisCache;
       const election = currentGeographyElection();
       if (!election || !boundaryFeatures.length) return null;
 
-      const points = boundaryFeatures.map(feature => ({
+      const visibleFeatures = usesBoundaryTypeLayers()
+        ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
+        : boundaryFeatures;
+      const points = visibleFeatures.map(feature => ({
         district: feature.properties?.district || feature.properties?.district2 || feature.properties?.DISTRICT,
         centre: featureCentre(feature)
       })).filter(point => point.centre && election.areas?.[point.district]);
+      const pointsByDistrict = new Map(points.map(point => [point.district, point]));
+      const neighbourSource = election.neighbourSourceKey
+        ? geographyAnalysisData?.elections?.[election.neighbourSourceKey]
+        : election;
+      const configuredNeighbours = neighbourSource?.neighbours || {};
       const values = points.map(point => Number(election.areas[point.district].blocs?.[activeAnalysisBloc]))
         .filter(Number.isFinite);
       if (!values.length) return null;
@@ -5365,11 +5448,16 @@
       const byDistrict = new Map();
 
       points.forEach(point => {
-        const neighbours = points
-          .filter(other => other.district !== point.district)
-          .map(other => ({ ...other, distance: spatialDistance(point.centre, other.centre) }))
-          .sort((a, b) => a.distance - b.distance)
-          .slice(0, Math.min(4, points.length - 1));
+        const configured = (configuredNeighbours[point.district] || [])
+          .map(district => pointsByDistrict.get(district))
+          .filter(Boolean);
+        const neighbours = configured.length
+          ? configured
+          : points
+            .filter(other => other.district !== point.district)
+            .map(other => ({ ...other, distance: spatialDistance(point.centre, other.centre) }))
+            .sort((a, b) => a.distance - b.distance)
+            .slice(0, Math.min(4, points.length - 1));
         const value = Number(election.areas[point.district].blocs?.[activeAnalysisBloc]);
         const neighbourValues = neighbours.map(neighbour => Number(election.areas[neighbour.district].blocs?.[activeAnalysisBloc]))
           .filter(Number.isFinite);
@@ -5419,12 +5507,12 @@
     function geographyHistory(district) {
       const current = currentGeographyElection();
       if (!current || !district) return [];
+      const historyGroup = current.historyGroup || `${current.jurisdiction}|${current.level}`;
       return Object.entries(geographyAnalysisData.elections)
-        .filter(([, election]) => election.level === current.level)
-        .filter(([, election]) => current.level === "federal" || election.jurisdiction === current.jurisdiction)
+        .filter(([, election]) => (election.historyGroup || `${election.jurisdiction}|${election.level}`) === historyGroup)
         .filter(([, election]) => election.areas?.[district])
         .map(([key, election]) => ({ key, ...election, area: election.areas[district] }))
-        .sort((a, b) => Number(a.year) - Number(b.year));
+        .sort((a, b) => Number(a.year) - Number(b.year) || String(a.periodLabel || "").localeCompare(String(b.periodLabel || "")));
     }
 
     function renderGeographyHistory(records) {
@@ -5459,10 +5547,10 @@
         return `<polyline class="chart-line${bloc === activeAnalysisBloc ? " active" : ""}" points="${points}" stroke="${color}" opacity="${bloc === activeAnalysisBloc ? 1 : .48}"></polyline>${dots}`;
       }).join("");
       const labels = records.map((record, index) => `
-        <text class="chart-axis-label" x="${x(index)}" y="${height - 18}" text-anchor="middle">${record.year}</text>
+        <text class="chart-axis-label" x="${x(index)}" y="${height - 18}" text-anchor="middle">${record.periodLabel || record.year}</text>
       `).join("");
       target.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="First-preference vote history for ${activeDistrict.district}">
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Vote history for ${activeDistrict.district}">
           ${grid}${lines}${labels}
         </svg>
         <div class="analysis-chart-legend">${blocs.map(bloc => `<span><span class="dot" style="background:${analysisBlocColor(bloc)}"></span>${bloc}</span>`).join("")}</div>
@@ -5492,7 +5580,7 @@
       const ticks = [];
       for (let value = 0; value <= xMax; value += 10) ticks.push(value);
       target.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${activeDistrict.district} first-preference shares compared with the election-wide result">
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${activeDistrict.district} vote shares compared with the election-wide result">
           ${ticks.map(value => `<line class="chart-grid" x1="${x(value)}" y1="${margin.top}" x2="${x(value)}" y2="${height - margin.bottom}"></line><text x="${x(value)}" y="${height - 9}" text-anchor="middle">${value}%</text>`).join("")}
           ${values.map((value, index) => {
             const y = rowY(index);
@@ -5512,6 +5600,10 @@
 
     function renderGeographyClusterSummary() {
       const target = document.getElementById("geographyClusterSummary");
+      if (!geographyClustersSupported()) {
+        target.innerHTML = `<p class="analysis-card-note">Cluster mode is unavailable for this schematic or non-comparable map geometry.</p>`;
+        return;
+      }
       const spatial = buildSpatialAnalysis();
       const info = spatial?.byDistrict.get(activeDistrict?.district);
       if (!info) {
@@ -5536,7 +5628,7 @@
       if (!supported) return;
       const records = geographyHistory(activeDistrict.district);
       const boundaryGroups = new Set(records.map(record => record.boundaryGroup));
-      document.getElementById("geographyAnalysisSubtitle").textContent = `${activeDistrict.district} · ${electorateLabel(1)}-level vote geography`;
+      document.getElementById("geographyAnalysisSubtitle").textContent = `${activeDistrict.district} · ${electorateLabel(1)}-level ${(election.voteLabel || "vote").toLowerCase()} geography`;
       document.getElementById("geographyHistoryTitle").textContent = `${activeDistrict.district} vote history`;
       document.getElementById("geographyHistoryNote").textContent = boundaryGroups.size > 1
         ? `${records.length} elections are shown. Boundaries changed during this series, so treat lines across redistribution years as indicative.`
@@ -6315,7 +6407,22 @@
         : boundaryFeatures;
       boundaryShapes = makeBoundaryShapes(visible);
       hideTooltip();
-      if (shouldRender) renderSeatMap();
+      if (!shouldRender) return;
+      if (activeDistrict?.electorate_type !== type) {
+        const nextDistrict = districts.find(district => district.electorate_type === type)
+          || allDistricts.find(district => district.electorate_type === type);
+        if (nextDistrict) {
+          activeDistrict = nextDistrict;
+          focusRound = activeDistrict.rounds?.[0]?.round ?? 1;
+          storyStep = 0;
+          populateControls();
+          render();
+          updateUrlState();
+          return;
+        }
+      }
+      renderSeatMap();
+      renderGeographyAnalysis();
     }
 
     function syncBoundaryTypeToActiveDistrict() {
@@ -7034,7 +7141,8 @@
       const analyticalLocalVote = presidential || senate || governor || referendum || partyList;
       const geographySupported = geographyAnalysisSupported();
       const geographyComparisonAvailable = Boolean(currentGeographyElection()?.comparisonKey);
-      if (geographyMapModes.has(activeMapMode) && geographyAnalysisLoadState !== "loading" && (!geographySupported || (activeMapMode === "swing" && !geographyComparisonAvailable))) {
+      const geographyClustersAvailable = geographyClustersSupported();
+      if (geographyMapModes.has(activeMapMode) && geographyAnalysisLoadState !== "loading" && (!geographySupported || (activeMapMode === "swing" && !geographyComparisonAvailable) || (activeMapMode === "clusters" && !geographyClustersAvailable))) {
         activeMapMode = "party";
       }
       document.getElementById("electionHeading").textContent = activeElection().label;
@@ -7051,7 +7159,7 @@
       document.getElementById("partyVoteMapMode").classList.toggle("hidden", !mmp);
       document.getElementById("voteShareMapMode").classList.toggle("hidden", !geographySupported);
       document.getElementById("swingMapMode").classList.toggle("hidden", !geographySupported || !geographyComparisonAvailable);
-      document.getElementById("clusterMapMode").classList.toggle("hidden", !geographySupported);
+      document.getElementById("clusterMapMode").classList.toggle("hidden", !geographyClustersAvailable);
       document.getElementById("geographyMetricControl").classList.toggle("hidden", !geographySupported);
       document.querySelector('[data-map-mode="party"]').textContent = activeElection().mapModeLabel || (activeElection().jurisdiction === "Germany" ? "Erststimme" : "Winner");
       document.getElementById("partyVoteMapMode").textContent = activeElection().jurisdiction === "Germany" ? "Zweitstimme" : "Party vote";
@@ -8137,35 +8245,53 @@
       return inAppDirectory ? `../${path}` : path;
     }
 
-    async function autoLoadGeographyAnalysis() {
+    async function loadGeographyAnalysisAsset(path) {
+      if (!path || loadedGeographyAnalysisAssets.has(path)) return true;
+      if (loadingGeographyAnalysisAssets.has(path)) return loadingGeographyAnalysisAssets.get(path);
+      const request = (async () => {
+        const response = await fetch(dataAssetPath(path), { cache: "no-store" });
+        if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+        const payload = await response.json();
+        if (payload?.version !== 1 || !payload?.elections) throw new Error(`${path}: unsupported geography analysis data`);
+        if (!geographyAnalysisData) geographyAnalysisData = { version: 1, blocs: payload.blocs, elections: {} };
+        if (payload.blocs && !geographyAnalysisData.blocs) geographyAnalysisData.blocs = payload.blocs;
+        Object.assign(geographyAnalysisData.elections, payload.elections);
+        loadedGeographyAnalysisAssets.add(path);
+        return true;
+      })();
+      loadingGeographyAnalysisAssets.set(path, request);
       try {
-        const paths = [
-          "data/australia_geography_analysis.json",
-          "data/uk_malaysia_geography_analysis.json"
-        ];
-        const payloads = await Promise.all(paths.map(async path => {
-          const response = await fetch(dataAssetPath(path), { cache: "no-store" });
-          if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
-          const payload = await response.json();
-          if (payload?.version !== 1 || !payload?.elections) throw new Error(`${path}: unsupported geography analysis data`);
-          return payload;
-        }));
-        geographyAnalysisData = {
-          version: 1,
-          blocs: payloads[0].blocs,
-          elections: Object.assign({}, ...payloads.map(payload => payload.elections))
-        };
+        return await request;
+      } finally {
+        loadingGeographyAnalysisAssets.delete(path);
+      }
+    }
+
+    async function ensureGeographyAnalysisForElection(election = activeElection(), shouldRender = true) {
+      const path = geographyAnalysisAssetPaths[electionCountry(election)];
+      if (!path || !geographyDefinitionSupported(election)) return false;
+      activeGeographyAnalysisPath = path;
+      geographyAnalysisLoadState = "loading";
+      try {
+        await loadGeographyAnalysisAsset(path);
+        if (path !== activeGeographyAnalysisPath) return true;
         geographyAnalysisLoadState = "ready";
         spatialAnalysisCache = null;
-        populateControls();
-        render();
+        if (shouldRender) {
+          populateControls();
+          render();
+        }
+        return true;
       } catch (err) {
-        geographyAnalysisData = null;
+        if (path !== activeGeographyAnalysisPath) return false;
         geographyAnalysisLoadState = "error";
         spatialAnalysisCache = null;
-        populateControls();
-        render();
-        console.info("Political geography analysis data was not auto-loaded.", err);
+        if (shouldRender) {
+          populateControls();
+          render();
+        }
+        console.info("Political geography analysis data was not loaded.", err);
+        return false;
       }
     }
 
@@ -8265,6 +8391,7 @@
       } else if (requestedYear !== previousYear || !election.geographies?.[activeGeography]) {
         activeGeography = election.defaultGeography || "";
       }
+      const geographyAnalysisPromise = ensureGeographyAnalysisForElection(activeElection(), false);
       setLoadingState();
       activeCouncil = "all";
       activeMapMode = "party";
@@ -8284,11 +8411,19 @@
       await autoLoadCSV(requestedYear, loadId, { applyState: replaceUrl });
       if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
       if (dataLoadState === "error") {
+        await geographyAnalysisPromise;
+        if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
+        populateControls();
+        render();
         updateUrlState(replaceUrl);
         return true;
       }
       await autoLoadBoundaries(requestedYear, loadId);
       if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
+      await geographyAnalysisPromise;
+      if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
+      populateControls();
+      render();
       updateUrlState(replaceUrl);
       return true;
     }
@@ -8312,6 +8447,7 @@
       if (!election.geographies?.[geography] || geography === activeGeography) return false;
       const loadId = ++electionLoadId;
       activeGeography = geography;
+      const geographyAnalysisPromise = ensureGeographyAnalysisForElection(activeElection(), false);
       setLoadingState();
       activeCouncil = "all";
       pendingCouncilFromUrl = "";
@@ -8330,11 +8466,18 @@
       await autoLoadCSV(activeElectionYear, loadId, { applyState: false });
       if (!isCurrentElectionLoad(activeElectionYear, loadId)) return false;
       if (dataLoadState === "error") {
+        await geographyAnalysisPromise;
+        populateControls();
+        render();
         updateUrlState(replaceUrl);
         return false;
       }
       await autoLoadBoundaries(activeElectionYear, loadId);
       if (!isCurrentElectionLoad(activeElectionYear, loadId)) return false;
+      await geographyAnalysisPromise;
+      if (!isCurrentElectionLoad(activeElectionYear, loadId)) return false;
+      populateControls();
+      render();
       updateUrlState(replaceUrl);
       return dataLoadState === "ready";
     }
@@ -8439,7 +8582,6 @@
     populateElectionSelect();
     populateControls();
     applyUrlState(true);
-    autoLoadGeographyAnalysis();
     loadElection(activeElectionYear, true);
   </script>
 </body>

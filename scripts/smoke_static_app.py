@@ -441,6 +441,20 @@ REQUIRED_GEOGRAPHY_ANALYSIS_MARKERS = (
     'function renderGeographyAnalysis()',
     'data/australia_geography_analysis.json',
     'data/uk_malaysia_geography_analysis.json',
+    'data/new_zealand_geography_analysis.json',
+    'data/sweden_geography_analysis.json',
+    'data/south_africa_geography_analysis.json',
+    'data/taiwan_geography_analysis.json',
+    'data/turkiye_geography_analysis.json',
+    'data/us_president_geography_analysis.json',
+    'data/germany_geography_analysis.json',
+    'data/poland_geography_analysis.json',
+    'data/spain_geography_analysis.json',
+    'data/portugal_geography_analysis.json',
+    'data/netherlands_geography_analysis.json',
+    'function ensureGeographyAnalysisForElection(',
+    'function geographyClustersSupported()',
+    'currentGeographyElection()?.colors?.[bloc]',
     '"United Kingdom": ["Labour", "Conservative", "Liberal Democrats"',
     'Malaysia: ["PH / PKR-DAP", "BN", "PN / PAS"',
     'Areas are legally defined election seats, not neighbourhoods.',
@@ -586,7 +600,7 @@ def load_election_definitions(html_file: Path) -> list[dict[str, object]]:
             raise SystemExit(f"{html_file}: missing Victorian local-election marker {marker!r}")
     for marker in REQUIRED_GEOGRAPHY_ANALYSIS_MARKERS:
         if marker not in html:
-            raise SystemExit(f"{html_file}: missing Australian geography-analysis marker {marker!r}")
+            raise SystemExit(f"{html_file}: missing political-geography marker {marker!r}")
     if html.count("syncBoundaryTypeToActiveDistrict();") < 2:
         raise SystemExit(f"{html_file}: NZ map layer is not synchronized after filters and reset")
     match = re.search(r"const electionDefinitions = (\[.*?\]);", html, flags=re.S)

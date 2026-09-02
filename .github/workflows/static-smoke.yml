@@ -106,6 +106,7 @@ jobs:
           python scripts/validate_australia_senate.py
           python scripts/validate_australia_geography_analysis.py
           python scripts/validate_uk_malaysia_geography_analysis.py
+          python scripts/validate_global_geography_analysis.py
           python scripts/validate_south_africa_national.py
           python scripts/validate_greece_poland_belgium.py
 

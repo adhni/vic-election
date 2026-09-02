@@ -269,6 +269,35 @@ python3 scripts/build_uk_malaysia_geography_analysis.py
 python3 scripts/validate_uk_malaysia_geography_analysis.py
 ```
 
+### Global political geography
+
+The same adaptive vote-share, spatial-cluster, linked-history, and area-profile tools are available for 40 election/geography views across New Zealand, Sweden, South Africa, Taiwan, Türkiye, the United States presidential elections, Germany, Poland, Spain, Portugal, and the Netherlands. Each selector uses locally meaningful party, coalition, or candidate families, and every family receives its own perceptually distinct base colour with six adaptive within-election shades. This makes the geographic pattern of a smaller party as legible as that of a dominant party without implying that their national vote totals are equal.
+
+Exact swing is shown only when two views use the same reporting units and boundary file. It is available for New Zealand 2020–2023; South African municipalities in 2019–2024 and provinces in 2014–2024; Taiwan 2016–2024; Türkiye first rounds in 2014–2023; U.S. counties in 2008–2016 and states in 2008–2024; matching rounds of Poland 2020–2025; Spain 2019–2023; Portugal 2024–2025; and the Netherlands 2023–2025. Swedish and German histories remain visible with a boundary-change warning, but their cross-election changes are not labelled as exact swing. Portugal's official compact inset map is schematic, so clusters are disabled there.
+
+The analysis is split into country-level assets and loaded only when a supported election is opened. The largest file, U.S. presidential geography, also stores each area's four nearest neighbours so county clustering does not require an expensive all-pairs calculation in the browser.
+
+```text
+data/new_zealand_geography_analysis.json
+data/sweden_geography_analysis.json
+data/south_africa_geography_analysis.json
+data/taiwan_geography_analysis.json
+data/turkiye_geography_analysis.json
+data/us_president_geography_analysis.json
+data/germany_geography_analysis.json
+data/poland_geography_analysis.json
+data/spain_geography_analysis.json
+data/portugal_geography_analysis.json
+data/netherlands_geography_analysis.json
+```
+
+Rebuild and validate all 11 assets with:
+
+```bash
+python3 scripts/build_global_geography_analysis.py
+python3 scripts/validate_global_geography_analysis.py
+```
+
 Singapore coverage currently includes the 2025, 2020, and 2015 general elections, preserving their different SMC/GRC maps and 97-, 93-, and 89-member Parliaments:
 
 ```text
