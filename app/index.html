@@ -4553,17 +4553,37 @@
       "Western Australia", "Northern Territory", "Tasmania"
     ]);
     const geographyJurisdictions = new Set([
-      ...australianJurisdictions, "United Kingdom", "Malaysia", "New Zealand", "Sweden",
-      "South Africa", "Taiwan", "Türkiye", "United States", "Germany", "Poland", "Spain",
-      "Portugal", "Netherlands"
+      ...australianJurisdictions, "Argentina", "Austria", "Belgium", "Brazil", "Canada",
+      "Denmark", "Finland", "France", "Germany", "Greece", "India", "Indonesia", "Italy",
+      "Japan", "Malaysia", "Mexico", "Netherlands", "New Zealand", "Norway", "Philippines",
+      "Poland", "Portugal", "Singapore", "South Africa", "South Korea", "Spain", "Sweden",
+      "Taiwan", "Thailand", "Türkiye", "United Kingdom", "United States"
     ]);
     const geographyBlocSets = {
       Australia: ["Labor", "Coalition", "Greens", "Independent", "Other"],
+      Argentina: ["Peronist", "Liberal / Milei", "PRO / centre-right", "Federal / centrist", "Left", "Other"],
+      Austria: ["ÖVP", "FPÖ", "SPÖ", "Greens", "NEOS", "KPÖ", "Other"],
+      Belgium: ["N-VA", "Vlaams Belang", "Liberals", "Socialists", "Christian democrats", "Greens", "Workers' Party", "Other"],
+      Brazil: ["PT / Lula-Haddad", "Bolsonaro", "Centre-left", "Centrist", "Other"],
+      Canada: ["Liberal", "Conservative", "NDP", "Bloc Québécois", "Green", "People's Party", "Independent", "Other"],
+      Denmark: ["Social Democrats", "Venstre", "SF", "Liberal Alliance", "Moderates", "Denmark Democrats", "Conservatives", "Danish People's Party", "Red-Green Alliance", "Social Liberals", "Other"],
+      Finland: ["National Coalition", "Social Democrats", "Finns Party", "Centre", "Greens", "Left Alliance", "Swedish People's Party", "Christian Democrats", "Movement Now", "Other"],
+      France: ["Nationalist right", "Presidential centre", "Mainstream right", "Socialists", "Left", "Greens", "Other"],
+      Greece: ["New Democracy", "SYRIZA", "PASOK / KINAL", "KKE", "Greek Solution", "MeRA25", "Course of Freedom", "Nationalist right", "Other"],
+      India: ["BJP", "Congress", "Samajwadi Party", "Trinamool Congress", "YSR Congress", "Telugu Desam", "DMK", "Left parties", "Independent / NOTA", "Other"],
+      Indonesia: ["Prabowo ticket", "PDI-P-backed ticket", "Anies ticket", "Other"],
+      Italy: ["Brothers of Italy", "Lega", "Forza Italia", "Five Star Movement", "Democratic Party", "Green / left", "Centrist liberals", "Other"],
+      Japan: ["LDP", "CDP", "Centrist Reform Alliance", "Ishin", "DPP", "Komeito", "JCP", "Reiwa", "Sanseitō", "Independent / Other"],
       "United Kingdom": ["Labour", "Conservative", "Liberal Democrats", "Reform / UKIP", "Greens", "National / regional", "Other"],
       Malaysia: ["PH / PKR-DAP", "BN", "PN / PAS", "East Malaysian parties", "Independent", "Other"],
+      Mexico: ["Sheinbaum / governing coalition", "Gálvez / opposition coalition", "Máynez / MC", "Other"],
       "New Zealand": ["Labour", "National", "Green", "ACT", "NZ First", "Te Pāti Māori", "Other"],
+      Norway: ["Labour", "Progress", "Conservatives", "Centre", "Socialist Left", "Red", "Greens", "Liberals", "Christian Democrats", "Other"],
+      Philippines: ["Marcos", "Robredo", "Pacquiao", "Moreno", "Duterte", "Pangilinan", "Sotto", "Ong", "Other"],
+      Singapore: ["PAP", "WP", "PSP", "SDP", "Other opposition", "Independent"],
       Sweden: ["Social Democrats", "Moderates", "Sweden Democrats", "Centre", "Left", "Christian Democrats", "Liberals", "Greens", "Other"],
       "South Africa": ["ANC", "DA", "EFF", "MK", "IFP", "Other"],
+      "South Korea": ["Democratic", "Conservative", "Reform", "Progressive", "Other"],
       Taiwan: ["DPP", "KMT", "Third party", "Other"],
       "Türkiye": ["Erdoğan", "CHP / main opposition", "Kurdish left", "Other"],
       "United States": ["Democratic", "Republican", "Other"],
@@ -4571,7 +4591,8 @@
       Poland: ["PiS-backed", "Civic Coalition", "Confederation right", "Left", "Centre / Third Way", "Other"],
       Spain: ["PSOE / PSC", "PP", "Vox", "Broad left", "Regional parties", "Other"],
       Portugal: ["AD / PSD-CDS", "PS", "Chega", "Liberal Initiative", "Left Bloc", "CDU", "Livre / PAN", "Other"],
-      Netherlands: ["PVV", "GL-PvdA", "VVD", "NSC", "D66", "CDA", "BBB", "SP / PvdD", "Other"]
+      Netherlands: ["PVV", "GL-PvdA", "VVD", "NSC", "D66", "CDA", "BBB", "SP / PvdD", "Other"],
+      Thailand: ["Bhumjaithai", "People's Party", "Pheu Thai", "Klatham", "Democrat", "Palang Pracharath", "United Thai Nation", "Other"]
     };
     const geographyElectionKeys = new Set([
       "2022", "2018", "2014", "2010", "2006", "nsw-2023", "nsw-2019", "nsw-2015", "nsw-2011",
@@ -4588,15 +4609,48 @@
       "germany-bundestag-2017", "poland-president-2025-round-1", "poland-president-2025-round-2",
       "poland-president-2020-round-1", "poland-president-2020-round-2", "spain-congress-2023",
       "spain-congress-2019", "portugal-legislative-2025", "portugal-legislative-2024",
-      "netherlands-house-2025", "netherlands-house-2023"
+      "netherlands-house-2025", "netherlands-house-2023", "argentina-president-2023-round-1",
+      "argentina-president-2023-round-2", "argentina-president-2019", "austria-national-council-2024",
+      "austria-national-council-2019", "belgium-chamber-2024", "belgium-chamber-2019",
+      "brazil-president-2022-round-1", "brazil-president-2022-round-2",
+      "brazil-president-2018-round-1", "brazil-president-2018-round-2", "canada-2025", "canada-2021",
+      "denmark-folketing-2026", "denmark-folketing-2022", "finland-parliament-2023",
+      "finland-parliament-2019", "france-president-2022-round-1", "france-president-2022-round-2",
+      "france-president-2017-round-1", "france-president-2017-round-2",
+      "france-president-2012-round-1", "france-president-2012-round-2",
+      "france-president-2007-round-1", "france-president-2007-round-2", "greece-parliament-2023",
+      "greece-parliament-2019", "india-2024", "indonesia-president-2024",
+      "indonesia-president-2019", "indonesia-president-2014", "italy-chamber-2022",
+      "italy-chamber-2018", "japan-house-2026", "japan-house-2024", "mexico-president-2024",
+      "norway-storting-2025", "norway-storting-2021", "philippines-president-2022",
+      "philippines-vice-president-2022", "singapore-2025", "singapore-2020", "singapore-2015",
+      "south-korea-president-2025", "south-korea-president-2022", "thailand-2026"
     ]);
     const geographyAnalysisAssetPaths = {
       Australia: "data/australia_geography_analysis.json",
+      Argentina: "data/argentina_geography_analysis.json",
+      Austria: "data/austria_geography_analysis.json",
+      Belgium: "data/belgium_geography_analysis.json",
+      Brazil: "data/brazil_geography_analysis.json",
+      Canada: "data/canada_geography_analysis.json",
+      Denmark: "data/denmark_geography_analysis.json",
+      Finland: "data/finland_geography_analysis.json",
+      France: "data/france_geography_analysis.json",
+      Greece: "data/greece_geography_analysis.json",
+      India: "data/india_geography_analysis.json",
+      Indonesia: "data/indonesia_geography_analysis.json",
+      Italy: "data/italy_geography_analysis.json",
+      Japan: "data/japan_geography_analysis.json",
       "United Kingdom": "data/uk_malaysia_geography_analysis.json",
       Malaysia: "data/uk_malaysia_geography_analysis.json",
+      Mexico: "data/mexico_geography_analysis.json",
       "New Zealand": "data/new_zealand_geography_analysis.json",
+      Norway: "data/norway_geography_analysis.json",
+      Philippines: "data/philippines_geography_analysis.json",
+      Singapore: "data/singapore_geography_analysis.json",
       Sweden: "data/sweden_geography_analysis.json",
       "South Africa": "data/south_africa_geography_analysis.json",
+      "South Korea": "data/south_korea_geography_analysis.json",
       Taiwan: "data/taiwan_geography_analysis.json",
       "Türkiye": "data/turkiye_geography_analysis.json",
       "United States": "data/us_president_geography_analysis.json",
@@ -4604,7 +4658,8 @@
       Poland: "data/poland_geography_analysis.json",
       Spain: "data/spain_geography_analysis.json",
       Portugal: "data/portugal_geography_analysis.json",
-      Netherlands: "data/netherlands_geography_analysis.json"
+      Netherlands: "data/netherlands_geography_analysis.json",
+      Thailand: "data/thailand_geography_analysis.json"
     };
     const australianJurisdictionOrder = [
       "Australia", "Victoria", "New South Wales", "Queensland", "South Australia",

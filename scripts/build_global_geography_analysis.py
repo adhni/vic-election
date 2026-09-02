@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import heapq
 import json
 import math
@@ -17,7 +18,25 @@ ROOT = Path(__file__).resolve().parents[1]
 EXPLORER_HTML = ROOT / "app" / "index.html"
 
 OUTPUT_PATHS = {
+    "Argentina": ROOT / "data" / "argentina_geography_analysis.json",
+    "Austria": ROOT / "data" / "austria_geography_analysis.json",
+    "Belgium": ROOT / "data" / "belgium_geography_analysis.json",
+    "Brazil": ROOT / "data" / "brazil_geography_analysis.json",
+    "Canada": ROOT / "data" / "canada_geography_analysis.json",
+    "Denmark": ROOT / "data" / "denmark_geography_analysis.json",
+    "Finland": ROOT / "data" / "finland_geography_analysis.json",
+    "France": ROOT / "data" / "france_geography_analysis.json",
+    "Greece": ROOT / "data" / "greece_geography_analysis.json",
+    "India": ROOT / "data" / "india_geography_analysis.json",
+    "Indonesia": ROOT / "data" / "indonesia_geography_analysis.json",
+    "Italy": ROOT / "data" / "italy_geography_analysis.json",
+    "Japan": ROOT / "data" / "japan_geography_analysis.json",
+    "Mexico": ROOT / "data" / "mexico_geography_analysis.json",
     "New Zealand": ROOT / "data" / "new_zealand_geography_analysis.json",
+    "Norway": ROOT / "data" / "norway_geography_analysis.json",
+    "Philippines": ROOT / "data" / "philippines_geography_analysis.json",
+    "Singapore": ROOT / "data" / "singapore_geography_analysis.json",
+    "South Korea": ROOT / "data" / "south_korea_geography_analysis.json",
     "Sweden": ROOT / "data" / "sweden_geography_analysis.json",
     "South Africa": ROOT / "data" / "south_africa_geography_analysis.json",
     "Taiwan": ROOT / "data" / "taiwan_geography_analysis.json",
@@ -28,10 +47,30 @@ OUTPUT_PATHS = {
     "Spain": ROOT / "data" / "spain_geography_analysis.json",
     "Portugal": ROOT / "data" / "portugal_geography_analysis.json",
     "Netherlands": ROOT / "data" / "netherlands_geography_analysis.json",
+    "Thailand": ROOT / "data" / "thailand_geography_analysis.json",
 }
 
 BLOCS = {
+    "Argentina": ("Peronist", "Liberal / Milei", "PRO / centre-right", "Federal / centrist", "Left", "Other"),
+    "Austria": ("ÖVP", "FPÖ", "SPÖ", "Greens", "NEOS", "KPÖ", "Other"),
+    "Belgium": ("N-VA", "Vlaams Belang", "Liberals", "Socialists", "Christian democrats", "Greens", "Workers' Party", "Other"),
+    "Brazil": ("PT / Lula-Haddad", "Bolsonaro", "Centre-left", "Centrist", "Other"),
+    "Canada": ("Liberal", "Conservative", "NDP", "Bloc Québécois", "Green", "People's Party", "Independent", "Other"),
+    "Denmark": ("Social Democrats", "Venstre", "SF", "Liberal Alliance", "Moderates", "Denmark Democrats", "Conservatives", "Danish People's Party", "Red-Green Alliance", "Social Liberals", "Other"),
+    "Finland": ("National Coalition", "Social Democrats", "Finns Party", "Centre", "Greens", "Left Alliance", "Swedish People's Party", "Christian Democrats", "Movement Now", "Other"),
+    "France": ("Nationalist right", "Presidential centre", "Mainstream right", "Socialists", "Left", "Greens", "Other"),
+    "Greece": ("New Democracy", "SYRIZA", "PASOK / KINAL", "KKE", "Greek Solution", "MeRA25", "Course of Freedom", "Nationalist right", "Other"),
+    "India": ("BJP", "Congress", "Samajwadi Party", "Trinamool Congress", "YSR Congress", "Telugu Desam", "DMK", "Left parties", "Independent / NOTA", "Other"),
+    "Indonesia": ("Prabowo ticket", "PDI-P-backed ticket", "Anies ticket", "Other"),
+    "Italy": ("Brothers of Italy", "Lega", "Forza Italia", "Five Star Movement", "Democratic Party", "Green / left", "Centrist liberals", "Other"),
+    "Japan": ("LDP", "CDP", "Centrist Reform Alliance", "Ishin", "DPP", "Komeito", "JCP", "Reiwa", "Sanseitō", "Independent / Other"),
+    "Mexico": ("Sheinbaum / governing coalition", "Gálvez / opposition coalition", "Máynez / MC", "Other"),
     "New Zealand": ("Labour", "National", "Green", "ACT", "NZ First", "Te Pāti Māori", "Other"),
+    "Norway": ("Labour", "Progress", "Conservatives", "Centre", "Socialist Left", "Red", "Greens", "Liberals", "Christian Democrats", "Other"),
+    "Philippines president": ("Marcos", "Robredo", "Pacquiao", "Moreno", "Other"),
+    "Philippines vice president": ("Duterte", "Pangilinan", "Sotto", "Ong", "Other"),
+    "Singapore": ("PAP", "WP", "PSP", "SDP", "Other opposition", "Independent"),
+    "South Korea": ("Democratic", "Conservative", "Reform", "Progressive", "Other"),
     "Sweden": ("Social Democrats", "Moderates", "Sweden Democrats", "Centre", "Left", "Christian Democrats", "Liberals", "Greens", "Other"),
     "South Africa": ("ANC", "DA", "EFF", "MK", "IFP", "Other"),
     "Taiwan": ("DPP", "KMT", "Third party", "Other"),
@@ -42,9 +81,76 @@ BLOCS = {
     "Spain": ("PSOE / PSC", "PP", "Vox", "Broad left", "Regional parties", "Other"),
     "Portugal": ("AD / PSD-CDS", "PS", "Chega", "Liberal Initiative", "Left Bloc", "CDU", "Livre / PAN", "Other"),
     "Netherlands": ("PVV", "GL-PvdA", "VVD", "NSC", "D66", "CDA", "BBB", "SP / PvdD", "Other"),
+    "Thailand": ("Bhumjaithai", "People's Party", "Pheu Thai", "Klatham", "Democrat", "Palang Pracharath", "United Thai Nation", "Other"),
 }
 
 COLORS = {
+    "Argentina": {
+        "Peronist": "#3c82c4", "Liberal / Milei": "#7c48aa", "PRO / centre-right": "#e2b323",
+        "Federal / centrist": "#d17b24", "Left": "#c33c4f", "Other": "#72777f",
+    },
+    "Austria": {
+        "ÖVP": "#3d9c9a", "FPÖ": "#2f61bf", "SPÖ": "#d94b49", "Greens": "#2d8a4b",
+        "NEOS": "#c23c87", "KPÖ": "#9d2435", "Other": "#72777f",
+    },
+    "Belgium": {
+        "N-VA": "#d8aa16", "Vlaams Belang": "#6f4a23", "Liberals": "#2f61bf",
+        "Socialists": "#d94b49", "Christian democrats": "#e28a22", "Greens": "#2d8a4b",
+        "Workers' Party": "#9f315a", "Other": "#72777f",
+    },
+    "Brazil": {
+        "PT / Lula-Haddad": "#d94b49", "Bolsonaro": "#2f61bf", "Centre-left": "#d88924",
+        "Centrist": "#2a9b91", "Other": "#72777f",
+    },
+    "Canada": {
+        "Liberal": "#d94b49", "Conservative": "#2f61bf", "NDP": "#e28a22",
+        "Bloc Québécois": "#36a5c5", "Green": "#2d8a4b", "People's Party": "#7c48aa",
+        "Independent": "#555f6d", "Other": "#8a6a3f",
+    },
+    "Denmark": {
+        "Social Democrats": "#d94b49", "Venstre": "#2f61bf", "SF": "#b23a78",
+        "Liberal Alliance": "#28a6c7", "Moderates": "#7c48aa", "Denmark Democrats": "#d39e18",
+        "Conservatives": "#2d8a4b", "Danish People's Party": "#35528c",
+        "Red-Green Alliance": "#9d2435", "Social Liberals": "#d45f93", "Other": "#72777f",
+    },
+    "Finland": {
+        "National Coalition": "#2f61bf", "Social Democrats": "#d94b49", "Finns Party": "#d1a600",
+        "Centre": "#3e9447", "Greens": "#63a844", "Left Alliance": "#b23a78",
+        "Swedish People's Party": "#d68a1d", "Christian Democrats": "#334a8b",
+        "Movement Now": "#28a6c7", "Other": "#72777f",
+    },
+    "France": {
+        "Nationalist right": "#243e84", "Presidential centre": "#e2b323", "Mainstream right": "#2f61bf",
+        "Socialists": "#d94b72", "Left": "#b2182b", "Greens": "#2d8a4b", "Other": "#72777f",
+    },
+    "Greece": {
+        "New Democracy": "#2f61bf", "SYRIZA": "#b23a78", "PASOK / KINAL": "#2d8a4b",
+        "KKE": "#b2182b", "Greek Solution": "#3e5b91", "MeRA25": "#d94b49",
+        "Course of Freedom": "#7c48aa", "Nationalist right": "#6f4a23", "Other": "#72777f",
+    },
+    "India": {
+        "BJP": "#e28a22", "Congress": "#2f61bf", "Samajwadi Party": "#d94b49",
+        "Trinamool Congress": "#2d8a4b", "YSR Congress": "#2878b5", "Telugu Desam": "#d1a600",
+        "DMK": "#b2182b", "Left parties": "#9f315a", "Independent / NOTA": "#555f6d", "Other": "#72777f",
+    },
+    "Indonesia": {
+        "Prabowo ticket": "#2f61bf", "PDI-P-backed ticket": "#d94b49",
+        "Anies ticket": "#2d8a4b", "Other": "#72777f",
+    },
+    "Italy": {
+        "Brothers of Italy": "#243e84", "Lega": "#2d8a4b", "Forza Italia": "#2f61bf",
+        "Five Star Movement": "#d8aa16", "Democratic Party": "#d94b49", "Green / left": "#b23a78",
+        "Centrist liberals": "#28a6c7", "Other": "#72777f",
+    },
+    "Japan": {
+        "LDP": "#d94b49", "CDP": "#2f61bf", "Centrist Reform Alliance": "#d8aa16",
+        "Ishin": "#2d8a4b", "DPP": "#e28a22", "Komeito": "#c33c8b", "JCP": "#b2182b",
+        "Reiwa": "#7c48aa", "Sanseitō": "#3e9447", "Independent / Other": "#72777f",
+    },
+    "Mexico": {
+        "Sheinbaum / governing coalition": "#8c2d49", "Gálvez / opposition coalition": "#2f61bf",
+        "Máynez / MC": "#e28a22", "Other": "#72777f",
+    },
     "New Zealand": {
         "Labour": "#d94b49", "National": "#2f61bf", "Green": "#2d8a4b", "ACT": "#e3b21a",
         "NZ First": "#343a40", "Te Pāti Māori": "#8b4aa8", "Other": "#7a6a55",
@@ -83,6 +189,29 @@ COLORS = {
         "PVV": "#2d75b6", "GL-PvdA": "#c33c4f", "VVD": "#243e84", "NSC": "#d19c19",
         "D66": "#5a9f45", "CDA": "#24724c", "BBB": "#76a83d", "SP / PvdD": "#9f315a", "Other": "#72777f",
     },
+    "Norway": {
+        "Labour": "#d94b49", "Progress": "#2f61bf", "Conservatives": "#2859a9",
+        "Centre": "#3e9447", "Socialist Left": "#b23a78", "Red": "#9d2435",
+        "Greens": "#63a844", "Liberals": "#28a6c7", "Christian Democrats": "#d1a600", "Other": "#72777f",
+    },
+    "Philippines": {
+        "Marcos": "#d94b49", "Robredo": "#d94b8a", "Pacquiao": "#2f61bf", "Moreno": "#28a6c7",
+        "Duterte": "#2d8a4b", "Pangilinan": "#c33c8b", "Sotto": "#d8aa16", "Ong": "#7c48aa",
+        "Other": "#72777f",
+    },
+    "Singapore": {
+        "PAP": "#d94b49", "WP": "#2f61bf", "PSP": "#d94b72", "SDP": "#d68a1d",
+        "Other opposition": "#7c48aa", "Independent": "#555f6d",
+    },
+    "South Korea": {
+        "Democratic": "#2f61bf", "Conservative": "#d94b49", "Reform": "#e28a22",
+        "Progressive": "#b23a78", "Other": "#72777f",
+    },
+    "Thailand": {
+        "Bhumjaithai": "#2f61bf", "People's Party": "#e28a22", "Pheu Thai": "#d94b49",
+        "Klatham": "#2d8a4b", "Democrat": "#28a6c7", "Palang Pracharath": "#243e84",
+        "United Thai Nation": "#7c48aa", "Other": "#72777f",
+    },
 }
 
 
@@ -99,6 +228,7 @@ def spec(
     cluster_group_property: str | None = None,
     clusters: bool = True,
     vote_label: str = "Vote share",
+    bloc_key: str | None = None,
 ) -> dict[str, object]:
     analysis_key = f"{key}:{geography}" if geography else key
     return {
@@ -114,10 +244,68 @@ def spec(
         "clusterGroupProperty": cluster_group_property,
         "clusters": clusters,
         "voteLabel": vote_label,
+        "blocKey": bloc_key or jurisdiction,
     }
 
 
 SPECS = [
+    spec("argentina-president-2019", "Argentina", boundary_group="argentina-provinces", history_group="argentina-president-round-1", period_label="2019 R1", vote_label="Presidential vote"),
+    spec("argentina-president-2023-round-1", "Argentina", boundary_group="argentina-provinces", history_group="argentina-president-round-1", comparison_key="argentina-president-2019", period_label="2023 R1", vote_label="First-round presidential vote"),
+    spec("argentina-president-2023-round-2", "Argentina", boundary_group="argentina-provinces", history_group="argentina-president-round-2", period_label="2023 R2", vote_label="Runoff presidential vote"),
+    spec("austria-national-council-2019", "Austria", boundary_group="austria-municipalities-2019", history_group="austria-national-council", vote_label="National Council party vote"),
+    spec("austria-national-council-2024", "Austria", boundary_group="austria-municipalities-2024", history_group="austria-national-council", vote_label="National Council party vote"),
+    spec("belgium-chamber-2019", "Belgium", boundary_group="belgium-chamber-constituencies", history_group="belgium-chamber", vote_label="Chamber party vote"),
+    spec("belgium-chamber-2024", "Belgium", boundary_group="belgium-chamber-constituencies", history_group="belgium-chamber", comparison_key="belgium-chamber-2019", vote_label="Chamber party vote"),
+    spec("brazil-president-2018-round-1", "Brazil", boundary_group="brazil-states", history_group="brazil-president-round-1", period_label="2018 R1", vote_label="First-round presidential vote"),
+    spec("brazil-president-2022-round-1", "Brazil", boundary_group="brazil-states", history_group="brazil-president-round-1", comparison_key="brazil-president-2018-round-1", period_label="2022 R1", vote_label="First-round presidential vote"),
+    spec("brazil-president-2018-round-2", "Brazil", boundary_group="brazil-states", history_group="brazil-president-round-2", period_label="2018 R2", vote_label="Runoff presidential vote"),
+    spec("brazil-president-2022-round-2", "Brazil", boundary_group="brazil-states", history_group="brazil-president-round-2", comparison_key="brazil-president-2018-round-2", period_label="2022 R2", vote_label="Runoff presidential vote"),
+    spec("canada-2021", "Canada", boundary_group="canada-ridings-2021", history_group="canada-federal", vote_label="Candidate vote"),
+    spec("canada-2025", "Canada", boundary_group="canada-ridings-2025", history_group="canada-federal", vote_label="Candidate vote"),
+    spec("denmark-folketing-2022", "Denmark", boundary_group="denmark-municipalities-2022", history_group="denmark-folketing", vote_label="Folketing party vote"),
+    spec("denmark-folketing-2026", "Denmark", boundary_group="denmark-municipalities-2026", history_group="denmark-folketing", vote_label="Folketing party vote"),
+    spec("finland-parliament-2019", "Finland", boundary_group="finland-municipalities-2019", history_group="finland-parliament", vote_label="Parliament party vote"),
+    spec("finland-parliament-2023", "Finland", boundary_group="finland-municipalities-2023", history_group="finland-parliament", vote_label="Parliament party vote"),
+    spec("france-president-2007-round-1", "France", geography="department", boundary_group="france-departments-2007", history_group="france-president:department:round-1", period_label="2007 R1", clusters=False, vote_label="First-round presidential vote"),
+    spec("france-president-2012-round-1", "France", geography="department", boundary_group="france-departments-2012", history_group="france-president:department:round-1", period_label="2012 R1", clusters=False, vote_label="First-round presidential vote"),
+    spec("france-president-2017-round-1", "France", geography="department", boundary_group="france-departments-2017", history_group="france-president:department:round-1", period_label="2017 R1", clusters=False, vote_label="First-round presidential vote"),
+    spec("france-president-2022-round-1", "France", geography="department", boundary_group="france-departments-2022", history_group="france-president:department:round-1", period_label="2022 R1", clusters=False, vote_label="First-round presidential vote"),
+    spec("france-president-2007-round-2", "France", geography="department", boundary_group="france-departments-2007", history_group="france-president:department:round-2", period_label="2007 R2", clusters=False, vote_label="Runoff presidential vote"),
+    spec("france-president-2012-round-2", "France", geography="department", boundary_group="france-departments-2012", history_group="france-president:department:round-2", period_label="2012 R2", clusters=False, vote_label="Runoff presidential vote"),
+    spec("france-president-2017-round-2", "France", geography="department", boundary_group="france-departments-2017", history_group="france-president:department:round-2", period_label="2017 R2", clusters=False, vote_label="Runoff presidential vote"),
+    spec("france-president-2022-round-2", "France", geography="department", boundary_group="france-departments-2022", history_group="france-president:department:round-2", period_label="2022 R2", clusters=False, vote_label="Runoff presidential vote"),
+    spec("france-president-2007-round-1", "France", geography="region", boundary_group="france-regions-2007", history_group="france-president:region:round-1", period_label="2007 R1", clusters=False, vote_label="First-round presidential vote"),
+    spec("france-president-2012-round-1", "France", geography="region", boundary_group="france-regions-2012", history_group="france-president:region:round-1", period_label="2012 R1", clusters=False, vote_label="First-round presidential vote"),
+    spec("france-president-2017-round-1", "France", geography="region", boundary_group="france-regions-2017", history_group="france-president:region:round-1", period_label="2017 R1", clusters=False, vote_label="First-round presidential vote"),
+    spec("france-president-2022-round-1", "France", geography="region", boundary_group="france-regions-2022", history_group="france-president:region:round-1", period_label="2022 R1", clusters=False, vote_label="First-round presidential vote"),
+    spec("france-president-2007-round-2", "France", geography="region", boundary_group="france-regions-2007", history_group="france-president:region:round-2", period_label="2007 R2", clusters=False, vote_label="Runoff presidential vote"),
+    spec("france-president-2012-round-2", "France", geography="region", boundary_group="france-regions-2012", history_group="france-president:region:round-2", period_label="2012 R2", clusters=False, vote_label="Runoff presidential vote"),
+    spec("france-president-2017-round-2", "France", geography="region", boundary_group="france-regions-2017", history_group="france-president:region:round-2", period_label="2017 R2", clusters=False, vote_label="Runoff presidential vote"),
+    spec("france-president-2022-round-2", "France", geography="region", boundary_group="france-regions-2022", history_group="france-president:region:round-2", period_label="2022 R2", clusters=False, vote_label="Runoff presidential vote"),
+    spec("greece-parliament-2019", "Greece", boundary_group="greece-constituencies-2019", history_group="greece-parliament", clusters=False, vote_label="Parliament party vote"),
+    spec("greece-parliament-2023", "Greece", boundary_group="greece-constituencies-2023", history_group="greece-parliament", clusters=False, vote_label="Parliament party vote"),
+    spec("india-2024", "India", boundary_group="india-constituencies-2024", history_group="india-lok-sabha", vote_label="Lok Sabha candidate vote"),
+    spec("indonesia-president-2014", "Indonesia", geography="province", boundary_group="indonesia-provinces-2014", history_group="indonesia-president:province", vote_label="Presidential ticket vote"),
+    spec("indonesia-president-2019", "Indonesia", geography="province", boundary_group="indonesia-provinces-2019", history_group="indonesia-president:province", vote_label="Presidential ticket vote"),
+    spec("indonesia-president-2024", "Indonesia", geography="province", boundary_group="indonesia-provinces-2024", history_group="indonesia-president:province", vote_label="Presidential ticket vote"),
+    spec("indonesia-president-2014", "Indonesia", geography="kabupaten-kota", boundary_group="indonesia-local-2014", history_group="indonesia-president:kabupaten-kota", vote_label="Presidential ticket vote"),
+    spec("indonesia-president-2019", "Indonesia", geography="kabupaten-kota", boundary_group="indonesia-local-2024", history_group="indonesia-president:kabupaten-kota", vote_label="Presidential ticket vote"),
+    spec("indonesia-president-2024", "Indonesia", geography="kabupaten-kota", boundary_group="indonesia-local-2024", history_group="indonesia-president:kabupaten-kota", comparison_key="indonesia-president-2019:kabupaten-kota", vote_label="Presidential ticket vote"),
+    spec("italy-chamber-2018", "Italy", boundary_group="italy-provinces-2018", history_group="italy-chamber", vote_label="Chamber party vote"),
+    spec("italy-chamber-2022", "Italy", boundary_group="italy-provinces-2022", history_group="italy-chamber", vote_label="Chamber party vote"),
+    spec("japan-house-2024", "Japan", boundary_group="japan-constituencies-post-2022", history_group="japan-house", clusters=False, vote_label="Constituency candidate vote"),
+    spec("japan-house-2026", "Japan", boundary_group="japan-constituencies-post-2022", history_group="japan-house", comparison_key="japan-house-2024", clusters=False, vote_label="Constituency candidate vote"),
+    spec("mexico-president-2024", "Mexico", boundary_group="mexico-federal-districts-2024", history_group="mexico-president", vote_label="Presidential coalition vote"),
+    spec("norway-storting-2021", "Norway", boundary_group="norway-municipalities-2021", history_group="norway-storting", vote_label="Storting party vote"),
+    spec("norway-storting-2025", "Norway", boundary_group="norway-municipalities-2025", history_group="norway-storting", vote_label="Storting party vote"),
+    spec("philippines-president-2022", "Philippines", boundary_group="philippines-canvass-2022", history_group="philippines-president", vote_label="Presidential candidate vote", bloc_key="Philippines president"),
+    spec("philippines-vice-president-2022", "Philippines", boundary_group="philippines-canvass-2022", history_group="philippines-vice-president", vote_label="Vice-presidential candidate vote", bloc_key="Philippines vice president"),
+    spec("singapore-2015", "Singapore", boundary_group="singapore-divisions-2015", history_group="singapore-general", vote_label="Candidate or team vote"),
+    spec("singapore-2020", "Singapore", boundary_group="singapore-divisions-2020", history_group="singapore-general", vote_label="Candidate or team vote"),
+    spec("singapore-2025", "Singapore", boundary_group="singapore-divisions-2025", history_group="singapore-general", vote_label="Candidate or team vote"),
+    spec("south-korea-president-2022", "South Korea", boundary_group="south-korea-municipalities-2022", history_group="south-korea-president", vote_label="Presidential candidate vote"),
+    spec("south-korea-president-2025", "South Korea", boundary_group="south-korea-municipalities-2025", history_group="south-korea-president", vote_label="Presidential candidate vote"),
+    spec("thailand-2026", "Thailand", boundary_group="thailand-constituency-cartogram-2026", history_group="thailand-house", clusters=False, vote_label="Constituency candidate vote"),
     spec("nz-2020", "New Zealand", row_type="party_vote", boundary_group="nz-electorates-2020", history_group="nz-party-vote", cluster_group_property="electorate_type", vote_label="Party vote"),
     spec("nz-2023", "New Zealand", row_type="party_vote", boundary_group="nz-electorates-2020", history_group="nz-party-vote", comparison_key="nz-2020", cluster_group_property="electorate_type", vote_label="Party vote"),
     spec("sweden-riksdag-2018", "Sweden", boundary_group="sweden-municipalities-2018", history_group="sweden-riksdag", vote_label="Party-list vote"),
@@ -165,6 +353,174 @@ def normalise(raw: str) -> str:
     return " ".join((raw or "").strip().split())
 
 
+def map_argentina(raw: str) -> str:
+    candidate = normalise(raw)
+    if candidate in {"Alberto Fernández", "Sergio Massa"}:
+        return "Peronist"
+    if candidate in {"Javier Milei", "José Luis Espert"}:
+        return "Liberal / Milei"
+    if candidate in {"Mauricio Macri", "Patricia Bullrich"}:
+        return "PRO / centre-right"
+    if candidate in {"Roberto Lavagna", "Juan Schiaretti"}:
+        return "Federal / centrist"
+    if candidate in {"Nicolás del Caño", "Myriam Bregman"}:
+        return "Left"
+    return "Other"
+
+
+def map_austria(raw: str) -> str:
+    party = normalise(raw)
+    return party if party in {"ÖVP", "FPÖ", "SPÖ", "NEOS", "KPÖ"} else "Greens" if party == "GRÜNE" else "Other"
+
+
+def map_belgium(raw: str) -> str:
+    party = normalise(raw)
+    folded = party.casefold()
+    if party == "N-VA":
+        return "N-VA"
+    if folded == "vlaams belang":
+        return "Vlaams Belang"
+    if party in {"MR", "Open Vld"}:
+        return "Liberals"
+    if party in {"PS", "Vooruit", "sp.a"}:
+        return "Socialists"
+    if party in {"CD&V", "cd&v", "LES ENGAGÉS", "CDH"}:
+        return "Christian democrats"
+    if party in {"GROEN", "ECOLO"}:
+        return "Greens"
+    if folded.startswith("ptb") or folded == "pvda":
+        return "Workers' Party"
+    return "Other"
+
+
+def map_brazil(raw: str) -> str:
+    candidate = normalise(raw)
+    if candidate in {"Luiz Inácio Lula da Silva", "Fernando Haddad"}:
+        return "PT / Lula-Haddad"
+    if candidate == "Jair Bolsonaro":
+        return "Bolsonaro"
+    if candidate == "Ciro Gomes":
+        return "Centre-left"
+    if candidate in {"Geraldo Alckmin", "Simone Tebet"}:
+        return "Centrist"
+    return "Other"
+
+
+def map_canada(raw: str) -> str:
+    party = normalise(raw)
+    if party in {"Liberal", "Conservative", "NDP", "Bloc Québécois", "Green", "People's Party"}:
+        return party
+    if party in {"Independent", "No Affiliation"}:
+        return "Independent"
+    return "Other"
+
+
+def map_denmark(raw: str) -> str:
+    party = normalise(raw)
+    principals = {
+        "Social Democrats", "Venstre", "SF", "Liberal Alliance", "Moderates", "Denmark Democrats",
+        "Conservatives", "Danish People's Party", "Red-Green Alliance", "Social Liberals",
+    }
+    return party if party in principals else "Other"
+
+
+def map_finland(raw: str) -> str:
+    return {
+        "KOK": "National Coalition", "SDP": "Social Democrats", "PS": "Finns Party", "KESK": "Centre",
+        "VIHR": "Greens", "VAS": "Left Alliance", "RKP": "Swedish People's Party",
+        "KD": "Christian Democrats", "LIIKE": "Movement Now",
+    }.get(normalise(raw), "Other")
+
+
+def map_france(raw: str) -> str:
+    candidate = normalise(raw)
+    if candidate in {"Marine Le Pen", "Jean-Marie Le Pen", "Éric Zemmour", "Nicolas Dupont-Aignan", "Philippe de Villiers"}:
+        return "Nationalist right"
+    if candidate in {"Emmanuel Macron", "François Bayrou"}:
+        return "Presidential centre"
+    if candidate in {"Nicolas Sarkozy", "François Fillon", "Valérie Pécresse"}:
+        return "Mainstream right"
+    if candidate in {"François Hollande", "Ségolène Royal", "Benoît Hamon", "Anne Hidalgo"}:
+        return "Socialists"
+    if candidate in {
+        "Jean-Luc Mélenchon", "Olivier Besancenot", "Philippe Poutou", "Fabien Roussel",
+        "Marie-George Buffet", "Nathalie Arthaud", "Arlette Laguiller",
+    }:
+        return "Left"
+    if candidate in {"Yannick Jadot", "Eva Joly", "Dominique Voynet", "José Bové"}:
+        return "Greens"
+    return "Other"
+
+
+def map_greece(raw: str) -> str:
+    party = normalise(raw)
+    if party in {"New Democracy", "SYRIZA", "KKE", "Greek Solution", "MeRA25", "Course of Freedom"}:
+        return party
+    if party == "PASOK–KINAL":
+        return "PASOK / KINAL"
+    if party in {"Spartans", "Niki", "Χρυσή Αυγή"}:
+        return "Nationalist right"
+    return "Other"
+
+
+def map_india(raw: str) -> str:
+    party = normalise(raw)
+    direct = {
+        "Bharatiya Janata Party": "BJP", "Indian National Congress": "Congress",
+        "Samajwadi Party": "Samajwadi Party", "All India Trinamool Congress": "Trinamool Congress",
+        "Yuvajana Sramika Rythu Congress Party": "YSR Congress", "Telugu Desam": "Telugu Desam",
+        "Dravida Munnetra Kazhagam": "DMK",
+    }
+    if party in direct:
+        return direct[party]
+    if party in {
+        "Communist Party of India (Marxist)", "Communist Party of India",
+        "Communist Party of India (Marxist-Leninist) (Liberation)", "Revolutionary Socialist Party",
+    }:
+        return "Left parties"
+    if party in {"Independent", "None of the Above"}:
+        return "Independent / NOTA"
+    return "Other"
+
+
+def map_indonesia(raw: str) -> str:
+    ticket = normalise(raw)
+    if ticket.startswith("Prabowo–"):
+        return "Prabowo ticket"
+    if ticket.startswith("Jokowi–") or ticket == "Ganjar–Mahfud":
+        return "PDI-P-backed ticket"
+    if ticket == "Anies–Muhaimin":
+        return "Anies ticket"
+    return "Other"
+
+
+def map_italy(raw: str) -> str:
+    party = normalise(raw)
+    if party in {"Brothers of Italy", "Lega", "Forza Italia", "Five Star Movement", "Democratic Party"}:
+        return party
+    if party in {"Greens and Left Alliance", "Free and Equal", "People's Union", "Power to the People"}:
+        return "Green / left"
+    if party in {"Action–Italia Viva", "More Europe", "Us Moderates", "Civic Commitment"}:
+        return "Centrist liberals"
+    return "Other"
+
+
+def map_japan(raw: str) -> str:
+    return {
+        "Liberal Democratic Party": "LDP", "Constitutional Democratic Party": "CDP",
+        "Centrist Reform Alliance": "Centrist Reform Alliance", "Japan Innovation Party": "Ishin",
+        "Democratic Party for the People": "DPP", "Komeito": "Komeito",
+        "Japanese Communist Party": "JCP", "Reiwa Shinsengumi": "Reiwa", "Sanseitō": "Sanseitō",
+    }.get(normalise(raw), "Independent / Other")
+
+
+def map_mexico(raw: str) -> str:
+    return {
+        "Sheinbaum": "Sheinbaum / governing coalition", "Gálvez": "Gálvez / opposition coalition",
+        "Máynez": "Máynez / MC",
+    }.get(normalise(raw), "Other")
+
+
 def map_new_zealand(raw: str) -> str:
     party = normalise(raw)
     return {
@@ -172,6 +528,55 @@ def map_new_zealand(raw: str) -> str:
         "ACT New Zealand": "ACT", "New Zealand First Party": "NZ First",
         "Te Pāti Māori": "Te Pāti Māori", "Māori Party": "Te Pāti Māori", "Maori Party": "Te Pāti Māori",
     }.get(party, "Other")
+
+
+def map_norway(raw: str) -> str:
+    return {
+        "A": "Labour", "FRP": "Progress", "H": "Conservatives", "SP": "Centre",
+        "SV": "Socialist Left", "RØDT": "Red", "MDG": "Greens", "V": "Liberals",
+        "KRF": "Christian Democrats",
+    }.get(normalise(raw), "Other")
+
+
+def map_philippines_president(raw: str) -> str:
+    candidate = normalise(raw)
+    return candidate if candidate in {"Marcos", "Robredo", "Pacquiao", "Moreno"} else "Other"
+
+
+def map_philippines_vice_president(raw: str) -> str:
+    candidate = normalise(raw)
+    return candidate if candidate in {"Duterte", "Pangilinan", "Sotto", "Ong"} else "Other"
+
+
+def map_singapore(raw: str) -> str:
+    party = normalise(raw)
+    if party in {"PAP", "WP", "PSP", "SDP"}:
+        return party
+    if "Independent" in party:
+        return "Independent"
+    return "Other opposition"
+
+
+def map_south_korea(raw: str) -> str:
+    candidate = normalise(raw)
+    if candidate == "Lee Jae-myung":
+        return "Democratic"
+    if candidate in {"Yoon Suk Yeol", "Kim Moon-soo"}:
+        return "Conservative"
+    if candidate == "Lee Jun-seok":
+        return "Reform"
+    if candidate in {"Sim Sang-jung", "Kwon Young-guk", "Kim Jae-yeon", "Oh Jun-ho", "Lee Baek-yoon"}:
+        return "Progressive"
+    return "Other"
+
+
+def map_thailand(raw: str) -> str:
+    party = normalise(raw)
+    principals = {
+        "Bhumjaithai", "People's Party", "Pheu Thai", "Klatham", "Democrat",
+        "Palang Pracharath", "United Thai Nation",
+    }
+    return party if party in principals else "Other"
 
 
 def map_sweden(raw: str) -> str:
@@ -281,7 +686,26 @@ def map_netherlands(raw: str) -> str:
 
 
 MAPPERS: dict[str, Callable[[str], str]] = {
+    "Argentina": map_argentina,
+    "Austria": map_austria,
+    "Belgium": map_belgium,
+    "Brazil": map_brazil,
+    "Canada": map_canada,
+    "Denmark": map_denmark,
+    "Finland": map_finland,
+    "France": map_france,
+    "Greece": map_greece,
+    "India": map_india,
+    "Indonesia": map_indonesia,
+    "Italy": map_italy,
+    "Japan": map_japan,
+    "Mexico": map_mexico,
     "New Zealand": map_new_zealand,
+    "Norway": map_norway,
+    "Philippines president": map_philippines_president,
+    "Philippines vice president": map_philippines_vice_president,
+    "Singapore": map_singapore,
+    "South Korea": map_south_korea,
     "Sweden": map_sweden,
     "South Africa": map_south_africa,
     "Taiwan": map_taiwan,
@@ -292,6 +716,7 @@ MAPPERS: dict[str, Callable[[str], str]] = {
     "Spain": map_spain,
     "Portugal": map_portugal,
     "Netherlands": map_netherlands,
+    "Thailand": map_thailand,
 }
 
 
@@ -337,19 +762,28 @@ def distance(left: tuple[float, float], right: tuple[float, float]) -> float:
 
 
 NEIGHBOUR_CACHE: dict[tuple[Path, str | None], dict[str, list[str]]] = {}
+BOUNDARY_FINGERPRINT_CACHE: dict[Path, str] = {}
 NEIGHBOUR_OWNER: dict[tuple[str, str | None], str] = {}
 
 
 def boundary_details(
     boundary_path: Path,
     cluster_group_property: str | None,
-) -> tuple[set[str], dict[str, list[str]]]:
+) -> tuple[set[str], dict[str, list[str]], str]:
     cache_key = (boundary_path, cluster_group_property)
     if cache_key in NEIGHBOUR_CACHE:
         neighbours = NEIGHBOUR_CACHE[cache_key]
-        return set(neighbours), neighbours
+        return set(neighbours), neighbours, BOUNDARY_FINGERPRINT_CACHE[boundary_path]
 
     data = json.loads(boundary_path.read_text(encoding="utf-8"))
+    canonical_geometry = {
+        str(feature.get("properties", {}).get("district", "")): feature.get("geometry")
+        for feature in data.get("features", [])
+    }
+    boundary_fingerprint = hashlib.sha256(
+        json.dumps(canonical_geometry, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    BOUNDARY_FINGERPRINT_CACHE[boundary_path] = boundary_fingerprint
     grouped: dict[str, list[tuple[str, tuple[float, float]]]] = defaultdict(list)
     for feature in data.get("features", []):
         properties = feature.get("properties", {})
@@ -368,7 +802,7 @@ def boundary_details(
             )
             neighbours[district] = [other for _, other in nearest]
     NEIGHBOUR_CACHE[cache_key] = neighbours
-    return set(neighbours), neighbours
+    return set(neighbours), neighbours, boundary_fingerprint
 
 
 def number(value: str, cast=float):
@@ -394,8 +828,9 @@ def build_election(specification: dict[str, object], definitions: dict[str, dict
         raise SystemExit(f"{analysis_key}: no {row_type!r} rows")
 
     jurisdiction = str(specification["jurisdiction"])
-    blocs = BLOCS[jurisdiction]
-    mapper = MAPPERS[jurisdiction]
+    bloc_key = str(specification["blocKey"])
+    blocs = BLOCS[bloc_key]
+    mapper = MAPPERS[bloc_key]
     areas: dict[str, object] = {}
     for district in sorted(grouped):
         district_rows = grouped[district]
@@ -418,7 +853,7 @@ def build_election(specification: dict[str, object], definitions: dict[str, dict
         }
 
     boundary_path = ROOT / str(config["boundaries"])
-    boundary_districts, neighbours = boundary_details(
+    boundary_districts, neighbours, boundary_fingerprint = boundary_details(
         boundary_path,
         str(specification["clusterGroupProperty"]) if specification["clusterGroupProperty"] else None,
     )
@@ -443,11 +878,13 @@ def build_election(specification: dict[str, object], definitions: dict[str, dict
         "geography": specification["geography"],
         "historyGroup": specification["historyGroup"],
         "boundaryGroup": specification["boundaryGroup"],
+        "boundaryFile": str(config["boundaries"]),
+        "boundaryFingerprint": boundary_fingerprint,
         "comparisonKey": specification["comparisonKey"],
         "clusters": specification["clusters"],
         "voteLabel": specification["voteLabel"],
         "blocs": list(blocs),
-        "colors": COLORS[jurisdiction],
+        "colors": {bloc: COLORS[jurisdiction][bloc] for bloc in blocs},
         "defaultBloc": blocs[0],
         "areas": areas,
     }

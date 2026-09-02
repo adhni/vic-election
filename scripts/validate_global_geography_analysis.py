@@ -15,7 +15,26 @@ from build_global_geography_analysis import (
 
 
 EXAMPLES = {
+    "Argentina": {"Javier Milei": "Liberal / Milei", "Sergio Massa": "Peronist", "Patricia Bullrich": "PRO / centre-right"},
+    "Austria": {"ÖVP": "ÖVP", "GRÜNE": "Greens", "BIER": "Other"},
+    "Belgium": {"MR": "Liberals", "Vooruit": "Socialists", "PTB-PVDA": "Workers' Party"},
+    "Brazil": {"Luiz Inácio Lula da Silva": "PT / Lula-Haddad", "Jair Bolsonaro": "Bolsonaro", "Simone Tebet": "Centrist"},
+    "Canada": {"Liberal": "Liberal", "Bloc Québécois": "Bloc Québécois", "No Affiliation": "Independent"},
+    "Denmark": {"Social Democrats": "Social Democrats", "Venstre": "Venstre", "Alternative": "Other"},
+    "Finland": {"KOK": "National Coalition", "PS": "Finns Party", "LIIKE": "Movement Now"},
+    "France": {"Marine Le Pen": "Nationalist right", "Emmanuel Macron": "Presidential centre", "Jean-Luc Mélenchon": "Left"},
+    "Greece": {"New Democracy": "New Democracy", "PASOK–KINAL": "PASOK / KINAL", "Spartans": "Nationalist right"},
+    "India": {"Bharatiya Janata Party": "BJP", "Indian National Congress": "Congress", "None of the Above": "Independent / NOTA"},
+    "Indonesia": {"Prabowo–Gibran": "Prabowo ticket", "Jokowi–Ma'ruf": "PDI-P-backed ticket", "Anies–Muhaimin": "Anies ticket"},
+    "Italy": {"Brothers of Italy": "Brothers of Italy", "Greens and Left Alliance": "Green / left", "Action–Italia Viva": "Centrist liberals"},
+    "Japan": {"Liberal Democratic Party": "LDP", "Centrist Reform Alliance": "Centrist Reform Alliance", "Independent": "Independent / Other"},
+    "Mexico": {"Sheinbaum": "Sheinbaum / governing coalition", "Gálvez": "Gálvez / opposition coalition", "Máynez": "Máynez / MC"},
     "New Zealand": {"Labour Party": "Labour", "National Party": "National", "Māori Party": "Te Pāti Māori"},
+    "Norway": {"A": "Labour", "FRP": "Progress", "MDG": "Greens"},
+    "Philippines president": {"Marcos": "Marcos", "Robredo": "Robredo", "Lacson": "Other"},
+    "Philippines vice president": {"Duterte": "Duterte", "Sotto": "Sotto", "Atienza": "Other"},
+    "Singapore": {"PAP": "PAP", "WP": "WP", "- Independent Candidate": "Independent"},
+    "South Korea": {"Lee Jae-myung": "Democratic", "Yoon Suk Yeol": "Conservative", "Lee Jun-seok": "Reform"},
     "Sweden": {"S": "Social Democrats", "SD": "Sweden Democrats", "MP": "Greens"},
     "South Africa": {"ANC": "ANC", "DA": "DA", "MK": "MK", "COPE": "Other"},
     "Taiwan": {"Democratic Progressive Party": "DPP", "Kuomintang": "KMT", "People First Party": "Third party"},
@@ -26,6 +45,7 @@ EXAMPLES = {
     "Spain": {"PSOE": "PSOE / PSC", "PP": "PP", "VOX": "Vox", "SUMAR": "Broad left", "ERC": "Regional parties"},
     "Portugal": {"PPD/PSD.CDS-PP": "AD / PSD-CDS", "PS": "PS", "CH": "Chega", "B.E.": "Left Bloc"},
     "Netherlands": {"PVV": "PVV", "GL-PvdA": "GL-PvdA", "PvdD": "SP / PvdD", "Volt": "Other"},
+    "Thailand": {"Bhumjaithai": "Bhumjaithai", "People's Party": "People's Party", "Thai Sang Thai": "Other"},
 }
 
 
@@ -59,12 +79,13 @@ def main() -> None:
         for payload in actual_payloads.values()
         for key, election in payload["elections"].items()
     }
+    specifications = {str(item["analysisKey"]): item for item in SPECS}
     comparison_count = 0
     area_count = 0
     for key, election in elections.items():
         areas = election["areas"]
         area_count += len(areas)
-        expected_blocs = set(BLOCS[election["jurisdiction"]])
+        expected_blocs = set(BLOCS[str(specifications[key]["blocKey"])])
         if set(election["blocs"]) != expected_blocs:
             raise SystemExit(f"{key}: unexpected bloc list")
         if set(election["colors"]) != expected_blocs:
@@ -78,8 +99,10 @@ def main() -> None:
             if any(not 0 <= float(value) <= 100 for value in shares.values()):
                 raise SystemExit(f"{key} {district}: vote share outside 0–100")
             total = sum(float(value) for value in shares.values())
-            if not 99.99 <= total <= 100.01:
+            if area["formal"] and not 99.99 <= total <= 100.01:
                 raise SystemExit(f"{key} {district}: bloc shares sum to {total:.3f}%")
+            if not area["formal"] and total != 0:
+                raise SystemExit(f"{key} {district}: zero-vote area has non-zero bloc shares")
 
         comparison_key = election.get("comparisonKey")
         if comparison_key:
@@ -89,6 +112,8 @@ def main() -> None:
                 raise SystemExit(f"{key}: comparison {comparison_key} is missing")
             if previous["boundaryGroup"] != election["boundaryGroup"]:
                 raise SystemExit(f"{key}: comparison crosses boundary groups")
+            if previous["boundaryFingerprint"] != election["boundaryFingerprint"]:
+                raise SystemExit(f"{key}: comparison uses different boundary geometry")
             if previous["historyGroup"] != election["historyGroup"]:
                 raise SystemExit(f"{key}: comparison crosses history groups")
             if set(previous["areas"]) != set(areas):
@@ -104,7 +129,7 @@ def main() -> None:
             if not set(neighbours) <= set(areas):
                 raise SystemExit(f"{key} {district}: unknown nearest neighbour")
 
-    if len(elections) != 40 or area_count != 20449 or comparison_count != 19:
+    if len(elections) != 97 or area_count != 32665 or comparison_count != 25:
         raise SystemExit(
             f"Unexpected totals: {len(elections)} views, {area_count} areas, {comparison_count} comparisons"
         )
