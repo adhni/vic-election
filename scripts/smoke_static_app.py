@@ -37,7 +37,7 @@ REQUIRED_VISUAL_REFRESH_MARKERS = (
     'id="explorerMap"',
     'function setupResponsiveFilters()',
     'button.setAttribute("aria-pressed", String(active));',
-    'tabindex="${!isMuted && d.district === keyboardDistrict ? "0" : "-1"}"',
+    'tabindex="${!presentation.muted && d.district === context.keyboardDistrict ? "0" : "-1"}"',
     'role="group" aria-label="${activeElection().label} interactive',
     'selectDistrictByName(district, { focusMap: true });',
     '["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"]',
@@ -414,7 +414,7 @@ REQUIRED_UK_REFERENDUM_MARKERS = (
     '"referendum", "party-list"',
 )
 REQUIRED_COMPACT_FPP_MARKERS = (
-    "if ((isFppElection() || isSenateStvElection()) && !d.rounds.length && Object.keys(d.first).length)",
+    'if (["fpp", "mmp-fpp", "senate-stv"].includes(election.system) && !d.rounds.length && Object.keys(d.first).length)',
     'totals: { ...d.first }, final: true, synthetic: true',
 )
 REQUIRED_VIC_LOCAL_MARKERS = (
@@ -484,6 +484,106 @@ EXPECTED_ELECTION_ALIASES = {
     "federal-2019-vic": "federal-2019-au",
     "federal-2016-vic": "federal-2016-au",
 }
+
+
+def javascript_function(html: str, name: str) -> str:
+    """Return one top-level JavaScript function from the inline application script."""
+    start = re.search(rf"^    (?:async )?function {re.escape(name)}\(", html, flags=re.M)
+    if not start:
+        raise SystemExit(f"app/index.html: missing JavaScript function {name}()")
+    following = re.search(
+        r"^    (?:async )?function [A-Za-z_$][\w$]*\(",
+        html[start.end():],
+        flags=re.M,
+    )
+    end = start.end() + following.start() if following else len(html)
+    return html[start.start():end]
+
+
+def validate_performance_guards(html_file: Path, html: str) -> None:
+    """Keep expensive map and asset-loading work out of hot interaction paths."""
+    geography_visual = javascript_function(html, "geographyMapVisual")
+    if "geographyVoteShareScale(" in geography_visual:
+        raise SystemExit(
+            f"{html_file}: vote-share scale must be prepared once per map render, "
+            "not recomputed by geographyMapVisual() for every path"
+        )
+    if html.count("geographyVoteShareScale(") != 2:
+        raise SystemExit(
+            f"{html_file}: expected exactly one geographyVoteShareScale() call "
+            "outside its definition"
+        )
+
+    for name in ("zoomMap", "resetMapZoom"):
+        body = javascript_function(html, name)
+        if "renderSeatMap(" in body or re.search(r"(?<![A-Za-z])render\(", body):
+            raise SystemExit(
+                f"{html_file}: {name}() must update the existing SVG viewBox "
+                "without rebuilding the map"
+            )
+
+    if 'cache: "no-store"' in html or "cache: 'no-store'" in html:
+        raise SystemExit(
+            f"{html_file}: static data fetches must allow browser caching"
+        )
+
+    asset_loader = javascript_function(html, "loadElectionAssets")
+    if "await " in asset_loader:
+        raise SystemExit(
+            f"{html_file}: election asset requests must be started without serial awaits"
+        )
+    for asset_call in (
+        "results: settleAsset(autoLoadCSV(context))",
+        "boundaries: settleAsset(autoLoadBoundaries(context))",
+        "analysis: settleAsset(ensureGeographyAnalysisForElection(context))",
+    ):
+        if asset_call not in asset_loader:
+            raise SystemExit(
+                f"{html_file}: concurrent loader is missing {asset_call}"
+            )
+
+    for name in ("loadElection", "setGeography"):
+        body = javascript_function(html, name)
+        asset_call = body.find("loadElectionAssets(context)")
+        first_await = body.find("await ")
+        if asset_call < 0 or first_await < 0 or asset_call > first_await:
+            raise SystemExit(
+                f"{html_file}: {name}() must start asset loading before its first await"
+            )
+        results_await = body.find("await assets.results")
+        boundaries_await = body.find("await assets.boundaries")
+        if results_await < 0 or boundaries_await < 0 or results_await > boundaries_await:
+            raise SystemExit(
+                f"{html_file}: {name}() must expose results before waiting for boundaries"
+            )
+        if "void finishGeographyAnalysisLoad(context, assets.analysis)" not in body:
+            raise SystemExit(
+                f"{html_file}: {name}() must keep optional geography analysis non-blocking"
+            )
+        if body.count("render();") > 2:
+            raise SystemExit(
+                f"{html_file}: {name}() should render loading state once and completed state once"
+            )
+
+    boundary_loader = javascript_function(html, "autoLoadBoundaries")
+    if "renderSeatMap(" in boundary_loader or "renderGeographyAnalysis(" in boundary_loader:
+        raise SystemExit(
+            f"{html_file}: autoLoadBoundaries() must not trigger intermediate map renders"
+        )
+
+    shape_activation = javascript_function(html, "activateBoundaryShapes")
+    empty_guard = shape_activation.find("if (!features.length)")
+    cache_lookup = shape_activation.find("touchCache(boundaryShapeCache")
+    if empty_guard < 0 or cache_lookup < 0 or empty_guard > cache_lookup:
+        raise SystemExit(
+            f"{html_file}: empty boundary layers must not poison the projected-shape cache"
+        )
+
+    upload = javascript_function(html, "handleUpload")
+    if "ensureGeographyAnalysisForElection(context)" not in upload:
+        raise SystemExit(
+            f"{html_file}: uploaded results must reattach cancellable geography analysis"
+        )
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -789,6 +889,7 @@ def main() -> None:
             raise SystemExit(f"{homepage}: missing homepage marker {marker!r}")
 
     first = load_election_definitions(explorer)
+    validate_performance_guards(explorer, explorer.read_text(encoding="utf-8"))
     aliases = load_election_aliases(explorer)
     keys = {str(election["key"]) for election in first}
     for old_key, new_key in aliases.items():

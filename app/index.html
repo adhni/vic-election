@@ -4717,6 +4717,11 @@
     let activeBoundaryType = "General";
     let boundaryFeatures = [];
     let boundaryShapes = [];
+    let activeBoundaryShapeKey = "";
+    let renderedBoundaryShapes = null;
+    let resultsRevision = 0;
+    let renderedResultsRevision = -1;
+    let renderedMapDistrictsByName = new Map();
     let mapBaseView = { x: 0, y: 0, w: 960, h: 560 };
     let mapView = { ...mapBaseView };
     let mapDrag = null;
@@ -4729,10 +4734,24 @@
     let datasetMeta = { kind: "sample" };
     let geographyAnalysisData = null;
     let geographyAnalysisLoadState = "loading";
-    let activeGeographyAnalysisPath = "";
-    const loadedGeographyAnalysisAssets = new Set();
-    const loadingGeographyAnalysisAssets = new Map();
     let spatialAnalysisCache = null;
+    let geographyVoteShareScaleCache = null;
+    const geographyElectionAverageCache = new WeakMap();
+    const parsedResultsCache = new Map();
+    const boundaryAssetCache = new Map();
+    const geographyAnalysisAssetCache = new Map();
+    const boundaryShapeCache = new Map();
+    const rankedObjectCache = new WeakMap();
+    const cacheWeightMetadata = new WeakMap();
+    const MEBIBYTE = 1024 * 1024;
+    const MAX_RESULTS_CACHE_ENTRIES = 3;
+    const MAX_RESULTS_CACHE_WEIGHT = 32 * MEBIBYTE;
+    const MAX_BOUNDARY_CACHE_ENTRIES = 2;
+    const MAX_BOUNDARY_CACHE_WEIGHT = 40 * MEBIBYTE;
+    const MAX_ANALYSIS_CACHE_ENTRIES = 3;
+    const MAX_ANALYSIS_CACHE_WEIGHT = 20 * MEBIBYTE;
+    const MAX_BOUNDARY_SHAPE_CACHE_WEIGHT = 20 * MEBIBYTE;
+    let activeElectionAbortController = null;
 
     const fmt = new Intl.NumberFormat("en-AU");
     const pct = (n, d) => d ? ((n / d) * 100).toFixed(1) + "%" : "—";
@@ -5268,7 +5287,12 @@
     }
 
     function ranked(obj) {
-      return Object.entries(obj || {}).sort(byVotesDesc);
+      if (!obj || typeof obj !== "object") return [];
+      const cached = rankedObjectCache.get(obj);
+      if (cached) return cached;
+      const rows = Object.entries(obj).sort(byVotesDesc);
+      rankedObjectCache.set(obj, rows);
+      return rows;
     }
 
     function getParty(d, candidate) {
@@ -5395,6 +5419,12 @@
 
     function geographyElectionAverage(election, bloc) {
       if (!election) return null;
+      let electionCache = geographyElectionAverageCache.get(election);
+      if (!electionCache) {
+        electionCache = new Map();
+        geographyElectionAverageCache.set(election, electionCache);
+      }
+      if (electionCache.has(bloc)) return electionCache.get(bloc);
       let votes = 0;
       let formal = 0;
       Object.values(election.areas || {}).forEach(area => {
@@ -5404,10 +5434,14 @@
         votes += areaFormal * share / 100;
         formal += areaFormal;
       });
-      return formal ? votes / formal * 100 : null;
+      const average = formal ? votes / formal * 100 : null;
+      electionCache.set(bloc, average);
+      return average;
     }
 
     function geographyVoteShareScale(bloc = activeAnalysisBloc) {
+      const cacheKey = `${currentGeographyAnalysisKey()}|${activeGeography}|${activeBoundaryType}|${bloc}|${boundaryFeatures.length}`;
+      if (geographyVoteShareScaleCache?.key === cacheKey) return geographyVoteShareScaleCache.scale;
       const visibleDistricts = usesBoundaryTypeLayers() && boundaryFeatures.length
         ? new Set(boundaryFeatures
             .filter(feature => feature.properties?.electorate_type === activeBoundaryType)
@@ -5437,7 +5471,7 @@
       const colors = bandCount === 1
         ? [palette[Math.floor(palette.length / 2)]]
         : Array.from({ length: bandCount }, (_, index) => palette[Math.round(index * (palette.length - 1) / (bandCount - 1))]);
-      return {
+      const scale = {
         breaks,
         colors,
         minimum: values[0],
@@ -5448,6 +5482,8 @@
           return index === -1 ? breaks.length : index;
         }
       };
+      geographyVoteShareScaleCache = { key: cacheKey, scale };
+      return scale;
     }
 
     function geographySwing(district, bloc = activeAnalysisBloc) {
@@ -5536,11 +5572,12 @@
       return spatialAnalysisCache;
     }
 
-    function geographyMapVisual(d) {
+    function geographyMapVisual(d, context = {}) {
       if (activeMapMode === "vote-share") {
         const value = geographyAreaShare(d.district);
         if (!Number.isFinite(value)) return { color: "#8b9098", fill: hexToRgba("#8b9098", .28), label: "Vote share unavailable" };
-        const scale = geographyVoteShareScale();
+        const scale = context.voteShareScale;
+        if (!scale) return { color: "#8b9098", fill: hexToRgba("#8b9098", .28), label: "Vote share unavailable" };
         const color = scale.colors[scale.bin(value)];
         return { color, fill: color, label: `${activeAnalysisBloc} ${value.toFixed(1)}%` };
       }
@@ -6044,7 +6081,7 @@
         const visible = activeCouncil === "all"
           ? boundaryFeatures
           : boundaryFeatures.filter(feature => feature.properties?.council === activeCouncil);
-        boundaryShapes = makeBoundaryShapes(visible);
+        activateBoundaryShapes(visible, `council:${activeCouncil}`);
       }
       syncBoundaryTypeToActiveDistrict();
       suppressUrlUpdate = false;
@@ -6053,9 +6090,9 @@
       if (!pendingDistrictFromUrl && !pendingCouncilFromUrl) updateUrlState(replace);
     }
 
-    function mapVisual(d) {
+    function mapVisual(d, context = {}) {
       if (geographyMapModes.has(activeMapMode) && geographyAnalysisSupported()) {
-        return geographyMapVisual(d);
+        return geographyMapVisual(d, context);
       }
       if (activeElection().localElection && activeMapMode === "party") {
         if (d.contest_status === "uncontested") {
@@ -6258,10 +6295,14 @@
       if (tip) tip.style.display = "none";
     }
 
-    function renderMapLegend() {
+    function renderMapLegend(context = {}) {
       const legend = document.getElementById("mapLegend");
       if (activeMapMode === "vote-share" && geographyAnalysisSupported()) {
-        const scale = geographyVoteShareScale();
+        const scale = context.voteShareScale;
+        if (!scale) {
+          legend.innerHTML = "";
+          return;
+        }
         const labels = scale.breaks.map((boundary, index) => index === 0
           ? (scale.separatesZero ? "0%" : `≤ ${boundary.toFixed(1)}%`)
           : (scale.separatesZero && index === 1 ? `>0–${boundary.toFixed(1)}%` : `${scale.breaks[index - 1].toFixed(1)}–${boundary.toFixed(1)}%`));
@@ -6367,19 +6408,28 @@
     function selectDistrictByName(name, { focusMap = false, revealResult = false, focusResult = false } = {}) {
       const selected = allDistricts.find(d => d.district === name);
       if (!selected) return;
+      let filtersReset = false;
       if (!districtMatchesFilters(selected, getFilterState())) {
         document.getElementById("districtSearch").value = "";
         document.getElementById("partyFilter").value = "all";
         document.getElementById("changedOnly").checked = false;
         document.getElementById("closeOnly").checked = false;
         districts = [...allDistricts];
+        filtersReset = true;
       }
       activeDistrict = selected;
-      if (usesBoundaryTypeLayers() && selected.electorate_type) setBoundaryType(selected.electorate_type, false);
+      if (usesBoundaryTypeLayers() && selected.electorate_type && selected.electorate_type !== activeBoundaryType) {
+        setBoundaryType(selected.electorate_type, false);
+      }
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
-      populateControls();
-      render();
+      if (filtersReset) {
+        populateControls();
+        render();
+      } else {
+        syncSelectedDistrictUi();
+        renderSelectedDistrict();
+      }
       if (focusMap) {
         [...document.querySelectorAll(".district-shape")]
           .find(shape => shape.dataset.district === name)
@@ -6450,6 +6500,59 @@
       });
     }
 
+    function touchCache(cache, key) {
+      if (!cache.has(key)) return null;
+      const value = cache.get(key);
+      cache.delete(key);
+      cache.set(key, value);
+      return value;
+    }
+
+    function rememberCache(cache, key, value, maximum, weight = 1, maximumWeight = Infinity) {
+      let weights = cacheWeightMetadata.get(cache);
+      if (!weights) {
+        weights = new Map();
+        cacheWeightMetadata.set(cache, weights);
+      }
+      cache.delete(key);
+      weights.delete(key);
+      cache.set(key, value);
+      weights.set(key, Math.max(1, Number(weight) || 1));
+      let totalWeight = [...weights.values()].reduce((sum, item) => sum + item, 0);
+      while (cache.size > maximum || (cache.size > 1 && totalWeight > maximumWeight)) {
+        const oldestKey = cache.keys().next().value;
+        cache.delete(oldestKey);
+        totalWeight -= weights.get(oldestKey) || 0;
+        weights.delete(oldestKey);
+      }
+      return value;
+    }
+
+    function activateBoundaryShapes(features, layer = "all") {
+      if (!features.length) {
+        boundaryShapes = [];
+        activeBoundaryShapeKey = "";
+        return;
+      }
+      const dataset = activeDataset();
+      const key = `${activeElectionYear}|${activeGeography}|${dataset.boundaries}|${layer}`;
+      if (activeBoundaryShapeKey === key && boundaryShapes.length) return;
+      const cached = touchCache(boundaryShapeCache, key);
+      if (cached) {
+        boundaryShapes = cached.shapes;
+        mapBaseView = { ...cached.baseView };
+        mapView = { ...mapBaseView };
+      } else {
+        boundaryShapes = makeBoundaryShapes(features);
+        const shapeWeight = boundaryShapes.reduce((sum, shape) => sum + shape.path.length * 2 + 128, 0);
+        rememberCache(boundaryShapeCache, key, {
+          shapes: boundaryShapes,
+          baseView: { ...mapBaseView }
+        }, MAX_BOUNDARY_CACHE_ENTRIES * 2, shapeWeight, MAX_BOUNDARY_SHAPE_CACHE_WEIGHT);
+      }
+      activeBoundaryShapeKey = key;
+    }
+
     function setBoundaryType(type, shouldRender = true) {
       activeBoundaryType = type;
       document.querySelectorAll("[data-boundary-type]").forEach(button => {
@@ -6460,7 +6563,7 @@
       const visible = usesBoundaryTypeLayers()
         ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
         : boundaryFeatures;
-      boundaryShapes = makeBoundaryShapes(visible);
+      activateBoundaryShapes(visible, `type:${activeBoundaryType}`);
       hideTooltip();
       if (!shouldRender) return;
       if (activeDistrict?.electorate_type !== type) {
@@ -6486,81 +6589,167 @@
       }
     }
 
+    function mapDistrictTitle(d, visual) {
+      const [winner] = getWinnerFromFinal(d);
+      const winnerParty = getParty(d, winner);
+      const localState = activeElection().contestType === "party-list" ? localResultState(d) : null;
+      if (geographyMapModes.has(activeMapMode) && geographyAnalysisSupported()) {
+        return `${d.district} · ${visual.label}`;
+      }
+      if (activeElection().localElection) {
+        return `${d.district} · ${d.contest_status === "uncontested" ? "uncontested" : `${shortName(winner)} · margin ${pct(finalMargin(d), d.formal_votes)}`}`;
+      }
+      if (isMultiMemberElection()) return `${d.district} · ${electedSeatSummary(d)}`;
+      if (!isFppElection()) {
+        return `${d.district} · ${partyBloc(winnerParty)} · ${partyLabel(winnerParty)} · ${shortName(winner)}`;
+      }
+      const result = d.contest_status === "void"
+        ? "no certified winner · election voided"
+        : d.contest_status === "cancelled"
+          ? "electorate vote cancelled"
+          : d.contest_status === "unavailable"
+            ? "no digitised vote"
+            : d.contest_status === "single-candidate"
+              ? `elected deputy ${shortName(winner)} · vote total not published`
+              : localState?.status === "aggregated"
+                ? "aggregated local lists · local leader unavailable"
+                : localState?.status === "tied"
+                  ? `${localLeaderNames(d).join(" / ")} tied on ${fmt.format(localState.topVotes)} votes`
+                  : `${partyLabel(winnerParty)} · ${shortName(winner)}`;
+      return `${d.district} · ${result}`;
+    }
+
+    function seatMapRenderContext() {
+      const byName = new Map(allDistricts.map(d => [d.district, d]));
+      const shown = new Set(districts.map(d => d.district));
+      const shapeIndexes = new Map(boundaryShapes.map((shape, index) => [shape.district, index]));
+      const focusedDistrict = document.activeElement?.classList?.contains("district-shape")
+        ? document.activeElement.dataset.district
+        : "";
+      const keyboardDistrict = shown.has(focusedDistrict)
+        ? focusedDistrict
+        : shown.has(activeDistrict?.district)
+          ? activeDistrict.district
+          : boundaryShapes.find(shape => shown.has(shape.district))?.district || "";
+      return {
+        byName,
+        shown,
+        shapeIndexes,
+        keyboardDistrict,
+        voteShareScale: activeMapMode === "vote-share" && geographyAnalysisSupported()
+          ? geographyVoteShareScale()
+          : null
+      };
+    }
+
+    function mapShapePresentation(d, context) {
+      const visual = mapVisual(d, context);
+      return {
+        visual,
+        active: activeDistrict?.district === d.district,
+        muted: !context.shown.has(d.district),
+        title: mapDistrictTitle(d, visual)
+      };
+    }
+
+    function applyMapView() {
+      const svg = document.querySelector("#seatMap > svg");
+      if (!svg) return;
+      svg.setAttribute("viewBox", `${mapView.x.toFixed(1)} ${mapView.y.toFixed(1)} ${mapView.w.toFixed(1)} ${mapView.h.toFixed(1)}`);
+    }
+
+    function updateSeatMapPresentation(target, svg, context) {
+      renderMapLegend(context);
+      hideTooltip();
+      renderedMapDistrictsByName = context.byName;
+      const mapClass = `geo-map${activeElection().compactMobileMap ? " compact-mobile-map" : ""}${activeElection().wideMobileMap ? " wide-mobile-map" : ""}`;
+      target.className = mapClass;
+      svg.setAttribute("class", mapClass);
+      svg.setAttribute("aria-label", `${activeElection().label} interactive ${electorateLabel(2)} map. Use arrow keys to move between areas and Enter to select.`);
+      svg.setAttribute("preserveAspectRatio", activeElection().compactMobileMap ? "xMidYMid slice" : "xMidYMid meet");
+      applyMapView();
+
+      const activePaths = [];
+      svg.querySelectorAll(".district-shape").forEach(shape => {
+        const d = context.byName.get(shape.dataset.district);
+        if (!d) return;
+        const presentation = mapShapePresentation(d, context);
+        shape.classList.toggle("active", presentation.active);
+        shape.classList.toggle("muted", presentation.muted);
+        shape.tabIndex = !presentation.muted && d.district === context.keyboardDistrict ? 0 : -1;
+        shape.setAttribute("aria-label", presentation.title);
+        shape.setAttribute("title", presentation.title);
+        shape.setAttribute("fill", presentation.visual.fill);
+        const title = shape.querySelector("title");
+        if (title) title.textContent = presentation.title;
+        if (presentation.active) activePaths.push(shape);
+      });
+      const activeBoundary = boundaryShapes.find(shape => shape.district === activeDistrict?.district);
+      const halo = svg.querySelector(".selection-halo");
+      if (halo) {
+        halo.setAttribute("d", activeBoundary?.path || "");
+        svg.appendChild(halo);
+      }
+      activePaths.forEach(path => svg.appendChild(path));
+    }
+
+    function invalidateRenderedSeatMap() {
+      renderedBoundaryShapes = null;
+      renderedResultsRevision = -1;
+      renderedMapDistrictsByName = new Map();
+    }
+
     function renderSeatMap() {
       const target = document.getElementById("seatMap");
       if (!target) return;
       document.getElementById("mapLegend").innerHTML = "";
       if (dataLoadState === "error") {
+        invalidateRenderedSeatMap();
         target.className = "map-empty";
         target.textContent = "Map unavailable because the results did not load.";
         return;
       }
       if (mapLoadState === "loading") {
+        invalidateRenderedSeatMap();
         target.className = "map-empty";
         target.textContent = "Loading map…";
         return;
       }
       if (mapLoadState === "error") {
+        invalidateRenderedSeatMap();
         target.className = "map-empty";
         target.textContent = "Map unavailable. Use search or the area selector to explore results.";
         return;
       }
       if (!boundaryShapes.length) {
+        invalidateRenderedSeatMap();
         target.className = "map-empty";
         target.textContent = "No map is available for this view.";
         return;
       }
-      renderMapLegend();
-      const byName = new Map(allDistricts.map(d => [d.district, d]));
-      const shown = new Set(districts.map(d => d.district));
-      const shapeIndexes = new Map(boundaryShapes.map((shape, index) => [shape.district, index]));
-      const keyboardDistrict = shown.has(activeDistrict?.district)
-        ? activeDistrict.district
-        : boundaryShapes.find(shape => shown.has(shape.district))?.district || "";
+      const context = seatMapRenderContext();
+      const existingSvg = target.querySelector("svg");
+      if (existingSvg && renderedBoundaryShapes === boundaryShapes && renderedResultsRevision === resultsRevision) {
+        updateSeatMapPresentation(target, existingSvg, context);
+        return;
+      }
+      renderMapLegend(context);
       const shapeHtml = shape => {
-        const d = byName.get(shape.district);
+        const d = context.byName.get(shape.district);
         if (!d) return "";
-        const visual = mapVisual(d);
-        const isActive = activeDistrict?.district === d.district;
-        const isMuted = !shown.has(d.district);
-        const [winner] = getWinnerFromFinal(d);
-        const winnerParty = getParty(d, winner);
-        const localState = activeElection().contestType === "party-list" ? localResultState(d) : null;
-        const mapTitle = geographyMapModes.has(activeMapMode) && geographyAnalysisSupported()
-          ? `${d.district} · ${visual.label}`
-          : activeElection().localElection
-          ? `${d.district} · ${d.contest_status === "uncontested" ? "uncontested" : `${shortName(winner)} · margin ${pct(finalMargin(d), d.formal_votes)}`}`
-          : isMultiMemberElection()
-          ? `${d.district} · ${electedSeatSummary(d)}`
-          : isFppElection()
-            ? `${d.district} · ${
-                d.contest_status === "void"
-                  ? "no certified winner · election voided"
-                  : d.contest_status === "cancelled"
-                    ? "electorate vote cancelled"
-                    : d.contest_status === "unavailable"
-                    ? "no digitised vote"
-                    : d.contest_status === "single-candidate"
-                      ? `elected deputy ${shortName(winner)} · vote total not published`
-                      : localState?.status === "aggregated"
-                        ? "aggregated local lists · local leader unavailable"
-                        : localState?.status === "tied"
-                          ? `${localLeaderNames(d).join(" / ")} tied on ${fmt.format(localState.topVotes)} votes`
-                          : `${partyLabel(winnerParty)} · ${shortName(winner)}`
-              }`
-            : `${d.district} · ${partyBloc(winnerParty)} · ${partyLabel(winnerParty)} · ${shortName(winner)}`;
+        const presentation = mapShapePresentation(d, context);
         return `
           <path
-            class="district-shape${isActive ? " active" : ""}${isMuted ? " muted" : ""}"
+            class="district-shape${presentation.active ? " active" : ""}${presentation.muted ? " muted" : ""}"
             data-district="${d.district}"
-            data-map-index="${shapeIndexes.get(d.district)}"
-            tabindex="${!isMuted && d.district === keyboardDistrict ? "0" : "-1"}"
+            data-map-index="${context.shapeIndexes.get(d.district)}"
+            tabindex="${!presentation.muted && d.district === context.keyboardDistrict ? "0" : "-1"}"
             role="button"
-            aria-label="${mapTitle}"
+            aria-label="${presentation.title}"
             d="${shape.path}"
-            fill="${visual.fill}"
-            title="${mapTitle}">
-            <title>${mapTitle}</title>
+            fill="${presentation.visual.fill}"
+            title="${presentation.title}">
+            <title>${presentation.title}</title>
           </path>
         `;
       };
@@ -6587,6 +6776,9 @@
         </svg>
       `;
       const svg = target.querySelector("svg");
+      renderedBoundaryShapes = boundaryShapes;
+      renderedResultsRevision = resultsRevision;
+      renderedMapDistrictsByName = context.byName;
       svg.addEventListener("wheel", event => {
         event.preventDefault();
         hideTooltip();
@@ -6638,6 +6830,11 @@
         }
         setTimeout(() => { mapDrag = null; }, 0);
       });
+      svg.addEventListener("pointercancel", event => {
+        if (!mapDrag || mapDrag.id !== event.pointerId) return;
+        svg.classList.remove("dragging");
+        mapDrag = null;
+      });
       svg.addEventListener("keydown", event => {
         const district = event.target?.dataset?.district;
         if (!district) return;
@@ -6663,11 +6860,18 @@
         shapes[nextIndex].tabIndex = 0;
         shapes[nextIndex].focus();
       });
-      target.querySelectorAll(".district-shape").forEach(shape => {
-        const d = byName.get(shape.dataset.district);
-        shape.addEventListener("pointerenter", event => showTooltip(event, d));
-        shape.addEventListener("pointermove", moveTooltip);
-        shape.addEventListener("pointerleave", hideTooltip);
+      svg.addEventListener("pointerover", event => {
+        const shape = event.target?.closest?.(".district-shape");
+        if (!shape || shape.contains(event.relatedTarget)) return;
+        showTooltip(event, renderedMapDistrictsByName.get(shape.dataset.district));
+      });
+      svg.addEventListener("pointermove", event => {
+        if (event.target?.closest?.(".district-shape")) moveTooltip(event);
+      });
+      svg.addEventListener("pointerout", event => {
+        const shape = event.target?.closest?.(".district-shape");
+        if (!shape || shape.contains(event.relatedTarget)) return;
+        hideTooltip();
       });
     }
 
@@ -7381,7 +7585,7 @@
         const visible = activeCouncil === "all"
           ? boundaryFeatures
           : boundaryFeatures.filter(feature => feature.properties?.council === activeCouncil);
-        boundaryShapes = makeBoundaryShapes(visible);
+        activateBoundaryShapes(visible, `council:${activeCouncil}`);
       }
       syncBoundaryTypeToActiveDistrict();
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
@@ -7401,7 +7605,7 @@
       districts = [...allDistricts];
       activeDistrict = districts[0] || null;
       if (activeElection().localCouncilFilter && boundaryFeatures.length) {
-        boundaryShapes = makeBoundaryShapes(boundaryFeatures);
+        activateBoundaryShapes(boundaryFeatures, "council:all");
       }
       syncBoundaryTypeToActiveDistrict();
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
@@ -7514,13 +7718,14 @@
       mapView.w = nextW;
       mapView.h = nextH;
       clampMapView();
-      renderSeatMap();
+      hideTooltip();
+      applyMapView();
     }
 
     function resetMapZoom() {
       mapView = { ...mapBaseView };
       hideTooltip();
-      renderSeatMap();
+      applyMapView();
     }
 
     function svgPointFromEvent(svg, event) {
@@ -8121,18 +8326,9 @@
       `;
     }
 
-    function render() {
-      if (dataLoadState !== "ready") {
-        renderLoadState();
-        return;
-      }
-      if (!activeDistrict) {
-        renderNoMatches();
-        return;
-      }
+    function renderSelectedDistrict() {
       document.querySelector(".detail-panel").classList.remove("state-message");
       document.querySelector(".rankings-panel").classList.remove("hidden");
-      renderRankings();
       renderSummary(activeDistrict);
       const [rankedPrimaryLeader] = getFirstLeader(activeDistrict);
       const primaryLeader = activeElection().contestType === "party-list"
@@ -8157,8 +8353,30 @@
       if (activeTab === "raw") renderRawTable(activeDistrict);
       renderSeatMap();
       updateDataStatus();
-      renderStateSummary();
       renderGeographyAnalysis();
+    }
+
+    function syncSelectedDistrictUi() {
+      const select = document.getElementById("districtSelect");
+      const activeIndex = districts.findIndex(d => d.district === activeDistrict?.district);
+      if (select && activeIndex >= 0) select.value = String(activeIndex);
+      document.querySelectorAll(".ranking-row").forEach(row => {
+        row.classList.toggle("active", row.dataset.district === activeDistrict?.district);
+      });
+    }
+
+    function render() {
+      if (dataLoadState !== "ready") {
+        renderLoadState();
+        return;
+      }
+      if (!activeDistrict) {
+        renderNoMatches();
+        return;
+      }
+      renderRankings();
+      renderSelectedDistrict();
+      renderStateSummary();
     }
 
     function parseCSV(text) {
@@ -8181,7 +8399,7 @@
       return rows.map(r => Object.fromEntries(headers.map((h, i) => [h, (r[i] || "").trim()])));
     }
 
-    function buildDistrictsFromRows(rows, source = "Uploaded CSV") {
+    function buildDistrictsFromRows(rows, source = "Uploaded CSV", election = activeElection()) {
       const groups = new Map();
       for (const row of rows) {
         const district = row.district;
@@ -8254,7 +8472,7 @@
           const final = rr.some(r => r.row_type === "final");
           d.rounds.push({ round: n, excluded, transfers, totals, final });
         }
-        if ((isFppElection() || isSenateStvElection()) && !d.rounds.length && Object.keys(d.first).length) {
+        if (["fpp", "mmp-fpp", "senate-stv"].includes(election.system) && !d.rounds.length && Object.keys(d.first).length) {
           d.rounds.push({ round: 1, excluded: "", transfers: {}, totals: { ...d.first }, final: true, synthetic: true });
         }
         out.push(d);
@@ -8262,37 +8480,85 @@
       return out;
     }
 
-    function loadRows(rows, source, options = {}) {
-      const { applyState = true } = options;
-      const loaded = buildDistrictsFromRows(rows, source);
+    function applyLoadedDistricts(loaded, source, kind = source === "Uploaded CSV" ? "uploaded" : "official") {
       if (!loaded.length) throw new Error("No valid district rows found.");
+      const requestedDistrict = pendingDistrictFromUrl.trim().toLowerCase();
       allDistricts = loaded;
       districts = [...allDistricts];
-      activeDistrict = pendingDistrictFromUrl
-        ? districts.find(d => d.district.toLowerCase() === pendingDistrictFromUrl.toLowerCase()) || districts[0]
+      activeDistrict = requestedDistrict
+        ? districts.find(d => d.district.toLowerCase() === requestedDistrict) || districts[0]
         : districts[0];
-      if (activeDistrict?.district?.toLowerCase() === pendingDistrictFromUrl.toLowerCase()) {
+      if (requestedDistrict && activeDistrict?.district?.toLowerCase() === requestedDistrict) {
         pendingDistrictFromUrl = "";
       }
-      datasetMeta = { kind: source === "Uploaded CSV" ? "uploaded" : "official" };
+      resultsRevision += 1;
+      geographyVoteShareScaleCache = null;
+      spatialAnalysisCache = null;
+      datasetMeta = { kind };
       dataLoadState = "ready";
-      syncBusyState();
       focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
       storyStep = 0;
       document.getElementById("districtSearch").value = "";
       document.getElementById("partyFilter").value = "all";
       document.getElementById("changedOnly").checked = false;
       document.getElementById("closeOnly").checked = false;
+      syncBusyState();
+    }
+
+    function loadRows(rows, source, options = {}) {
+      const { applyState = true, renderUi = true, election = activeElection() } = options;
+      const loaded = buildDistrictsFromRows(rows, source, election);
+      applyLoadedDistricts(loaded, source);
+      if (!renderUi) return loaded;
       if (applyState) {
         applyUrlState(true);
       } else {
         populateControls();
         render();
       }
+      return loaded;
     }
 
-    function isCurrentElectionLoad(year, loadId) {
-      return loadId === electionLoadId && year === activeElectionYear;
+    function createElectionLoadContext(year, geography, loadId, controller) {
+      const election = electionYears[year] || electionYears["2022"];
+      const dataset = election.geographies?.[geography] || election;
+      const config = dataset === election ? election : {
+        ...election,
+        ...dataset,
+        key: election.key,
+        label: election.label,
+        jurisdiction: election.jurisdiction,
+        year: election.year,
+        source: election.source,
+        geographies: election.geographies,
+        geographyLabels: election.geographyLabels
+      };
+      return {
+        year,
+        geography,
+        loadId,
+        controller,
+        signal: controller.signal,
+        election,
+        dataset,
+        config,
+        analysisPath: geographyAnalysisAssetPaths[electionCountry(config)] || ""
+      };
+    }
+
+    function isCurrentElectionLoad(context) {
+      return Boolean(
+        context
+        && context.loadId === electionLoadId
+        && context.year === activeElectionYear
+        && context.geography === activeGeography
+        && context.controller === activeElectionAbortController
+        && !context.signal.aborted
+      );
+    }
+
+    function isAbortError(error) {
+      return error?.name === "AbortError";
     }
 
     function dataAssetPath(path) {
@@ -8300,145 +8566,209 @@
       return inAppDirectory ? `../${path}` : path;
     }
 
-    async function loadGeographyAnalysisAsset(path) {
-      if (!path || loadedGeographyAnalysisAssets.has(path)) return true;
-      if (loadingGeographyAnalysisAssets.has(path)) return loadingGeographyAnalysisAssets.get(path);
-      const request = (async () => {
-        const response = await fetch(dataAssetPath(path), { cache: "no-store" });
-        if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
-        const payload = await response.json();
-        if (payload?.version !== 1 || !payload?.elections) throw new Error(`${path}: unsupported geography analysis data`);
-        if (!geographyAnalysisData) geographyAnalysisData = { version: 1, blocs: payload.blocs, elections: {} };
-        if (payload.blocs && !geographyAnalysisData.blocs) geographyAnalysisData.blocs = payload.blocs;
-        Object.assign(geographyAnalysisData.elections, payload.elections);
-        loadedGeographyAnalysisAssets.add(path);
-        return true;
-      })();
-      loadingGeographyAnalysisAssets.set(path, request);
-      try {
-        return await request;
-      } finally {
-        loadingGeographyAnalysisAssets.delete(path);
-      }
+    async function loadGeographyAnalysisAsset(path, signal) {
+      if (!path) return null;
+      const cached = touchCache(geographyAnalysisAssetCache, path);
+      if (cached) return cached;
+      const response = await fetch(dataAssetPath(path), { signal });
+      if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+      const text = await response.text();
+      const payload = JSON.parse(text);
+      if (payload?.version !== 1 || !payload?.elections) throw new Error(`${path}: unsupported geography analysis data`);
+      return rememberCache(
+        geographyAnalysisAssetCache,
+        path,
+        payload,
+        MAX_ANALYSIS_CACHE_ENTRIES,
+        text.length * 4,
+        MAX_ANALYSIS_CACHE_WEIGHT
+      );
     }
 
-    async function ensureGeographyAnalysisForElection(election = activeElection(), shouldRender = true) {
-      const path = geographyAnalysisAssetPaths[electionCountry(election)];
-      if (!path || !geographyDefinitionSupported(election)) return false;
-      activeGeographyAnalysisPath = path;
-      geographyAnalysisLoadState = "loading";
-      try {
-        await loadGeographyAnalysisAsset(path);
-        if (path !== activeGeographyAnalysisPath) return true;
-        geographyAnalysisLoadState = "ready";
-        spatialAnalysisCache = null;
-        if (shouldRender) {
-          populateControls();
-          render();
-        }
-        return true;
-      } catch (err) {
-        if (path !== activeGeographyAnalysisPath) return false;
-        geographyAnalysisLoadState = "error";
-        spatialAnalysisCache = null;
-        if (shouldRender) {
-          populateControls();
-          render();
-        }
-        console.info("Political geography analysis data was not loaded.", err);
-        return false;
-      }
+    async function ensureGeographyAnalysisForElection(context) {
+      if (!context.analysisPath || !geographyDefinitionSupported(context.config)) return null;
+      return loadGeographyAnalysisAsset(context.analysisPath, context.signal);
     }
 
-    async function autoLoadCSV(year = activeElectionYear, loadId = electionLoadId, options = {}) {
-      const election = electionYears[year] || electionYears["2022"];
-      const dataset = election.geographies?.[activeGeography] || election;
-      try {
-        const response = await fetch(dataAssetPath(dataset.csv), { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const rows = parseCSV(await response.text());
-        if (!isCurrentElectionLoad(year, loadId)) return false;
-        const datasetLabel = dataset !== election && dataset.label ? ` · ${dataset.label}` : "";
-        loadRows(rows, `${election.source || "Election"} ${election.label}${datasetLabel} CSV`, options);
-        return true;
-      } catch (err) {
-        if (!isCurrentElectionLoad(year, loadId)) return false;
-        if (year === "2022") {
-          allDistricts = structuredClone(sampleDistricts);
-          districts = [...allDistricts];
-          activeDistrict = districts[0] || null;
-          focusRound = activeDistrict?.rounds?.[0]?.round ?? 1;
-          storyStep = 0;
-          datasetMeta = { kind: "sample" };
-          dataLoadState = "ready";
-          syncBusyState();
-          if (options.applyState) {
-            applyUrlState(true);
-          } else {
-            populateControls();
-            render();
-          }
-          console.info("Using embedded sample data; generated CSV was not auto-loaded.", err);
+    async function autoLoadCSV(context) {
+      const { dataset, election, config, signal } = context;
+      if (!dataset.csv) throw new Error(`${election.label}: results asset is not configured`);
+      const cacheKey = `${dataset.csv}|${config.system || ""}|${config.contestType || ""}`;
+      const cached = touchCache(parsedResultsCache, cacheKey);
+      if (cached) return cached;
+      const response = await fetch(dataAssetPath(dataset.csv), { signal });
+      if (!response.ok) throw new Error(`${dataset.csv}: HTTP ${response.status}`);
+      const text = await response.text();
+      const rows = parseCSV(text);
+      const datasetLabel = dataset !== election && dataset.label ? ` · ${dataset.label}` : "";
+      const source = `${election.source || "Election"} ${election.label}${datasetLabel} CSV`;
+      const districts = buildDistrictsFromRows(rows, source, config);
+      if (!districts.length) throw new Error(`${dataset.csv}: no valid district rows found`);
+      return rememberCache(
+        parsedResultsCache,
+        cacheKey,
+        { districts, source },
+        MAX_RESULTS_CACHE_ENTRIES,
+        text.length * 4,
+        MAX_RESULTS_CACHE_WEIGHT
+      );
+    }
+
+    async function autoLoadBoundaries(context) {
+      const { dataset, election, signal } = context;
+      if (!dataset.boundaries) throw new Error(`${election.label}: boundary asset is not configured`);
+      const cached = touchCache(boundaryAssetCache, dataset.boundaries);
+      if (cached) return cached;
+      const response = await fetch(dataAssetPath(dataset.boundaries), { signal });
+      if (!response.ok) throw new Error(`${dataset.boundaries}: HTTP ${response.status}`);
+      const text = await response.text();
+      const geojson = JSON.parse(text);
+      const features = Array.isArray(geojson?.features) ? geojson.features : [];
+      return rememberCache(
+        boundaryAssetCache,
+        dataset.boundaries,
+        features,
+        MAX_BOUNDARY_CACHE_ENTRIES,
+        text.length * 4,
+        MAX_BOUNDARY_CACHE_WEIGHT
+      );
+    }
+
+    function settleAsset(promise) {
+      return promise.then(value => ({ value, error: null }), error => ({ value: null, error }));
+    }
+
+    function loadElectionAssets(context) {
+      return {
+        results: settleAsset(autoLoadCSV(context)),
+        boundaries: settleAsset(autoLoadBoundaries(context)),
+        analysis: settleAsset(ensureGeographyAnalysisForElection(context))
+      };
+    }
+
+    function prepareElectionLoadState(context) {
+      setLoadingState();
+      activeCouncil = "all";
+      activeMapMode = "party";
+      activeBoundaryType = "General";
+      boundaryFeatures = [];
+      boundaryShapes = [];
+      activeBoundaryShapeKey = "";
+      invalidateRenderedSeatMap();
+      spatialAnalysisCache = null;
+      geographyVoteShareScaleCache = null;
+      geographyAnalysisData = null;
+      geographyAnalysisLoadState = context.analysisPath && geographyDefinitionSupported(context.config)
+        ? "loading"
+        : "unavailable";
+      allDistricts = [];
+      districts = [];
+      activeDistrict = null;
+      datasetMeta = { kind: "official" };
+      mapBaseView = { x: 0, y: 0, w: 960, h: 560 };
+      mapView = { ...mapBaseView };
+    }
+
+    function applyBoundaryFeatures(features) {
+      boundaryFeatures = features;
+      spatialAnalysisCache = null;
+      geographyVoteShareScaleCache = null;
+      const initialType = usesBoundaryTypeLayers() ? (activeDistrict?.electorate_type || "General") : "General";
+      activeBoundaryType = initialType;
+      const visible = usesBoundaryTypeLayers()
+        ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
+        : activeElection().localCouncilFilter && activeCouncil !== "all"
+          ? boundaryFeatures.filter(feature => feature.properties?.council === activeCouncil)
+          : boundaryFeatures;
+      const layer = usesBoundaryTypeLayers()
+        ? `type:${activeBoundaryType}`
+        : activeElection().localCouncilFilter ? `council:${activeCouncil}` : "all";
+      activateBoundaryShapes(visible, layer);
+      document.querySelectorAll("[data-boundary-type]").forEach(button => {
+        const active = button.dataset.boundaryType === activeBoundaryType;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      mapLoadState = "ready";
+    }
+
+    function applyResultsOutcome(context, resultsOutcome) {
+      if (!isCurrentElectionLoad(context)) return false;
+      if (resultsOutcome.error) {
+        if (context.year === "2022") {
+          applyLoadedDistricts(structuredClone(sampleDistricts), "Embedded sample data", "sample");
+          console.info("Using embedded sample data; generated CSV was not auto-loaded.", resultsOutcome.error);
         } else {
           allDistricts = [];
           districts = [];
           activeDistrict = null;
+          resultsRevision += 1;
           datasetMeta = { kind: "official" };
           dataLoadState = "error";
-          mapLoadState = "error";
-          syncBusyState();
-          populateControls();
-          render();
-          console.info(`${election.label} CSV was not auto-loaded.`, err);
+          console.info(`${context.election.label} CSV was not auto-loaded.`, resultsOutcome.error);
         }
-        return false;
+      } else {
+        applyLoadedDistricts(resultsOutcome.value.districts, resultsOutcome.value.source);
       }
+      if (dataLoadState === "error") mapLoadState = "error";
+      syncBusyState();
+      return true;
     }
 
-    async function autoLoadBoundaries(year = activeElectionYear, loadId = electionLoadId) {
-      const election = electionYears[year] || electionYears["2022"];
-      const dataset = election.geographies?.[activeGeography] || election;
-      try {
-        const response = await fetch(dataAssetPath(dataset.boundaries), { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const geojson = await response.json();
-        if (!isCurrentElectionLoad(year, loadId)) return false;
-        boundaryFeatures = geojson.features || [];
-        spatialAnalysisCache = null;
-        const initialType = usesBoundaryTypeLayers() ? (activeDistrict?.electorate_type || "General") : "General";
-        activeBoundaryType = initialType;
-        const visible = usesBoundaryTypeLayers()
-          ? boundaryFeatures.filter(feature => feature.properties?.electorate_type === activeBoundaryType)
-          : activeElection().localCouncilFilter && activeCouncil !== "all"
-            ? boundaryFeatures.filter(feature => feature.properties?.council === activeCouncil)
-            : boundaryFeatures;
-        boundaryShapes = makeBoundaryShapes(visible);
-        document.querySelectorAll("[data-boundary-type]").forEach(button => {
-          const active = button.dataset.boundaryType === activeBoundaryType;
-          button.classList.toggle("active", active);
-          button.setAttribute("aria-pressed", String(active));
-        });
-        mapLoadState = "ready";
-        syncBusyState();
-        renderSeatMap();
-        renderGeographyAnalysis();
-        return true;
-      } catch (err) {
-        if (!isCurrentElectionLoad(year, loadId)) return false;
+    function applyBoundaryOutcome(context, boundariesOutcome) {
+      if (!isCurrentElectionLoad(context)) return false;
+      if (dataLoadState === "ready" && !boundariesOutcome.error) {
+        applyBoundaryFeatures(boundariesOutcome.value);
+      } else {
         boundaryFeatures = [];
         boundaryShapes = [];
+        activeBoundaryShapeKey = "";
+        invalidateRenderedSeatMap();
         mapLoadState = "error";
-        syncBusyState();
-        renderSeatMap();
-        console.info("District boundary map was not auto-loaded.", err);
-        return false;
+        if (boundariesOutcome.error && !isAbortError(boundariesOutcome.error)) {
+          console.info("District boundary map was not auto-loaded.", boundariesOutcome.error);
+        }
       }
+      syncBusyState();
+      return true;
+    }
+
+    function applyAnalysisOutcome(context, analysisOutcome) {
+      if (!isCurrentElectionLoad(context)) return false;
+      if (!analysisOutcome.error && analysisOutcome.value) {
+        geographyAnalysisData = analysisOutcome.value;
+        geographyAnalysisLoadState = "ready";
+      } else if (analysisOutcome.error) {
+        geographyAnalysisData = null;
+        geographyAnalysisLoadState = "error";
+        if (!isAbortError(analysisOutcome.error)) {
+          console.info("Political geography analysis data was not loaded.", analysisOutcome.error);
+        }
+      } else {
+        geographyAnalysisData = null;
+        geographyAnalysisLoadState = "unavailable";
+      }
+      spatialAnalysisCache = null;
+      geographyVoteShareScaleCache = null;
+      return true;
+    }
+
+    async function finishGeographyAnalysisLoad(context, analysisPromise) {
+      const analysisOutcome = await analysisPromise;
+      if (!applyAnalysisOutcome(context, analysisOutcome)) return;
+      populateControls();
+      renderSeatMap();
+      renderGeographyAnalysis();
+      updateUrlState(true);
     }
 
     async function loadElection(year, replaceUrl = false, requestedGeography = "") {
       const requestedYear = electionYears[year] ? year : "2022";
       const previousYear = activeElectionYear;
+      activeElectionAbortController?.abort();
+      const controller = new AbortController();
       const loadId = ++electionLoadId;
+      activeElectionAbortController = controller;
       activeElectionYear = requestedYear;
       const election = electionYears[requestedYear];
       if (requestedGeography && election.geographies?.[requestedGeography]) {
@@ -8446,41 +8776,31 @@
       } else if (requestedYear !== previousYear || !election.geographies?.[activeGeography]) {
         activeGeography = election.defaultGeography || "";
       }
-      const geographyAnalysisPromise = ensureGeographyAnalysisForElection(activeElection(), false);
-      setLoadingState();
-      activeCouncil = "all";
-      activeMapMode = "party";
-      activeBoundaryType = "General";
-      boundaryFeatures = [];
-      boundaryShapes = [];
-      spatialAnalysisCache = null;
-      allDistricts = [];
-      districts = [];
-      activeDistrict = null;
-      datasetMeta = { kind: "official" };
-      mapBaseView = { x: 0, y: 0, w: 960, h: 560 };
-      resetMapZoom();
+      if (!replaceUrl) {
+        pendingDistrictFromUrl = "";
+        pendingCouncilFromUrl = "";
+      }
+      const context = createElectionLoadContext(requestedYear, activeGeography, loadId, controller);
+      prepareElectionLoadState(context);
+      const assets = loadElectionAssets(context);
       syncElectionPicker();
       populateControls();
       render();
-      await autoLoadCSV(requestedYear, loadId, { applyState: replaceUrl });
-      if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
-      if (dataLoadState === "error") {
-        await geographyAnalysisPromise;
-        if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
+      const resultsOutcome = await assets.results;
+      if (!applyResultsOutcome(context, resultsOutcome)) return false;
+      if (replaceUrl) {
+        applyUrlState(true);
+      } else {
         populateControls();
         render();
-        updateUrlState(replaceUrl);
-        return true;
+        updateUrlState(false);
       }
-      await autoLoadBoundaries(requestedYear, loadId);
-      if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
-      await geographyAnalysisPromise;
-      if (!isCurrentElectionLoad(requestedYear, loadId)) return false;
-      populateControls();
-      render();
-      updateUrlState(replaceUrl);
-      return true;
+      void finishGeographyAnalysisLoad(context, assets.analysis);
+      const boundariesOutcome = await assets.boundaries;
+      if (!applyBoundaryOutcome(context, boundariesOutcome)) return false;
+      renderSeatMap();
+      renderGeographyAnalysis();
+      return dataLoadState === "ready";
     }
 
     async function restoreUrlState() {
@@ -8500,40 +8820,28 @@
     async function setGeography(geography, replaceUrl = false) {
       const election = activeElection();
       if (!election.geographies?.[geography] || geography === activeGeography) return false;
+      activeElectionAbortController?.abort();
+      const controller = new AbortController();
       const loadId = ++electionLoadId;
+      activeElectionAbortController = controller;
       activeGeography = geography;
-      const geographyAnalysisPromise = ensureGeographyAnalysisForElection(activeElection(), false);
-      setLoadingState();
-      activeCouncil = "all";
       pendingCouncilFromUrl = "";
-      activeMapMode = "party";
       pendingDistrictFromUrl = "";
-      boundaryFeatures = [];
-      boundaryShapes = [];
-      spatialAnalysisCache = null;
-      allDistricts = [];
-      districts = [];
-      activeDistrict = null;
-      datasetMeta = { kind: "official" };
-      resetMapZoom();
+      const context = createElectionLoadContext(activeElectionYear, activeGeography, loadId, controller);
+      prepareElectionLoadState(context);
+      const assets = loadElectionAssets(context);
       populateControls();
       render();
-      await autoLoadCSV(activeElectionYear, loadId, { applyState: false });
-      if (!isCurrentElectionLoad(activeElectionYear, loadId)) return false;
-      if (dataLoadState === "error") {
-        await geographyAnalysisPromise;
-        populateControls();
-        render();
-        updateUrlState(replaceUrl);
-        return false;
-      }
-      await autoLoadBoundaries(activeElectionYear, loadId);
-      if (!isCurrentElectionLoad(activeElectionYear, loadId)) return false;
-      await geographyAnalysisPromise;
-      if (!isCurrentElectionLoad(activeElectionYear, loadId)) return false;
+      const resultsOutcome = await assets.results;
+      if (!applyResultsOutcome(context, resultsOutcome)) return false;
       populateControls();
       render();
       updateUrlState(replaceUrl);
+      void finishGeographyAnalysisLoad(context, assets.analysis);
+      const boundariesOutcome = await assets.boundaries;
+      if (!applyBoundaryOutcome(context, boundariesOutcome)) return false;
+      renderSeatMap();
+      renderGeographyAnalysis();
       return dataLoadState === "ready";
     }
 
@@ -8559,16 +8867,37 @@
       try {
         const text = await file.text();
         if (expectedLoadId !== electionLoadId || expectedYear !== activeElectionYear || expectedGeography !== activeGeography) return;
-        const rows = parseCSV(text);
-        loadRows(rows, "Uploaded CSV");
+        activeElectionAbortController?.abort();
+        const controller = new AbortController();
         const loadId = ++electionLoadId;
+        activeElectionAbortController = controller;
+        const context = createElectionLoadContext(expectedYear, expectedGeography, loadId, controller);
+        if (context.analysisPath && geographyDefinitionSupported(context.config) && !geographyAnalysisData) {
+          geographyAnalysisLoadState = "loading";
+        }
+        const analysisPromise = settleAsset(ensureGeographyAnalysisForElection(context));
+        const rows = parseCSV(text);
+        loadRows(rows, "Uploaded CSV", { applyState: false, election: context.config });
+        void finishGeographyAnalysisLoad(context, analysisPromise);
         if (mapLoadState !== "ready" || !boundaryShapes.length) {
           mapLoadState = "loading";
           syncBusyState();
-          await autoLoadBoundaries(expectedYear, loadId);
+          renderSeatMap();
+          const outcome = await settleAsset(autoLoadBoundaries(context));
+          if (!isCurrentElectionLoad(context)) return;
+          if (outcome.error) {
+            mapLoadState = "error";
+            if (!isAbortError(outcome.error)) console.info("District boundary map was not auto-loaded.", outcome.error);
+          } else {
+            applyBoundaryFeatures(outcome.value);
+          }
+          syncBusyState();
+          renderSeatMap();
+          renderGeographyAnalysis();
         }
-        if (isCurrentElectionLoad(expectedYear, loadId)) updateUrlState(true);
+        if (isCurrentElectionLoad(context)) updateUrlState(true);
       } catch (err) {
+        if (isAbortError(err)) return;
         status.textContent = `Could not load this CSV: ${err.message}`;
       }
     }
@@ -8634,10 +8963,14 @@
     setupRankings();
     setupMapZoom();
     window.addEventListener("popstate", restoreUrlState);
+    const initialUrlState = readUrlState();
+    activeElectionYear = initialUrlState.year || "2022";
+    const initialElection = electionYears[activeElectionYear] || electionYears["2022"];
+    activeGeography = initialUrlState.geography || initialElection.defaultGeography || "";
+    pendingDistrictFromUrl = initialUrlState.district;
+    pendingCouncilFromUrl = initialUrlState.council;
     populateElectionSelect();
-    populateControls();
-    applyUrlState(true);
-    loadElection(activeElectionYear, true);
+    loadElection(activeElectionYear, true, activeGeography);
   </script>
 </body>
 </html>
