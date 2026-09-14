@@ -144,7 +144,34 @@
     .ctrl-group.grow { flex: 1 1 180px; }
     .ctrl-group.shrink { flex: 0 0 auto; }
 
-    .search-control { flex: 1 1 210px; }
+    .search-control { flex: 1 1 210px; position: relative; }
+
+    .search-suggestions {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      z-index: 30;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .search-options { max-height: min(320px, 40vh); overflow-y: auto; }
+    .search-option {
+      display: grid;
+      gap: 2px;
+      min-height: 48px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .search-option span { color: var(--muted); font-size: 12px; }
+    .search-option:hover, .search-option[aria-selected="true"] { background: #e8f0f7; }
+    .search-result-status { margin: 0; padding: 10px 12px; font-size: 12px; color: var(--muted); }
 
     .election-picker {
       flex: 1.3 1 390px;
@@ -768,14 +795,14 @@
     .analysis-chart svg {
       display: block;
       width: 100%;
-      min-width: 480px;
+      min-width: 0;
       height: auto;
     }
 
     .analysis-chart text {
       font-family: inherit;
       fill: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .analysis-chart .chart-axis-label {
@@ -817,6 +844,21 @@
       align-items: center;
       gap: 5px;
     }
+
+    .chart-data { margin-top: 10px; }
+    .chart-data summary {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .chart-data summary::before { content: "+"; margin-right: 8px; }
+    .chart-data[open] summary::before { content: "−"; }
+    .chart-data caption { padding: 10px; text-align: left; color: var(--muted); font-size: 12px; }
+    .chart-data th[scope="row"] { position: static; text-transform: none; letter-spacing: normal; }
 
     .analysis-empty {
       display: grid;
@@ -1426,7 +1468,11 @@
         </div>
         <div class="ctrl-group search-control">
           <label id="districtSearchLabel" class="ctrl-label" for="districtSearch">Search</label>
-          <input id="districtSearch" type="search" placeholder="Find a district or division…" autocomplete="off" />
+          <input id="districtSearch" type="search" placeholder="Find a district or division…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="districtSearchOptions" />
+          <div id="districtSearchSuggestions" class="search-suggestions hidden">
+            <div id="districtSearchOptions" class="search-options" role="listbox" aria-label="Matching areas"></div>
+            <p id="districtSearchStatus" class="search-result-status" role="status" aria-live="polite"></p>
+          </div>
         </div>
         <details id="filterTools" class="filter-tools" open>
           <summary>Filters <span class="filter-summary">Seat, bloc and margins</span></summary>
@@ -4711,6 +4757,8 @@
     let focusRound = 1;
     let storyStep = 0;
     let activeTab = "overview";
+    let searchMatches = [];
+    let activeSearchIndex = -1;
     let activeMapMode = "party";
     let activeAnalysisBloc = "Labor";
     let activeCouncil = "all";
@@ -5607,6 +5655,42 @@
         .sort((a, b) => Number(a.year) - Number(b.year) || String(a.periodLabel || "").localeCompare(String(b.periodLabel || "")));
     }
 
+    function appendChartData(target, label, headers, rows) {
+      const details = document.createElement("details");
+      details.className = "chart-data";
+      const summary = document.createElement("summary");
+      summary.textContent = label;
+      const wrap = document.createElement("div");
+      wrap.className = "table-wrap";
+      wrap.tabIndex = 0;
+      wrap.setAttribute("role", "region");
+      wrap.setAttribute("aria-label", label);
+      const table = document.createElement("table");
+      const caption = table.createCaption();
+      caption.textContent = "Vote share (%). Scroll the table sideways if needed.";
+      const heading = table.createTHead().insertRow();
+      headers.forEach(label => {
+        const cell = document.createElement("th");
+        cell.scope = "col";
+        cell.textContent = label;
+        heading.append(cell);
+      });
+      const body = table.createTBody();
+      rows.forEach(values => {
+        const row = body.insertRow();
+        values.forEach((value, index) => {
+          const cell = document.createElement(index === 0 ? "th" : "td");
+          if (index === 0) cell.scope = "row";
+          else cell.className = "right";
+          cell.textContent = value;
+          row.append(cell);
+        });
+      });
+      wrap.append(table);
+      details.append(summary, wrap);
+      target.append(details);
+    }
+
     function renderGeographyHistory(records) {
       const target = document.getElementById("geographyHistoryChart");
       if (!records.length) {
@@ -5614,8 +5698,8 @@
         return;
       }
       const blocs = geographyBlocs();
-      const width = 720, height = 280;
-      const margin = { left: 42, right: 16, top: 18, bottom: 42 };
+      const width = Math.max(240, target.clientWidth || 720), height = 280;
+      const margin = { left: 38, right: 24, top: 18, bottom: 42 };
       const plotW = width - margin.left - margin.right;
       const plotH = height - margin.top - margin.bottom;
       const maximum = Math.max(...records.flatMap(record => blocs.map(bloc => Number(record.area.blocs?.[bloc] || 0))));
@@ -5638,15 +5722,23 @@
         }).join("");
         return `<polyline class="chart-line${bloc === activeAnalysisBloc ? " active" : ""}" points="${points}" stroke="${color}" opacity="${bloc === activeAnalysisBloc ? 1 : .48}"></polyline>${dots}`;
       }).join("");
-      const labels = records.map((record, index) => `
-        <text class="chart-axis-label" x="${x(index)}" y="${height - 18}" text-anchor="middle">${record.periodLabel || record.year}</text>
-      `).join("");
+      const labelWidth = Math.max(58, ...records.map(record => String(record.periodLabel || record.year).length * 12 + 10));
+      const labelCount = Math.min(records.length, Math.max(2, Math.floor(plotW / labelWidth) + 1));
+      const labelIndices = new Set(Array.from({ length: labelCount }, (_, index) =>
+        Math.round(index * (records.length - 1) / Math.max(1, labelCount - 1))));
+      const labels = records.map((record, index) => labelIndices.has(index) ? `
+        <text class="chart-axis-label" x="${x(index)}" y="${height - 18}" text-anchor="${records.length === 1 ? "middle" : index === 0 ? "start" : index === records.length - 1 ? "end" : "middle"}">${record.periodLabel || record.year}</text>
+      ` : "").join("");
       target.innerHTML = `
         <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Vote history for ${activeDistrict.district}">
           ${grid}${lines}${labels}
         </svg>
         <div class="analysis-chart-legend">${blocs.map(bloc => `<span><span class="dot" style="background:${analysisBlocColor(bloc)}"></span>${bloc}</span>`).join("")}</div>
       `;
+      appendChartData(target, "View history values", ["Election", ...blocs], records.map(record => [
+        record.periodLabel || String(record.year),
+        ...blocs.map(bloc => Number(record.area.blocs?.[bloc] || 0).toFixed(1))
+      ]));
     }
 
     function renderGeographyProfile(election, area) {
@@ -5661,16 +5753,22 @@
         area: Number(area.blocs?.[bloc] || 0),
         average: Number(geographyElectionAverage(election, bloc) || 0)
       }));
-      const width = 620;
-      const margin = { left: 166, right: 54, top: 24, bottom: 30 };
-      const height = Math.max(245, margin.top + 18 + Math.max(0, values.length - 1) * 38 + 42);
+      const width = Math.max(240, target.clientWidth || 620);
+      const measure = document.createElement("canvas").getContext("2d");
+      measure.font = `700 12px ${getComputedStyle(target).fontFamily}`;
+      const labelWidth = Math.ceil(Math.max(...values.map(value => measure.measureText(value.bloc).width))) + 12;
+      const compact = width < 440 || width - labelWidth - 54 < 200;
+      const margin = { left: compact ? 24 : labelWidth, right: 54, top: compact ? 38 : 24, bottom: 30 };
+      const rowHeight = compact ? 62 : 38;
+      const height = Math.max(245, margin.top + 18 + Math.max(0, values.length - 1) * rowHeight + 42);
       const plotW = width - margin.left - margin.right;
       const maximum = Math.max(...values.flatMap(value => [value.area, value.average]));
       const xMax = Math.min(100, Math.max(40, Math.ceil(maximum / 10) * 10));
       const x = value => margin.left + value / xMax * plotW;
-      const rowY = index => margin.top + 18 + index * 38;
+      const rowY = index => margin.top + 18 + index * rowHeight;
       const ticks = [];
-      for (let value = 0; value <= xMax; value += 10) ticks.push(value);
+      const tickStep = Math.max(10, Math.ceil(xMax / Math.max(2, Math.floor(plotW / 52)) / 10) * 10);
+      for (let value = 0; value <= xMax; value += tickStep) ticks.push(value);
       target.innerHTML = `
         <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${activeDistrict.district} vote shares compared with the election-wide result">
           ${ticks.map(value => `<line class="chart-grid" x1="${x(value)}" y1="${margin.top}" x2="${x(value)}" y2="${height - margin.bottom}"></line><text x="${x(value)}" y="${height - 9}" text-anchor="middle">${value}%</text>`).join("")}
@@ -5678,7 +5776,7 @@
             const y = rowY(index);
             const color = analysisBlocColor(value.bloc);
             return `
-              <text class="chart-axis-label" x="${margin.left - 9}" y="${y + 4}" text-anchor="end">${value.bloc}</text>
+              <text class="chart-axis-label" x="${compact ? margin.left : margin.left - 9}" y="${compact ? y - 15 : y + 4}" text-anchor="${compact ? "start" : "end"}">${value.bloc}</text>
               <line x1="${x(value.area)}" y1="${y}" x2="${x(value.average)}" y2="${y}" stroke="${hexToRgba(color, .38)}" stroke-width="4"></line>
               <circle cx="${x(value.average)}" cy="${y}" r="5" fill="#fff" stroke="${color}" stroke-width="2"><title>Election: ${value.average.toFixed(1)}%</title></circle>
               <circle class="chart-dot" cx="${x(value.area)}" cy="${y}" r="6" fill="${color}"><title>${activeDistrict.district}: ${value.area.toFixed(1)}%</title></circle>
@@ -5688,6 +5786,30 @@
         </svg>
         <div class="analysis-chart-legend"><span><span class="dot" style="background:${analysisBlocColor(activeAnalysisBloc)}"></span>Selected area</span><span><span class="dot" style="background:#fff;border:2px solid #667184"></span>Election-wide</span></div>
       `;
+      appendChartData(target, "View comparison values", ["Party / bloc", "Selected area", "Election-wide"], values.map(value => [
+        value.bloc, value.area.toFixed(1), value.average.toFixed(1)
+      ]));
+    }
+
+    function setupResponsiveCharts() {
+      const widths = new Map();
+      let pendingFrame;
+      const observer = new ResizeObserver(entries => {
+        let changed = false;
+        entries.forEach(entry => {
+          const width = Math.round(entry.contentRect.width);
+          if (width > 0 && widths.get(entry.target) !== width) changed = true;
+          widths.set(entry.target, width);
+        });
+        if (!changed) return;
+        cancelAnimationFrame(pendingFrame);
+        pendingFrame = requestAnimationFrame(() => {
+          const expanded = [...document.querySelectorAll(".chart-data[open]")].map(details => details.parentElement.id);
+          renderGeographyAnalysis();
+          expanded.forEach(id => document.querySelector(`#${id} .chart-data`)?.setAttribute("open", ""));
+        });
+      });
+      ["geographyHistoryChart", "geographyProfileChart"].forEach(id => observer.observe(document.getElementById(id)));
     }
 
     function renderGeographyClusterSummary() {
@@ -5967,6 +6089,98 @@
     function filteredDistricts() {
       const filters = getFilterState();
       return allDistricts.filter(d => districtMatchesFilters(d, filters));
+    }
+
+    function closeSearchSuggestions() {
+      document.getElementById("districtSearchSuggestions").classList.add("hidden");
+      const input = document.getElementById("districtSearch");
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      activeSearchIndex = -1;
+      searchMatches = [];
+    }
+
+    function renderSearchSuggestions() {
+      const input = document.getElementById("districtSearch");
+      if (document.activeElement !== input || !input.value.trim() || dataLoadState !== "ready") {
+        closeSearchSuggestions();
+        return;
+      }
+      searchMatches = districts.slice(0, 8);
+      activeSearchIndex = -1;
+      input.removeAttribute("aria-activedescendant");
+      const options = document.getElementById("districtSearchOptions");
+      options.replaceChildren(...searchMatches.map((district, index) => {
+        const option = document.createElement("div");
+        option.id = `districtSearchOption${index}`;
+        option.className = "search-option";
+        option.dataset.index = index;
+        option.setAttribute("role", "option");
+        option.setAttribute("aria-selected", "false");
+        const name = document.createElement("strong");
+        name.textContent = district.district;
+        const context = document.createElement("span");
+        context.textContent = [district.council || district.electorate_type, "View result"].filter(Boolean).join(" · ");
+        option.append(name, context);
+        return option;
+      }));
+      document.getElementById("districtSearchStatus").textContent = districts.length === 0
+        ? "No matches. Try another name or clear the filters."
+        : districts.length > searchMatches.length
+          ? `Showing ${searchMatches.length} of ${fmt.format(districts.length)} matches. Keep typing to narrow the list.`
+          : `${districts.length} ${districts.length === 1 ? "match" : "matches"}. Choose an area to view its result.`;
+      document.getElementById("districtSearchSuggestions").classList.remove("hidden");
+      input.setAttribute("aria-expanded", "true");
+    }
+
+    function chooseSearchResult(index) {
+      const selected = searchMatches[index];
+      if (!selected) return;
+      closeSearchSuggestions();
+      selectDistrictByName(selected.district, { revealResult: true, focusResult: true });
+    }
+
+    function setupSearchSuggestions() {
+      const input = document.getElementById("districtSearch");
+      input.addEventListener("focus", renderSearchSuggestions);
+      input.addEventListener("blur", closeSearchSuggestions);
+      input.addEventListener("keydown", event => {
+        if (event.isComposing) return;
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeSearchSuggestions();
+          return;
+        }
+        if (!["ArrowDown", "ArrowUp", "Enter"].includes(event.key)) return;
+        if (input.getAttribute("aria-expanded") !== "true") {
+          if (event.key === "Enter") return;
+          renderSearchSuggestions();
+        }
+        if (!searchMatches.length) return;
+        event.preventDefault();
+        if (event.key === "Enter") {
+          chooseSearchResult(Math.max(0, activeSearchIndex));
+          return;
+        }
+        activeSearchIndex = activeSearchIndex < 0
+          ? (event.key === "ArrowUp" ? searchMatches.length - 1 : 0)
+          : (activeSearchIndex + (event.key === "ArrowDown" ? 1 : -1) + searchMatches.length) % searchMatches.length;
+        const options = [...document.querySelectorAll(".search-option")];
+        options.forEach((option, index) => option.setAttribute("aria-selected", String(index === activeSearchIndex)));
+        const active = options[activeSearchIndex];
+        input.setAttribute("aria-activedescendant", active.id);
+        const list = active.parentElement;
+        if (active.offsetTop < list.scrollTop) list.scrollTop = active.offsetTop;
+        else if (active.offsetTop + active.offsetHeight > list.scrollTop + list.clientHeight) {
+          list.scrollTop = active.offsetTop + active.offsetHeight - list.clientHeight;
+        }
+      });
+      const options = document.getElementById("districtSearchOptions");
+      options.addEventListener("mousedown", event => event.preventDefault());
+      options.addEventListener("click", event => {
+        const option = event.target.closest(".search-option");
+        if (option) chooseSearchResult(Number(option.dataset.index));
+      });
     }
 
     function readUrlState() {
@@ -6947,7 +7161,6 @@
         });
         const totalSenators = [...blocCounts.values()].reduce((sum, count) => sum + count, 0);
         const chips = [
-          `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`,
           `<span class="summary-chip"><strong>${fmt.format(totalSenators)}</strong> senators elected at this election</span>`
         ];
         ["Labor", "Coalition", "Greens", "Independent", "Other"].forEach(bloc => {
@@ -6955,12 +7168,13 @@
           if (!count) return;
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${blocColor(bloc)}"></span>${bloc} <strong>${fmt.format(count)}</strong></span>`);
         });
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`);
         setSummaryChips(target, chips);
         return;
       }
       if (isMmpElection()) {
         const election = activeElection();
-        const chips = usesBoundaryTypeLayers()
+        const geographyChips = usesBoundaryTypeLayers()
           ? [
               `<span class="summary-chip"><strong>${allDistricts.filter(d => d.electorate_type === "General").length}</strong> general electorates</span>`,
               `<span class="summary-chip"><strong>${allDistricts.filter(d => d.electorate_type === "Māori").length}</strong> Māori electorates</span>`
@@ -6968,15 +7182,15 @@
           : [
               `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
             ];
-        chips.push(
+        geographyChips.push(
           `<span class="summary-chip"><strong>${election.electorateSeats}</strong> ${activeElection().jurisdiction === "Germany" ? "constituency mandates" : "electorate seats"}</span>`,
-          `<span class="summary-chip"><strong>${election.listSeats}</strong> list seats</span>`,
-          `<span class="summary-chip"><strong>${election.totalSeats}</strong> MPs after the general election</span>`
+          `<span class="summary-chip"><strong>${election.listSeats}</strong> list seats</span>`
         );
-        (election.parliament || []).forEach(([party, seats]) => {
+        const chips = [`<span class="summary-chip"><strong>${election.totalSeats}</strong> MPs after the general election</span>`];
+        [...(election.parliament || [])].sort((a, b) => b[1] - a[1]).forEach(([party, seats]) => {
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${seats}</strong></span>`);
         });
-        setSummaryChips(target, chips);
+        setSummaryChips(target, [...chips, ...geographyChips]);
         return;
       }
       if (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType)) {
@@ -6985,9 +7199,10 @@
           const ticket = winningParty(d);
           winnerCounts.set(ticket, (winnerCounts.get(ticket) || 0) + 1);
         });
-        const chips = [
-          `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
-        ];
+        const chips = [...(activeElection().nationalResults || [])]
+          .sort((a, b) => b[1] - a[1])
+          .map(([ticket, share]) => `<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> ${activeElection().resultScopeLabel || "national"}</span>`);
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`);
         [...winnerCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([ticket, areas]) => {
@@ -6996,9 +7211,6 @@
               : activeElection().contestType === "referendum" ? "local leads" : "area wins";
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> ${winsLabel}</span>`);
           });
-        (activeElection().nationalResults || []).forEach(([ticket, share]) => {
-          chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> ${activeElection().resultScopeLabel || "national"}</span>`);
-        });
         setSummaryChips(target, chips);
         return;
       }
@@ -7006,12 +7218,12 @@
         const election = activeElection();
         if (election.contestType === "party-list") {
           const chips = [
-            `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`,
             `<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> ${election.seatBodyLabel || "Parliament seats"}</span>`
           ];
-          (election.parliament || []).forEach(([party, seats]) => {
+          [...(election.parliament || [])].sort((a, b) => b[1] - a[1]).forEach(([party, seats]) => {
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${fmt.format(seats)}</strong></span>`);
           });
+          chips.push(`<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`);
           setSummaryChips(target, chips);
           return;
         }
@@ -7035,14 +7247,14 @@
         if (election.teamElection) {
           chips.push(`<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> elected MPs</span>`);
         }
-        (election.summaryRegions || []).forEach(country => {
-          chips.push(`<span class="summary-chip">${country} <strong>${fmt.format(countryCounts.get(country) || 0)}</strong></span>`);
-        });
         [...partyCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([party, seats]) => {
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${party} <strong>${fmt.format(seats)}</strong></span>`);
           });
+        (election.summaryRegions || []).forEach(country => {
+          chips.push(`<span class="summary-chip">${country} <strong>${fmt.format(countryCounts.get(country) || 0)}</strong></span>`);
+        });
         setSummaryChips(target, chips);
         return;
       }
@@ -7439,7 +7651,7 @@
       document.querySelector('label[for="partyFilter"]').textContent = activeElection().membersOnly ? "Deputy affiliation" : activeElection().candidateFilterLabel || (analyticalLocalVote ? "Local winner" : fpp ? "Winner party" : "Bloc");
       document.getElementById("primaryVoteTitle").textContent = analyticalLocalVote ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? activeElection().partyVoteLabel || "Party vote" : "Final standing";
-      document.getElementById("finalVotePanel").classList.toggle("hidden", analyticalLocalVote || Boolean(activeElection().membersOnly));
+      document.getElementById("finalVotePanel").classList.toggle("hidden", activeElection().system === "fpp");
       document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeDataset().districtLabel || activeElection().districtLabel || activeDataset().label : activeDataset().districtLabel || activeElection().districtLabel || "Seat";
       document.getElementById("districtSearch").placeholder = analyticalLocalVote || activeElection().membersOnly || activeElection().localElection ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
       document.getElementById("mapSubtitle").textContent = analyticalLocalVote
@@ -7541,6 +7753,7 @@
       electionYear.onchange = () => loadElection(electionYear.value);
       updateFilterSummary();
       updateDataStatus();
+      renderSearchSuggestions();
     }
 
     function populateRoundSelect() {
@@ -7596,6 +7809,7 @@
     }
 
     function resetView() {
+      const selectedDistrict = activeDistrict?.district;
       document.getElementById("districtSearch").value = "";
       activeCouncil = "all";
       pendingCouncilFromUrl = "";
@@ -7603,7 +7817,7 @@
       document.getElementById("changedOnly").checked = false;
       document.getElementById("closeOnly").checked = false;
       districts = [...allDistricts];
-      activeDistrict = districts[0] || null;
+      activeDistrict = districts.find(d => d.district === selectedDistrict) || districts[0] || null;
       if (activeElection().localCouncilFilter && boundaryFeatures.length) {
         activateBoundaryShapes(boundaryFeatures, "council:all");
       }
@@ -8647,6 +8861,7 @@
     }
 
     function prepareElectionLoadState(context) {
+      closeSearchSuggestions();
       setLoadingState();
       activeCouncil = "all";
       activeMapMode = "party";
@@ -8958,6 +9173,8 @@
     }
 
     setupResponsiveFilters();
+    setupSearchSuggestions();
+    setupResponsiveCharts();
     setupTabs();
     setupMapModes();
     setupRankings();

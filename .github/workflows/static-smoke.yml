@@ -7,6 +7,29 @@ on:
       - main
 
 jobs:
+  explorer-ux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install browser test dependencies
+        run: |
+          pip install playwright==1.60.0
+          python -m playwright install --with-deps chromium
+      - name: Check explorer interactions and responsive layouts
+        run: python scripts/test_explorer_ux.py --screenshots tmp/explorer-ux
+      - name: Upload browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: explorer-ux-screenshots
+          path: tmp/explorer-ux
+          if-no-files-found: ignore
+
   validate:
     runs-on: ubuntu-latest
 
