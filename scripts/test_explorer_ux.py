@@ -141,6 +141,29 @@ def check_resize(page, base_url):
     print("PASS: responsive charts and accessible values survive resize", flush=True)
 
 
+def check_long_chart_labels(browser, base_url):
+    page = browser.new_page(viewport={"width": 320, "height": 900})
+    visit(page, base_url, "mexico-president-2024")
+    # A wider generic font reproduces the CI clipping on macOS as well as Linux.
+    page.locator("#geographyProfileChart").evaluate("el => el.style.fontFamily = 'monospace'")
+    page.evaluate("renderGeographyAnalysis()")
+    check_charts(page)
+    label = page.locator("#geographyProfileChart .chart-axis-label").first
+    expect(label).to_have_text("Sheinbaum / governing coalition")
+    assert label.locator("tspan").count() > 1
+    assert page.locator("#geographyProfileChart svg").evaluate("""svg => {
+        const labels = [...svg.querySelectorAll('.chart-axis-label')];
+        const markers = [...svg.querySelectorAll('.chart-dot')];
+        return labels.every((label, index) => {
+            const bounds = label.getBoundingClientRect();
+            return bounds.bottom < markers[index].getBoundingClientRect().top
+                && (!index || bounds.top > markers[index - 1].getBoundingClientRect().bottom);
+        });
+    }"""), "Wrapped chart labels overlap vote markers"
+    page.close()
+    print("PASS: long chart labels wrap without clipping or overlapping vote markers", flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-url")
@@ -164,6 +187,7 @@ def main():
             check_search(mobile, base_url)
             check_resize(mobile, base_url)
             mobile.close()
+            check_long_chart_labels(browser, base_url)
             check_results_and_layout(browser, base_url, args.screenshots, errors)
             browser.close()
         assert not errors, errors
