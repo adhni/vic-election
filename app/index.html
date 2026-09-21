@@ -5788,12 +5788,34 @@
       const compact = width < 440 || width - labelWidth - 54 < 200;
       const margin = { left: compact ? 24 : labelWidth, right: 54, top: compact ? 38 : 24, bottom: 30 };
       const rowHeight = compact ? 62 : 38;
-      const height = Math.max(245, margin.top + 18 + Math.max(0, values.length - 1) * rowHeight + 42);
+      const labelLines = values.map(value => {
+        if (!compact) return [value.bloc];
+        const lines = [];
+        let line = "";
+        for (const word of value.bloc.split(/\s+/)) {
+          const candidate = line ? `${line} ${word}` : word;
+          if (line && measure.measureText(candidate).width > width - margin.left - 8) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = candidate;
+          }
+        }
+        lines.push(line);
+        return lines;
+      });
+      let nextRowY = margin.top + 18;
+      const rowPositions = labelLines.map(lines => {
+        const y = nextRowY + (lines.length - 1) * 16;
+        nextRowY = y + rowHeight;
+        return y;
+      });
+      const height = Math.max(245, (rowPositions.at(-1) || margin.top + 18) + 42);
       const plotW = width - margin.left - margin.right;
       const maximum = Math.max(...values.flatMap(value => [value.area, value.average]));
       const xMax = Math.min(100, Math.max(40, Math.ceil(maximum / 10) * 10));
       const x = value => margin.left + value / xMax * plotW;
-      const rowY = index => margin.top + 18 + index * rowHeight;
+      const rowY = index => rowPositions[index];
       const ticks = [];
       const tickStep = Math.max(10, Math.ceil(xMax / Math.max(2, Math.floor(plotW / 52)) / 10) * 10);
       for (let value = 0; value <= xMax; value += tickStep) ticks.push(value);
@@ -5803,8 +5825,10 @@
           ${values.map((value, index) => {
             const y = rowY(index);
             const color = analysisBlocColor(value.bloc);
+            const labelX = compact ? margin.left : margin.left - 9;
+            const labelY = compact ? y - 15 - (labelLines[index].length - 1) * 16 : y + 4;
             return `
-              <text class="chart-axis-label" x="${compact ? margin.left : margin.left - 9}" y="${compact ? y - 15 : y + 4}" text-anchor="${compact ? "start" : "end"}">${value.bloc}</text>
+              <text class="chart-axis-label" x="${labelX}" y="${labelY}" text-anchor="${compact ? "start" : "end"}">${labelLines[index].map((line, lineIndex, lines) => `<tspan x="${labelX}" dy="${lineIndex ? 16 : 0}">${line}${lineIndex < lines.length - 1 ? " " : ""}</tspan>`).join("")}</text>
               <line x1="${x(value.area)}" y1="${y}" x2="${x(value.average)}" y2="${y}" stroke="${hexToRgba(color, .38)}" stroke-width="4"></line>
               <circle cx="${x(value.average)}" cy="${y}" r="5" fill="#fff" stroke="${color}" stroke-width="2"><title>Election: ${value.average.toFixed(1)}%</title></circle>
               <circle class="chart-dot" cx="${x(value.area)}" cy="${y}" r="6" fill="${color}"><title>${activeDistrict.district}: ${value.area.toFixed(1)}%</title></circle>
