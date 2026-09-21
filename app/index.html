@@ -12,11 +12,11 @@
       --surface-soft: #f8f7f4;
       --ink: #171a1f;
       --muted: #67645f;
-      --line: #ded9d1;
+      --line: #e1ded8;
       --accent: #294f7c;
       --accent-strong: #173d6a;
-      --radius: 14px;
-      --shadow: 0 12px 36px rgba(31, 38, 46, .07);
+      --radius: 12px;
+      --shadow: 0 2px 8px rgba(31, 38, 46, .035);
     }
 
     * { box-sizing: border-box; }
@@ -55,7 +55,7 @@
 
     /* ── Header ── */
     .page-header {
-      padding: 28px 0 18px;
+      padding: 20px 0;
       border-bottom: 1px solid var(--line);
       margin-bottom: 0;
     }
@@ -86,10 +86,10 @@
 
     .page-header h1 {
       margin: 0;
-      font-size: clamp(30px, 3vw, 42px);
-      font-weight: 900;
-      letter-spacing: -.065em;
-      line-height: .95;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -.035em;
+      line-height: 1.2;
       color: var(--ink);
     }
 
@@ -100,18 +100,14 @@
       align-items: center;
       min-height: 26px;
       padding: 4px 9px;
-      border: 1px solid rgba(41, 79, 124, .22);
-      border-radius: 999px;
-      background: rgba(41, 79, 124, .08);
-      color: var(--accent-strong);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+      border-left: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
     }
 
     .page-header p {
-      margin: 8px 0 0;
+      margin: 6px 0 0;
       color: var(--muted);
       font-size: 14px;
     }
@@ -130,7 +126,7 @@
     .controls-inner {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 16px;
       align-items: flex-end;
     }
 
@@ -144,7 +140,34 @@
     .ctrl-group.grow { flex: 1 1 180px; }
     .ctrl-group.shrink { flex: 0 0 auto; }
 
-    .search-control { flex: 1 1 210px; }
+    .search-control { flex: 1 1 210px; position: relative; }
+
+    .search-suggestions {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      z-index: 30;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .search-options { max-height: min(320px, 40vh); overflow-y: auto; }
+    .search-option {
+      display: grid;
+      gap: 2px;
+      min-height: 48px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .search-option span { color: var(--muted); font-size: 12px; }
+    .search-option:hover, .search-option[aria-selected="true"] { background: #e8f0f7; }
+    .search-result-status { margin: 0; padding: 10px 12px; font-size: 12px; color: var(--muted); }
 
     .election-picker {
       flex: 1.3 1 390px;
@@ -155,11 +178,9 @@
     }
 
     label.ctrl-label {
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .05em;
     }
 
     select,
@@ -172,7 +193,7 @@
       background: var(--surface);
       color: var(--ink);
       font: inherit;
-      font-size: 13px;
+      font-size: 14px;
       width: 100%;
     }
 
@@ -237,27 +258,51 @@
     }
 
     details.filter-tools {
-      flex: 2 1 540px;
+      flex: 0 0 auto;
       min-width: 0;
     }
 
     details.filter-tools > summary {
-      display: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
       list-style: none;
     }
 
     details.filter-tools > summary::-webkit-details-marker { display: none; }
+    details.filter-tools > summary::after { content: "+"; color: var(--accent); }
+    details.filter-tools[open] > summary::after { content: "−"; }
+    details.filter-tools[open] > summary { border-color: var(--accent); }
+    .filter-summary:empty { display: none; }
+    .filter-summary { color: var(--accent); font-size: 12px; }
 
     .filter-tools-content {
-      display: flex;
-      gap: 10px;
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      width: min(660px, calc(100vw - 48px));
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
       align-items: flex-end;
       min-width: 0;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 8px 24px rgba(31, 38, 46, .1);
     }
 
     .filter-tools-content .ctrl-group { flex: 1 1 140px; }
-    .filter-tools-content .ctrl-group.shrink { flex: 0 0 auto; }
+    .filter-tools-content .ctrl-group.shrink { grid-column: 1 / -1; }
 
     .data-status {
       font-size: 13px;
@@ -275,44 +320,48 @@
       align-items: flex-end;
       justify-content: space-between;
       gap: 16px;
-      padding: 22px 0 0;
+      padding: 28px 0 0;
     }
 
     .election-heading {
       margin: 0 0 3px;
       color: var(--ink);
-      font-size: clamp(22px, 2.2vw, 30px);
-      font-weight: 850;
-      letter-spacing: -.035em;
-      line-height: 1.1;
+      font-size: clamp(24px, 2.4vw, 34px);
+      font-weight: 650;
+      letter-spacing: -.03em;
+      line-height: 1.2;
     }
 
     .state-summary {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px 0;
       flex-wrap: wrap;
-      padding: 14px 0 0;
+      padding: 16px 0;
+      margin-top: 16px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
       min-height: 48px;
     }
 
     .summary-chip {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 4px 8px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--surface);
+      gap: 6px;
+      padding: 0 16px;
+      border-right: 1px solid var(--line);
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 500;
       white-space: nowrap;
     }
 
+    .summary-chip:first-child { padding-left: 0; }
+    .summary-chip:last-child { border-right: 0; }
     .summary-chip strong {
       color: var(--ink);
-      font-weight: 800;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
     }
 
     .summary-more { display: inline-flex; align-items: flex-start; }
@@ -320,10 +369,10 @@
       cursor: pointer;
       list-style: none;
       padding: 4px 8px;
-      border: 1px dashed var(--line);
-      border-radius: 999px;
+      border: 0;
+      border-radius: 4px;
       color: var(--accent-strong);
-      background: var(--surface);
+      background: transparent;
       font-size: 12px;
       font-weight: 700;
       white-space: nowrap;
@@ -337,17 +386,17 @@
 
     .explorer-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.55fr) minmax(380px, .85fr);
-      gap: 18px;
+      grid-template-columns: minmax(0, 1.4fr) minmax(400px, 1fr);
+      gap: 24px;
       align-items: start;
-      padding-top: 14px;
+      padding-top: 24px;
     }
 
     .detail-panel {
       min-width: 0;
       overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: 18px;
+      border-radius: var(--radius);
       background: var(--surface);
       box-shadow: var(--shadow);
     }
@@ -364,11 +413,11 @@
 
     .ranking-card {
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: var(--radius);
       background: var(--surface);
-      padding: 14px;
+      padding: 20px;
       min-width: 0;
-      box-shadow: 0 8px 24px rgba(31, 38, 46, .04);
+      box-shadow: var(--shadow);
     }
 
     .ranking-list {
@@ -498,9 +547,9 @@
     /* -- Map -- */
     .map-panel {
       min-width: 0;
-      padding: 16px;
+      padding: 20px;
       border: 1px solid var(--line);
-      border-radius: 18px;
+      border-radius: var(--radius);
       background: var(--surface);
       box-shadow: var(--shadow);
     }
@@ -516,21 +565,21 @@
 
     .map-title {
       margin: 0;
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .06em;
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: -.01em;
       color: var(--ink);
     }
 
     .map-subtitle {
-      margin: 1px 0 0;
+      margin: 4px 0 0;
       color: var(--muted);
       font-size: 13px;
     }
 
     .map-modes {
       display: inline-flex;
+      min-height: 40px;
       gap: 2px;
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -541,7 +590,7 @@
     .map-actions {
       display: flex;
       gap: 8px;
-      align-items: center;
+      align-items: flex-end;
       flex-wrap: wrap;
     }
 
@@ -550,15 +599,17 @@
       gap: 3px;
     }
 
+    .map-colour-buttons { display: none; }
+    .map-mode-select { min-width: 170px; }
+
     .map-control-label {
       color: var(--muted);
       font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .04em;
-      text-transform: uppercase;
+      font-weight: 600;
     }
 
     .map-mode {
+      min-height: 32px;
       border: 0;
       border-radius: 6px;
       padding: 6px 9px;
@@ -577,9 +628,9 @@
     }
 
     .geography-metric-control select {
-      min-height: 34px;
+      min-height: 40px;
       padding: 5px 30px 5px 9px;
-      font-size: 12px;
+      font-size: 14px;
     }
 
     .map-legend {
@@ -595,12 +646,9 @@
       align-items: center;
       gap: 5px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--muted);
-      padding: 3px 7px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--surface);
+      padding: 4px 8px 4px 0;
       white-space: nowrap;
     }
 
@@ -625,16 +673,16 @@
     .map-wrap {
       position: relative;
       overflow: hidden;
-      background: #f2f4f0;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+      background: #f5f6f3;
+      border: 1px solid #eeece7;
+      border-radius: 8px;
     }
 
     .geo-map {
       display: block;
       width: 100%;
-      height: min(64vh, 650px);
-      min-height: 500px;
+      height: min(56vh, 560px);
+      min-height: 450px;
       cursor: grab;
       touch-action: none;
       user-select: none;
@@ -716,10 +764,10 @@
 
     /* ── Political geography analysis ── */
     .geography-analysis {
-      margin-top: 18px;
-      padding: 18px;
+      margin-top: 24px;
+      padding: 20px;
       border: 1px solid var(--line);
-      border-radius: 18px;
+      border-radius: var(--radius);
       background: var(--surface);
       box-shadow: var(--shadow);
     }
@@ -735,7 +783,7 @@
       min-width: 0;
       padding: 14px;
       border: 1px solid var(--line);
-      border-radius: 14px;
+      border-radius: 8px;
       background: var(--surface-soft);
     }
 
@@ -768,14 +816,14 @@
     .analysis-chart svg {
       display: block;
       width: 100%;
-      min-width: 480px;
+      min-width: 0;
       height: auto;
     }
 
     .analysis-chart text {
       font-family: inherit;
       fill: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .analysis-chart .chart-axis-label {
@@ -817,6 +865,21 @@
       align-items: center;
       gap: 5px;
     }
+
+    .chart-data { margin-top: 10px; }
+    .chart-data summary {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .chart-data summary::before { content: "+"; margin-right: 8px; }
+    .chart-data[open] summary::before { content: "−"; }
+    .chart-data caption { padding: 10px; text-align: left; color: var(--muted); font-size: 12px; }
+    .chart-data th[scope="row"] { position: static; text-transform: none; letter-spacing: normal; }
 
     .analysis-empty {
       display: grid;
@@ -886,10 +949,10 @@
     .empty-state button { margin-top: 14px; }
 
     .result-district {
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: -.04em;
-      line-height: 1;
+      font-size: 28px;
+      font-weight: 650;
+      letter-spacing: -.025em;
+      line-height: 1.2;
       margin: 0 0 10px;
     }
 
@@ -927,15 +990,14 @@
     .fact-label {
       color: var(--muted);
       font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .04em;
+      font-weight: 500;
       white-space: nowrap;
     }
 
     .fact-value {
       font-weight: 600;
       color: var(--ink);
+      font-variant-numeric: tabular-nums;
     }
 
     .pref-impact {
@@ -1028,7 +1090,7 @@
       margin: 0 0 10px;
     }
 
-    .bars { display: grid; gap: 9px; }
+    .bars { display: grid; gap: 12px; }
 
     .bar-row {
       display: grid;
@@ -1319,10 +1381,15 @@
       details.filter-tools > summary::after { content: "+"; color: var(--accent); font-size: 18px; }
       details.filter-tools[open] > summary::after { content: "−"; }
       .filter-tools-content {
+        position: static;
+        width: auto;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
-        padding-top: 10px;
+        padding: 10px 0 0;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
       }
       .filter-tools-content .ctrl-group,
       .filter-tools-content .ctrl-group.shrink { flex: none; }
@@ -1345,6 +1412,8 @@
       .map-toolbar { align-items: stretch; }
       .map-actions { flex-direction: column; align-items: stretch; width: 100%; min-width: 0; }
       .map-action-group { width: 100%; }
+      .map-colour-buttons { display: inline-flex; }
+      .map-mode-select { display: none; }
       .map-modes { width: 100%; min-width: 0; flex-wrap: wrap; }
       .map-mode { flex: 1 1 auto; min-width: 44px; min-height: 44px; }
       .map-action-group.map-view-controls { width: auto; align-self: flex-end; }
@@ -1426,10 +1495,14 @@
         </div>
         <div class="ctrl-group search-control">
           <label id="districtSearchLabel" class="ctrl-label" for="districtSearch">Search</label>
-          <input id="districtSearch" type="search" placeholder="Find a district or division…" autocomplete="off" />
+          <input id="districtSearch" type="search" placeholder="Find a district or division…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="districtSearchOptions" />
+          <div id="districtSearchSuggestions" class="search-suggestions hidden">
+            <div id="districtSearchOptions" class="search-options" role="listbox" aria-label="Matching areas"></div>
+            <p id="districtSearchStatus" class="search-result-status" role="status" aria-live="polite"></p>
+          </div>
         </div>
-        <details id="filterTools" class="filter-tools" open>
-          <summary>Filters <span class="filter-summary">Seat, bloc and margins</span></summary>
+        <details id="filterTools" class="filter-tools">
+          <summary>Filters <span class="filter-summary"></span></summary>
           <div class="filter-tools-content">
             <div id="councilControl" class="ctrl-group grow hidden">
               <label class="ctrl-label" for="councilSelect">Council</label>
@@ -1476,8 +1549,9 @@
         </div>
         <div class="map-actions">
           <div class="map-action-group">
-            <span class="map-control-label">Colour map by</span>
-            <div class="map-modes" role="group" aria-label="Map colour mode">
+            <label class="map-control-label" for="mapModeSelect">Colour map by</label>
+            <select id="mapModeSelect" class="map-mode-select" aria-label="Colour map by"></select>
+            <div class="map-modes map-colour-buttons" role="group" aria-label="Map colour mode">
               <button class="map-mode active" type="button" data-map-mode="party" aria-pressed="true">Winner</button>
               <button id="partyVoteMapMode" class="map-mode hidden" type="button" data-map-mode="party-vote" aria-pressed="false">Party vote</button>
               <button id="voteShareMapMode" class="map-mode hidden" type="button" data-map-mode="vote-share" aria-pressed="false">Vote share</button>
@@ -4711,6 +4785,8 @@
     let focusRound = 1;
     let storyStep = 0;
     let activeTab = "overview";
+    let searchMatches = [];
+    let activeSearchIndex = -1;
     let activeMapMode = "party";
     let activeAnalysisBloc = "Labor";
     let activeCouncil = "all";
@@ -5607,6 +5683,42 @@
         .sort((a, b) => Number(a.year) - Number(b.year) || String(a.periodLabel || "").localeCompare(String(b.periodLabel || "")));
     }
 
+    function appendChartData(target, label, headers, rows) {
+      const details = document.createElement("details");
+      details.className = "chart-data";
+      const summary = document.createElement("summary");
+      summary.textContent = label;
+      const wrap = document.createElement("div");
+      wrap.className = "table-wrap";
+      wrap.tabIndex = 0;
+      wrap.setAttribute("role", "region");
+      wrap.setAttribute("aria-label", label);
+      const table = document.createElement("table");
+      const caption = table.createCaption();
+      caption.textContent = "Vote share (%). Scroll the table sideways if needed.";
+      const heading = table.createTHead().insertRow();
+      headers.forEach(label => {
+        const cell = document.createElement("th");
+        cell.scope = "col";
+        cell.textContent = label;
+        heading.append(cell);
+      });
+      const body = table.createTBody();
+      rows.forEach(values => {
+        const row = body.insertRow();
+        values.forEach((value, index) => {
+          const cell = document.createElement(index === 0 ? "th" : "td");
+          if (index === 0) cell.scope = "row";
+          else cell.className = "right";
+          cell.textContent = value;
+          row.append(cell);
+        });
+      });
+      wrap.append(table);
+      details.append(summary, wrap);
+      target.append(details);
+    }
+
     function renderGeographyHistory(records) {
       const target = document.getElementById("geographyHistoryChart");
       if (!records.length) {
@@ -5614,8 +5726,8 @@
         return;
       }
       const blocs = geographyBlocs();
-      const width = 720, height = 280;
-      const margin = { left: 42, right: 16, top: 18, bottom: 42 };
+      const width = Math.max(240, target.clientWidth || 720), height = 280;
+      const margin = { left: 38, right: 24, top: 18, bottom: 42 };
       const plotW = width - margin.left - margin.right;
       const plotH = height - margin.top - margin.bottom;
       const maximum = Math.max(...records.flatMap(record => blocs.map(bloc => Number(record.area.blocs?.[bloc] || 0))));
@@ -5638,15 +5750,23 @@
         }).join("");
         return `<polyline class="chart-line${bloc === activeAnalysisBloc ? " active" : ""}" points="${points}" stroke="${color}" opacity="${bloc === activeAnalysisBloc ? 1 : .48}"></polyline>${dots}`;
       }).join("");
-      const labels = records.map((record, index) => `
-        <text class="chart-axis-label" x="${x(index)}" y="${height - 18}" text-anchor="middle">${record.periodLabel || record.year}</text>
-      `).join("");
+      const labelWidth = Math.max(58, ...records.map(record => String(record.periodLabel || record.year).length * 12 + 10));
+      const labelCount = Math.min(records.length, Math.max(2, Math.floor(plotW / labelWidth) + 1));
+      const labelIndices = new Set(Array.from({ length: labelCount }, (_, index) =>
+        Math.round(index * (records.length - 1) / Math.max(1, labelCount - 1))));
+      const labels = records.map((record, index) => labelIndices.has(index) ? `
+        <text class="chart-axis-label" x="${x(index)}" y="${height - 18}" text-anchor="${records.length === 1 ? "middle" : index === 0 ? "start" : index === records.length - 1 ? "end" : "middle"}">${record.periodLabel || record.year}</text>
+      ` : "").join("");
       target.innerHTML = `
         <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Vote history for ${activeDistrict.district}">
           ${grid}${lines}${labels}
         </svg>
         <div class="analysis-chart-legend">${blocs.map(bloc => `<span><span class="dot" style="background:${analysisBlocColor(bloc)}"></span>${bloc}</span>`).join("")}</div>
       `;
+      appendChartData(target, "View history values", ["Election", ...blocs], records.map(record => [
+        record.periodLabel || String(record.year),
+        ...blocs.map(bloc => Number(record.area.blocs?.[bloc] || 0).toFixed(1))
+      ]));
     }
 
     function renderGeographyProfile(election, area) {
@@ -5661,24 +5781,54 @@
         area: Number(area.blocs?.[bloc] || 0),
         average: Number(geographyElectionAverage(election, bloc) || 0)
       }));
-      const width = 620;
-      const margin = { left: 166, right: 54, top: 24, bottom: 30 };
-      const height = Math.max(245, margin.top + 18 + Math.max(0, values.length - 1) * 38 + 42);
+      const width = Math.max(240, target.clientWidth || 620);
+      const measure = document.createElement("canvas").getContext("2d");
+      measure.font = `700 12px ${getComputedStyle(target).fontFamily}`;
+      const labelWidth = Math.ceil(Math.max(...values.map(value => measure.measureText(value.bloc).width))) + 12;
+      const compact = width < 440 || width - labelWidth - 54 < 200;
+      const margin = { left: compact ? 24 : labelWidth, right: 54, top: compact ? 38 : 24, bottom: 30 };
+      const rowHeight = compact ? 62 : 38;
+      const labelLines = values.map(value => {
+        if (!compact) return [value.bloc];
+        const lines = [];
+        let line = "";
+        for (const word of value.bloc.split(/\s+/)) {
+          const candidate = line ? `${line} ${word}` : word;
+          if (line && measure.measureText(candidate).width > width - margin.left - 8) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = candidate;
+          }
+        }
+        lines.push(line);
+        return lines;
+      });
+      let nextRowY = margin.top + 18;
+      const rowPositions = labelLines.map(lines => {
+        const y = nextRowY + (lines.length - 1) * 16;
+        nextRowY = y + rowHeight;
+        return y;
+      });
+      const height = Math.max(245, (rowPositions.at(-1) || margin.top + 18) + 42);
       const plotW = width - margin.left - margin.right;
       const maximum = Math.max(...values.flatMap(value => [value.area, value.average]));
       const xMax = Math.min(100, Math.max(40, Math.ceil(maximum / 10) * 10));
       const x = value => margin.left + value / xMax * plotW;
-      const rowY = index => margin.top + 18 + index * 38;
+      const rowY = index => rowPositions[index];
       const ticks = [];
-      for (let value = 0; value <= xMax; value += 10) ticks.push(value);
+      const tickStep = Math.max(10, Math.ceil(xMax / Math.max(2, Math.floor(plotW / 52)) / 10) * 10);
+      for (let value = 0; value <= xMax; value += tickStep) ticks.push(value);
       target.innerHTML = `
         <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${activeDistrict.district} vote shares compared with the election-wide result">
           ${ticks.map(value => `<line class="chart-grid" x1="${x(value)}" y1="${margin.top}" x2="${x(value)}" y2="${height - margin.bottom}"></line><text x="${x(value)}" y="${height - 9}" text-anchor="middle">${value}%</text>`).join("")}
           ${values.map((value, index) => {
             const y = rowY(index);
             const color = analysisBlocColor(value.bloc);
+            const labelX = compact ? margin.left : margin.left - 9;
+            const labelY = compact ? y - 15 - (labelLines[index].length - 1) * 16 : y + 4;
             return `
-              <text class="chart-axis-label" x="${margin.left - 9}" y="${y + 4}" text-anchor="end">${value.bloc}</text>
+              <text class="chart-axis-label" x="${labelX}" y="${labelY}" text-anchor="${compact ? "start" : "end"}">${labelLines[index].map((line, lineIndex, lines) => `<tspan x="${labelX}" dy="${lineIndex ? 16 : 0}">${line}${lineIndex < lines.length - 1 ? " " : ""}</tspan>`).join("")}</text>
               <line x1="${x(value.area)}" y1="${y}" x2="${x(value.average)}" y2="${y}" stroke="${hexToRgba(color, .38)}" stroke-width="4"></line>
               <circle cx="${x(value.average)}" cy="${y}" r="5" fill="#fff" stroke="${color}" stroke-width="2"><title>Election: ${value.average.toFixed(1)}%</title></circle>
               <circle class="chart-dot" cx="${x(value.area)}" cy="${y}" r="6" fill="${color}"><title>${activeDistrict.district}: ${value.area.toFixed(1)}%</title></circle>
@@ -5688,6 +5838,30 @@
         </svg>
         <div class="analysis-chart-legend"><span><span class="dot" style="background:${analysisBlocColor(activeAnalysisBloc)}"></span>Selected area</span><span><span class="dot" style="background:#fff;border:2px solid #667184"></span>Election-wide</span></div>
       `;
+      appendChartData(target, "View comparison values", ["Party / bloc", "Selected area", "Election-wide"], values.map(value => [
+        value.bloc, value.area.toFixed(1), value.average.toFixed(1)
+      ]));
+    }
+
+    function setupResponsiveCharts() {
+      const widths = new Map();
+      let pendingFrame;
+      const observer = new ResizeObserver(entries => {
+        let changed = false;
+        entries.forEach(entry => {
+          const width = Math.round(entry.contentRect.width);
+          if (width > 0 && widths.get(entry.target) !== width) changed = true;
+          widths.set(entry.target, width);
+        });
+        if (!changed) return;
+        cancelAnimationFrame(pendingFrame);
+        pendingFrame = requestAnimationFrame(() => {
+          const expanded = [...document.querySelectorAll(".chart-data[open]")].map(details => details.parentElement.id);
+          renderGeographyAnalysis();
+          expanded.forEach(id => document.querySelector(`#${id} .chart-data`)?.setAttribute("open", ""));
+        });
+      });
+      ["geographyHistoryChart", "geographyProfileChart"].forEach(id => observer.observe(document.getElementById(id)));
     }
 
     function renderGeographyClusterSummary() {
@@ -5948,7 +6122,7 @@
         + Number(filters.changedOnly)
         + Number(filters.closeOnly);
       const summary = document.querySelector(".filter-summary");
-      if (summary) summary.textContent = activeCount ? `${activeCount} active` : "Seat, party and margins";
+      if (summary) summary.textContent = activeCount ? `${activeCount} active` : "";
     }
 
     function districtMatchesFilters(d, filters) {
@@ -5967,6 +6141,98 @@
     function filteredDistricts() {
       const filters = getFilterState();
       return allDistricts.filter(d => districtMatchesFilters(d, filters));
+    }
+
+    function closeSearchSuggestions() {
+      document.getElementById("districtSearchSuggestions").classList.add("hidden");
+      const input = document.getElementById("districtSearch");
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      activeSearchIndex = -1;
+      searchMatches = [];
+    }
+
+    function renderSearchSuggestions() {
+      const input = document.getElementById("districtSearch");
+      if (document.activeElement !== input || !input.value.trim() || dataLoadState !== "ready") {
+        closeSearchSuggestions();
+        return;
+      }
+      searchMatches = districts.slice(0, 8);
+      activeSearchIndex = -1;
+      input.removeAttribute("aria-activedescendant");
+      const options = document.getElementById("districtSearchOptions");
+      options.replaceChildren(...searchMatches.map((district, index) => {
+        const option = document.createElement("div");
+        option.id = `districtSearchOption${index}`;
+        option.className = "search-option";
+        option.dataset.index = index;
+        option.setAttribute("role", "option");
+        option.setAttribute("aria-selected", "false");
+        const name = document.createElement("strong");
+        name.textContent = district.district;
+        const context = document.createElement("span");
+        context.textContent = [district.council || district.electorate_type, "View result"].filter(Boolean).join(" · ");
+        option.append(name, context);
+        return option;
+      }));
+      document.getElementById("districtSearchStatus").textContent = districts.length === 0
+        ? "No matches. Try another name or clear the filters."
+        : districts.length > searchMatches.length
+          ? `Showing ${searchMatches.length} of ${fmt.format(districts.length)} matches. Keep typing to narrow the list.`
+          : `${districts.length} ${districts.length === 1 ? "match" : "matches"}. Choose an area to view its result.`;
+      document.getElementById("districtSearchSuggestions").classList.remove("hidden");
+      input.setAttribute("aria-expanded", "true");
+    }
+
+    function chooseSearchResult(index) {
+      const selected = searchMatches[index];
+      if (!selected) return;
+      closeSearchSuggestions();
+      selectDistrictByName(selected.district, { revealResult: true, focusResult: true });
+    }
+
+    function setupSearchSuggestions() {
+      const input = document.getElementById("districtSearch");
+      input.addEventListener("focus", renderSearchSuggestions);
+      input.addEventListener("blur", closeSearchSuggestions);
+      input.addEventListener("keydown", event => {
+        if (event.isComposing) return;
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeSearchSuggestions();
+          return;
+        }
+        if (!["ArrowDown", "ArrowUp", "Enter"].includes(event.key)) return;
+        if (input.getAttribute("aria-expanded") !== "true") {
+          if (event.key === "Enter") return;
+          renderSearchSuggestions();
+        }
+        if (!searchMatches.length) return;
+        event.preventDefault();
+        if (event.key === "Enter") {
+          chooseSearchResult(Math.max(0, activeSearchIndex));
+          return;
+        }
+        activeSearchIndex = activeSearchIndex < 0
+          ? (event.key === "ArrowUp" ? searchMatches.length - 1 : 0)
+          : (activeSearchIndex + (event.key === "ArrowDown" ? 1 : -1) + searchMatches.length) % searchMatches.length;
+        const options = [...document.querySelectorAll(".search-option")];
+        options.forEach((option, index) => option.setAttribute("aria-selected", String(index === activeSearchIndex)));
+        const active = options[activeSearchIndex];
+        input.setAttribute("aria-activedescendant", active.id);
+        const list = active.parentElement;
+        if (active.offsetTop < list.scrollTop) list.scrollTop = active.offsetTop;
+        else if (active.offsetTop + active.offsetHeight > list.scrollTop + list.clientHeight) {
+          list.scrollTop = active.offsetTop + active.offsetHeight - list.clientHeight;
+        }
+      });
+      const options = document.getElementById("districtSearchOptions");
+      options.addEventListener("mousedown", event => event.preventDefault());
+      options.addEventListener("click", event => {
+        const option = event.target.closest(".search-option");
+        if (option) chooseSearchResult(Number(option.dataset.index));
+      });
     }
 
     function readUrlState() {
@@ -6947,7 +7213,6 @@
         });
         const totalSenators = [...blocCounts.values()].reduce((sum, count) => sum + count, 0);
         const chips = [
-          `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`,
           `<span class="summary-chip"><strong>${fmt.format(totalSenators)}</strong> senators elected at this election</span>`
         ];
         ["Labor", "Coalition", "Greens", "Independent", "Other"].forEach(bloc => {
@@ -6955,12 +7220,13 @@
           if (!count) return;
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${blocColor(bloc)}"></span>${bloc} <strong>${fmt.format(count)}</strong></span>`);
         });
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`);
         setSummaryChips(target, chips);
         return;
       }
       if (isMmpElection()) {
         const election = activeElection();
-        const chips = usesBoundaryTypeLayers()
+        const geographyChips = usesBoundaryTypeLayers()
           ? [
               `<span class="summary-chip"><strong>${allDistricts.filter(d => d.electorate_type === "General").length}</strong> general electorates</span>`,
               `<span class="summary-chip"><strong>${allDistricts.filter(d => d.electorate_type === "Māori").length}</strong> Māori electorates</span>`
@@ -6968,15 +7234,15 @@
           : [
               `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
             ];
-        chips.push(
+        geographyChips.push(
           `<span class="summary-chip"><strong>${election.electorateSeats}</strong> ${activeElection().jurisdiction === "Germany" ? "constituency mandates" : "electorate seats"}</span>`,
-          `<span class="summary-chip"><strong>${election.listSeats}</strong> list seats</span>`,
-          `<span class="summary-chip"><strong>${election.totalSeats}</strong> MPs after the general election</span>`
+          `<span class="summary-chip"><strong>${election.listSeats}</strong> list seats</span>`
         );
-        (election.parliament || []).forEach(([party, seats]) => {
+        const chips = [`<span class="summary-chip"><strong>${election.totalSeats}</strong> MPs after the general election</span>`];
+        [...(election.parliament || [])].sort((a, b) => b[1] - a[1]).forEach(([party, seats]) => {
           chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${seats}</strong></span>`);
         });
-        setSummaryChips(target, chips);
+        setSummaryChips(target, [...chips, ...geographyChips]);
         return;
       }
       if (["presidential", "senate", "governor", "referendum"].includes(activeElection().contestType)) {
@@ -6985,9 +7251,10 @@
           const ticket = winningParty(d);
           winnerCounts.set(ticket, (winnerCounts.get(ticket) || 0) + 1);
         });
-        const chips = [
-          `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`
-        ];
+        const chips = [...(activeElection().nationalResults || [])]
+          .sort((a, b) => b[1] - a[1])
+          .map(([ticket, share]) => `<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> ${activeElection().resultScopeLabel || "national"}</span>`);
+        chips.push(`<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`);
         [...winnerCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([ticket, areas]) => {
@@ -6996,9 +7263,6 @@
               : activeElection().contestType === "referendum" ? "local leads" : "area wins";
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> ${winsLabel}</span>`);
           });
-        (activeElection().nationalResults || []).forEach(([ticket, share]) => {
-          chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${Number(share).toFixed(2)}%</strong> ${activeElection().resultScopeLabel || "national"}</span>`);
-        });
         setSummaryChips(target, chips);
         return;
       }
@@ -7006,12 +7270,12 @@
         const election = activeElection();
         if (election.contestType === "party-list") {
           const chips = [
-            `<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`,
             `<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> ${election.seatBodyLabel || "Parliament seats"}</span>`
           ];
-          (election.parliament || []).forEach(([party, seats]) => {
+          [...(election.parliament || [])].sort((a, b) => b[1] - a[1]).forEach(([party, seats]) => {
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${partyLabel(party)} <strong>${fmt.format(seats)}</strong></span>`);
           });
+          chips.push(`<span class="summary-chip"><strong>${fmt.format(allDistricts.length)}</strong> ${electorateLabel(allDistricts.length)}</span>`);
           setSummaryChips(target, chips);
           return;
         }
@@ -7035,14 +7299,14 @@
         if (election.teamElection) {
           chips.push(`<span class="summary-chip"><strong>${fmt.format(election.totalSeats)}</strong> elected MPs</span>`);
         }
-        (election.summaryRegions || []).forEach(country => {
-          chips.push(`<span class="summary-chip">${country} <strong>${fmt.format(countryCounts.get(country) || 0)}</strong></span>`);
-        });
         [...partyCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([party, seats]) => {
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(party)}"></span>${party} <strong>${fmt.format(seats)}</strong></span>`);
           });
+        (election.summaryRegions || []).forEach(country => {
+          chips.push(`<span class="summary-chip">${country} <strong>${fmt.format(countryCounts.get(country) || 0)}</strong></span>`);
+        });
         setSummaryChips(target, chips);
         return;
       }
@@ -7439,7 +7703,7 @@
       document.querySelector('label[for="partyFilter"]').textContent = activeElection().membersOnly ? "Deputy affiliation" : activeElection().candidateFilterLabel || (analyticalLocalVote ? "Local winner" : fpp ? "Winner party" : "Bloc");
       document.getElementById("primaryVoteTitle").textContent = analyticalLocalVote ? activeElection().candidateVoteLabel || "Candidate-pair vote" : fpp ? activeElection().firstVoteLabel || "Candidate vote" : "First-preference vote";
       document.getElementById("finalVoteTitle").textContent = mmp ? activeElection().partyVoteLabel || "Party vote" : "Final standing";
-      document.getElementById("finalVotePanel").classList.toggle("hidden", analyticalLocalVote || Boolean(activeElection().membersOnly));
+      document.getElementById("finalVotePanel").classList.toggle("hidden", activeElection().system === "fpp");
       document.getElementById("districtSelectLabel").textContent = analyticalLocalVote ? activeDataset().districtLabel || activeElection().districtLabel || activeDataset().label : activeDataset().districtLabel || activeElection().districtLabel || "Seat";
       document.getElementById("districtSearch").placeholder = analyticalLocalVote || activeElection().membersOnly || activeElection().localElection ? `Find a ${electorateLabel(1)}…` : "Find a district or division…";
       document.getElementById("mapSubtitle").textContent = analyticalLocalVote
@@ -7475,6 +7739,11 @@
         button.classList.toggle("active", active);
         button.setAttribute("aria-pressed", String(active));
       });
+      const mapModeSelect = document.getElementById("mapModeSelect");
+      mapModeSelect.replaceChildren(...[...document.querySelectorAll("[data-map-mode]")]
+        .filter(button => !button.classList.contains("hidden"))
+        .map(button => new Option(button.textContent, button.dataset.mapMode)));
+      mapModeSelect.value = activeMapMode;
     }
 
     function populateControls() {
@@ -7541,6 +7810,7 @@
       electionYear.onchange = () => loadElection(electionYear.value);
       updateFilterSummary();
       updateDataStatus();
+      renderSearchSuggestions();
     }
 
     function populateRoundSelect() {
@@ -7596,6 +7866,7 @@
     }
 
     function resetView() {
+      const selectedDistrict = activeDistrict?.district;
       document.getElementById("districtSearch").value = "";
       activeCouncil = "all";
       pendingCouncilFromUrl = "";
@@ -7603,7 +7874,7 @@
       document.getElementById("changedOnly").checked = false;
       document.getElementById("closeOnly").checked = false;
       districts = [...allDistricts];
-      activeDistrict = districts[0] || null;
+      activeDistrict = districts.find(d => d.district === selectedDistrict) || districts[0] || null;
       if (activeElection().localCouncilFilter && boundaryFeatures.length) {
         activateBoundaryShapes(boundaryFeatures, "council:all");
       }
@@ -7656,19 +7927,16 @@
     }
 
     function setupMapModes() {
+      const selectMode = mode => {
+        activeMapMode = mode;
+        updateElectionSpecificUi();
+        renderSeatMap();
+        renderGeographyAnalysis();
+        updateUrlState();
+      };
+      document.getElementById("mapModeSelect").addEventListener("change", event => selectMode(event.target.value));
       document.querySelectorAll("[data-map-mode]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          activeMapMode = btn.dataset.mapMode;
-          document.querySelectorAll("[data-map-mode]").forEach(b => {
-            const active = b.dataset.mapMode === activeMapMode;
-            b.classList.toggle("active", active);
-            b.setAttribute("aria-pressed", String(active));
-          });
-          updateElectionSpecificUi();
-          renderSeatMap();
-          renderGeographyAnalysis();
-          updateUrlState();
-        });
+        btn.addEventListener("click", () => selectMode(btn.dataset.mapMode));
       });
       document.querySelectorAll("[data-boundary-type]").forEach(btn => {
         btn.addEventListener("click", () => setBoundaryType(btn.dataset.boundaryType));
@@ -8647,6 +8915,7 @@
     }
 
     function prepareElectionLoadState(context) {
+      closeSearchSuggestions();
       setLoadingState();
       activeCouncil = "all";
       activeMapMode = "party";
@@ -8948,16 +9217,28 @@
 
     function setupResponsiveFilters() {
       const tools = document.getElementById("filterTools");
-      const mobile = window.matchMedia("(max-width: 720px)");
-      const sync = event => {
-        if (event.matches) tools.removeAttribute("open");
-        else tools.setAttribute("open", "");
-      };
-      sync(mobile);
-      mobile.addEventListener?.("change", sync);
+      const summary = tools.querySelector("summary");
+      tools.addEventListener("keydown", event => {
+        if (event.key !== "Escape" || !tools.open) return;
+        event.preventDefault();
+        tools.open = false;
+        summary.focus();
+      });
+      document.addEventListener("click", event => {
+        if (window.matchMedia("(min-width: 721px)").matches && !tools.contains(event.target)) {
+          tools.open = false;
+        }
+      });
+      tools.addEventListener("focusout", event => {
+        if (window.matchMedia("(min-width: 721px)").matches && event.relatedTarget && !tools.contains(event.relatedTarget)) {
+          tools.open = false;
+        }
+      });
     }
 
     setupResponsiveFilters();
+    setupSearchSuggestions();
+    setupResponsiveCharts();
     setupTabs();
     setupMapModes();
     setupRankings();
