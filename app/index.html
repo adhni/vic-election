@@ -1592,11 +1592,18 @@
         <div id="seatMap" class="map-empty">Loading map…</div>
         <div id="mapTooltip" class="map-tooltip"></div>
       </div>
+          <section id="houseSwingRankings" class="house-swing-rankings hidden" aria-labelledby="houseSwingTitle">
+            <h3 id="houseSwingTitle">Biggest swings · 2022 → 2024</h3>
+            <p id="houseSwingRankingNote" class="house-demographic-note"></p>
+            <div id="houseSwingLists" class="house-swing-lists"></div>
+          </section>
+
         </section>
 
         <section id="houseDemographicsPanel" class="house-demographics-panel hidden" aria-labelledby="houseDemographicsTitle">
+          <p class="house-eyebrow">U.S. House · District explorer</p>
           <h2 id="houseDemographicsTitle" class="map-title">Demographics and voting</h2>
-          <p class="map-subtitle">Select a dot or map district to explore its result.</p>
+          <p class="map-subtitle">Explore the relationship between a district’s demographics and its vote. Select a dot, map district, or swing ranking.</p>
           <div class="house-demographics-controls">
             <label for="houseDemographicMetric">Demographic measure
               <select id="houseDemographicMetric" disabled><option>Loading measures…</option></select>
@@ -1604,15 +1611,15 @@
             <label for="houseDemographicSample">District sample
               <select id="houseDemographicSample">
                 <option value="baseline">Both major parties</option>
-                <option value="sensitivity">Single matchup, excluding Alaska / Maine</option>
+                <option value="sensitivity">Single matchup · no AK / ME</option>
               </select>
             </label>
             <label for="houseDemographicOutcome">Election outcome
               <select id="houseDemographicOutcome">
-                <option value="2024">2024 share · all eligible districts</option>
-                <option value="2022-matched">2022 share · matched districts</option>
-                <option value="2024-matched">2024 share · matched districts</option>
-                <option value="change">Swing 2022 → 2024 · matched districts</option>
+                <option value="2024">2024 share · all eligible</option>
+                <option value="2022-matched">2022 share · matched</option>
+                <option value="2024-matched">2024 share · matched</option>
+                <option value="change">Swing 2022 → 2024 · matched</option>
               </select>
             </label>
             <label for="houseDemographicParty">Party
@@ -1639,10 +1646,16 @@
           <button id="houseDemographicRetry" class="hidden" type="button">Retry demographics</button>
           <div id="houseDemographicContent" class="hidden">
             <div id="houseDemographicStatistics" class="house-demographic-statistics" aria-live="polite"></div>
+            <div class="house-chart-key" aria-label="Swing colour key">
+              <span class="house-key-democratic">Toward Democrats</span>
+              <span class="house-key-neutral">Little change</span>
+              <span class="house-key-republican">Toward Republicans</span>
+            </div>
             <p id="houseDemographicYLabel" class="house-chart-y-label">Democratic two-party vote share (%)</p>
             <div id="houseDemographicChart" class="house-demographic-chart" aria-busy="true"></div>
             <p id="houseDemographicAxis" class="house-chart-x-label"></p>
             <section id="houseDemographicSelection" class="house-demographic-selection" aria-label="Selected district demographics" tabindex="-1">
+              <p class="house-eyebrow">Selected district</p>
               <label for="houseDemographicDistrict">District
                 <select id="houseDemographicDistrict"></select>
               </label>
@@ -1666,11 +1679,6 @@
               <a href="../docs/us_house_2022_2024_comparison.md">Comparison methodology</a>
             </details>
           </div>
-          <section id="houseSwingRankings" class="house-swing-rankings hidden" aria-labelledby="houseSwingTitle">
-            <h3 id="houseSwingTitle">Biggest swings · 2022 → 2024</h3>
-            <p id="houseSwingRankingNote" class="house-demographic-note"></p>
-            <div id="houseSwingLists" class="house-swing-lists"></div>
-          </section>
           <div id="houseDemographicTooltip" class="house-demographic-tooltip hidden" role="tooltip"></div>
         </section>
 

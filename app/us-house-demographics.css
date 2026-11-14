@@ -12,7 +12,7 @@
   box-shadow: var(--shadow);
   position: relative;
 }
-.house-demographics-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 12px; }
+.house-demographics-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 18px 0 12px; }
 .house-demographics-controls > label:first-child { grid-column: 1 / -1; }
 .house-demographics-controls label, .house-demographic-selection label { display: grid; gap: 5px; min-width: 0; font-size: 12px; font-weight: 700; color: var(--muted); }
 .house-demographics-panel select { width: 100%; max-width: 100%; min-width: 0; font-weight: 500; color: var(--ink); }
@@ -27,8 +27,8 @@
 .house-demographic-chart svg { display: block; width: 100%; overflow: visible; }
 .house-demographic-chart text { font-family: inherit; font-size: 11px; fill: var(--muted); }
 .house-scatter-grid { stroke: var(--line); stroke-width: 1; pointer-events: none; }
-.house-scatter-midline { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; pointer-events: none; }
-.house-scatter-point { fill: var(--house-point-color, var(--accent)); fill-opacity: .5; cursor: pointer; }
+.house-scatter-midline { stroke: var(--muted); stroke-width: 1.6; stroke-dasharray: 4 4; pointer-events: none; }
+.house-scatter-point { fill: var(--house-point-color, var(--accent)); fill-opacity: .7; stroke: var(--surface); stroke-width: .5; cursor: pointer; }
 .house-demographics-panel.house-republican { --house-point-color: #c62828; }
 .house-scatter-point[aria-pressed="true"] { fill-opacity: 1; stroke: var(--ink); stroke-width: 2.5; }
 .house-scatter-point:hover, .house-scatter-point:focus-visible { fill-opacity: 1; stroke: var(--ink); stroke-width: 2.5; }
@@ -67,3 +67,52 @@
 .house-swing-lists button span { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
 .house-swing-lists button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 @media (max-width: 600px) { .house-swing-lists { grid-template-columns: minmax(0, 1fr); } }
+
+/* Visual hierarchy for the linked House analysis. */
+.house-eyebrow { margin: 0 0 8px; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+.house-demographics-panel > .map-title { font-size: 23px; letter-spacing: -.035em; }
+.house-demographics-controls { background: #f7f8f6; padding: 14px; border: 1px solid var(--line); border-radius: 12px; }
+.house-demographic-statistics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+.house-demographic-statistics > span { background: #f7f8f6; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; gap: 5px; font-size: 11px; }
+.house-demographic-statistics strong { font-size: 25px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.house-chart-key { display: none; gap: 8px 16px; flex-wrap: wrap; margin: 4px 0 18px; font-size: 11px; color: var(--muted); }
+.house-swing-view .house-chart-key { display: flex; }
+.house-chart-key span { display: inline-flex; align-items: center; gap: 6px; }
+.house-chart-key span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #8b9098; }
+.house-chart-key .house-key-democratic::before { background: #2166ac; }
+.house-chart-key .house-key-republican::before { background: #b51f24; }
+.house-demographic-selection { background: #f8f9f7; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.house-selected-metric { display: block; color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+.house-share-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.house-share-cards > span { display: grid; align-content: start; gap: 8px; padding: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 9px; }
+.house-share-cards > span > span { color: var(--muted); font-size: 10px; line-height: 1.5; }
+.house-share-cards strong { font-size: 25px; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.house-share-cards .house-change-democratic { background: #eef5fc; border-color: #d4e3f2; color: #2166ac; }
+.house-share-cards .house-change-republican { background: #fcf0ee; border-color: #f0d8d4; color: #b51f24; }
+.house-demographics-view #explorerMap .geo-map { height: auto; min-height: 0; aspect-ratio: 960 / 560; }
+.house-demographics-view #explorerMap .map-wrap { margin-top: 12px; }
+#explorerMap .house-swing-lists { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+#explorerMap .house-swing-rankings { margin-top: 20px; }
+.house-swing-lists button { background: #fafbf9; border-color: #e7e8e2; border-radius: 9px; padding: 10px 12px; }
+.house-swing-lists button:hover { background: #f0f3ee; }
+.house-swing-lists .house-swing-track { position: relative; display: block; height: 5px; background: #e7e9e5; border-radius: 3px; margin-top: 3px; }
+.house-swing-track::after { content: ""; position: absolute; left: 50%; top: -2px; width: 1px; height: 9px; background: #92978e; }
+.house-swing-track > span { position: absolute; height: 5px; border-radius: 3px; background: #2166ac; }
+.house-swing-republican .house-swing-track > span { background: #b51f24; }
+@media (min-width: 721px) and (max-width: 1150px) { .house-demographics-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  .house-demographics-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 10px; gap: 10px; }
+  .house-demographics-controls > label[for="houseDemographicOutcome"], .house-demographics-controls > label[for="houseDemographicSample"] { grid-column: 1 / -1; }
+  .house-demographic-statistics { gap: 6px; }
+  .house-demographic-statistics > span { padding: 10px 8px; font-size: 10px; }
+  .house-demographic-statistics strong { font-size: 22px; }
+  .house-demographic-selection { padding: 12px; }
+  .house-share-cards { gap: 6px; }
+  .house-share-cards > span { padding: 9px 7px; }
+  .house-share-cards strong { font-size: 21px; }
+  .house-chart-key { font-size: 10px; gap: 8px 12px; }
+}
+@media (max-width: 480px) {
+  .house-share-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .house-share-cards > span:last-child { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+}

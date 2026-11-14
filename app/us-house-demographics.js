@@ -170,7 +170,8 @@
     }
     swingRankingKey = key;
     const rows = sampleRows();
-    dom.swingRankingNote.textContent = `${rows.length} comparable districts · ${partyLabel()} two-party shares shown · Election-wide rankings include districts missing the selected demographic. Map colours always show party direction.`;
+    const maximumSwing = Math.max(...rows.map(row => Math.abs(Number(row.democratic_share_change_pp))), 1);
+    dom.swingRankingNote.textContent = `${rows.length} comparable districts · ${partyLabel()} two-party shares shown · Bars share one scale: ← Democratic · Republican →. Includes districts missing the selected demographic.`;
     dom.swingLists.replaceChildren(...["Democrats", "Republicans"].map((direction, index) => {
       const section = document.createElement("section"), title = document.createElement("h4");
       title.textContent = `Toward ${direction}`;
@@ -188,7 +189,14 @@
           button.type = "button";
           button.dataset.district = row.district;
           button.setAttribute("aria-pressed", String(row.district === context.district));
-          button.append(name, detail);
+          const track = document.createElement("span"), bar = document.createElement("span");
+          const width = Math.abs(Number(row.democratic_share_change_pp)) / maximumSwing * 50;
+          track.className = "house-swing-track";
+          track.setAttribute("aria-hidden", "true");
+          bar.style.width = `${width}%`;
+          bar.style.left = `${index === 0 ? 50 - width : 50}%`;
+          track.append(bar);
+          button.append(name, detail, track);
           button.onclick = () => callbacks.onSelect(row.district);
           item.append(button);
           list.append(item);
@@ -274,7 +282,19 @@
     if (matched() && row.comparison_eligible === "true") {
       const share = year => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
       const delta = share(2024) - share(2022);
-      dom.values.textContent += ` · 2022: ${share(2022).toFixed(1)}% → 2024: ${share(2024).toFixed(1)}% · Change: ${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`;
+      const metric = document.createElement("span"), cards = document.createElement("span");
+      metric.className = "house-selected-metric";
+      metric.textContent = `${data.metrics[state.metric].label}: ${format(row[state.metric])}`;
+      cards.className = "house-share-cards";
+      [["2022:", `${share(2022).toFixed(1)}%`], ["2024:", `${share(2024).toFixed(1)}%`], ["Change:", `${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`]].forEach(([label, value], index) => {
+        const card = document.createElement("span"), caption = document.createElement("span"), number = document.createElement("strong");
+        caption.textContent = `${label} ${index < 2 ? partyLabel() + " share" : partyLabel() + " share change"}`;
+        number.textContent = value;
+        if (index === 2) card.className = Number(row.democratic_share_change_pp) > 0 ? "house-change-democratic" : Number(row.democratic_share_change_pp) < 0 ? "house-change-republican" : "";
+        card.append(caption, number);
+        cards.append(card);
+      });
+      dom.values.replaceChildren(metric, cards);
     }
     dom.note.textContent = exclusionNote(row) || `2024 elected member: ${row.elected_member} · ${row.elected_party}`;
     const definition = data.metrics[state.metric];
@@ -402,6 +422,8 @@
     const active = isActive();
     dom.controls.classList.toggle("hidden", !supported());
     dom.panel.classList.toggle("hidden", !active);
+    dom.swingRankings.classList.toggle("hidden", !active || !changing());
+    dom.panel.classList.toggle("house-swing-view", changing());
     dom.grid.classList.toggle("house-demographics-view", active);
     dom.resultsButton.setAttribute("aria-pressed", String(!active));
     dom.demographicsButton.setAttribute("aria-pressed", String(active));
