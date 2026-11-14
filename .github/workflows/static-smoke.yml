@@ -22,6 +22,8 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Check explorer interactions and responsive layouts
         run: python scripts/test_explorer_ux.py --screenshots tmp/explorer-ux
+      - name: Check House demographics and linked map
+        run: python scripts/test_house_demographics_ux.py --screenshots tmp/explorer-ux
       - name: Upload browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -120,6 +122,12 @@ jobs:
           python scripts/validate_turkiye_presidential.py
           python scripts/validate_taiwan_presidential.py
           python scripts/validate_us_house.py
+          python scripts/validate_us_house_demographics.py
+          python scripts/test_us_house_demographics.py
+          python scripts/validate_us_house_analysis.py
+          python scripts/test_us_house_analysis.py
+          python scripts/build_us_house_comparison.py --check
+          python scripts/test_us_house_comparison.py
           python scripts/validate_us_presidential.py
           python scripts/validate_us_senate.py
           python scripts/validate_us_governor.py

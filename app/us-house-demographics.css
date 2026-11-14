@@ -1,0 +1,69 @@
+.house-view-controls { display: flex; gap: 8px; padding-top: 18px; }
+.house-view-controls.hidden, .house-demographics-panel.hidden { display: none; }
+.house-view-controls [aria-pressed="true"] { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+.house-demographics-view .detail-panel { grid-column: 1 / -1; }
+.explorer-grid.house-demographics-view { grid-template-columns: minmax(290px, .8fr) minmax(0, 1.6fr); }
+.house-demographics-panel {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.house-demographics-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 18px 0 12px; }
+.house-demographics-controls > label:first-child { grid-column: 1 / -1; }
+.house-demographics-controls label, .house-demographic-selection label { display: grid; gap: 5px; min-width: 0; font-size: 12px; font-weight: 700; color: var(--muted); }
+.house-demographics-panel select { width: 100%; max-width: 100%; min-width: 0; font-weight: 500; color: var(--ink); }
+.house-demographic-status, .house-demographic-note, .house-demographic-method p, .house-demographic-selection details p { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.house-demographic-status { margin: 8px 0 14px; }
+.house-demographic-statistics { display: flex; gap: 10px 18px; flex-wrap: wrap; font-size: 12px; font-variant-numeric: tabular-nums; margin-bottom: 14px; }
+.house-demographic-statistics span { display: grid; gap: 2px; }
+.house-demographic-statistics strong { color: var(--ink); font-size: 17px; font-weight: 700; }
+.house-chart-y-label, .house-chart-x-label { font-size: 12px; color: var(--muted); margin: 8px 0; overflow-wrap: anywhere; }
+.house-chart-x-label { text-align: center; }
+.house-demographic-chart { min-width: 0; width: 100%; }
+.house-demographic-chart svg { display: block; width: 100%; overflow: visible; }
+.house-demographic-chart text { font-family: inherit; font-size: 11px; fill: var(--muted); }
+.house-scatter-grid { stroke: var(--line); stroke-width: 1; pointer-events: none; }
+.house-scatter-midline { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; pointer-events: none; }
+.house-scatter-point { fill: var(--house-point-color, var(--accent)); fill-opacity: .5; cursor: pointer; }
+.house-demographics-panel.house-republican { --house-point-color: #c62828; }
+.house-scatter-point[aria-pressed="true"] { fill-opacity: 1; stroke: var(--ink); stroke-width: 2.5; }
+.house-scatter-point:hover, .house-scatter-point:focus-visible { fill-opacity: 1; stroke: var(--ink); stroke-width: 2.5; }
+.house-demographic-selection { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 14px; scroll-margin-top: 100px; }
+.house-demographic-selection > p { margin: 10px 0; font-size: 13px; }
+.house-demographic-selection > button { margin-top: 12px; }
+.house-demographic-selection details, .house-demographic-method { font-size: 12px; }
+.house-demographic-selection summary, .house-demographic-method summary { cursor: pointer; padding: 8px 0; }
+.house-demographic-method { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 8px; }
+.house-demographic-tooltip { position: absolute; max-width: min(260px, calc(100% - 24px)); padding: 9px 12px; background: var(--ink); color: var(--surface); border-radius: 8px; font-size: 12px; white-space: pre-line; pointer-events: none; z-index: 10; }
+@media (max-width: 1050px) {
+  .explorer-grid.house-demographics-view { grid-template-columns: 1fr; }
+  .house-demographics-view #explorerMap { order: 1; }
+  .house-demographics-view .house-demographics-panel { order: 0; }
+  .house-demographics-view .detail-panel { order: 2; }
+}
+@media (max-width: 480px) {
+  .house-demographics-controls { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .house-demographics-panel { padding: 16px 12px; }
+  .house-view-controls button, .house-demographics-panel select, .house-demographics-panel button { min-height: 44px; }
+  .house-demographic-selection summary, .house-demographic-method summary { min-height: 44px; display: list-item; padding: 12px 0; }
+}
+
+.house-swing-rankings { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 14px; }
+.house-swing-rankings h3 { font-size: 15px; margin: 0 0 8px; }
+.house-swing-lists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.house-swing-lists h4 { font-size: 13px; margin: 12px 0 8px; }
+.house-swing-democratic h4 { color: #2166ac; }
+.house-swing-republican h4 { color: #b51f24; }
+.house-swing-lists ol { list-style: none; padding: 0; margin: 0; }
+.house-swing-lists li { margin-bottom: 6px; }
+.house-swing-lists button { display: grid; gap: 4px; width: 100%; min-height: 44px; text-align: left; padding: 10px; white-space: normal; overflow-wrap: anywhere; }
+.house-swing-lists strong { font-size: 12px; }
+.house-swing-lists button span { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.house-swing-lists button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+@media (max-width: 600px) { .house-swing-lists { grid-template-columns: minmax(0, 1fr); } }

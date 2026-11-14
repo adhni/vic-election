@@ -44,6 +44,21 @@ The app is map-first and party/bloc-first:
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
 
+The repo also includes a separate [2024 U.S. House demographic dataset](docs/us_house_2024_demographics.md):
+2024 ACS 1-year estimates for all 435 districts, with 42 indicators, source
+estimates, margins of error, a variable dictionary and reproducible downloads.
+In the explorer, choose **United States House 2024 → Demographics** for a
+scatterplot linked to the district map, sample controls, correlations, and
+selected-district uncertainty. The view supports all 42 indicators and shareable URLs.
+Choose Democratic or Republican two-party vote share, and set each axis to
+**Full range** or **Fit data** independently.
+The [first district-level analysis](docs/us_house_2024_analysis.md) joins these
+indicators to the 2024 results, flags contests eligible for two-party analysis,
+and reports exploratory correlations for 397 districts plus a sensitivity sample.
+The [2022–2024 comparison](docs/us_house_2022_2024_comparison.md) is available
+from both House election pages. It holds the 2024 demographics fixed for 312
+matched districts and includes a swing map, linked chart, and biggest-shift rankings.
+
 ## Greece, Poland, and Belgium
 
 Poland's 2025 and 2020 presidential elections each have separate first-round and runoff views. Official National Electoral Commission candidate and ballot totals are aggregated to all 16 voivodeships and joined to Eurostat GISCO geometry. The shared map reunites the two NUTS components of Mazowieckie. Voivodeship colours show local leaders; Poland elects one president from the nationwide result.
