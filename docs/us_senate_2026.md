@@ -2,6 +2,8 @@
 
 Choose **United States → Senate 2026 · Provisional**. It opens on **State**, with **County** available through the existing map buttons. The snapshot was published **14 November 2026 at 15:01:38 UTC** and does not update live. It contains **35 races: 34 source-reported winners and Alaska uncalled**. Race totals describe the seats on the ballot, not control of all 100 Senate seats.
 
+The [six-year swing comparison](us_senate_comparison.md) now links regular 2020 seats to 2026 at State and County scope. Florida/Ohio specials remain in results and are excluded from that comparison.
+
 ## Scope and sources
 
 The snapshot includes the **33 regular Class II elections** and the **Florida and Ohio Class III special elections**, one race per participating state. These special elections are included explicitly, whereas the older Senate series in this repository covers regular elections only. CSV fields `race_id`, `election_kind` and `senate_class` preserve that distinction.

@@ -37,7 +37,8 @@ def main():
             expect(page.locator('#electionSnapshotNotice')).to_contain_text('not the full 100-seat Senate')
             expect(page.locator('[data-geography="state"]')).to_have_attribute('aria-pressed','true')
             expect(page.locator('.district-shape')).to_have_count(35)
-            expect(page.locator('#houseViewControls')).to_be_hidden()
+            expect(page.locator('#houseViewControls')).to_be_visible()
+            expect(page.locator('#houseDemographicsPanel')).to_be_hidden()
             expect(page.locator('#stateSummary')).to_contain_text('reported wins')
             expect(page.locator('#stateSummary')).to_contain_text('uncalled')
             alaska=select_shape(page,'Alaska')
@@ -105,6 +106,8 @@ def main():
             expect(page.locator('#electionSnapshotNotice')).to_be_hidden()
             expect(page.locator('.district-shape')).to_have_count(1875)
             page.locator('#electionYear').select_option('us-senate-2026')
+            expect(page.locator('.district-shape')).to_have_count(2443)
+            page.locator('[data-geography="state"]').click()
             expect(page.locator('.district-shape')).to_have_count(35)
             browser.close()
         assert not errors,errors

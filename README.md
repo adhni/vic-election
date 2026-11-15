@@ -64,6 +64,11 @@ districts. **2024 → 2026** uses a provisional 14 November 2026 snapshot, with
 with changed plans are excluded; flips are provisional. The sparse 2020 → 2022
 audit remains downloadable rather than appearing in the chart selector.
 
+The [Senate swing view](docs/us_senate_comparison.md) follows the same regular
+seat six years apart: **2016 → 2022**, **2018 → 2024**, and **2020 → 2026**,
+with State and County maps, matched share charts, flip outlines and downloads.
+Special elections and incompatible or uncalled races are excluded.
+
 ## Greece, Poland, and Belgium
 
 Poland's 2025 and 2020 presidential elections each have separate first-round and runoff views. Official National Electoral Commission candidate and ballot totals are aggregated to all 16 voivodeships and joined to Eurostat GISCO geometry. The shared map reunites the two NUTS components of Mazowieckie. Voivodeship colours show local leaders; Poland elects one president from the nationwide result.
