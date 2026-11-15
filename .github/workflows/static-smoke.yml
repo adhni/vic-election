@@ -26,6 +26,8 @@ jobs:
         run: python scripts/test_house_demographics_ux.py --screenshots tmp/explorer-ux
       - name: Check provisional House 2026
         run: python scripts/test_house_2026_ux.py
+      - name: Check provisional Senate 2026
+        run: python scripts/test_senate_2026_ux.py
       - name: Check presidential state demographics
         run: python scripts/test_president_demographics_ux.py --screenshots tmp/explorer-ux
       - name: Check presidential county demographics
@@ -146,6 +148,8 @@ jobs:
           python scripts/build_us_president_county_demographics.py --check
           python scripts/test_us_president_county_demographics.py
           python scripts/validate_us_presidential.py
+          python scripts/build_us_senate_2026.py --check
+          python scripts/test_us_senate_2026.py
           python scripts/validate_us_senate.py
           python scripts/validate_us_governor.py
           python scripts/validate_indonesia_presidential.py

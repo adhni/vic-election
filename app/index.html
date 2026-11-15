@@ -2751,6 +2751,43 @@
         }
       },
       {
+        "key": "us-senate-2026",
+        "label": "United States Senate 2026 · Provisional",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2026,
+        "source": "Call the Map (CC BY 4.0) / civicAPI",
+        "system": "fpp",
+        "contestType": "senate",
+        "systemLabel": "U.S. Senate · 33 regular + 2 special elections",
+        "dataNotice": "Provisional snapshot · 14 November 2026 · 35 races: 34 reported winners, Alaska uncalled · Includes Florida/Ohio special elections. These are races on the ballot, not the full 100-seat Senate. This snapshot does not update live.",
+        "methodNote": "Provisional counts from <a href=\"https://www.callthemap.com/results/data\">Call the Map</a> (<a href=\"https://creativecommons.org/licenses/by/4.0/\">CC BY 4.0</a>) and <a href=\"https://civicapi.org\">civicAPI</a>. Counties show local vote leaders; margins compare two named candidates and Other combines remaining votes. Alaska uses a statewide fallback. <a href=\"../docs/us_senate_2026.md\">Sources and coverage</a>.",
+        "candidateFilterLabel": "Any leading party",
+        "candidateVoteLabel": "Senate candidate vote",
+        "localVoteLabel": "Senate vote",
+        "mapModeLabel": "Red–blue margin",
+        "bipartisanMarginScale": true,
+        "csv": "data/us_2026_senate_state_fpp.csv",
+        "boundaries": "data/us_senate_2026_state_boundaries.geojson",
+        "defaultGeography": "state",
+        "geographies": {
+          "state": {
+            "label": "State",
+            "pluralLabel": "state races",
+            "areaLabel": "Country",
+            "csv": "data/us_2026_senate_state_fpp.csv",
+            "boundaries": "data/us_senate_2026_state_boundaries.geojson"
+          },
+          "county": {
+            "label": "County",
+            "pluralLabel": "counties/reporting areas",
+            "areaLabel": "State",
+            "csv": "data/us_2026_senate_county_fpp.csv",
+            "boundaries": "data/us_senate_2026_county_boundaries.geojson"
+          }
+        }
+      },
+      {
         "key": "us-senate-2024",
         "label": "United States Senate 2024",
         "type": "national",
@@ -6112,7 +6149,7 @@
     }
 
     function rankedForOutcome(d, totals) {
-      const rows = ranked(totals);
+      const rows = ranked(totals).filter(([candidate]) => !d.groupedCandidates?.has(candidate));
       if (activeElection().jurisdiction !== "India") return rows;
       return rows.filter(([candidate]) => partyLabel(getParty(d, candidate)) !== "NOTA");
     }
@@ -6781,7 +6818,9 @@
           ["#8eb6dc", "Democratic"],
           ["#ece9e4", "Close"],
           ["#e79a92", "Republican"],
-          ["#b51f24", "Strong Republican"]
+          ["#b51f24", "Strong Republican"],
+          ...(activeElectionYear === "us-senate-2026" && allDistricts.some(d => winningParty(d) === "Independent") ? [["#7a7f87", "Independent leader"]] : []),
+          ...(allDistricts.some(d => d.contest_status === "provisional-uncalled") ? [["#8b9098", "Not called"]] : [])
         ].map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
         return;
       }
@@ -7431,7 +7470,9 @@
         [...winnerCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([ticket, areas]) => {
-            const winsLabel = activeElection().contestType === "governor" && activeGeography === "state"
+            const winsLabel = activeElectionYear === "us-senate-2026"
+              ? (ticket === "Not called" ? "uncalled" : activeGeography === "state" ? "reported wins" : "local leads")
+              : activeElection().contestType === "governor" && activeGeography === "state"
               ? "race wins"
               : activeElection().contestType === "referendum" ? "local leads" : "area wins";
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> ${winsLabel}</span>`);
@@ -7624,7 +7665,8 @@
               return `${shortName(winner)} over ${shortName(runnerUp)} · ${d.electorate_type}`;
             }, d => pct(finalMargin(d), d.formal_votes), `No contested ${electorateLabel(2)} loaded.`)}
           </section>`;
-        target.innerHTML = card(`Closest ${electorateLabel(2)}`, closest) + card("Largest winning margins", largest);
+        const namedCountyPairs = activeElectionYear === "us-senate-2026" && activeGeography === "county";
+        target.innerHTML = card(namedCountyPairs ? "Closest named-candidate margins" : `Closest ${electorateLabel(2)}`, closest) + card(namedCountyPairs ? "Largest named-candidate margins" : "Largest winning margins", largest);
         return;
       }
       if (isMultiMemberElection()) {
@@ -8330,6 +8372,10 @@
           const winnerTicket = getParty(d, winner);
           const [runnerUp] = getSecondFromFinal(d);
           const reported = d.formal_votes > 0;
+          const provisionalSenate = activeElectionYear === "us-senate-2026";
+          const localLeaderLabel = provisionalSenate
+            ? (d.contest_status === "provisional-uncalled" ? "Current leader · not called" : activeGeography === "state" ? "Reported winner · provisional" : "Current local vote leader")
+            : activeElection().localLeaderLabel || "Local vote leader";
           const drilldown = activeGeography === "province"
             ? `<button id="provinceDrilldown" type="button">View kabupaten/kota in ${d.district}</button>`
             : "";
@@ -8338,13 +8384,15 @@
             <div class="result-facts">
               <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
               <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
-              <div class="fact-item"><span class="fact-label">${activeElection().localLeaderLabel || "Local vote leader"}</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) : "No digitised vote"}</span></div>
-              <div class="fact-item"><span class="fact-label">${activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
+              <div class="fact-item"><span class="fact-label">${localLeaderLabel}</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) + (provisionalSenate ? " " + shortName(winner) : "") : "No digitised vote"}</span></div>
+              <div class="fact-item"><span class="fact-label">${provisionalSenate && activeGeography === "county" ? "Named-candidate margin" : activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
               <div class="fact-item"><span class="fact-label">${activeElection().validVotesLabel || "Valid votes"}</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
               <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available"}</span></div>
             </div>
             <p class="pref-impact">${activeElection().methodNote}</p>
-            ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}
+            ${d.result_note ? (provisionalSenate
+              ? `<details><summary>Source and counting notes</summary><p class="pref-impact">${d.result_note}</p></details>`
+              : `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>`) : ""}
             ${drilldown}
           `;
           const drillButton = document.getElementById("provinceDrilldown");
@@ -8905,6 +8953,7 @@
           partyMap: {},
           partyVote: {},
           statusMap: {},
+          groupedCandidates: new Set(),
           electedSet: new Set(),
           electedOrder: {},
           first: {},
@@ -8912,6 +8961,7 @@
         };
 
         entries.forEach(r => {
+          if (r.candidate_grouped === "true") d.groupedCandidates.add(r.candidate);
           if (r.candidate) d.partyMap[r.candidate] = r.candidate_party || d.partyMap[r.candidate] || "Independent";
           if (r.excluded_candidate && r.excluded_party) d.partyMap[r.excluded_candidate] = r.excluded_party || d.partyMap[r.excluded_candidate] || "Independent";
           if (r.candidate && r.candidate_status) d.statusMap[r.candidate] = r.candidate_status;
