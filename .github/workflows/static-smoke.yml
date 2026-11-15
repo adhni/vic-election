@@ -8,7 +8,8 @@ on:
 
 jobs:
   explorer-ux:
-    runs-on: ubuntu-latest
+    # Match the Ubuntu version supported by the pinned Playwright release.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
 
     steps:
