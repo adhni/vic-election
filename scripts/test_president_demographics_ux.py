@@ -86,7 +86,7 @@ def check(browser, base, screenshots):
         if screenshots:
             page.screenshot(path=str(screenshots / f'president-state-{width}.png'), full_page=True)
     page.locator('[data-geography="county"]').click()
-    expect(page.locator('#houseDemographicsPanel')).to_be_hidden()
+    expect(page.locator('.house-scatter-point')).to_have_count(3104)
     page.locator('[data-geography="state"]').click()
     expect(page.locator('.house-scatter-point')).to_have_count(51)
     page.locator('#electionYear').select_option('us-house-2024')
