@@ -551,6 +551,63 @@ def check_earlier_period(browser, base_url):
     print("PASS: 2018–2020 period, 359 contests, historical geography and ACS, source shares, flips, party switching, strict sample, downloads, reload, mobile and history", flush=True)
 
 
+
+def check_2016_period(browser, base_url):
+    with (ROOT / "data/us_house_2016_2018_comparison.csv").open() as handle:
+        rows = list(csv.DictReader(handle))
+    matched = [r for r in rows if r["comparison_eligible"] == "true"]
+    page = browser.new_page(viewport={"width": 1440, "height": 1050})
+    open_demographics(page, base_url)
+    page.locator("#houseDemographicPeriod").select_option("2016-2018")
+    expect(page.locator("#electionYear")).to_have_value("us-house-2018")
+    expect(page.locator(".house-scatter-point")).to_have_count(307)
+    assert set(page.locator(".house-seat-flipped").evaluate_all("els => els.map(e => e.dataset.district)")) == {r["district"] for r in matched if r["seat_flipped"] == "true"}
+    expect(page.locator("#houseSwingTitle")).to_contain_text("2016 → 2018")
+    expect(page.locator("#houseDemographicComparisonNote")).to_contain_text("2021 ACS")
+    expect(page.locator("#houseDemographicComparisonNote")).to_contain_text("Colorado, Minnesota and Pennsylvania")
+    page.locator("#houseDemographicDistrict").select_option("California 21st")
+    expect(page.locator("#houseDemographicFlip")).to_contain_text("Flipped to Democrat")
+    for outcome in ("2016-matched", "2018-matched", "change"):
+        page.locator("#houseDemographicOutcome").select_option(outcome)
+        for party in ("democratic", "republican"):
+            page.locator("#houseDemographicParty").select_option(party)
+            labels = page.locator(".house-scatter-point").evaluate_all("els => Object.fromEntries(els.map(e => [e.dataset.district, e.getAttribute('aria-label')]))")
+            assert len(labels) == 307
+            for row in matched:
+                field = "democratic_share_change_pp" if outcome == "change" else f"democratic_two_party_share_pct_{outcome[:4]}"
+                value = float(row[field])
+                if party == "republican": value = -value if outcome == "change" else 100 - value
+                assert f"{value:.1f}" in labels[row["district"]]
+    expect(page.locator("#houseComparisonDownload")).to_have_attribute("href", "../data/us_house_2016_2018_comparison.csv")
+    for row in rows:
+        if row["state"] in {"Colorado", "Minnesota", "Pennsylvania"}:
+            expect(page.locator(f'.district-shape[data-district="{row["district"]}"]')).to_have_attribute("fill", "#8b9098")
+    page.locator("#houseDemographicSample").select_option("sensitivity")
+    expect(page.locator(".house-scatter-point")).to_have_count(305)
+    page.locator("#houseDemographicSample").select_option("baseline")
+    page.reload(wait_until="networkidle")
+    expect(page.locator("#houseDemographicPeriod")).to_have_value("2016-2018")
+    expect(page.locator(".house-scatter-point")).to_have_count(307)
+    page.locator("#electionYear").select_option("us-house-2016")
+    expect(page.locator(".house-scatter-point")).to_have_count(307)
+    page.locator("#houseDemographicDistrict").select_option("Pennsylvania 5th")
+    expect(page.locator("#houseDemographicSelectedValues")).to_contain_text("Not published")
+    page.set_viewport_size({"width": 320, "height": 1050})
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
+    page.locator("#houseDemographicPeriod").select_option("2018-2020")
+    expect(page.locator(".house-scatter-point")).to_have_count(359)
+    page.go_back(wait_until="networkidle")
+    expect(page.locator("#houseDemographicPeriod")).to_have_value("2016-2018")
+    expect(page.locator("#electionYear")).to_have_value("us-house-2016")
+    expect(page.locator(".house-scatter-point")).to_have_count(307)
+    page.close()
+    page = browser.new_page()
+    page.goto(f"{base_url}/app/?year=us-house-2016&view=demographics&mode=house-swing", wait_until="networkidle")
+    expect(page.locator("#houseDemographicPeriod")).to_have_value("2016-2018")
+    expect(page.locator(".house-scatter-point")).to_have_count(307)
+    page.close()
+    print("PASS: 2016–2018, source shares, flips, 307/305 samples, historical maps, exclusions, direct entry, reload, mobile and history", flush=True)
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--screenshots", type=Path)
@@ -575,6 +632,7 @@ def main():
             check_swing_map(browser, base_url, args.screenshots)
             check_seat_flip_badges(browser, base_url)
             check_earlier_period(browser, base_url)
+            check_2016_period(browser, base_url)
             check_retry(browser, base_url)
             check_pending_election_switch(browser, base_url)
             check_layout_and_touch(browser, base_url, args.screenshots)

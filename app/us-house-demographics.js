@@ -3,6 +3,18 @@
   "use strict";
   const ns = "http://www.w3.org/2000/svg";
   const defaults = { view: false, metric: "bachelors_plus_pct", sample: "baseline", party: "democratic", xRange: "full", yRange: "full", outcome: "2024", period: "2022-2024" };
+  const periods = {
+    "2016-2018": [2016, 2018],
+    "2018-2020": [2018, 2020],
+    "2022-2024": [2022, 2024]
+  };
+  function defaultPeriod(key) {
+    return key === "us-house-2016" ? "2016-2018" : ["us-house-2018", "us-house-2020"].includes(key) ? "2018-2020" : "2022-2024";
+  }
+  function compatiblePeriod(key, period) { return periods[period]?.some(year => key === `us-house-${year}`); }
+  function normalizeOutcome() {
+    if (!["change", ...periods[state.period].map(year => `${year}-matched`), ...(state.period === "2022-2024" ? ["2024"] : [])].includes(state.outcome)) state.outcome = "change";
+  }
   let state = { ...defaults };
   let context = {};
   let callbacks;
@@ -18,7 +30,7 @@
   let dom;
 
   function supported() {
-    return ["us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(context.electionKey) && context.official && context.ready;
+    return ["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(context.electionKey) && context.official && context.ready;
   }
 
   function isActive() { return Boolean(supported() && state.view); }
@@ -26,23 +38,22 @@
   function readLocation() {
     const params = new URLSearchParams(location.search);
     state = {
-      period: ["us-house-2018", "us-house-2020"].includes(params.get("year")) ? "2018-2020" : "2022-2024",
+      period: compatiblePeriod(params.get("year"), params.get("demographicPeriod")) ? params.get("demographicPeriod") : defaultPeriod(params.get("year")),
       view: params.get("view") === "demographics",
       metric: params.get("demographic") || defaults.metric,
       sample: params.get("demographicSample") === "sensitivity" ? "sensitivity" : "baseline",
       party: params.get("demographicParty") === "republican" ? "republican" : "democratic",
       xRange: params.get("demographicX") === "fit" ? "fit" : "full",
       yRange: params.get("demographicY") === "fit" ? "fit" : "full",
-      outcome: ["2018-matched", "2020-matched", "2022-matched", "2024-matched", "change"].includes(params.get("demographicOutcome")) ? params.get("demographicOutcome") : params.get("year") === "us-house-2022" ? "2022-matched" : "2024"
+      outcome: ["2016-matched", "2018-matched", "2020-matched", "2022-matched", "2024-matched", "change"].includes(params.get("demographicOutcome")) ? params.get("demographicOutcome") : params.get("year") === "us-house-2022" ? "2022-matched" : "2024"
     };
-    if (state.period === "2018-2020" && !["2018-matched", "2020-matched", "change"].includes(state.outcome)) state.outcome = "change";
-    if (state.period === "2022-2024" && ["2018-matched", "2020-matched"].includes(state.outcome)) state.outcome = "change";
+    normalizeOutcome();
     if (data && !data.metrics[state.metric]) state.metric = defaults.metric;
   }
 
   function writeUrlState(params) {
     ["view", "demographic", "demographicSample", "demographicParty", "demographicX", "demographicY", "demographicOutcome", "demographicPeriod"].forEach(key => params.delete(key));
-    if (!["us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(context.electionKey) || !context.official || !state.view) return;
+    if (!["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(context.electionKey) || !context.official || !state.view) return;
     params.set("view", "demographics");
     if (state.period !== defaults.period) params.set("demographicPeriod", state.period);
     if (state.metric !== defaults.metric) params.set("demographic", state.metric);
@@ -53,16 +64,17 @@
     if (state.outcome !== defaults.outcome) params.set("demographicOutcome", state.outcome);
   }
 
-  function startYear() { return state.period === "2018-2020" ? 2018 : 2022; }
-  function endYear() { return state.period === "2018-2020" ? 2020 : 2024; }
+  function startYear() { return periods[state.period][0]; }
+  function endYear() { return periods[state.period][1]; }
   function periodLabel() { return `${startYear()} → ${endYear()}`; }
   function activatePeriod() {
     if (!data || data.period === state.period && data.electionKey === context.electionKey) return;
-    const historical = state.period === "2018-2020";
+    const historical = startYear() < 2022;
     data.metrics = historical ? data.historicalMetrics : data.latestMetrics;
     data.rows = (historical ? data.historicalRows : data.baseRows).map(row => ({ ...row, ...data.comparisons[state.period].get(row.constituency_code) }));
-    // The 116th Congress ACS geography does not describe NC's 2020 districts.
-    if (historical && context.electionKey === "us-house-2020") data.rows.filter(row => row.state === "North Carolina").forEach(row => {
+    // Suppress ACS values when the map predates or postdates this snapshot's geography.
+    const mismatchedStates = context.electionKey === "us-house-2016" ? ["Colorado", "Minnesota", "Pennsylvania"] : context.electionKey === "us-house-2020" ? ["North Carolina"] : [];
+    if (historical) data.rows.filter(row => mismatchedStates.includes(row.state)).forEach(row => {
       Object.keys(data.metrics).forEach(key => { row[key] = ""; row[`${key}_moe`] = ""; });
     });
     if (!data.metrics[state.metric]) state.metric = defaults.metric;
@@ -279,6 +291,10 @@
         if (!response.ok) throw new Error("Election comparison could not be loaded.");
         return response.text();
       }),
+      fetch(callbacks.assetPath("data/us_house_2016_2018_comparison.csv"), { signal }).then(response => {
+        if (!response.ok) throw new Error("Election comparison could not be loaded.");
+        return response.text();
+      }),
       fetch(callbacks.assetPath("data/us_2021_house_demographics.csv"), { signal }).then(response => {
         if (!response.ok) throw new Error("Historical demographics could not be loaded.");
         return response.text();
@@ -287,7 +303,7 @@
         if (!response.ok) throw new Error("Historical definitions could not be loaded.");
         return response.json();
       })
-    ]).then(([text, metadata, comparisonText, comparison2020Text, historicalText, historicalMetadata]) => {
+    ]).then(([text, metadata, comparisonText, comparison2020Text, comparison2018Text, historicalText, historicalMetadata]) => {
       if (id !== requestId || signal.aborted) return;
       const rows = callbacks.parseCSV(text);
       const comparison = callbacks.parseCSV(comparisonText);
@@ -298,13 +314,16 @@
       const comparison2020 = callbacks.parseCSV(comparison2020Text);
       const comparison2020ByCode = new Map(comparison2020.map(row => [row.constituency_code, row]));
       if (comparison2020.length !== 435 || comparison2020ByCode.size !== 435 || historicalRows.length !== 435 || historicalMetadata.congress !== 116 || historicalRows.some(row => comparison2020ByCode.get(row.constituency_code)?.district !== row.district)) throw new Error("Comparison districts do not match.");
+      const comparison2018 = callbacks.parseCSV(comparison2018Text);
+      const comparison2018ByCode = new Map(comparison2018.map(row => [row.constituency_code, row]));
+      if (comparison2018.length !== 435 || comparison2018ByCode.size !== 435 || historicalRows.some(row => comparison2018ByCode.get(row.constituency_code)?.district !== row.district)) throw new Error("Historical comparison districts do not match.");
       const codes = new Set(rows.map(row => row.constituency_code));
       if (rows.length !== 435 || codes.size !== 435 || metadata.congress !== 119 || !metadata.demographic_metrics?.[defaults.metric]
         || rows.some(row => row.election_key !== "us-house-2024")) {
         throw new Error("Demographic data does not match these election districts.");
       }
       data = { baseRows: rows, historicalRows, latestMetrics: metadata.demographic_metrics, historicalMetrics: historicalMetadata.metrics,
-        comparisons: { "2022-2024": comparisonByCode, "2018-2020": comparison2020ByCode } };
+        comparisons: { "2016-2018": comparison2018ByCode, "2022-2024": comparisonByCode, "2018-2020": comparison2020ByCode } };
       activatePeriod();
       if (!data.metrics[state.metric]) state.metric = defaults.metric;
       populate();
@@ -359,7 +378,7 @@
       });
       dom.values.replaceChildren(metric, cards);
     }
-    dom.note.textContent = exclusionNote(row) || (state.period === "2018-2020" ? `2020 elected party: ${row.elected_party_2020}` : `2024 elected member: ${row.elected_member} · ${row.elected_party}`);
+    dom.note.textContent = exclusionNote(row) || (startYear() < 2022 ? `${endYear()} elected party: ${row[`elected_party_${endYear()}`]}` : `2024 elected member: ${row.elected_member} · ${row.elected_party}`);
     const definition = data.metrics[state.metric];
     const moe = row[`${state.metric}_moe`];
     dom.uncertainty.textContent = !finite(row[state.metric]) ? "The estimate and its uncertainty are unavailable; no value has been imputed."
@@ -506,8 +525,8 @@
     dom.yLabel.textContent = outcomeLabel();
     dom.period.value = state.period;
     dom.swingTitle.textContent = `Biggest swings · ${periodLabel()}`;
-    dom.outcome.querySelector('[value="2024"]').disabled = context.electionKey === "us-house-2022" || state.period === "2018-2020";
-    for (const year of [2018, 2020, 2022, 2024]) {
+    dom.outcome.querySelector('[value="2024"]').disabled = context.electionKey !== "us-house-2024" || state.period !== "2022-2024";
+    for (const year of [2016, 2018, 2020, 2022, 2024]) {
       const option = dom.outcome.querySelector(`[value="${year}-matched"]`);
       option.hidden = option.disabled = ![startYear(), endYear()].includes(year);
     }
@@ -515,9 +534,10 @@
     dom.download.href = `../data/us_house_${state.period.replace("-", "_")}_comparison.csv`;
     dom.download.textContent = `Download ${periodLabel()} comparison`;
     dom.outcome.value = state.outcome;
-    const vintage = state.period === "2018-2020" ? "2021 ACS demographics on historical districts" : "2024 ACS demographics";
+    const vintage = startYear() < 2022 ? "2021 ACS demographics on historical districts" : "2024 ACS demographics";
     dom.comparisonNote.textContent = matched() ? `${vintage} held fixed · Same matched districts for both years and change · Map and full results show ${context.electionKey.slice(-4)}` : "2024 ACS demographics and 2024 election results";
     if (state.period === "2018-2020") dom.comparisonNote.textContent += " · North Carolina excluded: boundaries changed. Demographics measured after the elections.";
+    if (state.period === "2016-2018") dom.comparisonNote.textContent += " · Colorado, Minnesota and Pennsylvania excluded: plans changed. Demographics measured after the elections.";
     dom.panel.classList.toggle("house-republican", state.party === "republican");
     if (!data) {
       dom.status.textContent = error || "Loading district demographics…";
@@ -544,12 +564,9 @@
 
   function update(nextContext) {
     context = nextContext;
-    if (["us-house-2018", "us-house-2020"].includes(context.electionKey)) {
-      state.period = "2018-2020";
-      if (!["2018-matched", "2020-matched", "change"].includes(state.outcome)) state.outcome = "change";
-    } else if (["us-house-2022", "us-house-2024"].includes(context.electionKey) && state.period === "2018-2020") {
-      state.period = "2022-2024";
-      state.outcome = "change";
+    if (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(context.electionKey) && !compatiblePeriod(context.electionKey, state.period)) {
+      state.period = defaultPeriod(context.electionKey);
+      normalizeOutcome();
     }
     if (context.electionKey === "us-house-2022" && state.outcome === "2024") state.outcome = "2022-matched";
     if (!supported() && controller) {

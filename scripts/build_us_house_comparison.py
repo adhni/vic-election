@@ -27,7 +27,7 @@ def build_rows(root=ROOT, period='2022-2024'):
         for row in read_csv(root / f'data/us_{year}_house_fpp.csv'):
             grouped[row['constituency_code']].append(row)
         years[year] = grouped
-    demographic_path = 'data/us_2021_house_demographics.csv' if start == 2018 else 'data/us_2024_house_analysis.csv'
+    demographic_path = 'data/us_2021_house_demographics.csv' if start in (2016, 2018) else 'data/us_2024_house_analysis.csv'
     demographics = read_csv(root / demographic_path)
     codes = {row['constituency_code'] for row in demographics}
     if len(codes) != 435 or set(years[end]) != codes or (start == 2022 and set(years[start]) != codes):
@@ -45,7 +45,7 @@ def build_rows(root=ROOT, period='2022-2024'):
     for demo in demographics:
         code, state = demo['constituency_code'], demo['state']
         audit = boundary_audit.get(code)
-        stable = audit['boundary_unchanged_verified'] == 'true' if audit else state not in ({'North Carolina'} if start == 2018 else CHANGED_STATES)
+        stable = audit['boundary_unchanged_verified'] == 'true' if audit else state not in ({'Colorado', 'Minnesota', 'Pennsylvania'} if start == 2016 else {'North Carolina'} if start == 2018 else CHANGED_STATES)
         source_codes = {start: audit['previous_constituency_code'] if audit and stable else code, end: code}
         contests = {year: summarize_result(years[year][source_codes[year]]) if source_codes[year] in years[year] else {
             'elected_party': '', 'contest_status': 'missing_previous_district', 'democratic_votes': '', 'republican_votes': '',
@@ -68,7 +68,7 @@ def build_rows(root=ROOT, period='2022-2024'):
         eligible = not reasons
         multiple = any(result['multiple_major_party_candidates'] == 'true' for result in contests.values())
         row = {'constituency_code': code, 'district': demo['district'], 'state': state,
-               'demographic_year': '2021' if start == 2018 else '2024', 'boundary_unchanged_verified': str(stable).lower(),
+               'demographic_year': '2021' if start in (2016, 2018) else '2024', 'boundary_unchanged_verified': str(stable).lower(),
                'comparison_eligible': str(eligible).lower(),
                'comparison_sensitivity_eligible': str(eligible and not multiple).lower(),
                'comparison_exclusion_reason': ';'.join(reasons)}
@@ -98,7 +98,7 @@ def artifacts(root=ROOT, period='2022-2024'):
     writer.writeheader()
     writer.writerows(rows)
     content = buffer.getvalue().encode()
-    inputs = [f'data/us_{year}_house_fpp.csv' for year in (start, end)] + ['data/us_2021_house_demographics.csv' if start == 2018 else 'data/us_2024_house_analysis.csv']
+    inputs = [f'data/us_{year}_house_fpp.csv' for year in (start, end)] + ['data/us_2021_house_demographics.csv' if start in (2016, 2018) else 'data/us_2024_house_analysis.csv']
     if start == 2020:
         inputs.extend(['data/us_house_2020_2022_boundary_audit.csv', 'data/us_house_2020_2022_boundary_audit_metadata.json'])
     metadata = {
@@ -144,12 +144,24 @@ def artifacts(root=ROOT, period='2022-2024'):
             'change_definition': '2020 two-party share minus 2018 two-party share in percentage points; Republican change negates Democratic change.',
             'interpretation': 'Fixed 2021 ACS 1-year snapshot on 116th Congress boundaries, the same areas as 2018/2020 outside North Carolina. Measured after the elections; does not measure demographic change or causation. The 2024 snapshot is not joined onto these older districts.',
         })
+    if start == 2016:
+        metadata.update({
+            'election_years': [start, end], 'demographic_year': 2021,
+            'boundary_source': 'https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.116th_Congress.html',
+            'boundary_source_section': '116th Congress',
+            'boundary_evidence': 'Census identifies new boundaries in Colorado, Minnesota and Pennsylvania for the 2018 election cycle and confirms all other states had no changes from 2016.',
+            'excluded_changed_plan_states': ['Colorado', 'Minnesota', 'Pennsylvania'],
+            'boundary_policy': 'Conservatively exclude all seats in the three changed-plan states; no claim every individual seat changed. Other states verified unchanged by Census. No reconstructed votes.',
+            'seat_flip_definition': 'Different official elected parties in 2016 and 2018 on unchanged boundaries; general-election snapshots, independent of vote-share eligibility.',
+            'change_definition': '2018 two-party share minus 2016 two-party share in percentage points; Republican change negates Democratic change.',
+            'interpretation': 'Fixed 2021 ACS 1-year snapshot on 116th Congress districts, the same areas as 2016 outside the three excluded states. Measured after the elections; does not measure demographic change or causation. Shares and correlations use equal-weight districts.',
+        })
     return content, (json.dumps(metadata, indent=2) + '\n').encode(), metadata
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--period', choices=('2022-2024', '2020-2022', '2018-2020'), default='2022-2024')
+    parser.add_argument('--period', choices=('2022-2024', '2020-2022', '2018-2020', '2016-2018'), default='2022-2024')
     parser.add_argument('--check', action='store_true', help='Recompute and validate committed artifacts without writing')
     args = parser.parse_args()
     content, metadata, summary = artifacts(period=args.period)

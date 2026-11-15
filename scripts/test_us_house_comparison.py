@@ -160,5 +160,49 @@ class HistoricalComparisonTests(unittest.TestCase):
         self.assertNotIn('Texas 38th', by_name)
 
 
+class EarliestComparisonTests(unittest.TestCase):
+    def test_2016_2018_source_votes_boundaries_and_flips(self):
+        rows = build_rows(period='2016-2018')
+        self.assertEqual(len(rows), 435)
+        self.assertEqual(sum(r['boundary_unchanged_verified'] == 'true' for r in rows), 402)
+        self.assertEqual(sum(r['comparison_eligible'] == 'true' for r in rows), 307)
+        self.assertEqual(sum(r['comparison_sensitivity_eligible'] == 'true' for r in rows), 305)
+        sources = {}
+        for year in (2016, 2018):
+            grouped = defaultdict(list)
+            with (ROOT / f'data/us_{year}_house_fpp.csv').open() as handle:
+                for row in csv.DictReader(handle):
+                    grouped[row['constituency_code']].append(row)
+            sources[year] = grouped
+        for row in rows:
+            stable = row['state'] not in {'Colorado', 'Minnesota', 'Pennsylvania'}
+            self.assertEqual(row['boundary_unchanged_verified'], str(stable).lower())
+            eligible = stable and row['state'] not in {'Alaska', 'Maine'}
+            shares = {}
+            for year in sources:
+                contest = sources[year][row['constituency_code']]
+                totals = {p: sum(int(r['votes']) for r in contest if r['candidate_party'] in {p, f'Write-in ({p})'}) for p in ('Democratic', 'Republican')}
+                valid = contest[0]['contest_status'] == 'official' and all(totals[p] > 0 and any(r['candidate_party'] == p for r in contest) for p in totals)
+                eligible = eligible and valid
+                for party in totals:
+                    self.assertEqual(int(row[f'{party.lower()}_votes_{year}']), totals[party])
+                self.assertEqual(row[f'elected_party_{year}'], contest[0]['elected_party'])
+                if valid:
+                    shares[year] = 100 * totals['Democratic'] / sum(totals.values())
+                    self.assertAlmostEqual(float(row[f'democratic_two_party_share_pct_{year}']), shares[year], places=5)
+            self.assertEqual(row['comparison_eligible'], str(eligible).lower())
+            if eligible:
+                self.assertAlmostEqual(float(row['democratic_share_change_pp']), shares[2018] - shares[2016], places=5)
+            else:
+                self.assertEqual(row['democratic_share_change_pp'], '')
+            if not stable:
+                self.assertEqual(row['seat_flipped'], '')
+            elif row['seat_flipped']:
+                self.assertEqual(row['seat_flipped'], str(row['elected_party_2016'] != row['elected_party_2018']).lower())
+        by_name = {r['district']: r for r in rows}
+        self.assertEqual(by_name['California 21st']['seat_flipped'], 'true')
+        self.assertEqual(by_name['California 21st']['elected_party_2018'], 'Democratic')
+
+
 if __name__ == '__main__':
     unittest.main()

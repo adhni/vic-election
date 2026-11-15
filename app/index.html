@@ -1618,11 +1618,13 @@
               <select id="houseDemographicPeriod">
                 <option value="2022-2024">2022 → 2024</option>
                 <option value="2018-2020">2018 → 2020</option>
+                <option value="2016-2018">2016 → 2018</option>
               </select>
             </label>
             <label for="houseDemographicOutcome">Election outcome
               <select id="houseDemographicOutcome">
                 <option value="2024">2024 share · all eligible</option>
+                <option value="2016-matched" hidden>2016 share · matched</option>
                 <option value="2018-matched" hidden>2018 share · matched</option>
                 <option value="2020-matched" hidden>2020 share · matched</option>
                 <option value="2022-matched">2022 share · matched</option>
@@ -1684,6 +1686,7 @@
               <p>The sample is election-wide. Map search and filters do not change these statistics. Missing estimates are omitted, never replaced with zero.</p>
               <p>Choose either party's two-party vote share. Full share axes run from 0% to 100%; full change axes run from −100 to +100 percentage points. Other full axes start at zero. Fit data uses the observed range with a little padding. Axis settings change the scale, not the sample or correlations.</p>
               <p>2022 → 2024 matched views hold the 2024 ACS demographics fixed and use the same districts for both years and change. All districts in Alabama, Georgia, Louisiana, New York, and North Carolina are conservatively excluded because those states changed plans; some individual seats may be unchanged. Alaska and Maine are excluded because ranked-choice count bases have not been standardized. Both years must have named candidates and positive votes for both major parties. The stricter sample applies to both years. Midterm and presidential turnout and candidate differences can affect the change.</p>
+              <p>2016 → 2018 uses the same fixed 2021 ACS snapshot on historical districts. Colorado, Minnesota and Pennsylvania are conservatively excluded because Census reports changed plans for 2018; other states had no changes from 2016. The historical snapshot was measured after these elections.</p>
               <p>2018 → 2020 uses 2021 ACS demographics on the historical districts, held fixed for both election results. Census confirms that only North Carolina changed its district plan between those elections; it is excluded. Alaska and Maine are excluded from share comparisons because count bases have not been standardized. The demographic snapshot was measured after both elections. Three citizenship-age measures are unavailable in this older release.</p>
               <a href="../data/us_2024_house_analysis.csv" download>Download 2024 district data</a> ·
               <a href="../data/us_2021_house_demographics.csv" download>Download historical district demographics</a> ·
@@ -6360,7 +6363,7 @@
         : system === "fpp"
           ? (membersOnly ? ["party"] : ["party", "close"])
           : system === "senate-stv" ? ["party"] : ["party", "close", "changed"];
-      if (["us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(year)) baseMapModes.push("house-swing");
+      if (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(year)) baseMapModes.push("house-swing");
       const allowedMapModes = geographyDefinitionSupported(config)
         ? [...baseMapModes, "vote-share", "swing", "clusters"]
         : baseMapModes;
@@ -6467,7 +6470,7 @@
     }
 
     function houseSwingSupported() {
-      return ["us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(activeElectionYear) && datasetMeta.kind === "official";
+      return ["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(activeElectionYear) && datasetMeta.kind === "official";
     }
 
     function mapVisual(d, context = {}) {

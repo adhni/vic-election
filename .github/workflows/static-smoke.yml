@@ -129,6 +129,7 @@ jobs:
           python scripts/test_us_house_analysis.py
           python scripts/build_us_house_comparison.py --check
           python scripts/build_us_house_comparison.py --period 2018-2020 --check
+          python scripts/build_us_house_comparison.py --period 2016-2018 --check
           python scripts/build_us_house_comparison.py --period 2020-2022 --check
           python scripts/test_us_house_comparison.py
           python scripts/test_us_house_boundary_audit.py

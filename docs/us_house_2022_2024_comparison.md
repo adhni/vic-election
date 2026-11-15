@@ -60,6 +60,22 @@ python3 scripts/build_us_house_comparison.py --period 2020-2022
 python3 scripts/build_us_house_comparison.py --period 2020-2022 --check
 ```
 
+## 2016–2018 comparison
+
+The Comparison selector also offers **2016 → 2018**, reaching the earliest House results in this repository. It selects the **House 2018 map** and reuses the historical 2021 ACS snapshot on 116th Congress districts, with the same 39 demographic measures, both-party chart controls, fitted axes, rankings and flip outlines. House 2016 also supports this view. A shared House 2018 URL retains its chosen comparison, since that election belongs to both historical periods.
+
+[Census's 116th Congress documentation](https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.116th_Congress.html) identifies new boundaries for Colorado, Minnesota and Pennsylvania in the 2018 cycle, and explicitly confirms no change from 2016 for other states. We conservatively exclude all 33 seats in those three states, without claiming each individual district changed. Of **402 verified unchanged districts**, **307** pass the both-party contest and count-basis rules, or **305** in the stricter sample. Changed-plan districts are grey and unplotted. On the House 2016 map their demographic estimates are also withheld because the 116th Congress snapshot describes the later boundaries.
+
+The fixed **2021** demographic snapshot was measured after both elections. It supports descriptive district associations, not demographic change, individual voting behavior or causal claims. No additional demographic vintage is mixed into the two historical periods.
+
+- [2016–2018 comparison CSV](../data/us_house_2016_2018_comparison.csv).
+- [Boundary evidence, eligibility counts and source hashes](../data/us_house_2016_2018_comparison_metadata.json).
+
+```sh
+python3 scripts/build_us_house_comparison.py --period 2016-2018
+python3 scripts/build_us_house_comparison.py --period 2016-2018 --check
+```
+
 ## 2018–2020 comparison
 
 The Comparison selector offers **2018 → 2020** in place of the sparse 2020–2022 view. Selecting it also selects the **House 2020 map** so old district numbers are never joined to the post-redistricting map. House 2018 also supports the historical comparison. Switching back selects House 2024. Existing chart controls, flip outlines, rankings, downloads and shared links work in both periods.
