@@ -49,7 +49,7 @@ The direct audit finds **six exact matches**, all at-large: Alaska, Delaware, No
 
 The six matches also retain the geography used for the fixed 2024 demographic snapshot. Audit [metadata and source hashes](../data/us_house_2020_2022_boundary_audit_metadata.json) record the evidence and limits. Rebuild with `.venv/bin/python scripts/build_us_house_boundary_audit.py --download`; with inputs cached, `--check` recomputes the audit without network access.
 
-Alaska is excluded from share comparisons because its count bases have not been standardized. North Dakota lacks a named Democratic candidate in 2022, and South Dakota lacks both-party matchups. This leaves **three comparable seats: Delaware, Vermont and Wyoming**, in both baseline and sensitivity views. The app labels this tiny sample explicitly; it does not represent national patterns. Within-state correlation is unavailable because each retained state has one district.
+Alaska is excluded from share comparisons because its count bases have not been standardized. North Dakota lacks a named Democratic candidate in 2022, and South Dakota lacks both-party matchups. This leaves **three comparable seats: Delaware, Vermont and Wyoming**, in both baseline and sensitivity views. The archived view labelled this tiny sample explicitly; it does not represent national patterns. Within-state correlation is unavailable because each retained state has one district.
 
 Winner flips continue to use actual elected parties on verified unchanged boundaries, independently of share eligibility. Alaska therefore correctly shows a flip to Democrat for 2020 → 2022 when selected, even though it has no plotted swing. None of the three plotted seats flipped in this period.
 
@@ -59,6 +59,30 @@ The [2020–2022 comparison CSV](../data/us_house_2020_2022_comparison.csv) and 
 python3 scripts/build_us_house_comparison.py --period 2020-2022
 python3 scripts/build_us_house_comparison.py --period 2020-2022 --check
 ```
+
+## 2018–2020 comparison
+
+The Comparison selector offers **2018 → 2020** in place of the sparse 2020–2022 view. Selecting it also selects the **House 2020 map** so old district numbers are never joined to the post-redistricting map. House 2018 also supports the historical comparison. Switching back selects House 2024. Existing chart controls, flip outlines, rankings, downloads and shared links work in both periods.
+
+[Census confirms](https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.117th_Congress.html) North Carolina was the only state to change congressional districts between the 116th and 117th Congresses. Excluding all 13 North Carolina seats leaves **422 verified unchanged districts**. The same both-party contest and count-basis rules leave **359 comparable districts**, or **355** in the stricter sample. Seat flips compare actual elected parties in the two general elections, not intervening changes of party or special elections.
+
+The historical chart uses a fixed **2021 ACS 1-year snapshot on 116th Congress districts**, rather than joining 2024 demographics onto same-number historical seats. Its geography identifiers are `5001600US…`; the original 2024 data use `5001900US…`. Both periods use the same metric formulas and published 90% margins of error. The 2021 snapshot is measured **after** the elections and is descriptive, not a measure of demographic change. It offers 39 measures: the three B29001 citizenship-age metrics used for 2024 are unavailable in that form in the older release and are omitted. Missing language-table estimates are retained as gaps.
+
+North Carolina's 116th ACS data do not describe its redrawn 2020 seats. Those seats are grey and unplotted; selecting one on the 2020 map also withholds its demographic estimate. The raw extract retains the actual Census geography and values for audit.
+
+Public table-based 2021 bulk files require no Census API key. National inputs are cached under `tmp/us_house_demographics_2021`; only district extracts, metric definitions, source flags and provenance hashes are committed. The [standard 2020 ACS 1-year product was not released](https://www.census.gov/programs-surveys/acs/data/experimental-data.html); using 2021 keeps the public source format and historical geography explicit. This is a different demographic vintage from the 2022–2024 chart, so correlations across the two periods are not controlled for an identical snapshot.
+
+- [2018–2020 comparison](../data/us_house_2018_2020_comparison.csv) and [metadata](../data/us_house_2018_2020_comparison_metadata.json).
+- [Historical demographic metrics](../data/us_2021_house_demographics.csv), [raw estimates/MOEs](../data/us_2021_house_demographics_acs.csv), [source flags](../data/us_2021_house_demographics_flags.csv), and [provenance and definitions](../data/us_2021_house_demographics_metadata.json).
+
+```sh
+python3 scripts/build_us_house_demographics.py --year 2021
+python3 scripts/validate_us_house_demographics.py --year 2021 --cache tmp/us_house_demographics_2021
+python3 scripts/build_us_house_comparison.py --period 2018-2020
+python3 scripts/build_us_house_comparison.py --period 2018-2020 --check
+```
+
+The earlier 2020–2022 files below are retained as an archival audit and are no longer an option in the app.
 
 ## Files and reproduction
 

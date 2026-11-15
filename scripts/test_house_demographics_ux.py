@@ -487,58 +487,68 @@ def check_seat_flip_badges(browser, base_url):
 
 
 def check_earlier_period(browser, base_url):
-    with (ROOT / "data/us_house_2020_2022_comparison.csv").open() as handle:
-        matched = [row for row in csv.DictReader(handle) if row["comparison_eligible"] == "true"]
+    with (ROOT / "data/us_house_2018_2020_comparison.csv").open() as handle:
+        rows = list(csv.DictReader(handle))
+    matched = [r for r in rows if r["comparison_eligible"] == "true"]
+    flips = {r["district"] for r in matched if r["seat_flipped"] == "true"}
     page = browser.new_page(viewport={"width": 1440, "height": 1050})
     open_demographics(page, base_url)
-    page.locator("#houseDemographicPeriod").select_option("2020-2022")
-    expect(page.locator(".house-scatter-point")).to_have_count(3)
+    page.locator("#houseDemographicPeriod").select_option("2018-2020")
+    expect(page.locator("#electionYear")).to_have_value("us-house-2020")
+    expect(page.locator(".house-scatter-point")).to_have_count(359)
     assert set(page.locator(".house-scatter-point").evaluate_all("els => els.map(e => e.dataset.district)")) == {r["district"] for r in matched}
-    expect(page.locator("#houseDemographicComparisonNote")).to_contain_text("District audit: 6 unchanged seats; 3 with comparable contests")
-    page.locator("#houseDemographicDistrict").select_option("Hawaii 2nd")
-    expect(page.locator("#houseDemographicSelectedNote")).to_contain_text("this district’s boundaries changed")
-    expect(page.locator("#houseDemographicSelectedNote")).not_to_contain_text("not been individually verified")
-    expect(page.locator("#mapSubtitle")).to_contain_text("2020 → 2022")
-    expect(page.locator("#houseSwingTitle")).to_contain_text("2020 → 2022")
-    expect(page.locator("#houseDemographicYLabel")).to_contain_text("2022 − 2020")
-    expect(page.locator(".house-seat-flipped")).to_have_count(0)
-    expect(page.locator('.district-shape[data-district="California 13th"]')).to_have_attribute("fill", "#8b9098")
-    for row in matched:
-        expect(page.locator(f'.district-shape[data-district="{row["district"]}"]')).not_to_have_attribute("fill", "#8b9098")
-        page.locator("#houseDemographicDistrict").select_option(row["district"])
-        values = page.locator("#houseDemographicSelectedValues")
-        expect(values).to_contain_text("2020:")
-        expect(values).to_contain_text("2022:")
-        expect(values).not_to_contain_text("2024:")
-    for outcome in ("2020-matched", "2022-matched", "change"):
+    assert set(page.locator(".house-seat-flipped").evaluate_all("els => els.map(e => e.dataset.district)")) == flips
+    expect(page.locator("#houseDemographicComparisonNote")).to_contain_text("2021 ACS")
+    expect(page.locator("#houseDemographicComparisonNote")).to_contain_text("results show 2020")
+    expect(page.locator("#mapSubtitle")).to_contain_text("2018 → 2020")
+    expect(page.locator("#houseDemographicYLabel")).to_contain_text("2020 − 2018")
+    assert page.locator('.district-shape[data-district="California 53rd"]').count() == 1
+    assert page.locator('.district-shape[data-district="Texas 38th"]').count() == 0
+    page.locator("#houseDemographicDistrict").select_option("North Carolina 2nd")
+    expect(page.locator("#houseDemographicSelectedValues")).to_contain_text("Not published")
+    expect(page.locator('.district-shape[data-district="North Carolina 2nd"]')).to_have_attribute("fill", "#8b9098")
+    page.locator("#houseDemographicDistrict").select_option("California 21st")
+    expect(page.locator("#houseDemographicFlip")).to_contain_text("Flipped to Republican")
+    values = page.locator("#houseDemographicSelectedValues")
+    expect(values).to_contain_text("2018:")
+    expect(values).to_contain_text("2020:")
+    with (ROOT / "data/us_2021_house_demographics.csv").open() as handle:
+        demo = next(r for r in csv.DictReader(handle) if r["district"] == "California 21st")
+    expect(values).to_contain_text(f"{float(demo['bachelors_plus_pct']):.1f}%")
+    for outcome in ("2018-matched", "2020-matched", "change"):
         page.locator("#houseDemographicOutcome").select_option(outcome)
-        expect(page.locator(".house-scatter-point")).to_have_count(3)
+        expect(page.locator(".house-scatter-point")).to_have_count(359)
         for party in ("republican", "democratic"):
             page.locator("#houseDemographicParty").select_option(party)
+            labels = page.locator(".house-scatter-point").evaluate_all("els => Object.fromEntries(els.map(e => [e.dataset.district, e.getAttribute('aria-label')]))")
             for row in matched:
                 field = "democratic_share_change_pp" if outcome == "change" else f"democratic_two_party_share_pct_{outcome[:4]}"
                 expected = float(row[field])
                 if party == "republican": expected = -expected if outcome == "change" else 100 - expected
-                expect(page.locator(f'.house-scatter-point[data-district="{row["district"]}"]')).to_have_attribute("aria-label", re.compile(re.escape(f"{expected:.1f}")))
-    expect(page.locator("#houseComparisonDownload")).to_have_attribute("href", "../data/us_house_2020_2022_comparison.csv")
-    page.locator("#houseDemographicDistrict").select_option("Alaska at-large")
-    expect(page.locator("#houseDemographicFlip")).to_contain_text("Flipped to Democrat")
-    expect(page.locator("#houseDemographicFlip")).to_contain_text("2020 → 2022")
+                assert f"{expected:.1f}" in labels[row["district"]]
+    expect(page.locator("#houseComparisonDownload")).to_have_attribute("href", "../data/us_house_2018_2020_comparison.csv")
+    page.locator("#houseDemographicSample").select_option("sensitivity")
+    expect(page.locator(".house-scatter-point")).to_have_count(355)
+    page.locator("#houseDemographicSample").select_option("baseline")
     page.reload(wait_until="networkidle")
-    expect(page.locator("#houseDemographicPeriod")).to_have_value("2020-2022")
-    expect(page.locator(".house-scatter-point")).to_have_count(3)
-    page.set_viewport_size({"width": 390, "height": 1050})
+    expect(page.locator("#houseDemographicPeriod")).to_have_value("2018-2020")
+    expect(page.locator(".house-scatter-point")).to_have_count(359)
+    page.set_viewport_size({"width": 320, "height": 1050})
     page.wait_for_function("() => Math.abs(document.querySelector('#houseDemographicChart svg').viewBox.baseVal.width - document.querySelector('#houseDemographicChart').clientWidth) < 2")
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
     page.locator("#houseDemographicPeriod").select_option("2022-2024")
+    expect(page.locator("#electionYear")).to_have_value("us-house-2024")
     expect(page.locator(".house-scatter-point")).to_have_count(312)
     expect(page.locator(".house-seat-flipped")).to_have_count(8)
-    expect(page.locator("#houseSwingTitle")).to_contain_text("2022 → 2024")
     page.go_back(wait_until="networkidle")
-    expect(page.locator("#houseDemographicPeriod")).to_have_value("2020-2022")
-    expect(page.locator(".house-scatter-point")).to_have_count(3)
+    expect(page.locator("#houseDemographicPeriod")).to_have_value("2018-2020")
+    expect(page.locator("#electionYear")).to_have_value("us-house-2020")
+    expect(page.locator(".house-scatter-point")).to_have_count(359)
+    page.locator("#electionYear").select_option("us-house-2018")
+    expect(page.locator("#houseDemographicPeriod")).to_have_value("2018-2020")
+    expect(page.locator(".house-scatter-point")).to_have_count(359)
     page.close()
-    print("PASS: 2020–2022 period, three verified seats, grey exclusions, year-specific shares and flips, party switching, downloads, reload, mobile and history", flush=True)
+    print("PASS: 2018–2020 period, 359 contests, historical geography and ACS, source shares, flips, party switching, strict sample, downloads, reload, mobile and history", flush=True)
 
 
 def main():

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build/check conservative House comparisons using fixed 2024 ACS data."""
+"""Build/check House comparisons with a fixed, district-appropriate ACS snapshot."""
 from __future__ import annotations
 
 import argparse
@@ -20,14 +20,15 @@ BOUNDARY_SOURCE = 'https://www.census.gov/programs-surveys/acs/technical-documen
 
 
 def build_rows(root=ROOT, period='2022-2024'):
-    start, end = (2020, 2022) if period == '2020-2022' else (2022, 2024)
+    start, end = tuple(map(int, period.split("-")))
     years = {}
     for year in (start, end):
         grouped = defaultdict(list)
         for row in read_csv(root / f'data/us_{year}_house_fpp.csv'):
             grouped[row['constituency_code']].append(row)
         years[year] = grouped
-    demographics = read_csv(root / 'data/us_2024_house_analysis.csv')
+    demographic_path = 'data/us_2021_house_demographics.csv' if start == 2018 else 'data/us_2024_house_analysis.csv'
+    demographics = read_csv(root / demographic_path)
     codes = {row['constituency_code'] for row in demographics}
     if len(codes) != 435 or set(years[end]) != codes or (start == 2022 and set(years[start]) != codes):
         raise ValueError('Expected the same 435 district identifiers in both elections and demographics')
@@ -44,7 +45,7 @@ def build_rows(root=ROOT, period='2022-2024'):
     for demo in demographics:
         code, state = demo['constituency_code'], demo['state']
         audit = boundary_audit.get(code)
-        stable = audit['boundary_unchanged_verified'] == 'true' if audit else state not in CHANGED_STATES
+        stable = audit['boundary_unchanged_verified'] == 'true' if audit else state not in ({'North Carolina'} if start == 2018 else CHANGED_STATES)
         source_codes = {start: audit['previous_constituency_code'] if audit and stable else code, end: code}
         contests = {year: summarize_result(years[year][source_codes[year]]) if source_codes[year] in years[year] else {
             'elected_party': '', 'contest_status': 'missing_previous_district', 'democratic_votes': '', 'republican_votes': '',
@@ -67,7 +68,7 @@ def build_rows(root=ROOT, period='2022-2024'):
         eligible = not reasons
         multiple = any(result['multiple_major_party_candidates'] == 'true' for result in contests.values())
         row = {'constituency_code': code, 'district': demo['district'], 'state': state,
-               'demographic_year': '2024', 'boundary_unchanged_verified': str(stable).lower(),
+               'demographic_year': '2021' if start == 2018 else '2024', 'boundary_unchanged_verified': str(stable).lower(),
                'comparison_eligible': str(eligible).lower(),
                'comparison_sensitivity_eligible': str(eligible and not multiple).lower(),
                'comparison_exclusion_reason': ';'.join(reasons)}
@@ -91,13 +92,13 @@ def build_rows(root=ROOT, period='2022-2024'):
 
 def artifacts(root=ROOT, period='2022-2024'):
     rows = build_rows(root, period)
-    start, end = (2020, 2022) if period == '2020-2022' else (2022, 2024)
+    start, end = tuple(map(int, period.split("-")))
     buffer = io.StringIO(newline='')
     writer = csv.DictWriter(buffer, fieldnames=list(rows[0]), lineterminator='\n')
     writer.writeheader()
     writer.writerows(rows)
     content = buffer.getvalue().encode()
-    inputs = [f'data/us_{year}_house_fpp.csv' for year in (start, end)] + ['data/us_2024_house_analysis.csv']
+    inputs = [f'data/us_{year}_house_fpp.csv' for year in (start, end)] + ['data/us_2021_house_demographics.csv' if start == 2018 else 'data/us_2024_house_analysis.csv']
     if start == 2020:
         inputs.extend(['data/us_house_2020_2022_boundary_audit.csv', 'data/us_house_2020_2022_boundary_audit_metadata.json'])
     metadata = {
@@ -131,16 +132,28 @@ def artifacts(root=ROOT, period='2022-2024'):
             'sample_note': 'Individual audit: six unchanged district matches, then three comparable contests (Delaware, Vermont, Wyoming). Other districts have changed block membership or materially different NC polygons. This small sample does not describe national patterns.',
         })
         metadata.pop('excluded_changed_plan_states', None)
+    if start == 2018:
+        metadata.update({
+            'election_years': [start, end], 'demographic_year': 2021,
+            'boundary_source': 'https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.117th_Congress.html',
+            'boundary_source_section': '117th Congress',
+            'boundary_evidence': 'Census confirms North Carolina was the only state to change districts between the 116th and 117th Congresses. All other states use the same districts.',
+            'excluded_changed_plan_states': ['North Carolina'],
+            'boundary_policy': 'Exclude North Carolina conservatively; other districts verified unchanged by Census. No reconstructed votes.',
+            'seat_flip_definition': 'Different official elected parties in 2018 and 2020 on unchanged boundaries; general-election snapshots, independent of vote-share eligibility.',
+            'change_definition': '2020 two-party share minus 2018 two-party share in percentage points; Republican change negates Democratic change.',
+            'interpretation': 'Fixed 2021 ACS 1-year snapshot on 116th Congress boundaries, the same areas as 2018/2020 outside North Carolina. Measured after the elections; does not measure demographic change or causation. The 2024 snapshot is not joined onto these older districts.',
+        })
     return content, (json.dumps(metadata, indent=2) + '\n').encode(), metadata
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--period', choices=('2022-2024', '2020-2022'), default='2022-2024')
+    parser.add_argument('--period', choices=('2022-2024', '2020-2022', '2018-2020'), default='2022-2024')
     parser.add_argument('--check', action='store_true', help='Recompute and validate committed artifacts without writing')
     args = parser.parse_args()
     content, metadata, summary = artifacts(period=args.period)
-    stem = STEM if args.period == "2022-2024" else "us_house_2020_2022_comparison"
+    stem = "us_house_" + args.period.replace("-", "_") + "_comparison"
     for suffix, body in (('.csv', content), ('_metadata.json', metadata)):
         path = ROOT / 'data' / (stem + suffix)
         if args.check:

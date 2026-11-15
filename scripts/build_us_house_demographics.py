@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download 2024 ACS 1-year tables and join demographics to the 2024 House seats.
+"""Download 2024 or historical 2021 ACS 1-year tables for House districts.
 
 Uses official public bulk files; no Census API key or third-party packages needed.
 Large national source files are cached in ignored tmp/, not committed to data/.
@@ -22,6 +22,8 @@ import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "tmp" / "us_house_demographics"
+YEAR = 2024
+CONGRESS = 119
 PREFIX = "us_2024_house_demographics"
 BULK_BASE = "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/1YRData/"
 METADATA_BASE = "https://api.census.gov/data/2024/acs/acs1/groups/"
@@ -36,7 +38,7 @@ CD_PATTERN = re.compile(r"5001900US(\d{4})\Z")
 
 def source_specs() -> list[tuple[str, str]]:
     return [item for table in TABLES for item in (
-        (f"acsdt1y2024-{table.lower()}.dat", f"{BULK_BASE}acsdt1y2024-{table.lower()}.dat"),
+        (f"acsdt1y{YEAR}-{table.lower()}.dat", f"{BULK_BASE}acsdt1y{YEAR}-{table.lower()}.dat"),
         (f"{table}.json", f"{METADATA_BASE}{table}.json"),
     )]
 
@@ -69,7 +71,7 @@ def fetch_source(spec: tuple[str, str], cache: Path, refresh: bool = False) -> N
 
 def election_districts() -> dict[str, dict[str, str]]:
     districts = {}
-    with (ROOT / "data" / "us_2024_house_fpp.csv").open(newline="", encoding="utf-8") as handle:
+    with (ROOT / "data" / f"us_{2020 if YEAR == 2021 else 2024}_house_fpp.csv").open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
             code = row["constituency_code"]
             identity = {"constituency_code": code, "district": row["district"], "state": row["electorate_type"]}
@@ -165,7 +167,7 @@ def load_sources(cache: Path, districts: dict) -> tuple[dict, dict, list, dict]:
     coverage = {}
     for table in TABLES:
         metadata = json.loads((cache / f"{table}.json").read_text(encoding="utf-8"))["variables"]
-        with (cache / f"acsdt1y2024-{table.lower()}.dat").open(newline="", encoding="utf-8-sig") as handle:
+        with (cache / f"acsdt1y{YEAR}-{table.lower()}.dat").open(newline="", encoding="utf-8-sig") as handle:
             reader = csv.DictReader(handle, delimiter="|")
             columns = {}
             for column in reader.fieldnames or []:
@@ -261,13 +263,18 @@ def build(cache: Path, output: Path) -> None:
     districts = election_districts()
     raw, variables, sources, coverage = load_sources(cache, districts)
     metrics = metric_definitions()
+    if YEAR == 2021:
+        metrics = {name: definition for name, definition in metrics.items() if not any(code.startswith("B29001_") for code in definition["numerator"])}
+        for definition in metrics.values():
+            definition["label"] = definition["label"].replace("2024", str(YEAR))
+            definition["unit"] = definition["unit"].replace("2024", str(YEAR))
     add_industry_metrics(metrics, variables)
     for definition in metrics.values():
         definition["source_universes"] = sorted({variables[code]["universe"] for code in definition["numerator"] + definition["denominator"]})
         definition["formula"] = "100 * sum(numerator) / sum(denominator)" if definition["denominator"] else "sum(numerator)"
     raw_rows, metric_rows, flags = [], [], []
     for code, district in sorted(districts.items()):
-        identity = {**district, "census_geo_id": f"5001900US{code}", "acs_year": 2024, "congress": 119}
+        identity = {**district, "census_geo_id": f"500{CONGRESS - 100:02d}00US{code}", "acs_year": YEAR, "congress": CONGRESS}
         raw_rows.append({**identity, **raw[code]})
         row = dict(identity)
         for name, definition in metrics.items():
@@ -290,16 +297,16 @@ def build(cache: Path, output: Path) -> None:
     write_csv(metrics_path, [*IDENTIFIERS, *(column for name in metrics for column in (name, f"{name}_moe"))], metric_rows)
     write_csv(flags_path, ["constituency_code", "district", "variable", "source_value", "reason"], flags)
     manifest = {
-        "version": 1, "dataset": "2024 ACS 1-year estimates", "congress": 119,
-        "boundary_vintage": "2024 election cycle; 119th Congress",
+        "version": 1, "dataset": f"{YEAR} ACS 1-year estimates", "congress": CONGRESS,
+        "boundary_vintage": "116th Congress (unchanged for 2020 outside North Carolina)" if YEAR == 2021 else "2024 election cycle; 119th Congress",
         "district_count": len(districts), "table_count": len(TABLES), "metric_count": len(metrics),
         "join_key": "constituency_code: two-digit state FIPS + two-digit district; 00 for at-large",
         "scope": "435 voting House districts in 50 states; DC and territories excluded",
         "missing_values": "Raw source tokens retained in _acs.csv and enumerated in _flags.csv; unavailable estimates/MOEs become blanks in derived metrics, never zeros. Exception: the controlled-estimate MOE token -555555555 (*****) contributes zero sampling error, with its status retained in flags.",
         "moe_confidence": 0.90,
         "methodology_sources": [
-            "https://www.census.gov/programs-surveys/acs/data/summary-file.2024.html",
-            "https://www.census.gov/programs-surveys/acs/technical-documentation/table-and-geography-changes/2024/geography-changes.html",
+            f"https://www.census.gov/programs-surveys/acs/data/summary-file.{YEAR}.html",
+            f"https://www.census.gov/programs-surveys/acs/technical-documentation/table-and-geography-changes/{YEAR}/geography-changes.html",
             "https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2024_Instructions_for_Stat_Testing_ACS.pdf",
             "https://www.census.gov/data/developers/data-sets/acs-1year/data-notes.html",
         ],
@@ -314,13 +321,24 @@ def build(cache: Path, output: Path) -> None:
 
 
 def main() -> None:
+    global YEAR, CONGRESS, PREFIX, BULK_BASE, METADATA_BASE, TABLES, CD_PATTERN
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--cache", type=Path, default=CACHE)
+    parser.add_argument("--year", type=int, choices=(2021, 2024), default=2024)
+    parser.add_argument("--cache", type=Path)
     parser.add_argument("--out", type=Path, default=ROOT / "data")
     parser.add_argument("--refresh", action="store_true", help="Redownload cached official source files")
     parser.add_argument("--offline", action="store_true", help="Rebuild entirely from cached sources")
     parser.add_argument("--download-only", action="store_true")
     args = parser.parse_args()
+    YEAR = args.year
+    if YEAR == 2021:
+        CONGRESS = 116
+        PREFIX = "us_2021_house_demographics"
+        BULK_BASE = BULK_BASE.replace("2024", "2021")
+        METADATA_BASE = METADATA_BASE.replace("2024", "2021")
+        TABLES = tuple(table for table in TABLES if table != "B29001")
+        CD_PATTERN = re.compile(r"5001600US(\d{4})\Z")
+    args.cache = args.cache or (CACHE if YEAR == 2024 else ROOT / "tmp/us_house_demographics_2021")
     if args.offline and args.refresh:
         parser.error("--offline and --refresh cannot be combined")
     args.cache.mkdir(parents=True, exist_ok=True)
