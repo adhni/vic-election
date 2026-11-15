@@ -34,7 +34,7 @@ The app is map-first and party/bloc-first:
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
 - United States Senate results for the 2016–2024 regular cycles, plus [provisional 2026 State and County results](docs/us_senate_2026.md) for all 33 regular races and the Florida/Ohio specials; earlier cycles exclude concurrent special elections
-- United States governor results for 2016–2024, plus [provisional 2026 State and County results](docs/us_governor_2026.md) for 36 state races, with Connecticut planning regions and a labelled Alaska fallback
+- United States governor results for 2016–2024, plus [provisional 2026 State and County results](docs/us_governor_2026.md) for 36 state races, with Connecticut planning regions, a labelled Alaska fallback and [swing since each state’s previous election](docs/us_governor_comparison.md)
 - United States House results for 2016–2024, plus a [provisional 2026 snapshot](docs/us_house_2026.md) with current district maps, uncalled-seat labels and 2024 → 2026 demographic/swing comparisons
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
 - Argentine presidential results for 2023 and 2019 by province, including the 2023 runoff

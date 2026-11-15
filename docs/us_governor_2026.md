@@ -52,3 +52,5 @@ Downloads go to ignored `tmp/us_governor/2026/`. Both original tables must match
 ```
 
 Data tests independently audit all candidate counts/calls, every local vote and party, grouped margins, unresolved Franklin County, Connecticut geometry, Alaska's fallback, checksums and deterministic rebuilds. A mutation test removes Alaska's explicit call to prove a vote lead cannot become an elected member. Browser checks cover all map identifiers, source notes, state/local labels, grey unresolved areas, county ranking exclusions, mobile layout, reload/history and geography preservation across governor years. Existing Senate result and general explorer checks protect the shared presentation.
+
+The State and County explorers also support [swing since the previous regular election](us_governor_comparison.md): 2024 for New Hampshire/Vermont and 2022 for the other participating states. The comparison uses fixed 2024 demographics and shows the actual years on selection.

@@ -29,6 +29,8 @@ jobs:
         run: python scripts/test_house_2026_ux.py
       - name: Check Senate six-year swing
         run: python scripts/test_senate_swing_ux.py
+      - name: Check Governor previous-election swing
+        run: python scripts/test_governor_swing_ux.py
       - name: Check provisional Governor 2026
         run: python scripts/test_governor_2026_ux.py
       - name: Check provisional Senate 2026
@@ -161,6 +163,8 @@ jobs:
           python scripts/build_us_governor_2026.py --check
           python scripts/test_us_governor_2026.py
           python scripts/validate_us_governor.py
+          python scripts/build_us_governor_comparison.py --check
+          python scripts/test_us_governor_comparison.py
           python scripts/validate_indonesia_presidential.py
           python scripts/validate_indonesia_historical_presidential.py
           python scripts/validate_finland_denmark_austria.py
