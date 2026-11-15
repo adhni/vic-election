@@ -10,18 +10,19 @@
   const houseKeys = [2016, 2018, 2020, 2022, 2024, 2026].map(year => `us-house-${year}`);
   const presidentKeys = [2008, 2012, 2016, 2020, 2024].map(year => `us-president-${year}`);
   function isPresidential(key = context.electionKey) { return presidentKeys.includes(key); }
-  function isGovernor(key = context.electionKey) { return key === "us-governor-2026"; }
+  const governorKeys = [2018, 2020, 2022, 2024, 2026].map(year => `us-governor-${year}`);
+  function isGovernor(key = context.electionKey) { return governorKeys.includes(key); }
   function isSenate(key = context.electionKey) { return senateKeys.includes(key); }
   function isRegional(key = context.electionKey) { return isPresidential(key) || isSenate(key) || isGovernor(key); }
-  function availablePeriods(key = context.electionKey) { return isGovernor(key) ? ["previous-2026"] : isSenate(key) ? senatePeriods : isPresidential(key) ? presidentialPeriods : housePeriods; }
+  function availablePeriods(key = context.electionKey) { return isGovernor(key) ? [`previous-${key.slice(-4)}`] : isSenate(key) ? senatePeriods : isPresidential(key) ? presidentialPeriods : housePeriods; }
   function isCounty() { return isRegional() && context.geography === "county"; }
   function comparisonFile(period, county = isCounty()) {
     const scope = county ? "county" : "state";
-    if (isGovernor()) return `us_governor_${scope}_2026_previous_comparison.csv`;
+    if (isGovernor()) return `us_governor_${scope}_${period.slice(-4)}_previous_comparison.csv`;
     const family = isSenate() ? `senate_${scope}` : isPresidential() ? (county ? "president_county" : "president") : "house";
     return `us_${family}_${period.replace("-", "_")}_comparison.csv`;
   }
-  function datasetKind() { return isRegional() ? `${isGovernor() ? "governor" : isSenate() ? "senate" : "president"}${isCounty() ? "-county" : ""}` : "house"; }
+  function datasetKind() { return isRegional() ? `${isGovernor() ? context.electionKey.slice(3) : isSenate() ? "senate" : "president"}${isCounty() ? "-county" : ""}` : "house"; }
   function areaLabel() { return isCounty() ? "county" : "state"; }
   function areaPlural() { return isCounty() ? "counties/reporting areas" : isSenate() || isGovernor() ? "state races" : "states/DC"; }
   function supportedKey(key) { return houseKeys.includes(key) || presidentKeys.includes(key) || senateKeys.includes(key) || isGovernor(key); }
@@ -37,10 +38,10 @@
     "2016-2022": [2016, 2022],
     "2018-2024": [2018, 2024],
     "2020-2026": [2020, 2026],
-    "previous-2026": [2022, 2026]
+    ...Object.fromEntries([2018, 2020, 2022, 2024, 2026].map(year => [`previous-${year}`, [year - 4, year]]))
   };
   function defaultPeriod(key) {
-    if (isGovernor(key)) return "previous-2026";
+    if (isGovernor(key)) return `previous-${key.slice(-4)}`;
     if (isSenate(key)) return senatePeriods.find(period => periods[period].includes(Number(key.slice(-4))));
     if (isPresidential(key)) {
       const year = Number(key.slice(-4));
@@ -48,9 +49,9 @@
     }
     return key === "us-house-2026" ? "2024-2026" : key === "us-house-2016" ? "2016-2018" : ["us-house-2018", "us-house-2020"].includes(key) ? "2018-2020" : "2022-2024";
   }
-  function compatiblePeriod(key, period) { if (isGovernor(key)) return period === "previous-2026"; return availablePeriods(key).includes(period) && periods[period]?.some(year => key === `us-${isSenate(key) ? "senate" : isPresidential(key) ? "president" : "house"}-${year}`); }
+  function compatiblePeriod(key, period) { if (isGovernor(key)) return period === `previous-${key.slice(-4)}`; return availablePeriods(key).includes(period) && periods[period]?.some(year => key === `us-${isSenate(key) ? "senate" : isPresidential(key) ? "president" : "house"}-${year}`); }
   function normalizeOutcome() {
-    if (state.period === "previous-2026") { if (!["change", "previous-matched", "2026-matched"].includes(state.outcome)) state.outcome = "change"; return; }
+    if (state.period.startsWith("previous-")) { if (!["change", "previous-matched", `${endYear()}-matched`].includes(state.outcome)) state.outcome = "change"; return; }
     if (!["change", ...periods[state.period].map(year => `${year}-matched`), ...(state.period === "2022-2024" ? ["2024"] : [])].includes(state.outcome)) state.outcome = "change";
   }
   let state = { ...defaults };
@@ -107,7 +108,7 @@
 
   function startYear(row) { return isGovernor() && row ? Number(row.baseline_year) : periods[state.period][0]; }
   function endYear() { return periods[state.period][1]; }
-  function periodLabel(row) { return isGovernor() && !row ? "Previous election → 2026" : `${startYear(row)} → ${endYear()}`; }
+  function periodLabel(row) { return isGovernor() && !row ? `Previous election → ${endYear()}` : `${startYear(row)} → ${endYear()}`; }
   function activatePeriod() {
     if (!data || data.kind !== datasetKind() || data.period === state.period && data.electionKey === context.electionKey) return;
     if ((isCounty() || isSenate() || isGovernor()) && !context.ready) return;
@@ -144,7 +145,7 @@
   function matched() { return state.outcome !== "2024"; }
   function changing() { return state.outcome === "change"; }
   function outcomeLabel() {
-    if (isGovernor()) return changing() ? `${partyLabel()} share change since previous election (pp)` : `${partyLabel()} two-party share · ${state.outcome === "previous-matched" ? "previous election" : "2026"} (%)`;
+    if (isGovernor()) return changing() ? `${partyLabel()} share change since previous election (pp)` : `${partyLabel()} two-party share · ${state.outcome === "previous-matched" ? "previous election" : endYear()} (%)`;
     return changing() ? `${partyLabel()} share change, ${endYear()} − ${startYear()} (pp)`
       : `${partyLabel()} two-party vote share${matched() ? " · " + state.outcome.slice(0, 4) : ""} (%)`;
   }
@@ -423,8 +424,8 @@
       const mapped = {};
       comparisons.forEach((body, index) => {
         const rows = callbacks.parseCSV(body), byCode = new Map(rows.map(row => [row.constituency_code, row]));
-        if (senate || governor ? rows.length < (county ? 1000 : 30) || byCode.size !== rows.length : county ? rows.length < 3000 || byCode.size !== rows.length || rows.some(row => !row.demographic_constituency_code) : rows.length !== 51 || byCode.size !== 51 || baseRows.some(row => byCode.get(row.constituency_code)?.district !== row.district)) throw new Error("State comparison coverage mismatch.");
-        if (governor && (rows.length !== context.districtNames.length || rows.some(row => Number(row.baseline_year) !== (["New Hampshire", "Vermont"].includes(row.state) ? 2024 : 2022)))) throw new Error("Governor baseline coverage mismatch.");
+        if (senate || governor ? rows.length < (governor ? (county ? 500 : 11) : (county ? 1000 : 30)) || byCode.size !== rows.length : county ? rows.length < 3000 || byCode.size !== rows.length || rows.some(row => !row.demographic_constituency_code) : rows.length !== 51 || byCode.size !== 51 || baseRows.some(row => byCode.get(row.constituency_code)?.district !== row.district)) throw new Error("State comparison coverage mismatch.");
+        if (governor && (rows.length !== context.districtNames.length || rows.some(row => Number(row.election_year) !== endYear() || Number(row.baseline_year) !== endYear() - (["New Hampshire", "Vermont"].includes(row.state) ? 2 : 4)))) throw new Error("Governor baseline coverage mismatch.");
         mapped[selectedPeriods[index]] = byCode;
       });
       data = { kind, baseRows, latestMetrics: metadata.metrics, comparisons: mapped };
@@ -443,12 +444,13 @@
   function exclusionNote(row) {
     if (isGovernor() && row.comparison_eligible !== "true") {
       const reason = row.comparison_exclusion_reason || "";
-      return reason.includes("local_leader_unresolved") ? "Not compared: grouped Other votes prevent identifying a local candidate leader."
+      return reason.includes("previous_election_data_unavailable") ? `Not compared: the previous election (${row.baseline_year}) is before the available governor data, which starts in 2016.`
+        : reason.includes("local_leader_unresolved") ? "Not compared: grouped Other votes prevent identifying a local candidate leader."
         : reason.includes("special_election") ? "Not compared: a special election cannot substitute for the previous regular election."
         : reason.includes("race_not_called") ? "Not compared: this race is not called in the provisional snapshot."
         : reason.includes("alaska_statewide") ? "Not compared: Alaska is a statewide fallback, not a county."
         : reason.includes("ranked_choice") ? "Not compared: Alaska's count bases have not been standardized."
-        : reason.includes("connecticut") ? "Not compared: the previous Connecticut counties do not match the current planning regions."
+        : reason.includes("connecticut") ? "Not compared: Connecticut county/planning-region geography cannot be matched across results and the fixed demographics."
         : reason.includes("previous_reporting_area_missing") ? "Not compared: this reporting area is missing from the preceding election."
         : "Not compared: both elections need positive named Democratic and Republican votes; independent and grouped Other votes are not assigned to either party.";
     }
@@ -665,9 +667,9 @@
     document.getElementById("senateComparisonMethods").classList.toggle("hidden", !senate);
     document.getElementById("houseComparisonMethods").href = governor ? "../docs/us_governor_comparison.md" : senate ? "../docs/us_senate_comparison.md" : regional ? "../docs/us_president_state_demographics.md" : "../docs/us_house_2022_2024_comparison.md";
     const periodOptions = availablePeriods().slice().reverse();
-    if (dom.period.dataset.kind !== (governor ? "governor" : senate ? "senate" : regional ? "president" : "house")) {
+    if (dom.period.dataset.kind !== (governor ? context.electionKey : senate ? "senate" : regional ? "president" : "house")) {
       dom.period.replaceChildren(...periodOptions.map(period => new Option(governor ? "Since previous election" : period.replace("-", " → "), period)));
-      dom.period.dataset.kind = governor ? "governor" : senate ? "senate" : regional ? "president" : "house";
+      dom.period.dataset.kind = governor ? context.electionKey : senate ? "senate" : regional ? "president" : "house";
     }
     dom.period.closest("label").classList.toggle("hidden", governor);
     if (!active) {
@@ -688,7 +690,7 @@
     dom.outcome.querySelector('[value="2024"]').disabled = context.electionKey !== "us-house-2024" || state.period !== "2022-2024";
     for (const year of [2008, 2012, 2016, 2018, 2020, 2022, 2024, 2026]) {
       const option = dom.outcome.querySelector(`[value="${year}-matched"]`);
-      option.hidden = option.disabled = !(governor ? [2026] : [startYear(), endYear()]).includes(year);
+      option.hidden = option.disabled = !(governor ? [endYear()] : [startYear(), endYear()]).includes(year);
     }
     dom.outcome.querySelector('[value="previous-matched"]').hidden = dom.outcome.querySelector('[value="previous-matched"]').disabled = !governor;
     dom.outcome.querySelector('[value="change"]').textContent = governor ? "Swing since previous election" : `Swing ${periodLabel()} · matched`;
@@ -697,7 +699,11 @@
     dom.outcome.value = state.outcome;
     const vintage = isCounty() ? "2020–2024 ACS five-year demographics" : !regional && startYear() < 2022 ? "2021 ACS demographics on historical districts" : "2024 ACS demographics";
     dom.comparisonNote.textContent = matched() ? `${vintage} held fixed · Same matched ${regional ? areaPlural() : "districts"} for both years and change · Map and full results show ${context.electionKey.slice(-4)}` : "2024 ACS demographics and 2024 election results";
-    if (governor) dom.comparisonNote.textContent += " · 2022 → 2026 in 34 states; 2024 → 2026 in New Hampshire and Vermont · Actual years shown on selection · No annualisation · Provisional: 15 November 2026.";
+    if (governor) {
+      dom.comparisonNote.textContent += ` · ${endYear()-4} → ${endYear()} in states with four-year terms; ${endYear()-2} → ${endYear()} in New Hampshire and Vermont · Actual years shown on selection · No annualisation · Fixed demographics; earlier populations may differ.`;
+      if (endYear() === 2018) dom.comparisonNote.textContent += " · Only New Hampshire and Vermont have a preceding election in the available data; other states need 2014 results.";
+      if (endYear() === 2026) dom.comparisonNote.textContent += " · Provisional: 15 November 2026.";
+    }
     if (senate) dom.comparisonNote.textContent += " · Same regular Senate seat, six years apart · Special elections excluded · Fixed demographic snapshot; earlier populations may differ.";
     if (senate && endYear() === 2026) dom.comparisonNote.textContent += " · Provisional: 14 November 2026 · Uncalled races excluded.";
     if (state.period === "2024-2026") dom.comparisonNote.textContent += " · Provisional snapshot: 14 November 2026 · Flips provisional · Uncalled races and changed-plan states excluded.";

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""2026 governor swing against each state's preceding regular election. Bismillah."""
+"""Governor swing against each state's preceding regular election. Bismillah."""
 import argparse
 from collections import Counter, defaultdict
 import hashlib
@@ -9,11 +9,12 @@ from build_us_house_analysis import formatted
 
 DATA=ROOT/'data'
 TWO_YEAR_STATES={'New Hampshire','Vermont'}
-YEARS=(2022,2024,2026)
+YEARS=(2016,2018,2020,2022,2024,2026)
+COMPARISON_YEARS=YEARS[1:]
 
 
-def baseline_year(state):
-    return 2024 if state in TWO_YEAR_STATES else 2022
+def baseline_year(state, election_year=2026):
+    return election_year-(2 if state in TWO_YEAR_STATES else 4)
 
 
 def inputs(year,scope):
@@ -42,23 +43,24 @@ def summarize(rows):
         'party':rows[0]['elected_party'] or leader['candidate_party']}
 
 
-def build_scope(scope):
+def build_scope(scope, election_year=2026):
     sources={year:inputs(year,scope) for year in YEARS}
     demo_prefix='US-COUNTY-' if scope=='county' else 'US-STATE-'
     demos={r['constituency_code'].removeprefix(demo_prefix):r for r in read_csv(DATA/f'us_2024_{scope}_demographics.csv')}
     output=[]
-    for code,current in sorted(sources[2026].items()):
+    for code,current in sorted(sources[election_year].items()):
         example=current[0]
         state=example['district'] if scope=='state' else example['electorate_type']
-        previous_year=baseline_year(state)
-        previous=sources[previous_year].get(code)
+        previous_year=baseline_year(state,election_year)
+        previous=sources.get(previous_year,{}).get(code)
         before,after=summarize(previous) if previous else None,summarize(current)
         reasons=[]
-        if not previous:reasons.append('previous_reporting_area_missing')
-        if state=='Alaska':reasons.append('ranked_choice_count_basis_not_standardized')
+        if previous_year not in sources:reasons.append('previous_election_data_unavailable')
+        elif not previous:reasons.append('previous_reporting_area_missing')
+        if state=='Alaska' and election_year>=2022:reasons.append('ranked_choice_count_basis_not_standardized')
         if scope=='county' and state=='Alaska':reasons.append('alaska_statewide_not_county')
         if scope=='county' and state=='Connecticut':reasons.append('connecticut_counties_to_planning_regions')
-        for year,result in ((previous_year,before),(2026,after)):
+        for year,result in ((previous_year,before),(election_year,after)):
             if not result:continue
             if result['special']:reasons.append(f'{year}:special_election')
             if not result['called']:reasons.append(f'{year}:race_not_called')
@@ -67,16 +69,16 @@ def build_scope(scope):
         eligible=not reasons
         demographic=demos.get(code)
         row={'constituency_code':example['constituency_code'],'district':example['district'],'state':state,
-            'baseline_year':previous_year,'election_year':2026,'years_between_elections':2026-previous_year,
+            'baseline_year':previous_year,'election_year':election_year,'years_between_elections':election_year-previous_year,
             'demographic_constituency_code':demographic['constituency_code'] if demographic else '',
             'demographic_year':2024,'boundary_unchanged_verified':'true' if scope=='state' else '',
             'reporting_area_matched':str(bool(previous and not(scope=='county' and state in {'Alaska','Connecticut'}))).lower(),
             'comparison_eligible':str(eligible).lower(),
             'comparison_sensitivity_eligible':str(eligible and not(before['multiple'] or after['multiple'])).lower(),
             'comparison_exclusion_reason':';'.join(reasons)}
-        for year in YEARS:
-            raw=current if year==2026 else previous if year==previous_year else None
-            summary=after if year==2026 else before if year==previous_year else None
+        for year in sorted({election_year-4,election_year-2,election_year}):
+            raw=current if year==election_year else previous if year==previous_year else None
+            summary=after if year==election_year else before if year==previous_year else None
             row[f'constituency_code_{year}']=raw[0]['constituency_code'] if raw else ''
             row[f'district_{year}']=raw[0]['district'] if raw else ''
             row[f'elected_party_{year}']=summary['party'] if summary and summary['called'] and not summary['unresolved'] else ''
@@ -92,17 +94,18 @@ def build_scope(scope):
 
 def artifacts():
     outputs={};summary={}
-    for scope in ('state','county'):
-        rows=build_scope(scope)
-        outputs[f'us_governor_{scope}_2026_previous_comparison.csv']=csv_bytes(rows)
-        summary[scope]={'rows':len(rows),'eligible':sum(r['comparison_eligible']=='true' for r in rows),
-            'stricter':sum(r['comparison_sensitivity_eligible']=='true' for r in rows),
-            'baseline_2022_areas':sum(r['baseline_year']==2022 for r in rows),
-            'baseline_2024_areas':sum(r['baseline_year']==2024 for r in rows)}
+    for election_year in COMPARISON_YEARS:
+        summary[str(election_year)]={}
+        for scope in ('state','county'):
+            rows=build_scope(scope,election_year)
+            outputs[f'us_governor_{scope}_{election_year}_previous_comparison.csv']=csv_bytes(rows)
+            summary[str(election_year)][scope]={'rows':len(rows),'eligible':sum(r['comparison_eligible']=='true' for r in rows),
+                'stricter':sum(r['comparison_sensitivity_eligible']=='true' for r in rows),
+                'baseline_areas':dict(sorted(Counter(str(r['baseline_year']) for r in rows).items()))}
     files=[f'us_{year}_governor_{scope}_fpp.csv' for year in YEARS for scope in ('state','county')]
     files.extend(f'us_2024_{scope}_demographics.csv' for scope in ('state','county'))
-    outputs['us_governor_comparison_metadata.json']=json_bytes({'election_year':2026,'summary':summary,
-        'baseline_policy':'Previous regular election: 2024 for New Hampshire/Vermont (two-year terms); 2022 for the other 34 participating states (four-year terms). No annualisation, special-election substitution or fallback to a non-preceding election.',
+    outputs['us_governor_comparison_metadata.json']=json_bytes({'election_years':COMPARISON_YEARS,'summary':summary,
+        'baseline_policy':'Previous regular election: two years earlier for New Hampshire/Vermont; four years earlier for other participating states. Results start in 2016; earlier baselines are unavailable. No annualisation, special-election substitution or fallback to a non-preceding election.',
         'eligibility':'Positive named D/R votes in both years, known local leader and matching reporting identifier. Do not reassign independent or grouped Other votes. Exclude Alaska count bases; county scope also excludes its statewide placeholder and incompatible Connecticut county/planning-region geography. Maine governors use plurality; Maine is not excluded as a ranked-choice state.',
         'flip_policy':'State flags compare the elected party at each preceding regular election; county flags compare eligible local leaders. Uncalled, unresolved and special contests receive no flip flag. 2026 calls are provisional.',
         'demographics':'Fixed 2024 ACS one-year state and five-year county snapshot, not demographic change or causation. County identifiers are matched, not individually boundary-audited.',

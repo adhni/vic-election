@@ -1,28 +1,126 @@
 {
-  "election_year": 2026,
+  "election_years": [
+    2018,
+    2020,
+    2022,
+    2024,
+    2026
+  ],
   "summary": {
-    "state": {
-      "rows": 36,
-      "eligible": 34,
-      "stricter": 33,
-      "baseline_2022_areas": 34,
-      "baseline_2024_areas": 2
+    "2018": {
+      "state": {
+        "rows": 36,
+        "eligible": 2,
+        "stricter": 2,
+        "baseline_areas": {
+          "2014": 34,
+          "2016": 2
+        }
+      },
+      "county": {
+        "rows": 2145,
+        "eligible": 23,
+        "stricter": 23,
+        "baseline_areas": {
+          "2014": 2121,
+          "2016": 24
+        }
+      }
     },
-    "county": {
-      "rows": 2151,
-      "eligible": 2109,
-      "stricter": 2107,
-      "baseline_2022_areas": 2127,
-      "baseline_2024_areas": 24
+    "2020": {
+      "state": {
+        "rows": 11,
+        "eligible": 10,
+        "stricter": 10,
+        "baseline_areas": {
+          "2016": 9,
+          "2018": 2
+        }
+      },
+      "county": {
+        "rows": 527,
+        "eligible": 474,
+        "stricter": 474,
+        "baseline_areas": {
+          "2016": 503,
+          "2018": 24
+        }
+      }
+    },
+    "2022": {
+      "state": {
+        "rows": 36,
+        "eligible": 34,
+        "stricter": 31,
+        "baseline_areas": {
+          "2018": 34,
+          "2020": 2
+        }
+      },
+      "county": {
+        "rows": 2148,
+        "eligible": 2104,
+        "stricter": 2059,
+        "baseline_areas": {
+          "2018": 2124,
+          "2020": 24
+        }
+      }
+    },
+    "2024": {
+      "state": {
+        "rows": 11,
+        "eligible": 11,
+        "stricter": 10,
+        "baseline_areas": {
+          "2020": 9,
+          "2022": 2
+        }
+      },
+      "county": {
+        "rows": 564,
+        "eligible": 518,
+        "stricter": 511,
+        "baseline_areas": {
+          "2020": 540,
+          "2022": 24
+        }
+      }
+    },
+    "2026": {
+      "state": {
+        "rows": 36,
+        "eligible": 34,
+        "stricter": 33,
+        "baseline_areas": {
+          "2022": 34,
+          "2024": 2
+        }
+      },
+      "county": {
+        "rows": 2151,
+        "eligible": 2109,
+        "stricter": 2107,
+        "baseline_areas": {
+          "2022": 2127,
+          "2024": 24
+        }
+      }
     }
   },
-  "baseline_policy": "Previous regular election: 2024 for New Hampshire/Vermont (two-year terms); 2022 for the other 34 participating states (four-year terms). No annualisation, special-election substitution or fallback to a non-preceding election.",
+  "baseline_policy": "Previous regular election: two years earlier for New Hampshire/Vermont; four years earlier for other participating states. Results start in 2016; earlier baselines are unavailable. No annualisation, special-election substitution or fallback to a non-preceding election.",
   "eligibility": "Positive named D/R votes in both years, known local leader and matching reporting identifier. Do not reassign independent or grouped Other votes. Exclude Alaska count bases; county scope also excludes its statewide placeholder and incompatible Connecticut county/planning-region geography. Maine governors use plurality; Maine is not excluded as a ranked-choice state.",
   "flip_policy": "State flags compare the elected party at each preceding regular election; county flags compare eligible local leaders. Uncalled, unresolved and special contests receive no flip flag. 2026 calls are provisional.",
   "demographics": "Fixed 2024 ACS one-year state and five-year county snapshot, not demographic change or causation. County identifiers are matched, not individually boundary-audited.",
   "source_credit": "Call the Map, CC BY 4.0, including civicAPI feeds; 2026-11-15T18:19:21Z snapshot. Earlier results retain their MIT/state-office compilation provenance.",
   "term_source": "https://www.nga.org/governors/powers-and-authority/",
   "input_sha256": {
+    "us_2016_governor_state_fpp.csv": "2a1174a7ace966317f8c9fddba3c7a9a067a8e3ae4c396bfa48cc16311fdaec2",
+    "us_2016_governor_county_fpp.csv": "44af4026a655beb0421a9188a92e15cfe9f4e31726f8d5a1cd7252c6e9c0beb0",
+    "us_2018_governor_state_fpp.csv": "6411fec666df434fb00907bbe2a18bc29bd962eb83a9613d710b136570733e11",
+    "us_2018_governor_county_fpp.csv": "d66da929ed4df14a34c0a49160d93a0c666e254249bc97e8190707e2242ff76e",
+    "us_2020_governor_state_fpp.csv": "8ced450defc08bb8dd9f71a36bb22a059777166fa823693bc442c291471911e4",
+    "us_2020_governor_county_fpp.csv": "827914e9a32ae64f7c5459ace29097904b96d513de6e28cea4d0c4946ee2e9c0",
     "us_2022_governor_state_fpp.csv": "15d3a97ec30ed419ca102ebab5a68e980cbd787de387d6545f7ed5c6ece20f80",
     "us_2022_governor_county_fpp.csv": "48ee093651090b5f1167fc8c3f9bb6a358327fa9144fcc18ff8d43c94aace104",
     "us_2024_governor_state_fpp.csv": "55072fd2087369b002a5f787db3d11730a27ac0afa8abe0cf769573574012ab2",
@@ -33,6 +131,14 @@
     "us_2024_county_demographics.csv": "2ce62db18019cdb1a53816e7705320d24c31ec67f158077853c15f40cb7c7741"
   },
   "output_sha256": {
+    "us_governor_state_2018_previous_comparison.csv": "bf6fbb08e880813a70c83e0be3a2fc4376da770dfe59c6a8192512d79ee5978b",
+    "us_governor_county_2018_previous_comparison.csv": "04335a71104315b80cc8ca20746db2c5ccd2f92ac7a7fd4b61f5454ddeb99282",
+    "us_governor_state_2020_previous_comparison.csv": "fdc03505e87a33342f8cc22118cfc53a76a46c43afa2284e67c341ed8e549ba6",
+    "us_governor_county_2020_previous_comparison.csv": "b7d51204cfaafec149b9810d5432014f22cf6c449ca1ce29bc3a80dfed4c4057",
+    "us_governor_state_2022_previous_comparison.csv": "9269a712a004d15a2e59db81993222e0219c2d9b4464f72a23bc83de4c146688",
+    "us_governor_county_2022_previous_comparison.csv": "76f3ee763e32c469cae91947b3c61ba199a72b202ae34a8126e0304e4c7b6404",
+    "us_governor_state_2024_previous_comparison.csv": "b0ad4c6e643cc6fafe454162c0d315469d63f330c8dc5a315fbc416999229df9",
+    "us_governor_county_2024_previous_comparison.csv": "57efef1e857e1a1daef5359025f09feaa3d2eebc764d685610ade18686f15ccc",
     "us_governor_state_2026_previous_comparison.csv": "f59464ac37e2609a49b51056d758119495aa1ca84fa220e2223185e3faaae41f",
     "us_governor_county_2026_previous_comparison.csv": "3e46a62d27fa91affd042497387aa540f499284d7168f99a6d10edf75e4c4ff1"
   }

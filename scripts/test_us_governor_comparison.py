@@ -4,7 +4,7 @@ import csv
 import unittest
 from collections import defaultdict
 from pathlib import Path
-from build_us_governor_comparison import artifacts
+from build_us_governor_comparison import artifacts, COMPARISON_YEARS
 
 DATA=Path(__file__).resolve().parents[1]/'data'
 def read(name):
@@ -20,43 +20,49 @@ class GovernorComparisonTests(unittest.TestCase):
         for name,body in outputs.items():self.assertEqual((DATA/name).read_bytes(),body,name)
 
     def test_exact_previous_regular_year_per_area(self):
-        for scope in ('state','county'):
-            rows=read(f'us_governor_{scope}_2026_previous_comparison.csv')
-            self.assertEqual(len(rows),36 if scope=='state' else 2151)
-            for row in rows:
-                year=2024 if row['state'] in {'New Hampshire','Vermont'} else 2022
-                self.assertEqual(int(row['baseline_year']),year)
-                self.assertEqual(int(row['years_between_elections']),2026-year)
-                other=2022 if year==2024 else 2024
-                self.assertEqual(row[f'democratic_votes_{other}'],'')
-                self.assertEqual(row[f'district_{other}'],'')
-            self.assertEqual(sum(r['baseline_year']=='2024' for r in rows),2 if scope=='state' else 24)
+        for election_year in COMPARISON_YEARS:
+            for scope in ('state','county'):
+                rows=read(f'us_governor_{scope}_{election_year}_previous_comparison.csv')
+                self.assertEqual(len(rows),len(grouped(election_year,scope)))
+                for row in rows:
+                    year=election_year-(2 if row['state'] in {'New Hampshire','Vermont'} else 4)
+                    self.assertEqual(int(row['baseline_year']),year)
+                    self.assertEqual(int(row['years_between_elections']),election_year-year)
+                    other=election_year-4 if year==election_year-2 else election_year-2
+                    self.assertEqual(row[f'democratic_votes_{other}'],'')
+                    self.assertEqual(row[f'district_{other}'],'')
+                    if year<2016:
+                        self.assertEqual(row['comparison_eligible'],'false')
+                        self.assertIn('previous_election_data_unavailable',row['comparison_exclusion_reason'])
+                        self.assertEqual(row['seat_flipped'],'')
+                self.assertEqual(sum(r['baseline_year']==str(election_year-2) for r in rows),2 if scope=='state' else 24)
 
     def test_every_named_party_total_and_raw_pp_change(self):
         for scope in ('state','county'):
-            source={year:grouped(year,scope) for year in (2022,2024,2026)}
-            for row in read(f'us_governor_{scope}_2026_previous_comparison.csv'):
-                shares=[];leaders=[];multiple=False
-                for year in (int(row['baseline_year']),2026):
-                    code=row[f'constituency_code_{year}']
-                    if not code:continue
-                    original=source[year][code]
-                    named=[r for r in original if r.get('candidate_grouped')!='true']
-                    totals={p:sum(int(r['votes']) for r in named if r['candidate_party']==p) for p in ('Democratic','Republican')}
-                    multiple |= max(sum(r['candidate_party']==p for r in named) for p in totals)>1
-                    self.assertEqual(int(row[f'democratic_votes_{year}']),totals['Democratic'])
-                    self.assertEqual(int(row[f'republican_votes_{year}']),totals['Republican'])
-                    if min(totals.values())>0:
-                        share=100*totals['Democratic']/sum(totals.values())
-                        self.assertAlmostEqual(float(row[f'democratic_two_party_share_pct_{year}']),share,places=5)
-                        shares.append(share)
-                    leaders.append(original[0]['elected_party'] or max(named,key=lambda r:int(r['votes']))['candidate_party'])
-                if row['comparison_eligible']=='true':
-                    self.assertEqual(len(shares),2)
-                    self.assertAlmostEqual(float(row['democratic_share_change_pp']),shares[1]-shares[0],places=5)
-                    self.assertEqual(row['seat_flipped'],str(leaders[0]!=leaders[1]).lower())
-                    self.assertEqual(row['comparison_sensitivity_eligible'],str(not multiple).lower())
-                else:self.assertEqual(row['democratic_share_change_pp'],'')
+            source={year:grouped(year,scope) for year in (2016,2018,2020,2022,2024,2026)}
+            for election_year in COMPARISON_YEARS:
+                for row in read(f'us_governor_{scope}_{election_year}_previous_comparison.csv'):
+                    shares=[];leaders=[];multiple=False
+                    for year in (int(row['baseline_year']),election_year):
+                        code=row[f'constituency_code_{year}']
+                        if not code:continue
+                        original=source[year][code]
+                        named=[r for r in original if r.get('candidate_grouped')!='true']
+                        totals={p:sum(int(r['votes']) for r in named if r['candidate_party']==p) for p in ('Democratic','Republican')}
+                        multiple |= max(sum(r['candidate_party']==p for r in named) for p in totals)>1
+                        self.assertEqual(int(row[f'democratic_votes_{year}']),totals['Democratic'])
+                        self.assertEqual(int(row[f'republican_votes_{year}']),totals['Republican'])
+                        if min(totals.values())>0:
+                            share=100*totals['Democratic']/sum(totals.values())
+                            self.assertAlmostEqual(float(row[f'democratic_two_party_share_pct_{year}']),share,places=5)
+                            shares.append(share)
+                        leaders.append(original[0]['elected_party'] or max(named,key=lambda r:int(r['votes']))['candidate_party'])
+                    if row['comparison_eligible']=='true':
+                        self.assertEqual(len(shares),2)
+                        self.assertAlmostEqual(float(row['democratic_share_change_pp']),shares[1]-shares[0],places=5)
+                        self.assertEqual(row['seat_flipped'],str(leaders[0]!=leaders[1]).lower())
+                        self.assertEqual(row['comparison_sensitivity_eligible'],str(not multiple).lower())
+                    else:self.assertEqual(row['democratic_share_change_pp'],'')
 
     def test_exclusions_and_independent_votes(self):
         counties=read('us_governor_county_2026_previous_comparison.csv')
@@ -78,7 +84,9 @@ class GovernorComparisonTests(unittest.TestCase):
 
     def test_sample_sizes(self):
         _,summary=artifacts()
-        self.assertEqual((summary['state']['eligible'],summary['state']['stricter']),(34,33))
-        self.assertEqual((summary['county']['eligible'],summary['county']['stricter']),(2109,2107))
+        expected={2018:(2,2,23,23),2020:(10,10,474,474),2022:(34,31,2104,2059),2024:(11,10,518,511),2026:(34,33,2109,2107)}
+        for year,counts in expected.items():
+            cycle=summary[str(year)]
+            self.assertEqual((cycle['state']['eligible'],cycle['state']['stricter'],cycle['county']['eligible'],cycle['county']['stricter']),counts)
 
 if __name__=='__main__':unittest.main()
