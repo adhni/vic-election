@@ -486,6 +486,58 @@ def check_seat_flip_badges(browser, base_url):
     print("PASS: actual winner flips, party-independent badges, held seats, unverified boundaries, excluded-count races and mobile", flush=True)
 
 
+def check_earlier_period(browser, base_url):
+    with (ROOT / "data/us_house_2020_2022_comparison.csv").open() as handle:
+        matched = [row for row in csv.DictReader(handle) if row["comparison_eligible"] == "true"]
+    page = browser.new_page(viewport={"width": 1440, "height": 1050})
+    open_demographics(page, base_url)
+    page.locator("#houseDemographicPeriod").select_option("2020-2022")
+    expect(page.locator(".house-scatter-point")).to_have_count(3)
+    assert set(page.locator(".house-scatter-point").evaluate_all("els => els.map(e => e.dataset.district)")) == {r["district"] for r in matched}
+    expect(page.locator("#houseDemographicComparisonNote")).to_contain_text("Only 3 comparable seats")
+    expect(page.locator("#mapSubtitle")).to_contain_text("2020 → 2022")
+    expect(page.locator("#houseSwingTitle")).to_contain_text("2020 → 2022")
+    expect(page.locator("#houseDemographicYLabel")).to_contain_text("2022 − 2020")
+    expect(page.locator(".house-seat-flipped")).to_have_count(0)
+    expect(page.locator('.district-shape[data-district="California 13th"]')).to_have_attribute("fill", "#8b9098")
+    for row in matched:
+        expect(page.locator(f'.district-shape[data-district="{row["district"]}"]')).not_to_have_attribute("fill", "#8b9098")
+        page.locator("#houseDemographicDistrict").select_option(row["district"])
+        values = page.locator("#houseDemographicSelectedValues")
+        expect(values).to_contain_text("2020:")
+        expect(values).to_contain_text("2022:")
+        expect(values).not_to_contain_text("2024:")
+    for outcome in ("2020-matched", "2022-matched", "change"):
+        page.locator("#houseDemographicOutcome").select_option(outcome)
+        expect(page.locator(".house-scatter-point")).to_have_count(3)
+        for party in ("republican", "democratic"):
+            page.locator("#houseDemographicParty").select_option(party)
+            for row in matched:
+                field = "democratic_share_change_pp" if outcome == "change" else f"democratic_two_party_share_pct_{outcome[:4]}"
+                expected = float(row[field])
+                if party == "republican": expected = -expected if outcome == "change" else 100 - expected
+                expect(page.locator(f'.house-scatter-point[data-district="{row["district"]}"]')).to_have_attribute("aria-label", re.compile(re.escape(f"{expected:.1f}")))
+    expect(page.locator("#houseComparisonDownload")).to_have_attribute("href", "../data/us_house_2020_2022_comparison.csv")
+    page.locator("#houseDemographicDistrict").select_option("Alaska at-large")
+    expect(page.locator("#houseDemographicFlip")).to_contain_text("Flipped to Democrat")
+    expect(page.locator("#houseDemographicFlip")).to_contain_text("2020 → 2022")
+    page.reload(wait_until="networkidle")
+    expect(page.locator("#houseDemographicPeriod")).to_have_value("2020-2022")
+    expect(page.locator(".house-scatter-point")).to_have_count(3)
+    page.set_viewport_size({"width": 390, "height": 1050})
+    page.wait_for_function("() => Math.abs(document.querySelector('#houseDemographicChart svg').viewBox.baseVal.width - document.querySelector('#houseDemographicChart').clientWidth) < 2")
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
+    page.locator("#houseDemographicPeriod").select_option("2022-2024")
+    expect(page.locator(".house-scatter-point")).to_have_count(312)
+    expect(page.locator(".house-seat-flipped")).to_have_count(8)
+    expect(page.locator("#houseSwingTitle")).to_contain_text("2022 → 2024")
+    page.go_back(wait_until="networkidle")
+    expect(page.locator("#houseDemographicPeriod")).to_have_value("2020-2022")
+    expect(page.locator(".house-scatter-point")).to_have_count(3)
+    page.close()
+    print("PASS: 2020–2022 period, three verified seats, grey exclusions, year-specific shares and flips, party switching, downloads, reload, mobile and history", flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--screenshots", type=Path)
@@ -509,6 +561,7 @@ def main():
             check_2022_entry(browser, base_url)
             check_swing_map(browser, base_url, args.screenshots)
             check_seat_flip_badges(browser, base_url)
+            check_earlier_period(browser, base_url)
             check_retry(browser, base_url)
             check_pending_election_switch(browser, base_url)
             check_layout_and_touch(browser, base_url, args.screenshots)

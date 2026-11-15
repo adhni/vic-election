@@ -58,6 +58,8 @@ and reports exploratory correlations for 397 districts plus a sensitivity sample
 The [2022–2024 comparison](docs/us_house_2022_2024_comparison.md) is available
 from both House election pages. It holds the 2024 demographics fixed for 312
 matched districts and includes a swing map, linked chart, and biggest-shift rankings.
+The comparison dropdown also offers 2020 → 2022 for three verified comparable
+at-large seats, clearly labelled as a small sample.
 
 ## Greece, Poland, and Belgium
 

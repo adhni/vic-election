@@ -37,6 +37,23 @@ Two-party share = party votes / (Democratic votes + Republican votes). Candidate
 
 **Flipped seats have a larger dot with a dark outline directly on the scatterplot**, explained by the chart key. A small **Flipped to Democrat/Republican** badge also identifies a changed winning party in the selected district, chart/map tooltips, and any affected swing ranking row. It compares the official elected parties in the 2022 and 2024 general-election snapshots on verified unchanged boundaries, independently of two-party share eligibility. Large swings in held seats do not receive a badge; unverified changed-plan districts remain unlabelled. This does not track intervening by-elections or party switches.
 
+## Earlier period: 2020 → 2022
+
+The **Comparison** dropdown switches between 2022 → 2024 and 2020 → 2022 on either supported House election page. The same map, chart, rankings, outlined flip markers, party controls and share/year outcomes update together. Shared URLs preserve `demographicPeriod=2020-2022`. The map geometry and full election results still follow the main election picker; the chart note names that year. Demographics remain the fixed 2024 ACS snapshot.
+
+The Census Bureau's [About Congressional Districts](https://www.census.gov/programs-surveys/geography/guidance/geo-areas/congressional-dist.html) identifies six single-member states as exceptions to new 2022 congressional plans: Alaska, Delaware, North Dakota, South Dakota, Vermont, and Wyoming. We conservatively exclude every district outside these six states rather than reconstruct votes or assume that repeated district numbers imply unchanged boundaries. These six states also retain the geography used for the fixed 2024 demographic snapshot.
+
+Alaska is excluded from share comparisons because its count bases have not been standardized. North Dakota lacks a named Democratic candidate in 2022, and South Dakota lacks both-party matchups. This leaves **three comparable seats: Delaware, Vermont and Wyoming**, in both baseline and sensitivity views. The app labels this tiny sample explicitly; it does not represent national patterns. Within-state correlation is unavailable because each retained state has one district.
+
+Winner flips continue to use actual elected parties on verified unchanged boundaries, independently of share eligibility. Alaska therefore correctly shows a flip to Democrat for 2020 → 2022 when selected, even though it has no plotted swing. None of the three plotted seats flipped in this period.
+
+The [2020–2022 comparison CSV](../data/us_house_2020_2022_comparison.csv) and [metadata](../data/us_house_2020_2022_comparison_metadata.json) use the same 435-district display grid as the current demographic data. Historical districts without a matching 2020 code have blank historical values and an explicit exclusion; no votes are invented for newly created seats. Redrawn same-number districts retain source values for audit but have blank comparable swings and flip flags.
+
+```sh
+python3 scripts/build_us_house_comparison.py --period 2020-2022
+python3 scripts/build_us_house_comparison.py --period 2020-2022 --check
+```
+
 ## Files and reproduction
 
 - [Comparison CSV](../data/us_house_2022_2024_comparison.csv): all 435 districts, year-specific totals and shares, boundary status, eligibility, reasons, and comparable change.

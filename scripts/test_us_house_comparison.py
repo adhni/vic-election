@@ -73,5 +73,38 @@ class ComparisonTests(unittest.TestCase):
                 self.assertEqual(row['democratic_share_change_pp'], '')
 
 
+class EarlierComparisonTests(unittest.TestCase):
+    def test_2020_period_uses_only_verified_contested_seats(self):
+        rows = build_rows(period='2020-2022')
+        self.assertEqual(len(rows), 435)
+        self.assertEqual({r['district'] for r in rows if r['comparison_eligible'] == 'true'},
+                         {'Delaware at-large', 'Vermont at-large', 'Wyoming at-large'})
+        self.assertEqual(sum(r['boundary_unchanged_verified'] == 'true' for r in rows), 6)
+        sources = {}
+        for year in (2020, 2022):
+            grouped = defaultdict(list)
+            with (ROOT / f'data/us_{year}_house_fpp.csv').open() as handle:
+                for row in csv.DictReader(handle):
+                    grouped[row['constituency_code']].append(row)
+            sources[year] = grouped
+        for row in rows:
+            code = row['constituency_code']
+            if row['comparison_eligible'] != 'true':
+                self.assertEqual(row['democratic_share_change_pp'], '')
+                continue
+            shares = {}
+            for year in (2020, 2022):
+                totals = {p: sum(int(r['votes']) for r in sources[year][code] if r['candidate_party'] in {p, f'Write-in ({p})'}) for p in ('Democratic', 'Republican')}
+                shares[year] = 100 * totals['Democratic'] / sum(totals.values())
+                self.assertAlmostEqual(float(row[f'democratic_two_party_share_pct_{year}']), shares[year], places=5)
+            self.assertAlmostEqual(float(row['democratic_share_change_pp']), shares[2022] - shares[2020], places=5)
+        by_name = {r['district']: r for r in rows}
+        self.assertEqual(by_name['Texas 38th']['democratic_votes_2020'], '')
+        self.assertEqual(by_name['Texas 38th']['seat_flipped'], '')
+        self.assertEqual(by_name['Alaska at-large']['seat_flipped'], 'true')
+        self.assertEqual(by_name['Alaska at-large']['elected_party_2022'], 'Democratic')
+        self.assertEqual(by_name['California 13th']['seat_flipped'], '')
+
+
 if __name__ == '__main__':
     unittest.main()

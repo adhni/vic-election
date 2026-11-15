@@ -1614,9 +1614,16 @@
                 <option value="sensitivity">Single matchup · no AK / ME</option>
               </select>
             </label>
+            <label for="houseDemographicPeriod">Comparison
+              <select id="houseDemographicPeriod">
+                <option value="2022-2024">2022 → 2024</option>
+                <option value="2020-2022">2020 → 2022</option>
+              </select>
+            </label>
             <label for="houseDemographicOutcome">Election outcome
               <select id="houseDemographicOutcome">
                 <option value="2024">2024 share · all eligible</option>
+                <option value="2020-matched" hidden>2020 share · matched</option>
                 <option value="2022-matched">2022 share · matched</option>
                 <option value="2024-matched">2024 share · matched</option>
                 <option value="change">Swing 2022 → 2024 · matched</option>
@@ -1676,8 +1683,9 @@
               <p>The sample is election-wide. Map search and filters do not change these statistics. Missing estimates are omitted, never replaced with zero.</p>
               <p>Choose either party's two-party vote share. Full share axes run from 0% to 100%; full change axes run from −100 to +100 percentage points. Other full axes start at zero. Fit data uses the observed range with a little padding. Axis settings change the scale, not the sample or correlations.</p>
               <p>Matched views hold the 2024 ACS demographics fixed and use the same districts for both years and change. All districts in Alabama, Georgia, Louisiana, New York, and North Carolina are conservatively excluded because those states changed plans; some individual seats may be unchanged. Alaska and Maine are excluded because ranked-choice count bases have not been standardized. Both years must have named candidates and positive votes for both major parties. The stricter sample applies to both years. Midterm and presidential turnout and candidate differences can affect the change.</p>
+              <p>For 2020 → 2022, only six at-large states have verified unchanged boundaries. After the same contest and count-basis checks, Delaware, Vermont and Wyoming remain. All other seats are grey or unplotted. The three-seat sample does not describe national patterns; 2024 demographics remain fixed.</p>
               <a href="../data/us_2024_house_analysis.csv" download>Download 2024 district data</a> ·
-              <a href="../data/us_house_2022_2024_comparison.csv" download>Download 2022–2024 comparison</a> ·
+              <a id="houseComparisonDownload" href="../data/us_house_2022_2024_comparison.csv" download>Download 2022–2024 comparison</a> ·
               <a href="../docs/us_house_2022_2024_comparison.md">Comparison methodology</a>
             </details>
           </div>
@@ -7778,6 +7786,7 @@
       const analyticalLocalVote = presidential || senate || governor || referendum || partyList;
       const geographySupported = geographyAnalysisSupported();
       if (activeMapMode === "house-swing" && !houseSwingSupported()) activeMapMode = "party";
+      document.getElementById("houseSwingMapMode").textContent = `${houseDemographics.periodLabel()} swing`;
       document.getElementById("houseSwingMapMode").classList.toggle("hidden", !houseSwingSupported());
       const geographyComparisonAvailable = Boolean(currentGeographyElection()?.comparisonKey);
       const geographyClustersAvailable = geographyClustersSupported();
@@ -7837,7 +7846,7 @@
           : "Click a seat to explore its result and political geography.";
       }
       if (activeMapMode === "house-swing" && houseSwingSupported()) {
-        document.getElementById("mapSubtitle").textContent = "2022 → 2024 change in two-party share. Blue toward Democrats; red toward Republicans. Grey districts are not comparable.";
+        document.getElementById("mapSubtitle").textContent = `${houseDemographics.periodLabel()} change in two-party share. Blue toward Democrats; red toward Republicans. Grey districts are not comparable.`;
       }
       document.getElementById("rankingsSubtitle").textContent = activeElection().membersOnly
         ? "Constituency-level margins are unavailable in the published result."

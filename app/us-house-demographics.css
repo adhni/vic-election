@@ -127,3 +127,6 @@
 .house-chart-key .house-key-flip::before { box-sizing: border-box; width: 11px; height: 11px; background: #f4f5f2; border: 2px solid #242b34; }
 .house-scatter-point.house-seat-flipped { stroke: #242b34; stroke-width: 2; fill-opacity: 1; }
 .house-scatter-point:not(.house-seat-flipped):is([aria-pressed="true"], :hover, :focus-visible) { stroke: #fff; stroke-width: 2; filter: drop-shadow(0 0 2px rgba(0,0,0,.5)); }
+
+.house-demographic-statistics .house-statistic-unavailable { font-size: 12px; letter-spacing: -.03em; }
+@media (max-width: 480px) { .house-demographic-statistics .house-statistic-unavailable { font-size: 10px; } }

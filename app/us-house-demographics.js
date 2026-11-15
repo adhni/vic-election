@@ -2,7 +2,7 @@
 (() => {
   "use strict";
   const ns = "http://www.w3.org/2000/svg";
-  const defaults = { view: false, metric: "bachelors_plus_pct", sample: "baseline", party: "democratic", xRange: "full", yRange: "full", outcome: "2024" };
+  const defaults = { view: false, metric: "bachelors_plus_pct", sample: "baseline", party: "democratic", xRange: "full", yRange: "full", outcome: "2024", period: "2022-2024" };
   let state = { ...defaults };
   let context = {};
   let callbacks;
@@ -26,27 +26,43 @@
   function readLocation() {
     const params = new URLSearchParams(location.search);
     state = {
+      period: params.get("demographicPeriod") === "2020-2022" ? "2020-2022" : "2022-2024",
       view: params.get("view") === "demographics",
       metric: params.get("demographic") || defaults.metric,
       sample: params.get("demographicSample") === "sensitivity" ? "sensitivity" : "baseline",
       party: params.get("demographicParty") === "republican" ? "republican" : "democratic",
       xRange: params.get("demographicX") === "fit" ? "fit" : "full",
       yRange: params.get("demographicY") === "fit" ? "fit" : "full",
-      outcome: ["2022-matched", "2024-matched", "change"].includes(params.get("demographicOutcome")) ? params.get("demographicOutcome") : params.get("year") === "us-house-2022" ? "2022-matched" : "2024"
+      outcome: ["2020-matched", "2022-matched", "2024-matched", "change"].includes(params.get("demographicOutcome")) ? params.get("demographicOutcome") : params.get("year") === "us-house-2022" ? "2022-matched" : "2024"
     };
+    if (state.period === "2020-2022" && !["2020-matched", "2022-matched", "change"].includes(state.outcome)) state.outcome = "change";
+    if (state.period === "2022-2024" && state.outcome === "2020-matched") state.outcome = "change";
     if (data && !data.metrics[state.metric]) state.metric = defaults.metric;
   }
 
   function writeUrlState(params) {
-    ["view", "demographic", "demographicSample", "demographicParty", "demographicX", "demographicY", "demographicOutcome"].forEach(key => params.delete(key));
+    ["view", "demographic", "demographicSample", "demographicParty", "demographicX", "demographicY", "demographicOutcome", "demographicPeriod"].forEach(key => params.delete(key));
     if (!["us-house-2022", "us-house-2024"].includes(context.electionKey) || !context.official || !state.view) return;
     params.set("view", "demographics");
+    if (state.period !== defaults.period) params.set("demographicPeriod", state.period);
     if (state.metric !== defaults.metric) params.set("demographic", state.metric);
     if (state.sample !== defaults.sample) params.set("demographicSample", state.sample);
     if (state.party !== defaults.party) params.set("demographicParty", state.party);
     if (state.xRange !== defaults.xRange) params.set("demographicX", state.xRange);
     if (state.yRange !== defaults.yRange) params.set("demographicY", state.yRange);
     if (state.outcome !== defaults.outcome) params.set("demographicOutcome", state.outcome);
+  }
+
+  function startYear() { return state.period === "2020-2022" ? 2020 : 2022; }
+  function endYear() { return state.period === "2020-2022" ? 2022 : 2024; }
+  function periodLabel() { return `${startYear()} → ${endYear()}`; }
+  function activatePeriod() {
+    if (!data || data.period === state.period) return;
+    data.rows = data.baseRows.map(row => ({ ...row, ...data.comparisons[state.period].get(row.constituency_code) }));
+    data.byName = new Map(data.rows.map(row => [row.district, row]));
+    data.period = state.period;
+    geometryKey = "";
+    swingRankingKey = "";
   }
 
   function finite(value) { return value !== "" && value !== undefined && value !== null && Number.isFinite(Number(value)); }
@@ -56,7 +72,7 @@
   function matched() { return state.outcome !== "2024"; }
   function changing() { return state.outcome === "change"; }
   function outcomeLabel() {
-    return changing() ? `${partyLabel()} share change, 2024 − 2022 (pp)`
+    return changing() ? `${partyLabel()} share change, ${endYear()} − ${startYear()} (pp)`
       : `${partyLabel()} two-party vote share${matched() ? " · " + state.outcome.slice(0, 4) : ""} (%)`;
   }
   function outcomeFormat(value) {
@@ -132,14 +148,14 @@
   const swingColors = { democraticStrong: "#2166ac", democratic: "#9ecae1", neutral: "#f1efeb", republican: "#efaaa3", republicanStrong: "#b51f24", excluded: "#8b9098" };
   function flipLabel(row) {
     if (row?.seat_flipped !== "true") return "";
-    const party = row.elected_party_2024 === "Democratic" ? "Democrat" : row.elected_party_2024;
+    const party = row[`elected_party_${endYear()}`] === "Democratic" ? "Democrat" : row[`elected_party_${endYear()}`];
     return `Flipped to ${party}`;
   }
   function flipBadge(row) {
     const badge = document.createElement("span");
-    badge.className = `house-flip-badge${row.elected_party_2024 === "Republican" ? " house-flip-republican" : ""}`;
+    badge.className = `house-flip-badge${row[`elected_party_${endYear()}`] === "Republican" ? " house-flip-republican" : ""}`;
     badge.textContent = flipLabel(row);
-    badge.title = `2022 → 2024: ${row.elected_party_2022} → ${row.elected_party_2024}`;
+    badge.title = `${periodLabel()}: ${row[`elected_party_${startYear()}`]} → ${row[`elected_party_${endYear()}`]}`;
     return badge;
   }
   function swingLegend() {
@@ -164,7 +180,7 @@
       : (magnitude >= 5 ? swingColors.republicanStrong : swingColors.republican);
     return { color, fill: color,
       label: delta === 0 ? "No change in two-party share" : `${magnitude.toFixed(1)} pp toward ${delta > 0 ? "Democrats" : "Republicans"}`,
-      detail: `Democratic share: ${Number(row.democratic_two_party_share_pct_2022).toFixed(1)}% in 2022 → ${Number(row.democratic_two_party_share_pct_2024).toFixed(1)}% in 2024${flipLabel(row) ? " · " + flipLabel(row) : ""}` };
+      detail: `Democratic share: ${Number(row[`democratic_two_party_share_pct_${startYear()}`]).toFixed(1)}% in ${startYear()} → ${Number(row[`democratic_two_party_share_pct_${endYear()}`]).toFixed(1)}% in ${endYear()}${flipLabel(row) ? " · " + flipLabel(row) : ""}` };
   }
   function showSwing() {
     state.view = true;
@@ -175,7 +191,7 @@
   function renderSwingRankings() {
     dom.swingRankings.classList.toggle("hidden", !changing());
     if (!changing()) return;
-    const key = `${state.sample}|${state.party}`;
+    const key = `${state.period}|${state.sample}|${state.party}`;
     if (key === swingRankingKey) {
       dom.swingLists.querySelectorAll("button").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.district === context.district)));
       return;
@@ -198,7 +214,7 @@
           const share = year => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
           name.textContent = row.district;
           if (flipLabel(row)) name.append(document.createTextNode(" "), flipBadge(row));
-          detail.textContent = `${share(2022).toFixed(1)}% → ${share(2024).toFixed(1)}% · ${outcomeFormat(voteShare(row))}`;
+          detail.textContent = `${share(startYear()).toFixed(1)}% → ${share(endYear()).toFixed(1)}% · ${outcomeFormat(voteShare(row))}`;
           button.type = "button";
           button.dataset.district = row.district;
           button.setAttribute("aria-pressed", String(row.district === context.district));
@@ -214,6 +230,12 @@
           item.append(button);
           list.append(item);
         });
+      if (!list.children.length) {
+        const empty = document.createElement("p");
+        empty.className = "house-demographic-note";
+        empty.textContent = "No comparable seats moved this way.";
+        section.append(empty);
+      }
       section.append(list);
       return section;
     }));
@@ -243,22 +265,30 @@
       fetch(callbacks.assetPath("data/us_house_2022_2024_comparison.csv"), { signal }).then(response => {
         if (!response.ok) throw new Error("Election comparison could not be loaded.");
         return response.text();
+      }),
+      fetch(callbacks.assetPath("data/us_house_2020_2022_comparison.csv"), { signal }).then(response => {
+        if (!response.ok) throw new Error("Election comparison could not be loaded.");
+        return response.text();
       })
-    ]).then(([text, metadata, comparisonText]) => {
+    ]).then(([text, metadata, comparisonText, comparison2020Text]) => {
       if (id !== requestId || signal.aborted) return;
       const rows = callbacks.parseCSV(text);
       const comparison = callbacks.parseCSV(comparisonText);
       const comparisonByCode = new Map(comparison.map(row => [row.constituency_code, row]));
       if (comparison.length !== 435 || comparisonByCode.size !== 435 || rows.some(row => !comparisonByCode.has(row.constituency_code)
         || comparisonByCode.get(row.constituency_code).district !== row.district)) throw new Error("Comparison districts do not match.");
-      rows.forEach(row => Object.assign(row, comparisonByCode.get(row.constituency_code)));
+      const comparison2020 = callbacks.parseCSV(comparison2020Text);
+      const comparison2020ByCode = new Map(comparison2020.map(row => [row.constituency_code, row]));
+      if (comparison2020.length !== 435 || comparison2020ByCode.size !== 435 || rows.some(row => comparison2020ByCode.get(row.constituency_code)?.district !== row.district)) throw new Error("Comparison districts do not match.");
       const codes = new Set(rows.map(row => row.constituency_code));
       const names = new Set(context.districtNames);
       if (rows.length !== 435 || codes.size !== 435 || metadata.congress !== 119 || !metadata.demographic_metrics?.[defaults.metric]
         || rows.some(row => row.election_key !== "us-house-2024" || !names.has(row.district))) {
         throw new Error("Demographic data does not match these election districts.");
       }
-      data = { rows, metrics: metadata.demographic_metrics, byName: new Map(rows.map(row => [row.district, row])) };
+      data = { baseRows: rows, metrics: metadata.demographic_metrics,
+        comparisons: { "2022-2024": comparisonByCode, "2020-2022": comparison2020ByCode } };
+      activatePeriod();
       if (!data.metrics[state.metric]) state.metric = defaults.metric;
       populate();
     }).catch(reason => {
@@ -293,16 +323,16 @@
     dom.district.value = row.district;
     dom.flip.classList.toggle("hidden", !flipLabel(row));
     dom.flip.replaceChildren();
-    if (flipLabel(row)) dom.flip.append(flipBadge(row), document.createTextNode(" · 2022 → 2024"));
+    if (flipLabel(row)) dom.flip.append(flipBadge(row), document.createTextNode(` · ${periodLabel()}`));
     dom.values.textContent = `${format(row[state.metric])} · ${outcomeLabel()}: ${outcomeFormat(voteShare(row))}`;
     if (matched() && row.comparison_eligible === "true") {
       const share = year => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
-      const delta = share(2024) - share(2022);
+      const delta = share(endYear()) - share(startYear());
       const metric = document.createElement("span"), cards = document.createElement("span");
       metric.className = "house-selected-metric";
       metric.textContent = `${data.metrics[state.metric].label}: ${format(row[state.metric])}`;
       cards.className = "house-share-cards";
-      [["2022:", `${share(2022).toFixed(1)}%`], ["2024:", `${share(2024).toFixed(1)}%`], ["Change:", `${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`]].forEach(([label, value], index) => {
+      [[`${startYear()}:`, `${share(startYear()).toFixed(1)}%`], [`${endYear()}:`, `${share(endYear()).toFixed(1)}%`], ["Change:", `${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`]].forEach(([label, value], index) => {
         const card = document.createElement("span"), caption = document.createElement("span"), number = document.createElement("strong");
         caption.textContent = `${label} ${index < 2 ? partyLabel() + " share" : partyLabel() + " share change"}`;
         number.textContent = value;
@@ -312,7 +342,7 @@
       });
       dom.values.replaceChildren(metric, cards);
     }
-    dom.note.textContent = exclusionNote(row) || `2024 elected member: ${row.elected_member} · ${row.elected_party}`;
+    dom.note.textContent = exclusionNote(row) || (state.period === "2020-2022" ? `2022 elected party: ${row.elected_party_2022}` : `2024 elected member: ${row.elected_member} · ${row.elected_party}`);
     const definition = data.metrics[state.metric];
     const moe = row[`${state.metric}_moe`];
     dom.uncertainty.textContent = !finite(row[state.metric]) ? "The estimate and its uncertainty are unavailable; no value has been imputed."
@@ -436,6 +466,7 @@
 
   function render() {
     if (!dom) return;
+    activatePeriod();
     const active = isActive();
     dom.controls.classList.toggle("hidden", !supported());
     dom.panel.classList.toggle("hidden", !active);
@@ -456,9 +487,19 @@
     dom.xRange.value = state.xRange;
     dom.yRange.value = state.yRange;
     dom.yLabel.textContent = outcomeLabel();
-    dom.outcome.querySelector('[value="2024"]').disabled = context.electionKey === "us-house-2022";
+    dom.period.value = state.period;
+    dom.swingTitle.textContent = `Biggest swings · ${periodLabel()}`;
+    dom.outcome.querySelector('[value="2024"]').disabled = context.electionKey === "us-house-2022" || state.period === "2020-2022";
+    for (const year of [2020, 2024]) {
+      const option = dom.outcome.querySelector(`[value="${year}-matched"]`);
+      option.hidden = option.disabled = year === 2020 ? state.period !== "2020-2022" : state.period === "2020-2022";
+    }
+    dom.outcome.querySelector('[value="change"]').textContent = `Swing ${periodLabel()} · matched`;
+    dom.download.href = `../data/us_house_${state.period.replace("-", "_")}_comparison.csv`;
+    dom.download.textContent = `Download ${periodLabel()} comparison`;
     dom.outcome.value = state.outcome;
     dom.comparisonNote.textContent = matched() ? `2024 ACS demographics held fixed · Same matched districts for both years and change · Map and full results show ${context.electionKey === "us-house-2022" ? "2022" : "2024"}` : "2024 ACS demographics and 2024 election results";
+    if (state.period === "2020-2022") dom.comparisonNote.textContent += " · Only 3 comparable seats: Delaware, Vermont, Wyoming. This small sample does not represent the country.";
     dom.panel.classList.toggle("house-republican", state.party === "republican");
     if (!data) {
       dom.status.textContent = error || "Loading district demographics…";
@@ -470,9 +511,10 @@
     const rows = sample.filter(row => finite(row[state.metric]) && finite(voteShare(row)));
     dom.status.textContent = `${rows.length} districts · ${435 - sample.length} excluded by sample · ${sample.length - rows.length} missing this measure`;
     const values = statistics(rows);
-    dom.statistics.replaceChildren(...["National r", "Spearman ρ", "Within-state r"].map((label, index) => {
+    dom.statistics.replaceChildren(...[state.period === "2020-2022" ? "Sample r" : "National r", "Spearman ρ", "Within-state r"].map((label, index) => {
       const span = document.createElement("span"), strong = document.createElement("strong");
       span.append(document.createTextNode(label));
+      strong.classList.toggle("house-statistic-unavailable", values[index] === null);
       strong.textContent = values[index] === null ? "Unavailable" : values[index].toFixed(3);
       strong.dataset.statistic = ["pearson", "spearman", "within-state"][index];
       span.append(strong);
@@ -496,13 +538,21 @@
 
   function setup(options) {
     callbacks = options;
-    const ids = { controls: "houseViewControls", grid: "explorerGrid", panel: "houseDemographicsPanel", resultsButton: "houseResultsView", demographicsButton: "houseDemographicsView", metric: "houseDemographicMetric", sample: "houseDemographicSample", party: "houseDemographicParty", outcome: "houseDemographicOutcome", comparisonNote: "houseDemographicComparisonNote", xRange: "houseDemographicXRange", yRange: "houseDemographicYRange", yLabel: "houseDemographicYLabel", status: "houseDemographicStatus", retry: "houseDemographicRetry", content: "houseDemographicContent", statistics: "houseDemographicStatistics", chart: "houseDemographicChart", axis: "houseDemographicAxis", selection: "houseDemographicSelection", district: "houseDemographicDistrict", values: "houseDemographicSelectedValues", flip: "houseDemographicFlip", note: "houseDemographicSelectedNote", uncertainty: "houseDemographicUncertaintyText", fullResult: "houseDemographicFullResult", swingRankings: "houseSwingRankings", swingRankingNote: "houseSwingRankingNote", swingLists: "houseSwingLists", tooltip: "houseDemographicTooltip" };
+    const ids = { controls: "houseViewControls", grid: "explorerGrid", panel: "houseDemographicsPanel", resultsButton: "houseResultsView", demographicsButton: "houseDemographicsView", metric: "houseDemographicMetric", sample: "houseDemographicSample", party: "houseDemographicParty", outcome: "houseDemographicOutcome", period: "houseDemographicPeriod", swingTitle: "houseSwingTitle", download: "houseComparisonDownload", comparisonNote: "houseDemographicComparisonNote", xRange: "houseDemographicXRange", yRange: "houseDemographicYRange", yLabel: "houseDemographicYLabel", status: "houseDemographicStatus", retry: "houseDemographicRetry", content: "houseDemographicContent", statistics: "houseDemographicStatistics", chart: "houseDemographicChart", axis: "houseDemographicAxis", selection: "houseDemographicSelection", district: "houseDemographicDistrict", values: "houseDemographicSelectedValues", flip: "houseDemographicFlip", note: "houseDemographicSelectedNote", uncertainty: "houseDemographicUncertaintyText", fullResult: "houseDemographicFullResult", swingRankings: "houseSwingRankings", swingRankingNote: "houseSwingRankingNote", swingLists: "houseSwingLists", tooltip: "houseDemographicTooltip" };
     dom = Object.fromEntries(Object.entries(ids).map(([key, id]) => [key, document.getElementById(id)]));
     readLocation();
     dom.resultsButton.onclick = () => { state.view = false; render(); callbacks.onUrlChange(); };
     dom.demographicsButton.onclick = () => { state.view = true; render(); callbacks.onUrlChange(); };
     dom.metric.onchange = () => { state.metric = dom.metric.value; render(); callbacks.onUrlChange(); };
     dom.sample.onchange = () => { state.sample = dom.sample.value; render(); callbacks.onDataChange(); callbacks.onUrlChange(); };
+    dom.period.onchange = () => {
+      state.period = dom.period.value;
+      state.outcome = "change";
+      state.yRange = "fit";
+      render();
+      callbacks.onSwingChange(true);
+      callbacks.onUrlChange();
+    };
     dom.outcome.onchange = () => { state.outcome = dom.outcome.value; render(); callbacks.onSwingChange(changing()); callbacks.onUrlChange(); };
     dom.party.onchange = () => { state.party = dom.party.value; render(); callbacks.onUrlChange(); };
     dom.xRange.onchange = () => { state.xRange = dom.xRange.value; render(); callbacks.onUrlChange(); };
@@ -545,5 +595,5 @@
     window.addEventListener("popstate", () => { readLocation(); render(); });
   }
 
-  window.houseDemographics = { setup, update, isActive, writeUrlState, showSwing, swingVisual, swingLegend };
+  window.houseDemographics = { setup, update, isActive, writeUrlState, showSwing, swingVisual, swingLegend, periodLabel };
 })();
