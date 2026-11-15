@@ -1,0 +1,23 @@
+{
+  "election_years": [
+    2008,
+    2012
+  ],
+  "geography": "50 states and District of Columbia",
+  "demographic_year": 2024,
+  "demographic_dataset": "2024 ACS 1-year estimates, fixed in every comparison",
+  "areas": 51,
+  "comparable_areas": 51,
+  "flipped_states": 2,
+  "vote_source": "https://www.fec.gov/introduction-campaign-finance/election-results-and-voting-information/",
+  "change_definition": "2012 D / (D + R) share minus 2008 share, in percentage points. Republican change negates Democratic change.",
+  "flip_definition": "Change in statewide popular-vote leading party; not electoral-vote allocation, congressional-district electors, or the national presidency. seat_flipped is the shared chart field name.",
+  "sample_policy": "All 50 states and DC; published official statewide totals, both major parties positive. No House district or county geography joins. Alaska and Maine retained.",
+  "interpretation": "Equal-weight state/DC associations, not vote-weighted national results. Fixed 2024 characteristics, measured after earlier elections; not demographic change or individual voting behavior. No within-state correlation: each point is a whole state/DC.",
+  "input_sha256": {
+    "data/us_2008_president_state_fpp.csv": "5c919939392d8bc534fe5c674c092b702d5adbe66727d3f453a65a546b9fc0dd",
+    "data/us_2012_president_state_fpp.csv": "40207187036dfa01fe50f13fbb66a396b28f5f11073cb4c203435b1baa6a5ca0",
+    "data/us_2024_state_demographics.csv": "747979bb153e368ad6b4776ddddd037f0b137c46eaed9ee1869f7e201075ab2c"
+  },
+  "output_sha256": "641ede0fa9b345f1c75674439ce56637f369afbe829f79f5880e0a99903bc2df"
+}

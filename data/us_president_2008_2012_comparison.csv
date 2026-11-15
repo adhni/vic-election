@@ -1,0 +1,52 @@
+constituency_code,district,state,demographic_year,boundary_unchanged_verified,comparison_eligible,comparison_sensitivity_eligible,comparison_exclusion_reason,elected_party_2008,democratic_votes_2008,republican_votes_2008,democratic_two_party_share_pct_2008,elected_party_2012,democratic_votes_2012,republican_votes_2012,democratic_two_party_share_pct_2012,seat_flipped,democratic_share_change_pp
+US-STATE-AK,Alaska,Alaska,2024,true,true,true,,Republican,123594,193841,38.935215,Republican,122640,164676,42.68471,false,3.749495
+US-STATE-AL,Alabama,Alabama,2024,true,true,true,,Republican,813479,1266546,39.109097,Republican,795696,1255925,38.783771,false,-0.325326
+US-STATE-AR,Arkansas,Arkansas,2024,true,true,true,,Republican,422310,638017,39.828279,Republican,394409,647744,37.845595,false,-1.982684
+US-STATE-AZ,Arizona,Arizona,2024,true,true,true,,Republican,1034707,1230111,45.686099,Republican,1025232,1233654,45.38662,false,-0.299479
+US-STATE-CA,California,California,2024,true,true,true,,Democratic,8274473,5011781,62.27845,Democratic,7854285,4839958,61.872811,false,-0.405639
+US-STATE-CO,Colorado,Colorado,2024,true,true,true,,Democratic,1288633,1073629,54.550808,Democratic,1323102,1185243,52.748007,false,-1.802801
+US-STATE-CT,Connecticut,Connecticut,2024,true,true,true,,Democratic,997772,629428,61.318338,Democratic,905083,634892,58.772577,false,-2.545761
+US-STATE-DC,District of Columbia,District of Columbia,2024,true,true,true,,Democratic,245800,17367,93.400768,Democratic,267070,21381,92.587649,false,-0.813119
+US-STATE-DE,Delaware,Delaware,2024,true,true,true,,Democratic,255459,152374,62.638139,Democratic,242584,165484,59.446955,false,-3.191184
+US-STATE-FL,Florida,Florida,2024,true,true,true,,Democratic,4282074,4045624,51.41966,Democratic,4237756,4163447,50.442252,false,-0.977408
+US-STATE-GA,Georgia,Georgia,2024,true,true,true,,Republican,1844123,2048759,47.371664,Republican,1773827,2078688,46.043351,false,-1.328313
+US-STATE-HI,Hawaii,Hawaii,2024,true,true,true,,Democratic,325871,120566,72.993726,Democratic,306658,121015,71.703849,false,-1.289877
+US-STATE-IA,Iowa,Iowa,2024,true,true,true,,Democratic,828940,682379,54.848778,Democratic,822544,730617,52.959352,false,-1.889426
+US-STATE-ID,Idaho,Idaho,2024,true,true,true,,Republican,236440,403012,36.97541,Republican,212787,420911,33.578613,false,-3.396797
+US-STATE-IL,Illinois,Illinois,2024,true,true,true,,Democratic,3419348,2031179,62.734264,Democratic,3019512,2135216,58.577523,false,-4.156741
+US-STATE-IN,Indiana,Indiana,2024,true,true,true,,Democratic,1374039,1345648,50.521953,Republican,1152887,1420543,44.799625,true,-5.722328
+US-STATE-KS,Kansas,Kansas,2024,true,true,true,,Republican,514765,699655,42.387724,Republican,440726,692634,38.886673,false,-3.501051
+US-STATE-KY,Kentucky,Kentucky,2024,true,true,true,,Republican,751985,1048462,41.766572,Republican,679370,1087190,38.457228,false,-3.309344
+US-STATE-LA,Louisiana,Louisiana,2024,true,true,true,,Republican,782989,1148275,40.542826,Republican,809141,1152262,41.253174,false,0.710348
+US-STATE-MA,Massachusetts,Massachusetts,2024,true,true,true,,Democratic,1904097,1108854,63.197078,Democratic,1921290,1188314,61.785681,false,-1.411397
+US-STATE-MD,Maryland,Maryland,2024,true,true,true,,Democratic,1629467,959862,62.930087,Democratic,1677844,971869,63.321726,false,0.391639
+US-STATE-ME,Maine,Maine,2024,true,true,true,,Democratic,421923,295273,58.829525,Democratic,401306,292276,57.859921,false,-0.969604
+US-STATE-MI,Michigan,Michigan,2024,true,true,true,,Democratic,2872579,2048639,58.371302,Democratic,2564569,2115256,54.800532,false,-3.57077
+US-STATE-MN,Minnesota,Minnesota,2024,true,true,true,,Democratic,1573354,1275409,55.229375,Democratic,1546167,1320225,53.941226,false,-1.288149
+US-STATE-MO,Missouri,Missouri,2024,true,true,true,,Republican,1441911,1445814,49.932421,Republican,1223796,1482440,45.221333,false,-4.711088
+US-STATE-MS,Mississippi,Mississippi,2024,true,true,true,,Republican,554662,724597,43.358069,Republican,562949,710746,44.198101,false,0.840032
+US-STATE-MT,Montana,Montana,2024,true,true,true,,Republican,231667,242763,48.830597,Republican,201839,267928,42.965768,false,-5.864829
+US-STATE-NC,North Carolina,North Carolina,2024,true,true,true,,Democratic,2142651,2128474,50.165963,Republican,2178391,2270395,48.965965,true,-1.199998
+US-STATE-ND,North Dakota,North Dakota,2024,true,true,true,,Republican,141278,168601,45.591344,Republican,124827,188163,39.882105,false,-5.709239
+US-STATE-NE,Nebraska,Nebraska,2024,true,true,true,,Republican,333319,452979,42.390926,Republican,302081,475064,38.87061,false,-3.520316
+US-STATE-NH,New Hampshire,New Hampshire,2024,true,true,true,,Democratic,384826,316534,54.868541,Democratic,369561,329918,52.833752,false,-2.034789
+US-STATE-NJ,New Jersey,New Jersey,2024,true,true,true,,Democratic,2215422,1613207,57.86463,Democratic,2125101,1477568,58.986851,false,1.122221
+US-STATE-NM,New Mexico,New Mexico,2024,true,true,true,,Democratic,472422,346832,57.6649,Democratic,415335,335788,55.295205,false,-2.369695
+US-STATE-NV,Nevada,Nevada,2024,true,true,true,,Democratic,533736,412827,56.386738,Democratic,531373,463567,53.407542,false,-2.979196
+US-STATE-NY,New York,New York,2024,true,true,true,,Democratic,4804945,2752771,63.576681,Democratic,4485741,2490431,64.300895,false,0.724214
+US-STATE-OH,Ohio,Ohio,2024,true,true,true,,Democratic,2940044,2677820,52.333841,Democratic,2827709,2661437,51.514553,false,-0.819288
+US-STATE-OK,Oklahoma,Oklahoma,2024,true,true,true,,Republican,502496,960165,34.354919,Republican,443547,891325,33.22768,false,-1.127239
+US-STATE-OR,Oregon,Oregon,2024,true,true,true,,Democratic,1037291,738475,58.413721,Democratic,970488,754175,56.271167,false,-2.142554
+US-STATE-PA,Pennsylvania,Pennsylvania,2024,true,true,true,,Democratic,3276363,2655885,55.229704,Democratic,2990274,2680434,52.731934,false,-2.49777
+US-STATE-RI,Rhode Island,Rhode Island,2024,true,true,true,,Democratic,296571,165391,64.198138,Democratic,279677,157204,64.016746,false,-0.181392
+US-STATE-SC,South Carolina,South Carolina,2024,true,true,true,,Republican,862449,1034896,45.455571,Republican,865941,1071645,44.691745,false,-0.763826
+US-STATE-SD,South Dakota,South Dakota,2024,true,true,true,,Republican,170924,203054,45.704293,Republican,145039,210610,40.781501,false,-4.922792
+US-STATE-TN,Tennessee,Tennessee,2024,true,true,true,,Republican,1087437,1479178,42.368528,Republican,960709,1462330,39.648928,false,-2.7196
+US-STATE-TX,Texas,Texas,2024,true,true,true,,Republican,3528633,4479328,44.064063,Republican,3308124,4569843,41.992103,false,-2.07196
+US-STATE-UT,Utah,Utah,2024,true,true,true,,Republican,327670,596030,35.473639,Republican,251813,740600,25.373811,false,-10.099828
+US-STATE-VA,Virginia,Virginia,2024,true,true,true,,Democratic,1959532,1725005,53.182584,Democratic,1971820,1822522,51.967377,false,-1.215207
+US-STATE-VT,Vermont,Vermont,2024,true,true,true,,Democratic,219262,98974,68.899182,Democratic,199239,92698,68.247259,false,-0.651923
+US-STATE-WA,Washington,Washington,2024,true,true,true,,Democratic,1750848,1229216,58.752027,Democratic,1755396,1290670,57.628298,false,-1.123729
+US-STATE-WI,Wisconsin,Wisconsin,2024,true,true,true,,Democratic,1677211,1262393,57.055678,Democratic,1620985,1407966,53.516382,false,-3.539296
+US-STATE-WV,West Virginia,West Virginia,2024,true,true,true,,Republican,303857,397466,43.326256,Republican,238269,417655,36.325702,false,-7.000554
+US-STATE-WY,Wyoming,Wyoming,2024,true,true,true,,Republican,82868,164958,33.437977,Republican,69286,170962,28.839366,false,-4.598611

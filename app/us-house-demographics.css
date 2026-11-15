@@ -1,5 +1,5 @@
 .house-view-controls { display: flex; gap: 8px; padding-top: 18px; }
-.house-view-controls.hidden, .house-demographics-panel.hidden { display: none; }
+.house-demographics-controls label.hidden, .house-view-controls.hidden, .house-demographics-panel.hidden { display: none; }
 .house-view-controls [aria-pressed="true"] { background: var(--accent); color: var(--surface); border-color: var(--accent); }
 .house-demographics-view .detail-panel { grid-column: 1 / -1; }
 .explorer-grid.house-demographics-view { grid-template-columns: minmax(290px, .8fr) minmax(0, 1.6fr); }

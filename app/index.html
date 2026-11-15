@@ -1624,6 +1624,8 @@
             <label for="houseDemographicOutcome">Election outcome
               <select id="houseDemographicOutcome">
                 <option value="2024">2024 share · all eligible</option>
+                <option value="2008-matched" hidden>2008 share · matched</option>
+                <option value="2012-matched" hidden>2012 share · matched</option>
                 <option value="2016-matched" hidden>2016 share · matched</option>
                 <option value="2018-matched" hidden>2018 share · matched</option>
                 <option value="2020-matched" hidden>2020 share · matched</option>
@@ -1681,6 +1683,7 @@
             </section>
             <details class="house-demographic-method">
               <summary>Sample and interpretation</summary>
+              <div id="houseDemographicHouseMethods">
               <p>Each dot is a district, with equal weight. The baseline requires named Democratic and Republican candidates and positive reported party votes. The stricter sample also excludes Alaska, Maine, and multiple major-party candidates. Published candidate totals are used without reconstructing ranked-choice rounds.</p>
               <p>National r is Pearson correlation; Spearman uses ranks. Within-state r compares departures from state averages. These use demographic point estimates and do not incorporate their uncertainty. They describe districts, not individual voters or causal effects.</p>
               <p>The sample is election-wide. Map search and filters do not change these statistics. Missing estimates are omitted, never replaced with zero.</p>
@@ -1690,8 +1693,16 @@
               <p>2018 → 2020 uses 2021 ACS demographics on the historical districts, held fixed for both election results. Census confirms that only North Carolina changed its district plan between those elections; it is excluded. Alaska and Maine are excluded from share comparisons because count bases have not been standardized. The demographic snapshot was measured after both elections. Three citizenship-age measures are unavailable in this older release.</p>
               <a href="../data/us_2024_house_analysis.csv" download>Download 2024 district data</a> ·
               <a href="../data/us_2021_house_demographics.csv" download>Download historical district demographics</a> ·
+              </div>
+              <div id="houseDemographicPresidentMethods" class="hidden">
+                <p>Each dot is one state or DC, with equal weight. All 51 areas have official statewide presidential totals for 2008, 2012, 2016, 2020 and 2024. Share means D / (D + R), or R / (D + R); swing is the difference in percentage points.</p>
+                <p>Outlined dots changed statewide popular-vote leading party between the selected elections. They do not describe Electoral College allocation, including split electors in Maine and Nebraska.</p>
+                <p>Demographics use the fixed 2024 ACS one-year snapshot in every view. Earlier populations may differ; these charts do not measure demographic change or individual voting behavior. State r is Pearson correlation; Spearman uses ranks. Both use point estimates and do not propagate demographic uncertainty. Each point is a whole state, so no within-state correlation is shown.</p>
+                <p>Alaska, Maine and DC are included. Map search does not change the sample. Missing demographic estimates are omitted, never replaced with zero. Full and fitted axes change only the scale.</p>
+                <a href="../data/us_2024_state_demographics.csv" download>Download state demographics</a> ·
+              </div>
               <a id="houseComparisonDownload" href="../data/us_house_2022_2024_comparison.csv" download>Download 2022–2024 comparison</a> ·
-              <a href="../docs/us_house_2022_2024_comparison.md">Comparison methodology</a>
+              <a id="houseComparisonMethods" href="../docs/us_house_2022_2024_comparison.md">Comparison methodology</a>
             </details>
           </div>
           <div id="houseDemographicTooltip" class="house-demographic-tooltip hidden" role="tooltip"></div>
@@ -2864,9 +2875,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2024_president_county_fpp.csv",
-        "boundaries": "data/us_president_2024_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2024_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -2904,9 +2915,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2020_president_county_fpp.csv",
-        "boundaries": "data/us_president_2020_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2020_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -2944,9 +2955,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2016_president_county_fpp.csv",
-        "boundaries": "data/us_president_2008_2016_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2016_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -2984,9 +2995,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2012_president_county_fpp.csv",
-        "boundaries": "data/us_president_2008_2016_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2012_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -3024,9 +3035,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2008_president_county_fpp.csv",
-        "boundaries": "data/us_president_2008_2016_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2008_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -6363,7 +6374,7 @@
         : system === "fpp"
           ? (membersOnly ? ["party"] : ["party", "close"])
           : system === "senate-stv" ? ["party"] : ["party", "close", "changed"];
-      if (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(year)) baseMapModes.push("house-swing");
+      if (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(year) || (year?.startsWith("us-president-") && (geography || definition.defaultGeography) === "state")) baseMapModes.push("house-swing");
       const allowedMapModes = geographyDefinitionSupported(config)
         ? [...baseMapModes, "vote-share", "swing", "clusters"]
         : baseMapModes;
@@ -6470,7 +6481,7 @@
     }
 
     function houseSwingSupported() {
-      return ["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(activeElectionYear) && datasetMeta.kind === "official";
+      return (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024"].includes(activeElectionYear) || (activeElectionYear.startsWith("us-president-") && activeGeography === "state")) && datasetMeta.kind === "official";
     }
 
     function mapVisual(d, context = {}) {
@@ -7813,7 +7824,7 @@
       document.getElementById("voteShareMapMode").classList.toggle("hidden", !geographySupported);
       document.getElementById("swingMapMode").classList.toggle("hidden", !geographySupported || !geographyComparisonAvailable);
       document.getElementById("clusterMapMode").classList.toggle("hidden", !geographyClustersAvailable);
-      document.getElementById("geographyMetricControl").classList.toggle("hidden", !geographySupported);
+      document.getElementById("geographyMetricControl").classList.toggle("hidden", !geographySupported || activeMapMode === "house-swing");
       document.querySelector('[data-map-mode="party"]').textContent = activeElection().mapModeLabel || (activeElection().jurisdiction === "Germany" ? "Erststimme" : "Winner");
       document.getElementById("partyVoteMapMode").textContent = activeElection().jurisdiction === "Germany" ? "Zweitstimme" : "Party vote";
       document.getElementById("changedMapMode").classList.toggle("hidden", compactAnalytical);
@@ -7851,7 +7862,7 @@
           : "Click a seat to explore its result and political geography.";
       }
       if (activeMapMode === "house-swing" && houseSwingSupported()) {
-        document.getElementById("mapSubtitle").textContent = `${houseDemographics.periodLabel()} change in two-party share. Blue toward Democrats; red toward Republicans. Grey districts are not comparable.`;
+        document.getElementById("mapSubtitle").textContent = `${houseDemographics.periodLabel()} change in two-party share. Blue toward Democrats; red toward Republicans. Grey ${activeElectionYear.startsWith("us-president-") ? "states" : "districts"} are not comparable.`;
       }
       document.getElementById("rankingsSubtitle").textContent = activeElection().membersOnly
         ? "Constituency-level margins are unavailable in the published result."
@@ -8765,6 +8776,7 @@
     function updateHouseDemographics() {
       houseDemographics.update({
         electionKey: activeElectionYear,
+        geography: activeGeography,
         mapMode: activeMapMode,
         official: datasetMeta.kind === "official",
         ready: dataLoadState === "ready",
@@ -9399,9 +9411,9 @@
       onFullResult: () => revealSelectedResult(true, true),
       onUrlChange: () => updateUrlState(),
       onDataChange: () => { updateElectionSpecificUi(); renderSeatMap(); },
-      onPeriodChange: async year => {
+      onPeriodChange: async (year, kind) => {
         suppressUrlUpdate = true;
-        try { await loadElection(`us-house-${year}`); }
+        try { await loadElection(`us-${kind}-${year}`, false, kind === "president" ? "state" : ""); }
         finally { suppressUrlUpdate = false; }
       },
       onSwingChange: enabled => {
