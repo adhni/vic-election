@@ -1,0 +1,19 @@
+{
+  "election_years": [
+    2012,
+    2016
+  ],
+  "geography": "county/reporting area",
+  "areas": 3113,
+  "comparable_areas": 3104,
+  "flipped_areas": 239,
+  "demographic_dataset": "Fixed 2020–2024 ACS 5-year county estimates",
+  "geography_policy": "Match source reporting-area identifiers, harmonizing Shannon 46113 to renamed Oglala Lakota 46102. Not an individual Census block boundary audit. Historical source already combines Bedford city/county and Kansas City/Jackson reporting returns. Exclude Connecticut throughout because old counties lack matching current ACS areas; exclude Alaska statewide placeholder. No reconstructed votes or invented ACS values.",
+  "flip_definition": "Change of county/reporting-area popular-vote leader on a comparable reporting area, not electoral votes.",
+  "interpretation": "Equal-weight county/reporting areas; descriptive associations with a fixed 2020–2024 snapshot, not individual behavior or demographic change.",
+  "input_sha256": {
+    "data/us_2012_president_county_fpp.csv": "e66a54bf81fc8033b0fbe96de5a4cbe20cf9ff30b6bf7a21b7e58f5d159ee585",
+    "data/us_2016_president_county_fpp.csv": "f2e84183f029a8b267728441712e43eb17bd14d4b5e6fe20cc65552d7678e3e8"
+  },
+  "output_sha256": "c0dd55124878ebc12f0fd262e8adae1782abd9e9c3c578f2244b9c77d0c0b5b0"
+}

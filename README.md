@@ -33,9 +33,9 @@ The app is map-first and party/bloc-first:
 - Belgian Federal Chamber results for 2024 and 2019 across all 11 multi-member constituencies
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
-- United States Senate results for the 2024, 2022, 2020, 2018, and 2016 regular election cycles, with county/reporting-area and official state views; concurrent special elections are excluded
+- United States Senate results for the 2016–2024 regular cycles, plus [provisional 2026 State and County results](docs/us_senate_2026.md) for all 33 regular races and the Florida/Ohio specials; earlier cycles exclude concurrent special elections
 - United States governor results for 2024, 2022, 2020, 2018, and 2016, with county/reporting-area and state-race views
-- United States congressional-district results and winner-party map for the 2024 House election
+- United States House results for 2016–2024, plus a [provisional 2026 snapshot](docs/us_house_2026.md) with current district maps, uncalled-seat labels and 2024 → 2026 demographic/swing comparisons
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
 - Argentine presidential results for 2023 and 2019 by province, including the 2023 runoff
 - Brazilian presidential results for 2022 and 2018 by state, with both rounds shown separately
@@ -43,6 +43,31 @@ The app is map-first and party/bloc-first:
 - Mexican presidential results for 2024, mapped across all 300 federal electoral districts
 
 No build step is needed. It is plain HTML/CSS/JavaScript.
+
+The repo also includes a separate [2024 U.S. House demographic dataset](docs/us_house_2024_demographics.md):
+2024 ACS 1-year estimates for all 435 districts, with 42 indicators, source
+estimates, margins of error, a variable dictionary and reproducible downloads.
+In the explorer, choose **United States House 2024 → Demographics** for a
+scatterplot linked to the district map, sample controls, correlations, and
+selected-district uncertainty. The view supports all 42 indicators and shareable URLs.
+Choose Democratic or Republican two-party vote share, and set each axis to
+**Full range** or **Fit data** independently.
+The [first district-level analysis](docs/us_house_2024_analysis.md) joins these
+indicators to the 2024 results, flags contests eligible for two-party analysis,
+and reports exploratory correlations for 397 districts plus a sensitivity sample.
+The [2022–2024 comparison](docs/us_house_2022_2024_comparison.md) is available
+from both House election pages. It holds the 2024 demographics fixed for 312
+matched districts and includes a swing map, linked chart, and biggest-shift rankings.
+The comparison dropdown also offers 2016 → 2018 and 2018 → 2020 on historical
+districts. **2024 → 2026** uses a provisional 14 November 2026 snapshot, with
+236 matched districts and fixed 2024 demographics. Uncalled races and states
+with changed plans are excluded; flips are provisional. The sparse 2020 → 2022
+audit remains downloadable rather than appearing in the chart selector.
+
+The [Senate swing view](docs/us_senate_comparison.md) follows the same regular
+seat six years apart: **2016 → 2022**, **2018 → 2024**, and **2020 → 2026**,
+with State and County maps, matched share charts, flip outlines and downloads.
+Special elections and incompatible or uncalled races are excluded.
 
 ## Greece, Poland, and Belgium
 

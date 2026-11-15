@@ -1,0 +1,436 @@
+constituency_code,district,state,demographic_year,boundary_unchanged_verified,comparison_eligible,comparison_sensitivity_eligible,comparison_exclusion_reason,elected_party_2016,democratic_votes_2016,republican_votes_2016,two_party_analysis_eligible_2016,multiple_major_party_candidates_2016,democratic_two_party_share_pct_2016,elected_party_2018,democratic_votes_2018,republican_votes_2018,two_party_analysis_eligible_2018,multiple_major_party_candidates_2018,democratic_two_party_share_pct_2018,seat_flipped,democratic_share_change_pp
+0101,Alabama 1st,Alabama,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,208083,false,false,,Republican,89226,153228,true,false,36.801208,false,
+0102,Alabama 2nd,Alabama,2021,true,true,true,,Republican,112089,134886,true,false,45.384756,Republican,86931,138879,true,false,38.497409,false,-6.887347
+0103,Alabama 3rd,Alabama,2021,true,true,true,,Republican,94549,192164,true,false,32.976879,Republican,83996,147770,true,false,36.241727,false,3.264848
+0104,Alabama 4th,Alabama,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,235925,false,false,,Republican,46492,184255,true,false,20.148474,false,
+0105,Alabama 5th,Alabama,2021,true,true,true,,Republican,102234,205647,true,false,33.205687,Republican,101388,159063,true,false,38.92786,false,5.722173
+0106,Alabama 6th,Alabama,2021,true,true,true,,Republican,83709,245313,true,false,25.441764,Republican,85644,192542,true,false,30.786596,false,5.344832
+0107,Alabama 7th,Alabama,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,229330,0,false,false,,Democratic,185010,0,false,false,,false,
+0200,Alaska at-large,Alaska,2021,true,false,false,ranked_choice_count_basis_not_standardized,Republican,111019,155088,true,false,41.719684,Republican,131199,149779,true,false,46.693691,false,
+0401,Arizona 1st,Arizona,2021,true,true,true,,Democratic,142219,121745,true,false,53.87818,Democratic,143240,122784,true,false,53.844766,false,-0.033414
+0402,Arizona 2nd,Arizona,2021,true,true,true,,Republican,135873,179806,true,false,43.041507,Democratic,161000,133102,true,false,54.742912,true,11.701405
+0403,Arizona 3rd,Arizona,2021,true,false,false,2016:no_named_republican_candidate,Democratic,149256,1635,false,false,,Democratic,114650,64868,true,false,63.865462,false,
+0404,Arizona 4th,Arizona,2021,true,true,true,,Republican,81296,203487,true,false,28.546648,Republican,84521,188842,true,false,30.918961,false,2.372313
+0405,Arizona 5th,Arizona,2021,true,true,true,,Republican,114940,205184,true,false,35.904837,Republican,127027,186037,true,false,40.57541,false,4.670573
+0406,Arizona 6th,Arizona,2021,true,true,true,,Republican,122866,201578,true,false,37.869709,Republican,140559,173140,true,false,44.806965,false,6.937256
+0407,Arizona 7th,Arizona,2021,true,false,false,2018:no_named_republican_candidate,Democratic,119465,39286,true,false,75.253069,Democratic,113044,301,false,false,,false,
+0408,Arizona 8th,Arizona,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,205017,false,false,,Republican,135569,168835,true,false,44.53588,false,
+0409,Arizona 9th,Arizona,2021,true,true,true,,Democratic,169055,108350,true,false,60.941584,Democratic,159583,101662,true,false,61.085571,false,0.143987
+0501,Arkansas 1st,Arkansas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,183866,false,false,,Republican,57907,138757,true,false,29.444637,false,
+0502,Arkansas 2nd,Arkansas,2021,true,true,true,,Republican,111347,176472,true,false,38.686466,Republican,116135,132125,true,false,46.779586,false,8.09312
+0503,Arkansas 3rd,Arkansas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,217192,false,false,,Republican,74952,148717,true,false,33.510232,false,
+0504,Arkansas 4th,Arkansas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,182885,false,false,,Republican,63984,136740,true,false,31.876607,false,
+0601,California 1st,California,2021,true,true,true,,Republican,128588,185448,true,false,40.946898,Republican,131548,160046,true,false,45.113411,false,4.166513
+0602,California 2nd,California,2021,true,true,true,,Democratic,254194,76572,true,false,76.850099,Democratic,243081,72576,true,false,77.007955,false,0.157856
+0603,California 3rd,California,2021,true,true,true,,Democratic,152513,104453,true,false,59.351432,Democratic,134875,97376,true,false,58.072947,false,-1.278485
+0604,California 4th,California,2021,true,true,true,,Republican,130845,220133,true,false,37.280114,Republican,156253,184401,true,false,45.868535,false,8.588421
+0605,California 5th,California,2021,true,false,false,2018:no_named_republican_candidate,Democratic,224526,67565,true,false,76.86851,Democratic,205860,0,false,false,,false,
+0606,California 6th,California,2021,true,false,false,2018:no_named_republican_candidate,Democratic,177565,57848,true,false,75.427016,Democratic,201939,0,false,true,,false,
+0607,California 7th,California,2021,true,true,true,,Democratic,152133,145168,true,false,51.171372,Democratic,155016,126601,true,false,55.044972,false,3.8736
+0608,California 8th,California,2021,true,false,false,2018:no_named_democratic_candidate,Republican,83035,136972,true,false,37.741981,Republican,0,170785,false,true,,false,
+0609,California 9th,California,2021,true,true,true,,Democratic,133163,98992,true,false,57.359523,Democratic,113414,87349,true,false,56.491485,false,-0.868038
+0610,California 10th,California,2021,true,true,true,,Republican,116470,124671,true,false,48.299543,Democratic,115945,105955,true,false,52.251014,true,3.951471
+0611,California 11th,California,2021,true,true,true,,Democratic,214868,83341,true,false,72.052822,Democratic,204369,71312,true,false,74.132421,false,2.079599
+0612,California 12th,California,2021,true,false,false,2016:no_named_republican_candidate,Democratic,274035,0,false,false,,Democratic,275292,41780,true,false,86.823182,false,
+0613,California 13th,California,2021,true,false,false,2018:no_named_republican_candidate,Democratic,293117,29754,true,false,90.784555,Democratic,260580,0,false,false,,false,
+0614,California 14th,California,2021,true,true,true,,Democratic,231630,54817,true,false,80.863127,Democratic,211384,55439,true,false,79.222556,false,-1.640571
+0615,California 15th,California,2021,true,true,true,,Democratic,198578,70619,true,false,73.766795,Democratic,177989,65940,true,false,72.967544,false,-0.799251
+0616,California 16th,California,2021,true,true,true,,Democratic,97473,70483,true,false,58.034842,Democratic,82266,60693,true,false,57.54517,false,-0.489672
+0617,California 17th,California,2021,true,false,false,2016:no_named_republican_candidate,Democratic,233192,0,false,true,,Democratic,159105,52057,true,false,75.347364,false,
+0618,California 18th,California,2021,true,true,true,,Democratic,230460,93470,true,false,71.145,Democratic,225142,77096,true,false,74.491626,false,3.346626
+0619,California 19th,California,2021,true,true,true,,Democratic,181802,64061,true,false,73.944432,Democratic,162496,57823,true,false,73.754874,false,-0.189558
+0620,California 20th,California,2021,true,false,false,2018:no_named_republican_candidate,Democratic,180980,74811,true,false,70.753076,Democratic,183677,0,false,false,,false,
+0621,California 21st,California,2021,true,true,true,,Republican,57282,75126,true,false,43.261736,Democratic,57239,56377,true,false,50.379348,true,7.117612
+0622,California 22nd,California,2021,true,true,true,,Republican,76211,158755,true,false,32.434905,Republican,105136,117243,true,false,47.277845,false,14.84294
+0623,California 23rd,California,2021,true,true,true,,Republican,74468,167116,true,false,30.824889,Republican,74661,131113,true,false,36.28301,false,5.458121
+0624,California 24th,California,2021,true,true,true,,Democratic,166034,144780,true,false,53.419087,Democratic,166550,117881,true,false,58.555502,false,5.136415
+0625,California 25th,California,2021,true,true,true,,Republican,122406,138755,true,false,46.869938,Democratic,133209,111813,true,false,54.366139,true,7.496201
+0626,California 26th,California,2021,true,true,true,,Democratic,169248,111059,true,false,60.379512,Democratic,158216,97210,true,false,61.942011,false,1.562499
+0627,California 27th,California,2021,true,false,false,2018:no_named_republican_candidate,Democratic,168977,81655,true,false,67.420361,Democratic,202636,0,false,true,,false,
+0628,California 28th,California,2021,true,true,true,,Democratic,210883,59526,true,false,77.986679,Democratic,196662,54272,true,false,78.372002,false,0.385323
+0629,California 29th,California,2021,true,false,false,2016:no_named_republican_candidate,Democratic,171824,0,false,true,,Democratic,124697,29995,true,false,80.609857,false,
+0630,California 30th,California,2021,true,true,true,,Democratic,205279,77325,true,false,72.638392,Democratic,191573,69420,true,false,73.401585,false,0.763193
+0631,California 31st,California,2021,true,true,true,,Democratic,121070,94866,true,false,56.067539,Democratic,110143,77352,true,false,58.7445,false,2.676961
+0632,California 32nd,California,2021,true,false,false,2016:no_named_republican_candidate,Democratic,186646,0,false,true,,Democratic,121759,55272,true,false,68.77835,false,
+0633,California 33rd,California,2021,true,true,true,,Democratic,219397,110822,true,false,66.439847,Democratic,219091,93769,true,false,70.028447,false,3.5886
+0634,California 34th,California,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,159156,0,false,true,,Democratic,110195,0,false,false,,false,
+0635,California 35th,California,2021,true,true,true,,Democratic,124044,47309,true,false,72.390912,Democratic,103420,45604,true,false,69.398218,false,-2.992694
+0636,California 36th,California,2021,true,true,true,,Democratic,144348,88269,true,false,62.053934,Democratic,122169,84839,true,false,59.01656,false,-3.037374
+0637,California 37th,California,2021,true,false,false,2016:no_named_republican_candidate,Democratic,237272,0,false,true,,Democratic,210555,25823,true,false,89.075548,false,
+0638,California 38th,California,2021,true,true,true,,Democratic,163590,68524,true,false,70.478299,Democratic,139188,62968,true,false,68.851778,false,-1.626521
+0639,California 39th,California,2021,true,true,true,,Republican,112679,150777,true,false,42.769571,Democratic,126002,118391,true,false,51.557123,true,8.787552
+0640,California 40th,California,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,106554,0,false,false,,Democratic,93938,0,false,false,,false,
+0641,California 41st,California,2021,true,true,true,,Democratic,128164,69159,true,false,64.951374,Democratic,108227,58021,true,false,65.099731,false,0.148357
+0642,California 42nd,California,2021,true,true,true,,Republican,104689,149547,true,false,41.177882,Republican,100892,131040,true,false,43.500681,false,2.322799
+0643,California 43rd,California,2021,true,true,true,,Democratic,167017,52499,true,false,76.084203,Democratic,152272,43780,true,false,77.66919,false,1.584987
+0644,California 44th,California,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,178413,0,false,true,,Democratic,143322,0,false,true,,false,
+0645,California 45th,California,2021,true,true,true,,Republican,129231,182618,true,false,41.440248,Democratic,158906,146383,true,false,52.051007,true,10.610759
+0646,California 46th,California,2021,true,false,false,2016:no_named_republican_candidate,Democratic,164593,0,false,true,,Democratic,102278,45638,true,false,69.146002,false,
+0647,California 47th,California,2021,true,true,true,,Democratic,154759,88109,true,false,63.721445,Democratic,143354,77682,true,false,64.855499,false,1.134054
+0648,California 48th,California,2021,true,true,true,,Republican,127715,178701,true,false,41.680265,Democratic,157837,136899,true,false,53.551992,true,11.871727
+0649,California 49th,California,2021,true,true,true,,Republican,154267,155888,true,false,49.738679,Democratic,166453,128577,true,false,56.419008,true,6.680329
+0650,California 50th,California,2021,true,true,true,,Republican,103646,179937,true,false,36.548735,Republican,125448,134362,true,false,48.284516,false,11.735781
+0651,California 51st,California,2021,true,true,true,,Democratic,145162,54362,true,false,72.754155,Democratic,109527,44301,true,false,71.200952,false,-1.553203
+0652,California 52nd,California,2021,true,true,true,,Democratic,181253,139403,true,false,56.525685,Democratic,188992,107015,true,false,63.847139,false,7.321454
+0653,California 53rd,California,2021,true,true,true,,Democratic,198988,97968,true,false,67.009254,Democratic,185667,83127,true,false,69.074086,false,2.064832
+0801,Colorado 1st,Colorado,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,257254,105030,true,false,71.008932,Democratic,272908,85207,true,false,76.206805,,
+0802,Colorado 2nd,Colorado,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,260175,170001,true,false,60.481059,Democratic,259608,144901,true,false,64.178547,,
+0803,Colorado 3rd,Colorado,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,150914,204220,true,false,42.494946,Republican,146426,173205,true,false,45.810951,,
+0804,Colorado 4th,Colorado,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,123642,248230,true,false,33.248537,Republican,145557,224038,true,false,39.382838,,
+0805,Colorado 5th,Colorado,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,111676,225445,true,false,33.126385,Republican,126903,184002,true,false,40.817291,,
+0806,Colorado 6th,Colorado,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,160372,191626,true,false,45.560486,Democratic,187639,148685,true,false,55.791142,,
+0807,Colorado 7th,Colorado,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,199758,144066,true,false,58.098911,Democratic,204305,119734,true,false,63.049509,,
+0901,Connecticut 1st,Connecticut,2021,true,true,true,,Democratic,200686,105674,true,false,65.506594,Democratic,175087,96024,true,false,64.581297,false,-0.925297
+0902,Connecticut 2nd,Connecticut,2021,true,true,true,,Democratic,208818,111149,true,false,65.262355,Democratic,179731,102483,true,false,63.686068,false,-1.576287
+0903,Connecticut 3rd,Connecticut,2021,true,true,true,,Democratic,213572,95786,true,false,69.037167,Democratic,174572,95667,true,false,64.599114,false,-4.438053
+0904,Connecticut 4th,Connecticut,2021,true,true,true,,Democratic,187811,125724,true,false,59.901127,Democratic,168726,106921,true,false,61.210897,false,1.30977
+0905,Connecticut 5th,Connecticut,2021,true,true,true,,Democratic,179252,129801,true,false,58.000408,Democratic,151225,119426,true,false,55.87454,false,-2.125868
+1000,Delaware at-large,Delaware,2021,true,true,true,,Democratic,233554,172301,true,false,57.546168,Democratic,227353,125384,true,false,64.45397,false,6.907802
+1201,Florida 1st,Florida,2021,true,true,true,,Republican,114079,255107,true,false,30.900142,Republican,106199,216189,true,false,32.941363,false,2.041221
+1202,Florida 2nd,Florida,2021,true,true,true,,Republican,102801,231163,true,false,30.78206,Republican,96233,199335,true,false,32.558667,false,1.776607
+1203,Florida 3rd,Florida,2021,true,true,true,,Republican,136338,193843,true,false,41.291897,Republican,129880,176616,true,false,42.375757,false,1.08386
+1204,Florida 4th,Florida,2021,true,true,true,,Republican,113088,287509,true,false,28.229867,Republican,123351,248420,true,false,33.179296,false,4.949429
+1205,Florida 5th,Florida,2021,true,true,true,,Democratic,194549,108325,true,false,64.234302,Democratic,180527,89799,true,false,66.78122,false,2.546918
+1206,Florida 6th,Florida,2021,true,true,true,,Republican,151051,213519,true,false,41.432647,Republican,145758,187891,true,false,43.686029,false,2.253382
+1207,Florida 7th,Florida,2021,true,true,true,,Democratic,182039,171583,true,false,51.478415,Democratic,183113,134285,true,false,57.69192,false,6.213505
+1208,Florida 8th,Florida,2021,true,true,true,,Republican,127127,246483,true,false,34.026659,Republican,142415,218112,true,false,39.501896,false,5.475237
+1209,Florida 9th,Florida,2021,true,true,true,,Democratic,195311,144450,true,false,57.48482,Democratic,172172,124565,true,false,58.02175,false,0.53693
+1210,Florida 10th,Florida,2021,true,false,false,2018:candidate_vote_totals_unavailable;uncontested;no_named_republican_candidate;no_positive_democratic_votes,Democratic,198491,107498,true,false,64.868672,Democratic,0,0,false,false,,false,
+1211,Florida 11th,Florida,2021,true,true,true,,Republican,124713,258016,true,false,32.585197,Republican,128053,239395,true,false,34.849285,false,2.264088
+1212,Florida 12th,Florida,2021,true,true,true,,Republican,116110,253559,true,false,31.40918,Republican,132844,194564,true,false,40.574451,false,9.165271
+1213,Florida 13th,Florida,2021,true,true,true,,Democratic,184693,171149,true,false,51.903092,Democratic,182717,134254,true,false,57.644706,false,5.741614
+1214,Florida 14th,Florida,2021,true,false,false,2018:candidate_vote_totals_unavailable;uncontested;no_named_republican_candidate;no_positive_democratic_votes,Democratic,195789,121088,true,false,61.787066,Democratic,0,0,false,false,,false,
+1215,Florida 15th,Florida,2021,true,true,true,,Republican,135475,182999,true,false,42.538794,Republican,134132,151380,true,false,46.979461,false,4.440667
+1216,Florida 16th,Florida,2021,true,true,true,,Republican,155262,230654,true,false,40.232071,Republican,164463,197483,true,false,45.438546,false,5.206475
+1217,Florida 17th,Florida,2021,true,true,true,,Republican,115974,209348,true,false,35.648988,Republican,117194,193326,true,false,37.741208,false,2.09222
+1218,Florida 18th,Florida,2021,true,true,true,,Republican,161918,201488,true,false,44.555676,Republican,156454,185905,true,false,45.698813,false,1.143137
+1219,Florida 19th,Florida,2021,true,true,true,,Republican,123812,239225,true,false,34.104513,Republican,128106,211465,true,false,37.725836,false,3.621323
+1220,Florida 20th,Florida,2021,true,false,false,2018:no_named_republican_candidate,Democratic,222914,54646,true,false,80.312005,Democratic,202659,0,false,false,,false,
+1221,Florida 21st,Florida,2021,true,false,false,2018:candidate_vote_totals_unavailable;uncontested;no_named_republican_candidate;no_positive_democratic_votes,Democratic,210606,118038,true,false,64.083324,Democratic,0,0,false,false,,false,
+1222,Florida 22nd,Florida,2021,true,true,true,,Democratic,199113,138737,true,false,58.935326,Democratic,184634,113049,true,false,62.023696,false,3.08837
+1223,Florida 23rd,Florida,2021,true,true,true,,Democratic,183225,130818,true,false,58.343921,Democratic,161611,99446,true,false,61.906404,false,3.562483
+1224,Florida 24th,Florida,2021,true,false,false,2016:candidate_vote_totals_unavailable;uncontested;no_named_republican_candidate;no_positive_democratic_votes;2018:candidate_vote_totals_unavailable;uncontested;no_named_republican_candidate;no_positive_democratic_votes,Democratic,0,0,false,false,,Democratic,0,0,false,false,,false,
+1225,Florida 25th,Florida,2021,true,true,true,,Republican,95319,157921,true,false,37.639788,Republican,84173,128672,true,false,39.546618,false,1.90683
+1226,Florida 26th,Florida,2021,true,true,true,,Republican,115493,148547,true,false,43.740721,Democratic,119797,115678,true,false,50.874615,true,7.133894
+1227,Florida 27th,Florida,2021,true,true,true,,Republican,129760,157917,true,false,45.106143,Democratic,130743,115588,true,false,53.076146,true,7.970003
+1301,Georgia 1st,Georgia,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,210243,false,false,,Republican,105942,144741,true,false,42.261342,false,
+1302,Georgia 2nd,Georgia,2021,true,true,true,,Democratic,148543,94056,true,false,61.229848,Democratic,136699,92472,true,false,59.649345,false,-1.580503
+1303,Georgia 3rd,Georgia,2021,true,true,true,,Republican,95969,207218,true,false,31.653402,Republican,101010,191996,true,false,34.473697,false,2.820295
+1304,Georgia 4th,Georgia,2021,true,true,true,,Democratic,220146,70593,true,false,75.71946,Democratic,227717,61092,true,false,78.84692,false,3.12746
+1305,Georgia 5th,Georgia,2021,true,false,false,2018:uncontested;no_named_republican_candidate,Democratic,253781,46768,true,false,84.439143,Democratic,275406,0,false,false,,false,
+1306,Georgia 6th,Georgia,2021,true,true,true,,Republican,124917,201088,true,false,38.31751,Democratic,160139,156875,true,false,50.514804,true,12.197294
+1307,Georgia 7th,Georgia,2021,true,true,true,,Republican,114220,174081,true,false,39.618316,Republican,140011,140430,true,false,49.925296,false,10.30698
+1308,Georgia 8th,Georgia,2021,true,false,false,2018:no_named_democratic_candidate,Republican,83225,173983,true,false,32.357081,Republican,0,198152,false,false,,false,
+1309,Georgia 9th,Georgia,2021,true,false,false,2016:uncontested;no_named_democratic_candidate,Republican,0,256535,false,false,,Republican,57912,224661,true,false,20.494527,false,
+1310,Georgia 10th,Georgia,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,243725,false,false,,Republican,112339,190396,true,false,37.108032,false,
+1311,Georgia 11th,Georgia,2021,true,true,true,,Republican,105383,217935,true,false,32.594226,Republican,118653,191887,true,false,38.208604,false,5.614378
+1312,Georgia 12th,Georgia,2021,true,true,true,,Republican,99420,159492,true,false,38.399147,Republican,101503,148986,true,false,40.521939,false,2.122792
+1313,Georgia 13th,Georgia,2021,true,false,false,2016:uncontested;no_named_republican_candidate,Democratic,252833,0,false,false,,Democratic,223157,69760,true,false,76.18438,false,
+1314,Georgia 14th,Georgia,2021,true,false,false,2016:uncontested;no_named_democratic_candidate,Republican,0,216743,false,false,,Republican,53981,175743,true,false,23.498198,false,
+1501,Hawaii 1st,Hawaii,2021,true,true,true,,Democratic,145417,45958,true,false,75.985369,Democratic,134650,42498,true,false,76.00989,false,0.024521
+1502,Hawaii 2nd,Hawaii,2021,true,true,true,,Democratic,170848,39668,true,false,81.156777,Democratic,153271,44850,true,false,77.362319,false,-3.794458
+1601,Idaho 1st,Idaho,2021,true,true,true,,Republican,113052,242252,true,false,31.818387,Republican,96922,197719,true,false,32.894947,false,1.07656
+1602,Idaho 2nd,Idaho,2021,true,true,true,,Republican,95940,205292,true,false,31.849206,Republican,110381,170274,true,false,39.329782,false,7.480576
+1701,Illinois 1st,Illinois,2021,true,true,true,,Democratic,234037,81817,true,false,74.096576,Democratic,189560,50960,true,false,78.812573,false,4.715997
+1702,Illinois 2nd,Illinois,2021,true,true,true,,Democratic,235051,59471,true,false,79.80762,Democratic,190684,44567,true,false,81.055553,false,1.247933
+1703,Illinois 3rd,Illinois,2021,true,false,false,2016:no_named_republican_candidate,Democratic,225320,0,false,false,,Democratic,163053,57885,true,false,73.800342,false,
+1704,Illinois 4th,Illinois,2021,true,false,false,2016:uncontested;no_named_republican_candidate,Democratic,171297,0,false,false,,Democratic,143895,22294,true,false,86.585153,false,
+1705,Illinois 5th,Illinois,2021,true,true,true,,Democratic,212842,86222,true,false,71.169382,Democratic,213992,65134,true,false,76.665019,false,5.495637
+1706,Illinois 6th,Illinois,2021,true,true,true,,Republican,143591,208555,true,false,40.775985,Democratic,169001,146445,true,false,53.575255,true,12.79927
+1707,Illinois 7th,Illinois,2021,true,true,true,,Democratic,250584,46882,true,false,84.239543,Democratic,215746,30497,true,false,87.615079,false,3.375536
+1708,Illinois 8th,Illinois,2021,true,true,true,,Democratic,144954,103617,true,false,58.314928,Democratic,130054,67073,true,false,65.974727,false,7.659799
+1709,Illinois 9th,Illinois,2021,true,true,true,,Democratic,217306,109550,true,false,66.483711,Democratic,213368,76983,true,false,73.486229,false,7.002518
+1710,Illinois 10th,Illinois,2021,true,true,true,,Democratic,150435,135535,true,false,52.605168,Democratic,156540,82124,true,false,65.590118,false,12.98495
+1711,Illinois 11th,Illinois,2021,true,true,true,,Democratic,166578,108995,true,false,60.447867,Democratic,145407,82358,true,false,63.840801,false,3.392934
+1712,Illinois 12th,Illinois,2021,true,true,true,,Republican,124246,169976,true,false,42.228657,Republican,118724,134884,true,false,46.813981,false,4.585324
+1713,Illinois 13th,Illinois,2021,true,true,true,,Republican,126811,187583,true,false,40.335057,Republican,134458,136516,true,false,49.620259,false,9.285202
+1714,Illinois 14th,Illinois,2021,true,true,true,,Republican,137589,200508,true,false,40.695126,Democratic,156035,141164,true,false,52.501859,true,11.806733
+1715,Illinois 15th,Illinois,2021,true,false,false,2016:uncontested;no_named_democratic_candidate,Republican,0,274554,false,false,,Republican,74309,181294,true,false,29.072037,false,
+1716,Illinois 16th,Illinois,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,259722,false,false,,Republican,104569,151254,true,false,40.875527,false,
+1717,Illinois 17th,Illinois,2021,true,true,true,,Democratic,173125,113943,true,false,60.308011,Democratic,142659,87090,true,false,62.093415,false,1.785404
+1718,Illinois 18th,Illinois,2021,true,true,true,,Republican,96770,250506,true,false,27.865444,Republican,95486,195927,true,false,32.766555,false,4.901111
+1801,Indiana 1st,Indiana,2021,true,false,false,2016:no_named_republican_candidate,Democratic,207515,0,false,false,,Democratic,159611,85594,true,false,65.092881,false,
+1802,Indiana 2nd,Indiana,2021,true,true,true,,Republican,102401,164355,true,false,38.387515,Republican,103363,125499,true,false,45.163898,false,6.776383
+1803,Indiana 3rd,Indiana,2021,true,true,true,,Republican,66023,201396,true,false,24.688971,Republican,86610,158927,true,false,35.273706,false,10.584735
+1804,Indiana 4th,Indiana,2021,true,true,true,,Republican,91256,193412,true,false,32.056993,Republican,87824,156539,true,false,35.939975,false,3.882982
+1805,Indiana 5th,Indiana,2021,true,true,true,,Republican,123849,221957,true,false,35.81459,Republican,137142,180035,true,false,43.238318,false,7.423728
+1806,Indiana 6th,Indiana,2021,true,true,true,,Republican,79135,204920,true,false,27.859041,Republican,79430,154260,true,false,33.989473,false,6.130432
+1807,Indiana 7th,Indiana,2021,true,true,true,,Democratic,158739,94456,true,false,62.694366,Democratic,141139,76457,true,false,64.862865,false,2.168499
+1808,Indiana 8th,Indiana,2021,true,true,true,,Republican,93356,187702,true,false,33.21592,Republican,86895,157396,true,false,35.570283,false,2.354363
+1809,Indiana 9th,Indiana,2021,true,true,true,,Republican,130627,174791,true,false,42.769909,Republican,118090,153271,true,false,43.517676,false,0.747767
+1901,Iowa 1st,Iowa,2021,true,true,true,,Republican,177403,206903,true,false,46.161913,Democratic,170342,153442,true,false,52.609765,true,6.447852
+1902,Iowa 2nd,Iowa,2021,true,true,true,,Democratic,198571,170933,true,false,53.739878,Democratic,171446,133287,true,false,56.261055,false,2.521177
+1903,Iowa 3rd,Iowa,2021,true,true,true,,Republican,155002,208598,true,false,42.629813,Democratic,175642,167933,true,false,51.12188,true,8.492067
+1904,Iowa 4th,Iowa,2021,true,true,true,,Republican,142993,226719,true,false,38.676862,Republican,147246,157676,true,false,48.289727,false,9.612865
+2001,Kansas 1st,Kansas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,169992,false,false,,Republican,71558,153082,true,false,31.854523,false,
+2002,Kansas 2nd,Kansas,2021,true,true,true,,Republican,96840,181228,true,false,34.826014,Republican,123859,126098,true,false,49.552123,false,14.726109
+2003,Kansas 3rd,Kansas,2021,true,true,true,,Republican,139300,176022,true,false,44.177063,Democratic,170518,139762,true,false,54.956169,true,10.779106
+2004,Kansas 4th,Kansas,2021,true,true,true,,Republican,81495,166998,true,false,32.795692,Republican,98445,144248,true,false,40.563593,false,7.767901
+2101,Kentucky 1st,Kentucky,2021,true,true,true,,Republican,81710,216959,true,false,27.358045,Republican,78849,172167,true,false,31.411942,false,4.053897
+2102,Kentucky 2nd,Kentucky,2021,true,false,false,2016:uncontested;no_named_democratic_candidate,Republican,0,251825,false,false,,Republican,79964,171700,true,false,31.774112,false,
+2103,Kentucky 3rd,Kentucky,2021,true,true,true,,Democratic,212401,122093,true,false,63.499196,Democratic,173002,101930,true,false,62.925378,false,-0.573818
+2104,Kentucky 4th,Kentucky,2021,true,true,true,,Republican,94065,233922,true,false,28.67949,Republican,90536,162946,true,false,35.716935,false,7.037445
+2105,Kentucky 5th,Kentucky,2021,true,false,false,2016:uncontested;no_named_democratic_candidate,Republican,0,221242,false,false,,Republican,45890,172093,true,false,21.0521,false,
+2106,Kentucky 6th,Kentucky,2021,true,true,true,,Republican,128728,202099,true,false,38.910972,Republican,144736,154468,true,false,48.373685,false,9.462713
+2201,Louisiana 1st,Louisiana,2021,true,true,false,,Republican,63785,243645,true,true,20.747813,Republican,71521,192555,true,true,27.083491,false,6.335678
+2202,Louisiana 2nd,Louisiana,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,284269,0,false,true,,Democratic,190182,0,false,false,,false,
+2203,Louisiana 3rd,Louisiana,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,138433,false,true,,Republican,74713,168263,true,true,30.749127,false,
+2204,Louisiana 4th,Louisiana,2021,true,true,true,,Republican,46579,87370,true,false,34.773683,Republican,72934,139326,true,false,34.36069,false,-0.412993
+2205,Louisiana 5th,Louisiana,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,255662,false,true,,Republican,67118,149018,true,false,31.053596,false,
+2206,Louisiana 6th,Louisiana,2021,true,true,false,,Republican,79202,241075,true,true,24.729219,Republican,76716,186553,true,true,29.139777,false,4.410558
+2301,Maine 1st,Maine,2021,true,false,false,ranked_choice_count_basis_not_standardized,Democratic,227546,164569,true,false,58.030425,Democratic,201195,111188,true,false,64.406514,false,
+2302,Maine 2nd,Maine,2021,true,false,false,ranked_choice_count_basis_not_standardized,Republican,159081,192878,true,false,45.198731,Democratic,142440,138931,true,false,50.623554,true,
+2401,Maryland 1st,Maryland,2021,true,true,true,,Republican,103622,242574,true,false,29.931599,Republican,116631,183662,true,false,38.839067,false,8.907468
+2402,Maryland 2nd,Maryland,2021,true,true,true,,Democratic,192183,102577,true,false,65.199824,Democratic,167201,77782,true,false,68.250042,false,3.050218
+2403,Maryland 3rd,Maryland,2021,true,true,true,,Democratic,214703,115048,true,false,65.110644,Democratic,202407,82774,true,false,70.974925,false,5.864281
+2404,Maryland 4th,Maryland,2021,true,true,true,,Democratic,237519,68670,true,false,77.572676,Democratic,209642,53327,true,false,79.721184,false,2.148508
+2405,Maryland 5th,Maryland,2021,true,true,true,,Democratic,242989,105931,true,false,69.640319,Democratic,213796,82460,true,false,72.165965,false,2.525646
+2406,Maryland 6th,Maryland,2021,true,true,true,,Democratic,185770,133081,true,false,58.262323,Democratic,163346,105209,true,false,60.82404,false,2.561717
+2407,Maryland 7th,Maryland,2021,true,true,true,,Democratic,238838,69775,true,false,77.390777,Democratic,202345,56266,true,false,78.242998,false,0.852221
+2408,Maryland 8th,Maryland,2021,true,true,true,,Democratic,220657,124651,true,false,63.901502,Democratic,217679,96525,true,false,69.279513,false,5.378011
+2501,Massachusetts 1st,Massachusetts,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,235803,0,false,false,,Democratic,211790,0,false,false,,false,
+2502,Massachusetts 2nd,Massachusetts,2021,true,false,false,2016:no_named_republican_candidate,Democratic,275487,0,false,false,,Democratic,191332,93391,true,false,67.199348,false,
+2503,Massachusetts 3rd,Massachusetts,2021,true,true,true,,Democratic,236713,107519,true,false,68.765542,Democratic,173175,93445,true,false,64.951992,false,-3.81355
+2504,Massachusetts 4th,Massachusetts,2021,true,false,false,2018:no_named_republican_candidate,Democratic,265823,113055,true,false,70.160579,Democratic,245289,0,false,false,,false,
+2505,Massachusetts 5th,Massachusetts,2021,true,false,false,2016:no_named_republican_candidate,Democratic,285606,0,false,false,,Democratic,236243,74856,true,false,75.938206,false,
+2506,Massachusetts 6th,Massachusetts,2021,true,false,false,2016:no_named_republican_candidate,Democratic,308923,0,false,false,,Democratic,217703,104798,true,false,67.504597,false,
+2507,Massachusetts 7th,Massachusetts,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,253354,0,false,false,,Democratic,216557,0,false,false,,false,
+2508,Massachusetts 8th,Massachusetts,2021,true,false,false,2018:no_named_republican_candidate,Democratic,271019,102744,true,false,72.510923,Democratic,259159,0,false,false,,false,
+2509,Massachusetts 9th,Massachusetts,2021,true,true,true,,Democratic,211790,127803,true,false,62.365832,Democratic,192347,131463,true,false,59.401192,false,-2.96464
+2601,Michigan 1st,Michigan,2021,true,true,true,,Republican,144334,197777,true,false,42.189231,Republican,145246,187251,true,false,43.683402,false,1.494171
+2602,Michigan 2nd,Michigan,2021,true,true,true,,Republican,110391,212508,true,false,34.18747,Republican,131254,168970,true,false,43.71869,false,9.53122
+2603,Michigan 3rd,Michigan,2021,true,true,true,,Republican,128400,203545,true,false,38.681107,Republican,134185,169107,true,false,44.242842,false,5.561735
+2604,Michigan 4th,Michigan,2021,true,true,true,,Republican,101277,194572,true,false,34.232666,Republican,106540,178510,true,false,37.375899,false,3.143233
+2605,Michigan 5th,Michigan,2021,true,true,true,,Democratic,195279,112102,true,false,63.529951,Democratic,164502,99265,true,false,62.366407,false,-1.163544
+2606,Michigan 6th,Michigan,2021,true,true,true,,Republican,119980,193259,true,false,38.303021,Republican,134082,147436,true,false,47.628216,false,9.325195
+2607,Michigan 7th,Michigan,2021,true,true,true,,Republican,134010,184321,true,false,42.097691,Republican,136330,158730,true,false,46.204162,false,4.106471
+2608,Michigan 8th,Michigan,2021,true,true,true,,Republican,143791,205629,true,false,41.151337,Democratic,172880,159782,true,false,51.968665,true,10.817328
+2609,Michigan 9th,Michigan,2021,true,true,true,,Democratic,199661,128937,true,false,60.761478,Democratic,181734,112123,true,false,61.844366,false,1.082888
+2610,Michigan 10th,Michigan,2021,true,true,true,,Republican,110112,215132,true,false,33.855198,Republican,106061,182808,true,false,36.715951,false,2.860753
+2611,Michigan 11th,Michigan,2021,true,true,true,,Republican,152461,200872,true,false,43.14938,Democratic,181912,158463,true,false,53.444583,true,10.295203
+2612,Michigan 12th,Michigan,2021,true,true,true,,Democratic,211378,96104,true,false,68.744837,Democratic,200588,85115,true,false,70.208573,false,1.463736
+2613,Michigan 13th,Michigan,2021,true,false,false,2018:no_named_republican_candidate,Democratic,198771,40541,true,false,83.059353,Democratic,165355,0,false,false,,false,
+2614,Michigan 14th,Michigan,2021,true,true,true,,Democratic,244135,58103,true,false,80.775746,Democratic,214334,45899,true,false,82.362345,false,1.586599
+2701,Minnesota 1st,Minnesota,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,169071,166524,true,false,50.379475,Republican,144885,146200,true,false,49.774121,,
+2702,Minnesota 2nd,Minnesota,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,167315,173970,true,false,49.025008,Democratic,177958,159344,true,false,52.759248,,
+2703,Minnesota 3rd,Minnesota,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,169238,223075,true,false,43.138514,Democratic,202404,160839,true,false,55.721377,,
+2704,Minnesota 4th,Minnesota,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,203299,121033,true,false,62.682375,Democratic,216865,97747,true,false,68.930937,,
+2705,Minnesota 5th,Minnesota,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,249957,80660,true,false,75.60319,Democratic,267703,74440,true,false,78.243015,,
+2706,Minnesota 6th,Minnesota,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,123010,235385,true,false,34.322465,Republican,122332,192931,true,false,38.803158,,
+2707,Minnesota 7th,Minnesota,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,173572,156944,true,false,52.515461,Democratic,146672,134668,true,false,52.133362,,
+2708,Minnesota 8th,Minnesota,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,179097,177088,true,false,50.282016,Republican,141950,159364,true,false,47.110323,,
+2801,Mississippi 1st,Mississippi,2021,true,true,true,,Republican,83947,206455,true,false,28.90717,Republican,76601,158245,true,false,32.617545,false,3.710375
+2802,Mississippi 2nd,Mississippi,2021,true,false,false,2018:no_named_republican_candidate,Democratic,192343,83542,true,false,69.718542,Democratic,158921,0,false,false,,false,
+2803,Mississippi 3rd,Mississippi,2021,true,true,true,,Republican,96101,209490,true,false,31.447588,Republican,94461,160284,true,false,37.08061,false,5.633022
+2804,Mississippi 4th,Mississippi,2021,true,true,true,,Republican,77505,181323,true,false,29.944596,Republican,68787,152633,true,false,31.066299,false,1.121703
+2901,Missouri 1st,Missouri,2021,true,true,true,,Democratic,236993,62714,true,false,79.074896,Democratic,219781,45867,true,false,82.733919,false,3.659023
+2902,Missouri 2nd,Missouri,2021,true,true,true,,Republican,155689,241954,true,false,39.152959,Republican,177611,192477,true,false,47.991559,false,8.8386
+2903,Missouri 3rd,Missouri,2021,true,true,true,,Republican,102891,249865,true,false,29.167753,Republican,106589,211243,true,false,33.536271,false,4.368518
+2904,Missouri 4th,Missouri,2021,true,true,true,,Republican,92510,225348,true,false,29.104191,Republican,95968,190138,true,false,33.542813,false,4.438622
+2905,Missouri 5th,Missouri,2021,true,true,true,,Democratic,190766,123771,true,false,60.64978,Democratic,175019,101069,true,false,63.392469,false,2.742689
+2906,Missouri 6th,Missouri,2021,true,true,true,,Republican,99692,238388,true,false,29.487695,Republican,97660,199796,true,false,32.831747,false,3.344052
+2907,Missouri 7th,Missouri,2021,true,true,true,,Republican,92756,228692,true,false,28.855678,Republican,89190,196343,true,false,31.236319,false,2.380641
+2908,Missouri 8th,Missouri,2021,true,true,true,,Republican,70009,229792,true,false,23.351823,Republican,66151,194042,true,false,25.42382,false,2.071997
+3000,Montana at-large,Montana,2021,true,true,true,,Republican,205919,285358,true,false,41.91505,Republican,233284,256661,true,false,47.614324,false,5.699274
+3101,Nebraska 1st,Nebraska,2021,true,true,true,,Republican,83467,189771,true,false,30.547362,Republican,93069,141712,true,false,39.640772,false,9.09341
+3102,Nebraska 2nd,Nebraska,2021,true,true,true,,Republican,137602,141066,true,false,49.378472,Republican,121770,126715,true,false,49.00497,false,-0.373502
+3103,Nebraska 3rd,Nebraska,2021,true,false,false,2016:uncontested;no_named_democratic_candidate,Republican,0,226720,false,false,,Republican,49654,163650,true,false,23.278513,false,
+3201,Nevada 1st,Nevada,2021,true,true,true,,Democratic,116537,54174,true,false,68.265665,Democratic,100707,46978,true,false,68.190405,false,-0.07526
+3202,Nevada 2nd,Nevada,2021,true,true,true,,Republican,115722,182676,true,false,38.781091,Republican,120102,167435,true,false,41.769233,false,2.988142
+3203,Nevada 3rd,Nevada,2021,true,true,true,,Democratic,146869,142926,true,false,50.680308,Democratic,148501,122566,true,false,54.783873,false,4.103565
+3204,Nevada 4th,Nevada,2021,true,true,true,,Democratic,128985,118328,true,false,52.154557,Democratic,121962,102748,true,false,54.275288,false,2.120731
+3301,New Hampshire 1st,New Hampshire,2021,true,true,true,,Democratic,162080,157176,true,false,50.768036,Democratic,155884,130996,true,false,54.337702,false,3.569666
+3302,New Hampshire 2nd,New Hampshire,2021,true,true,true,,Democratic,174371,158825,true,false,52.332861,Democratic,155358,117990,true,false,56.835243,false,4.502382
+3401,New Jersey 1st,New Jersey,2021,true,true,true,,Democratic,183231,112388,true,false,61.982146,Democratic,169628,87617,true,false,65.940252,false,3.958106
+3402,New Jersey 2nd,New Jersey,2021,true,true,true,,Republican,110838,176338,true,false,38.595844,Democratic,136685,116866,true,false,53.908287,true,15.312443
+3403,New Jersey 3rd,New Jersey,2021,true,true,true,,Republican,127526,194596,true,false,39.589348,Democratic,153473,149500,true,false,50.655669,true,11.066321
+3404,New Jersey 4th,New Jersey,2021,true,true,true,,Republican,111532,211992,true,false,34.474104,Republican,126766,163065,true,false,43.737902,false,9.263798
+3405,New Jersey 5th,New Jersey,2021,true,true,true,,Democratic,172587,157690,true,false,52.255228,Democratic,169546,128255,true,false,56.93265,false,4.677422
+3406,New Jersey 6th,New Jersey,2021,true,true,true,,Democratic,167895,91908,true,false,64.623965,Democratic,140752,80443,true,false,63.632541,false,-0.991424
+3407,New Jersey 7th,New Jersey,2021,true,true,true,,Republican,148188,185850,true,false,44.362617,Democratic,166985,150785,true,false,52.549013,true,8.186396
+3408,New Jersey 8th,New Jersey,2021,true,true,true,,Democratic,134733,32337,true,false,80.64464,Democratic,119881,28725,true,false,80.670363,false,0.025723
+3409,New Jersey 9th,New Jersey,2021,true,true,true,,Democratic,162642,65376,true,false,71.328579,Democratic,140832,57854,true,false,70.881693,false,-0.446886
+3410,New Jersey 10th,New Jersey,2021,true,true,true,,Democratic,190856,26450,true,false,87.828224,Democratic,175253,20191,true,false,89.669164,false,1.84094
+3411,New Jersey 11th,New Jersey,2021,true,true,true,,Republican,130162,194299,true,false,40.116378,Democratic,183684,136322,true,false,57.400174,true,17.283796
+3412,New Jersey 12th,New Jersey,2021,true,true,true,,Democratic,181430,92407,true,false,66.254743,Democratic,173334,79041,true,false,68.681129,false,2.426386
+3501,New Mexico 1st,New Mexico,2021,true,true,true,,Democratic,181088,96879,true,false,65.147302,Democratic,147336,90507,true,false,61.946746,false,-3.200556
+3502,New Mexico 2nd,New Mexico,2021,true,true,true,,Republican,85232,143515,true,false,37.260379,Democratic,101489,97767,true,false,50.933974,true,13.673595
+3503,New Mexico 3rd,New Mexico,2021,true,true,true,,Democratic,170612,102730,true,false,62.417045,Democratic,155201,76427,true,false,67.004421,false,4.587376
+3601,New York 1st,New York,2021,true,true,true,,Republican,135278,188499,true,false,41.781226,Republican,127991,139027,true,false,47.933473,false,6.152247
+3602,New York 2nd,New York,2021,true,true,true,,Republican,110938,181506,true,false,37.934784,Republican,113074,128078,true,false,46.889099,false,8.954315
+3603,New York 3rd,New York,2021,true,true,true,,Democratic,171775,152304,true,false,53.004051,Democratic,157456,109514,true,false,58.978911,false,5.97486
+3604,New York 4th,New York,2021,true,true,true,,Democratic,186423,126438,true,false,59.586526,Democratic,159535,100571,true,false,61.33461,false,1.748084
+3605,New York 5th,New York,2021,true,false,false,2018:no_named_republican_candidate,Democratic,199815,30312,true,false,86.828143,Democratic,160500,0,false,false,,false,
+3606,New York 6th,New York,2021,true,false,false,2018:no_named_republican_candidate,Democratic,136506,50617,true,false,72.949878,Democratic,111646,0,false,false,,false,
+3607,New York 7th,New York,2021,true,false,false,2018:no_named_republican_candidate,Democratic,172146,17478,true,false,90.782812,Democratic,146687,0,false,false,,false,
+3608,New York 8th,New York,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,214595,0,false,false,,Democratic,180376,0,false,false,,false,
+3609,New York 9th,New York,2021,true,false,false,2016:no_named_republican_candidate,Democratic,214189,0,false,false,,Democratic,181455,20901,true,false,89.671174,false,
+3610,New York 10th,New York,2021,true,true,true,,Democratic,192371,53857,true,false,78.127183,Democratic,173095,37619,true,false,82.146891,false,4.019708
+3611,New York 11th,New York,2021,true,true,true,,Republican,85257,142934,true,false,37.362122,Democratic,101823,89441,true,false,53.236887,true,15.874765
+3612,New York 12th,New York,2021,true,true,true,,Democratic,244358,49398,true,false,83.184003,Democratic,217430,30446,true,false,87.717246,false,4.533243
+3613,New York 13th,New York,2021,true,true,true,,Democratic,207194,16089,true,false,92.794346,Democratic,180035,10268,true,false,94.604394,false,1.810048
+3614,New York 14th,New York,2021,true,true,true,,Democratic,147587,30545,true,false,82.852604,Democratic,110318,19202,true,false,85.17449,false,2.321886
+3615,New York 15th,New York,2021,true,true,true,,Democratic,165688,6129,true,false,96.432833,Democratic,124469,5205,true,false,95.986088,false,-0.446745
+3616,New York 16th,New York,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,209857,0,false,false,,Democratic,182044,0,false,false,,false,
+3617,New York 17th,New York,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,214530,0,false,false,,Democratic,170168,0,false,false,,false,
+3618,New York 18th,New York,2021,true,true,true,,Democratic,162060,129369,true,false,55.608742,Democratic,139564,112035,true,false,55.470809,false,-0.137933
+3619,New York 19th,New York,2021,true,true,true,,Republican,141224,166171,true,false,45.942192,Democratic,147873,132873,true,false,52.671454,true,6.729262
+3620,New York 20th,New York,2021,true,true,true,,Democratic,213021,100738,true,false,67.893192,Democratic,176811,89058,true,false,66.503052,false,-1.39014
+3621,New York 21st,New York,2021,true,true,true,,Republican,82161,177886,true,false,31.594673,Republican,99791,131981,true,false,43.055675,false,11.461002
+3622,New York 22nd,New York,2021,true,true,true,,Republican,114266,129444,true,false,46.886053,Democratic,127715,123242,true,false,50.891189,true,4.005136
+3623,New York 23rd,New York,2021,true,true,true,,Republican,118584,161050,true,false,42.40686,Republican,109932,130323,true,false,45.756384,false,3.349524
+3624,New York 24th,New York,2021,true,true,true,,Republican,119040,182761,true,false,39.443209,Republican,123226,136920,true,false,47.368016,false,7.924807
+3625,New York 25th,New York,2021,true,true,true,,Democratic,182950,142650,true,false,56.188575,Democratic,159244,110736,true,false,58.983628,false,2.795053
+3626,New York 26th,New York,2021,true,true,true,,Democratic,215289,73377,true,false,74.580657,Democratic,169166,61488,true,false,73.341889,false,-1.238768
+3627,New York 27th,New York,2021,true,true,true,,Republican,107832,220885,true,false,32.803901,Republican,139059,140146,true,false,49.80534,false,17.001439
+3701,North Carolina 1st,North Carolina,2021,true,true,true,,Democratic,240661,101567,true,false,70.321832,Democratic,190457,82218,true,false,69.847621,false,-0.474211
+3702,North Carolina 2nd,North Carolina,2021,true,true,true,,Republican,169082,221485,true,false,43.29142,Republican,151977,170072,true,false,47.190645,false,3.899225
+3703,North Carolina 3rd,North Carolina,2021,true,false,false,2018:uncontested;no_named_democratic_candidate,Republican,106170,217531,true,false,32.798787,Republican,0,187901,false,false,,false,
+3704,North Carolina 4th,North Carolina,2021,true,true,true,,Democratic,279380,130161,true,false,68.217834,Democratic,247067,82052,true,false,75.0692,false,6.851366
+3705,North Carolina 5th,North Carolina,2021,true,true,true,,Republican,147887,207625,true,false,41.598315,Republican,120468,159917,true,false,42.965209,false,1.366894
+3706,North Carolina 6th,North Carolina,2021,true,true,true,,Republican,143167,207983,true,false,40.770896,Republican,123651,160709,true,false,43.483964,false,2.713068
+3707,North Carolina 7th,North Carolina,2021,true,true,true,,Republican,135905,211801,true,false,39.086182,Republican,120838,156809,true,false,43.52217,false,4.435988
+3708,North Carolina 8th,North Carolina,2021,true,true,true,,Republican,133182,189863,true,false,41.227074,Republican,114119,141402,true,false,44.6613,false,3.434226
+3709,North Carolina 9th,North Carolina,2021,true,false,false,2018:void,Republican,139041,193452,true,false,41.817722,Other,138341,139246,false,false,,,
+3710,North Carolina 10th,North Carolina,2021,true,true,true,,Republican,128919,220825,true,false,36.860961,Republican,113259,164969,true,false,40.707262,false,3.846301
+3711,North Carolina 11th,North Carolina,2021,true,true,true,,Republican,129103,230405,true,false,35.911023,Republican,116508,178012,true,false,39.558604,false,3.647581
+3712,North Carolina 12th,North Carolina,2021,true,true,true,,Democratic,234115,115185,true,false,67.024048,Democratic,203974,75164,true,false,73.072817,false,6.048769
+3713,North Carolina 13th,North Carolina,2021,true,true,true,,Republican,156049,199443,true,false,43.896628,Republican,130402,147570,true,false,46.911919,false,3.015291
+3800,North Dakota at-large,North Dakota,2021,true,true,true,,Republican,80377,233980,true,false,25.568701,Republican,114377,193568,true,false,37.142022,false,11.573321
+3901,Ohio 1st,Ohio,2021,true,true,true,,Republican,144644,210014,true,false,40.784079,Republican,141118,154409,true,false,47.751305,false,6.967226
+3902,Ohio 2nd,Ohio,2021,true,true,true,,Republican,111694,221193,true,false,33.553128,Republican,119333,166714,true,false,41.717969,false,8.164841
+3903,Ohio 3rd,Ohio,2021,true,true,true,,Democratic,199791,91560,true,false,68.573988,Democratic,181575,65040,true,false,73.626908,false,5.05292
+3904,Ohio 4th,Ohio,2021,true,true,true,,Republican,98981,210227,true,false,32.011138,Republican,89412,167993,true,false,34.735922,false,2.724784
+3905,Ohio 5th,Ohio,2021,true,true,true,,Republican,100392,244599,true,false,29.09989,Republican,99655,176569,true,false,36.077604,false,6.977714
+3906,Ohio 6th,Ohio,2021,true,true,true,,Republican,88780,213975,true,false,29.324041,Republican,76716,172774,true,false,30.749128,false,1.425087
+3907,Ohio 7th,Ohio,2021,true,true,true,,Republican,89638,198221,true,false,31.139551,Republican,107536,153117,true,false,41.256383,false,10.116832
+3908,Ohio 8th,Ohio,2021,true,true,true,,Republican,87794,223833,true,false,28.172783,Republican,87281,173852,true,false,33.423964,false,5.251181
+3909,Ohio 9th,Ohio,2021,true,true,true,,Democratic,193966,88427,true,false,68.686547,Democratic,157219,74670,true,false,67.799249,false,-0.887298
+3910,Ohio 10th,Ohio,2021,true,true,true,,Republican,109981,215724,true,false,33.767059,Republican,118785,157554,true,false,42.985246,false,9.218187
+3911,Ohio 11th,Ohio,2021,true,true,true,,Democratic,242917,59769,true,false,80.253794,Democratic,206138,44486,true,false,82.249904,false,1.99611
+3912,Ohio 12th,Ohio,2021,true,true,true,,Republican,112638,251266,true,false,30.952669,Republican,161251,175677,true,false,47.859187,false,16.906518
+3913,Ohio 13th,Ohio,2021,true,true,true,,Democratic,208610,99377,true,false,67.733378,Democratic,153323,98047,true,false,60.994948,false,-6.73843
+3914,Ohio 14th,Ohio,2021,true,true,true,,Republican,130907,219191,true,false,37.39153,Republican,137549,169809,true,false,44.752048,false,7.360518
+3915,Ohio 15th,Ohio,2021,true,true,true,,Republican,113960,222847,true,false,33.835401,Republican,116112,170593,true,false,40.498771,false,6.66337
+3916,Ohio 16th,Ohio,2021,true,true,true,,Republican,119830,225794,true,false,34.670625,Republican,129681,170029,true,false,43.268827,false,8.598202
+4001,Oklahoma 1st,Oklahoma,2021,true,false,false,2016:candidate_vote_totals_unavailable;uncontested;no_named_democratic_candidate;no_positive_republican_votes,Republican,0,0,false,false,,Republican,103042,150129,true,false,40.700554,false,
+4002,Oklahoma 2nd,Oklahoma,2021,true,true,true,,Republican,62387,189839,true,false,24.734563,Republican,65021,140451,true,false,31.644701,false,6.910138
+4003,Oklahoma 3rd,Oklahoma,2021,true,true,true,,Republican,63090,227525,true,false,21.709134,Republican,61152,172913,true,false,26.126076,false,4.416942
+4004,Oklahoma 4th,Oklahoma,2021,true,true,true,,Republican,76472,204143,true,false,27.251572,Republican,78088,149227,true,false,34.35233,false,7.100758
+4005,Oklahoma 5th,Oklahoma,2021,true,true,true,,Republican,103273,160184,true,false,39.199186,Democratic,121149,117811,true,false,50.698443,true,11.499257
+4101,Oregon 1st,Oregon,2021,true,true,true,,Democratic,225391,139756,true,false,61.726099,Democratic,231198,116446,true,false,66.50424,false,4.778141
+4102,Oregon 2nd,Oregon,2021,true,true,true,,Republican,106640,272952,true,false,28.093321,Republican,145298,207597,true,false,41.173153,false,13.079832
+4103,Oregon 3rd,Oregon,2021,true,false,false,2016:no_named_republican_candidate,Democratic,274687,0,false,false,,Democratic,279019,76187,true,false,78.55132,false,
+4104,Oregon 4th,Oregon,2021,true,true,true,,Democratic,220628,157743,true,false,58.309966,Democratic,208710,152414,true,false,57.794553,false,-0.515413
+4105,Oregon 5th,Oregon,2021,true,true,true,,Democratic,199505,160443,true,false,55.426062,Democratic,197187,149887,true,false,56.814109,false,1.388047
+4201,Pennsylvania 1st,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,245791,53219,true,false,82.201599,Republican,160745,169053,true,false,48.740441,,
+4202,Pennsylvania 2nd,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,322514,35131,true,false,90.177131,Democratic,159600,42382,true,false,79.016942,,
+4203,Pennsylvania 3rd,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified;2016:uncontested;no_named_democratic_candidate,Republican,0,244893,false,false,,Democratic,287610,20387,true,false,93.38078,,
+4204,Pennsylvania 4th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,113372,220628,true,false,33.943713,Democratic,211524,121467,true,false,63.522438,,
+4205,Pennsylvania 5th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,101082,206761,true,false,32.835569,Democratic,198639,106075,true,false,65.188669,,
+4206,Pennsylvania 6th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,155000,207469,true,false,42.762278,Democratic,177704,124124,true,false,58.875916,,
+4207,Pennsylvania 7th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,153824,225678,true,false,40.53312,Democratic,140813,114437,true,false,55.166699,,
+4208,Pennsylvania 8th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,173555,207263,true,false,45.574264,Democratic,135603,112563,true,false,54.642054,,
+4209,Pennsylvania 9th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,107985,186580,true,false,36.659141,Republican,100204,148723,true,false,40.254372,,
+4210,Pennsylvania 10th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,89823,211282,true,false,29.831122,Republican,141668,149365,true,false,48.677641,,
+4211,Pennsylvania 11th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,113800,199421,true,false,36.332174,Republican,113876,163708,true,false,41.023978,,
+4212,Pennsylvania 12th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,137353,221851,true,false,38.23816,Republican,82825,161047,true,false,33.962489,,
+4213,Pennsylvania 13th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified;2016:uncontested;no_named_republican_candidate,Democratic,239316,0,false,false,,Republican,74733,178533,true,false,29.507711,,
+4214,Pennsylvania 14th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,255293,87999,true,false,74.366137,Republican,110051,151386,true,false,42.094654,,
+4215,Pennsylvania 15th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,124129,190618,true,false,39.437707,Republican,78327,165245,true,false,32.157637,,
+4216,Pennsylvania 16th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Republican,134586,168669,true,false,44.380472,Republican,124109,135348,true,false,47.834131,,
+4217,Pennsylvania 17th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified,Democratic,157734,135430,true,false,53.804014,Democratic,183162,142417,true,false,56.257314,,
+4218,Pennsylvania 18th,Pennsylvania,2021,false,false,false,state_plan_changed_not_individually_verified;2016:uncontested;no_named_democratic_candidate;2018:uncontested;no_named_republican_candidate,Republican,0,293684,false,false,,Democratic,231472,0,false,false,,,
+4401,Rhode Island 1st,Rhode Island,2021,true,true,true,,Democratic,130534,71023,true,false,64.762821,Democratic,116099,57567,true,false,66.851888,false,2.089067
+4402,Rhode Island 2nd,Rhode Island,2021,true,true,true,,Democratic,133108,70301,true,false,65.438599,Democratic,126476,72271,true,false,63.636684,false,-1.801915
+4501,South Carolina 1st,South Carolina,2021,true,true,true,,Republican,119779,190410,true,false,38.614844,Democratic,145455,141473,true,false,50.693902,true,12.079058
+4502,South Carolina 2nd,South Carolina,2021,true,true,true,,Republican,109452,183746,true,false,37.330405,Republican,109199,144642,true,false,43.018661,false,5.688256
+4503,South Carolina 3rd,South Carolina,2021,true,true,true,,Republican,72933,196325,true,false,27.08666,Republican,70046,153338,true,false,31.356767,false,4.270107
+4504,South Carolina 4th,South Carolina,2021,true,true,true,,Republican,91676,198648,true,false,31.577135,Republican,89182,145321,true,false,38.030217,false,6.453082
+4505,South Carolina 5th,South Carolina,2021,true,true,true,,Republican,105772,161669,true,false,39.549658,Republican,103129,141757,true,false,42.113065,false,2.563407
+4506,South Carolina 6th,South Carolina,2021,true,true,true,,Democratic,177947,70099,true,false,71.739516,Democratic,144765,58282,true,false,71.296301,false,-0.443215
+4507,South Carolina 7th,South Carolina,2021,true,true,true,,Republican,112744,176468,true,false,38.983168,Republican,96564,142681,true,false,40.361972,false,1.378804
+4600,South Dakota at-large,South Dakota,2021,true,true,true,,Republican,132810,237163,true,false,35.897214,Republican,121033,202695,true,false,37.387251,false,1.490037
+4701,Tennessee 1st,Tennessee,2021,true,true,true,,Republican,39024,198293,true,false,16.443828,Republican,47138,172835,true,false,21.428994,false,4.985166
+4702,Tennessee 2nd,Tennessee,2021,true,true,true,,Republican,68401,212455,true,false,24.354473,Republican,86668,172856,true,false,33.394985,false,9.040512
+4703,Tennessee 3rd,Tennessee,2021,true,true,true,,Republican,76727,176613,true,false,30.286177,Republican,84731,156512,true,false,35.122677,false,4.8365
+4704,Tennessee 4th,Tennessee,2021,true,true,true,,Republican,89141,165796,true,false,34.965894,Republican,78065,147323,true,false,34.635828,false,-0.330066
+4705,Tennessee 5th,Tennessee,2021,true,true,true,,Democratic,171111,102433,true,false,62.553373,Democratic,177923,84317,true,false,67.847392,false,5.294019
+4706,Tennessee 6th,Tennessee,2021,true,true,true,,Republican,61995,202234,true,false,23.462603,Republican,70370,172810,true,false,28.937413,false,5.47481
+4707,Tennessee 7th,Tennessee,2021,true,true,true,,Republican,65226,200407,true,false,24.554931,Republican,81661,170071,true,false,32.439658,false,7.884727
+4708,Tennessee 8th,Tennessee,2021,true,true,true,,Republican,70925,194386,true,false,26.732778,Republican,74755,168030,true,false,30.790617,false,4.057839
+4709,Tennessee 9th,Tennessee,2021,true,true,true,,Democratic,171631,41123,true,false,80.671104,Democratic,145139,34901,true,false,80.614863,false,-0.056241
+4801,Texas 1st,Texas,2021,true,true,true,,Republican,62847,192434,true,false,24.618753,Republican,61263,168165,true,false,26.702495,false,2.083742
+4802,Texas 2nd,Texas,2021,true,true,true,,Republican,100231,168692,true,false,37.271264,Republican,119992,139188,true,false,46.296782,false,9.025518
+4803,Texas 3rd,Texas,2021,true,true,true,,Republican,109420,193684,true,false,36.099821,Republican,138234,169520,true,false,44.917044,false,8.817223
+4804,Texas 4th,Texas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,216643,false,false,,Republican,57400,188667,true,false,23.32698,false,
+4805,Texas 5th,Texas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,155469,false,false,,Republican,78666,130617,true,false,37.588337,false,
+4806,Texas 6th,Texas,2021,true,true,true,,Republican,106667,159444,true,false,40.083649,Republican,116350,135961,true,false,46.113725,false,6.030076
+4807,Texas 7th,Texas,2021,true,true,true,,Republican,111991,143542,true,false,43.826433,Democratic,127959,115642,true,false,52.528109,true,8.701676
+4808,Texas 8th,Texas,2021,true,false,false,2016:uncontested;no_named_democratic_candidate,Republican,0,236379,false,false,,Republican,67930,200619,true,false,25.295198,false,
+4809,Texas 9th,Texas,2021,true,false,false,2018:no_named_republican_candidate,Democratic,152032,36491,true,false,80.643741,Democratic,136256,0,false,false,,false,
+4810,Texas 10th,Texas,2021,true,true,true,,Republican,120170,179221,true,false,40.138147,Republican,144034,157166,true,false,47.820053,false,7.681906
+4811,Texas 11th,Texas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,201871,false,false,,Republican,40631,176603,true,false,18.703794,false,
+4812,Texas 12th,Texas,2021,true,true,true,,Republican,76029,196482,true,false,27.899424,Republican,90994,172557,true,false,34.526145,false,6.626721
+4813,Texas 13th,Texas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,199050,false,false,,Republican,35083,169027,true,false,17.188281,false,
+4814,Texas 14th,Texas,2021,true,true,true,,Republican,99054,160631,true,false,38.143905,Republican,92212,138942,true,false,39.89202,false,1.748115
+4815,Texas 15th,Texas,2021,true,true,true,,Democratic,101712,66877,true,false,60.331338,Democratic,98333,63862,true,false,60.626406,false,0.295068
+4816,Texas 16th,Texas,2021,true,false,false,2016:no_named_republican_candidate,Democratic,150228,0,false,false,,Democratic,124437,49127,true,false,71.695167,false,
+4817,Texas 17th,Texas,2021,true,true,true,,Republican,86603,149417,true,false,36.693077,Republican,98070,134841,true,false,42.106212,false,5.413135
+4818,Texas 18th,Texas,2021,true,true,true,,Democratic,150157,48306,true,false,75.659947,Democratic,138704,38368,true,false,78.331978,false,2.672031
+4819,Texas 19th,Texas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,176314,false,false,,Republican,50039,151946,true,false,24.773622,false,
+4820,Texas 20th,Texas,2021,true,false,false,2016:no_named_republican_candidate;2018:no_named_republican_candidate,Democratic,149640,0,false,false,,Democratic,139038,0,false,false,,false,
+4821,Texas 21st,Texas,2021,true,true,true,,Republican,129765,202967,true,false,38.999856,Republican,168421,177654,true,false,48.666041,false,9.666185
+4822,Texas 22nd,Texas,2021,true,true,true,,Republican,123679,181864,true,false,40.478427,Republican,138153,152750,true,false,47.491088,false,7.012661
+4823,Texas 23rd,Texas,2021,true,true,true,,Republican,107526,110577,true,false,49.30056,Republican,102359,103285,true,false,49.774854,false,0.474294
+4824,Texas 24th,Texas,2021,true,true,true,,Republican,108389,154845,true,false,41.175912,Republican,125231,133317,true,false,48.436267,false,7.260355
+4825,Texas 25th,Texas,2021,true,true,true,,Republican,117073,180988,true,false,39.278201,Republican,136385,163023,true,false,45.551555,false,6.273354
+4826,Texas 26th,Texas,2021,true,true,true,,Republican,94507,211730,true,false,30.860739,Republican,121938,185551,true,false,39.656053,false,8.795314
+4827,Texas 27th,Texas,2021,true,true,true,,Republican,88329,142251,true,false,38.307312,Republican,75929,125118,true,false,37.766791,false,-0.540521
+4828,Texas 28th,Texas,2021,true,false,false,2018:no_named_republican_candidate,Democratic,122086,57740,true,false,67.891184,Democratic,117494,0,false,false,,false,
+4829,Texas 29th,Texas,2021,true,true,true,,Democratic,95649,31646,true,false,75.139636,Democratic,88188,28098,true,false,75.83716,false,0.697524
+4830,Texas 30th,Texas,2021,true,false,false,2018:no_named_republican_candidate,Democratic,170502,41518,true,false,80.417885,Democratic,166784,0,false,false,,false,
+4831,Texas 31st,Texas,2021,true,true,true,,Republican,103852,166060,true,false,38.476244,Republican,136362,144680,true,false,48.52015,false,10.043906
+4832,Texas 32nd,Texas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,162868,false,false,,Democratic,144067,126101,true,false,53.324968,true,
+4833,Texas 33rd,Texas,2021,true,true,true,,Democratic,93147,33222,true,false,73.710325,Democratic,90805,26120,true,false,77.660894,false,3.950569
+4834,Texas 34th,Texas,2021,true,true,true,,Democratic,104638,62323,true,false,62.672121,Democratic,85825,57243,true,false,59.988956,false,-2.683165
+4835,Texas 35th,Texas,2021,true,true,true,,Democratic,124612,62384,true,false,66.638859,Democratic,138278,50553,true,false,73.228442,false,6.589583
+4836,Texas 36th,Texas,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,193675,false,false,,Republican,60908,161048,true,false,27.441475,false,
+4901,Utah 1st,Utah,2021,true,true,true,,Republican,73380,182925,true,false,28.629953,Republican,63308,156692,true,false,28.776364,false,0.146411
+4902,Utah 2nd,Utah,2021,true,true,true,,Republican,93778,170524,true,false,35.481381,Republican,105051,151489,true,false,40.94917,false,5.467789
+4903,Utah 3rd,Utah,2021,true,true,true,,Republican,75716,209589,true,false,26.538617,Republican,70686,174856,true,false,28.787743,false,2.249126
+4904,Utah 4th,Utah,2021,true,true,true,,Republican,113413,147597,true,false,43.451592,Democratic,134964,134270,true,false,50.128884,true,6.677292
+5000,Vermont at-large,Vermont,2021,true,false,false,2016:no_named_republican_candidate,Democratic,264414,0,false,false,,Democratic,188547,70705,true,false,72.727308,false,
+5101,Virginia 1st,Virginia,2021,true,true,true,,Republican,140785,230213,true,false,37.947644,Republican,148464,183250,true,false,44.756628,false,6.808984
+5102,Virginia 2nd,Virginia,2021,true,true,true,,Republican,119440,190475,true,false,38.5396,Democratic,139571,133458,true,false,51.119478,true,12.579878
+5103,Virginia 3rd,Virginia,2021,true,false,false,2018:no_named_republican_candidate,Democratic,208337,103289,true,false,66.85482,Democratic,198615,0,false,false,,false,
+5104,Virginia 4th,Virginia,2021,true,true,true,,Democratic,200136,145731,true,false,57.865017,Democratic,187642,107706,true,false,63.532511,false,5.667494
+5105,Virginia 5th,Virginia,2021,true,true,true,,Republican,148339,207758,true,false,41.656908,Republican,145040,165339,true,false,46.729966,false,5.073058
+5106,Virginia 6th,Virginia,2021,true,true,true,,Republican,112170,225471,true,false,33.221676,Republican,113133,167957,true,false,40.247963,false,7.026287
+5107,Virginia 7th,Virginia,2021,true,true,true,,Republican,160159,218057,true,false,42.345908,Democratic,176079,169295,true,false,50.982124,true,8.636216
+5108,Virginia 8th,Virginia,2021,true,true,true,,Democratic,246653,98387,true,false,71.485335,Democratic,247137,76899,true,false,76.268378,false,4.783043
+5109,Virginia 9th,Virginia,2021,true,true,true,,Republican,87877,212838,true,false,29.222686,Republican,85833,160933,true,false,34.783155,false,5.560469
+5110,Virginia 10th,Virginia,2021,true,true,true,,Republican,187712,210791,true,false,47.104288,Democratic,206356,160841,true,false,56.197627,true,9.093339
+5111,Virginia 11th,Virginia,2021,true,false,false,2016:no_named_republican_candidate,Democratic,247818,0,false,false,,Democratic,219191,83023,true,false,72.528407,false,
+5301,Washington 1st,Washington,2021,true,true,true,,Democratic,193619,155779,true,false,55.415028,Democratic,197209,135534,true,false,59.267663,false,3.852635
+5302,Washington 2nd,Washington,2021,true,false,false,2018:no_named_republican_candidate,Democratic,208314,117094,true,false,64.01625,Democratic,210187,0,false,false,,false,
+5303,Washington 3rd,Washington,2021,true,true,true,,Republican,119820,193457,true,false,38.247302,Republican,145407,161819,true,false,47.329002,false,9.0817
+5304,Washington 4th,Washington,2021,true,false,false,2016:no_named_democratic_candidate,Republican,0,229919,false,true,,Republican,83785,141551,true,false,37.182252,false,
+5305,Washington 5th,Washington,2021,true,true,true,,Republican,130575,192959,true,false,40.358973,Republican,144925,175422,true,false,45.240005,false,4.881032
+5306,Washington 6th,Washington,2021,true,true,true,,Democratic,201718,126116,true,false,61.530531,Democratic,206409,116677,true,false,63.886705,false,2.356174
+5307,Washington 7th,Washington,2021,true,false,false,2016:no_named_republican_candidate,Democratic,378754,0,false,true,,Democratic,329800,64881,true,false,83.561154,false,
+5308,Washington 8th,Washington,2021,true,false,false,2018:no_named_republican_candidate,Republican,127720,193145,true,false,39.804902,Democratic,164089,0,false,false,,true,
+5309,Washington 9th,Washington,2021,true,false,false,2018:no_named_republican_candidate,Democratic,205165,76317,true,false,72.887432,Democratic,240567,0,false,true,,false,
+5310,Washington 10th,Washington,2021,true,true,true,,Democratic,170460,120104,true,false,58.665217,Democratic,166215,103860,true,false,61.544016,false,2.878799
+5401,West Virginia 1st,West Virginia,2021,true,true,true,,Republican,73534,163469,true,false,31.026611,Republican,70217,127997,true,false,35.424844,false,4.398233
+5402,West Virginia 2nd,West Virginia,2021,true,true,true,,Republican,101207,140807,true,false,41.818655,Republican,88011,110504,true,false,44.334685,false,2.51603
+5403,West Virginia 3rd,West Virginia,2021,true,true,true,,Republican,49708,140741,true,false,26.100426,Republican,76340,98645,true,false,43.626597,false,17.526171
+5501,Wisconsin 1st,Wisconsin,2021,true,true,true,,Republican,107003,230072,true,false,31.744567,Republican,137508,177492,true,false,43.653333,false,11.908766
+5502,Wisconsin 2nd,Wisconsin,2021,true,false,false,2018:no_named_republican_candidate,Democratic,273537,124044,true,false,68.80032,Democratic,309117,29,false,false,,false,
+5503,Wisconsin 3rd,Wisconsin,2021,true,false,false,2016:no_named_republican_candidate,Democratic,257401,169,false,false,,Democratic,187888,126980,true,false,59.67199,false,
+5504,Wisconsin 4th,Wisconsin,2021,true,false,false,2016:no_named_republican_candidate,Democratic,220181,0,false,false,,Democratic,206487,59091,true,false,77.75004,false,
+5505,Wisconsin 5th,Wisconsin,2021,true,true,true,,Republican,114477,260706,true,false,30.51231,Republican,138386,225619,true,false,38.01761,false,7.5053
+5506,Wisconsin 6th,Wisconsin,2021,true,true,true,,Republican,133072,204147,true,false,39.461596,Republican,144536,180311,true,false,44.493562,false,5.031966
+5507,Wisconsin 7th,Wisconsin,2021,true,true,true,,Republican,138643,223418,true,false,38.292719,Republican,124310,194061,true,false,39.045642,false,0.752923
+5508,Wisconsin 8th,Wisconsin,2021,true,true,true,,Republican,135684,227892,true,false,37.319295,Republican,119265,209410,true,false,36.286605,false,-1.03269
+5600,Wyoming at-large,Wyoming,2021,true,true,true,,Republican,75466,156176,true,false,32.578721,Republican,59903,127963,true,false,31.886025,false,-0.692696

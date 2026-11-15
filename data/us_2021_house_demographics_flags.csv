@@ -1,0 +1,1401 @@
+constituency_code,district,variable,source_value,reason
+0104,Alabama 4th,C16001_001E,,district_not_in_source_table
+0104,Alabama 4th,C16001_001M,,district_not_in_source_table
+0104,Alabama 4th,C16001_002E,,district_not_in_source_table
+0104,Alabama 4th,C16001_002M,,district_not_in_source_table
+0104,Alabama 4th,C16001_003E,,district_not_in_source_table
+0104,Alabama 4th,C16001_003M,,district_not_in_source_table
+0104,Alabama 4th,C16001_004E,,district_not_in_source_table
+0104,Alabama 4th,C16001_004M,,district_not_in_source_table
+0104,Alabama 4th,C16001_005E,,district_not_in_source_table
+0104,Alabama 4th,C16001_005M,,district_not_in_source_table
+0104,Alabama 4th,C16001_006E,,district_not_in_source_table
+0104,Alabama 4th,C16001_006M,,district_not_in_source_table
+0104,Alabama 4th,C16001_007E,,district_not_in_source_table
+0104,Alabama 4th,C16001_007M,,district_not_in_source_table
+0104,Alabama 4th,C16001_008E,,district_not_in_source_table
+0104,Alabama 4th,C16001_008M,,district_not_in_source_table
+0104,Alabama 4th,C16001_009E,,district_not_in_source_table
+0104,Alabama 4th,C16001_009M,,district_not_in_source_table
+0104,Alabama 4th,C16001_010E,,district_not_in_source_table
+0104,Alabama 4th,C16001_010M,,district_not_in_source_table
+0104,Alabama 4th,C16001_011E,,district_not_in_source_table
+0104,Alabama 4th,C16001_011M,,district_not_in_source_table
+0104,Alabama 4th,C16001_012E,,district_not_in_source_table
+0104,Alabama 4th,C16001_012M,,district_not_in_source_table
+0104,Alabama 4th,C16001_013E,,district_not_in_source_table
+0104,Alabama 4th,C16001_013M,,district_not_in_source_table
+0104,Alabama 4th,C16001_014E,,district_not_in_source_table
+0104,Alabama 4th,C16001_014M,,district_not_in_source_table
+0104,Alabama 4th,C16001_015E,,district_not_in_source_table
+0104,Alabama 4th,C16001_015M,,district_not_in_source_table
+0104,Alabama 4th,C16001_016E,,district_not_in_source_table
+0104,Alabama 4th,C16001_016M,,district_not_in_source_table
+0104,Alabama 4th,C16001_017E,,district_not_in_source_table
+0104,Alabama 4th,C16001_017M,,district_not_in_source_table
+0104,Alabama 4th,C16001_018E,,district_not_in_source_table
+0104,Alabama 4th,C16001_018M,,district_not_in_source_table
+0104,Alabama 4th,C16001_019E,,district_not_in_source_table
+0104,Alabama 4th,C16001_019M,,district_not_in_source_table
+0104,Alabama 4th,C16001_020E,,district_not_in_source_table
+0104,Alabama 4th,C16001_020M,,district_not_in_source_table
+0104,Alabama 4th,C16001_021E,,district_not_in_source_table
+0104,Alabama 4th,C16001_021M,,district_not_in_source_table
+0104,Alabama 4th,C16001_022E,,district_not_in_source_table
+0104,Alabama 4th,C16001_022M,,district_not_in_source_table
+0104,Alabama 4th,C16001_023E,,district_not_in_source_table
+0104,Alabama 4th,C16001_023M,,district_not_in_source_table
+0104,Alabama 4th,C16001_024E,,district_not_in_source_table
+0104,Alabama 4th,C16001_024M,,district_not_in_source_table
+0104,Alabama 4th,C16001_025E,,district_not_in_source_table
+0104,Alabama 4th,C16001_025M,,district_not_in_source_table
+0104,Alabama 4th,C16001_026E,,district_not_in_source_table
+0104,Alabama 4th,C16001_026M,,district_not_in_source_table
+0104,Alabama 4th,C16001_027E,,district_not_in_source_table
+0104,Alabama 4th,C16001_027M,,district_not_in_source_table
+0104,Alabama 4th,C16001_028E,,district_not_in_source_table
+0104,Alabama 4th,C16001_028M,,district_not_in_source_table
+0104,Alabama 4th,C16001_029E,,district_not_in_source_table
+0104,Alabama 4th,C16001_029M,,district_not_in_source_table
+0104,Alabama 4th,C16001_030E,,district_not_in_source_table
+0104,Alabama 4th,C16001_030M,,district_not_in_source_table
+0104,Alabama 4th,C16001_031E,,district_not_in_source_table
+0104,Alabama 4th,C16001_031M,,district_not_in_source_table
+0104,Alabama 4th,C16001_032E,,district_not_in_source_table
+0104,Alabama 4th,C16001_032M,,district_not_in_source_table
+0104,Alabama 4th,C16001_033E,,district_not_in_source_table
+0104,Alabama 4th,C16001_033M,,district_not_in_source_table
+0104,Alabama 4th,C16001_034E,,district_not_in_source_table
+0104,Alabama 4th,C16001_034M,,district_not_in_source_table
+0104,Alabama 4th,C16001_035E,,district_not_in_source_table
+0104,Alabama 4th,C16001_035M,,district_not_in_source_table
+0104,Alabama 4th,C16001_036E,,district_not_in_source_table
+0104,Alabama 4th,C16001_036M,,district_not_in_source_table
+0104,Alabama 4th,C16001_037E,,district_not_in_source_table
+0104,Alabama 4th,C16001_037M,,district_not_in_source_table
+0104,Alabama 4th,C16001_038E,,district_not_in_source_table
+0104,Alabama 4th,C16001_038M,,district_not_in_source_table
+0107,Alabama 7th,C16001_001E,,district_not_in_source_table
+0107,Alabama 7th,C16001_001M,,district_not_in_source_table
+0107,Alabama 7th,C16001_002E,,district_not_in_source_table
+0107,Alabama 7th,C16001_002M,,district_not_in_source_table
+0107,Alabama 7th,C16001_003E,,district_not_in_source_table
+0107,Alabama 7th,C16001_003M,,district_not_in_source_table
+0107,Alabama 7th,C16001_004E,,district_not_in_source_table
+0107,Alabama 7th,C16001_004M,,district_not_in_source_table
+0107,Alabama 7th,C16001_005E,,district_not_in_source_table
+0107,Alabama 7th,C16001_005M,,district_not_in_source_table
+0107,Alabama 7th,C16001_006E,,district_not_in_source_table
+0107,Alabama 7th,C16001_006M,,district_not_in_source_table
+0107,Alabama 7th,C16001_007E,,district_not_in_source_table
+0107,Alabama 7th,C16001_007M,,district_not_in_source_table
+0107,Alabama 7th,C16001_008E,,district_not_in_source_table
+0107,Alabama 7th,C16001_008M,,district_not_in_source_table
+0107,Alabama 7th,C16001_009E,,district_not_in_source_table
+0107,Alabama 7th,C16001_009M,,district_not_in_source_table
+0107,Alabama 7th,C16001_010E,,district_not_in_source_table
+0107,Alabama 7th,C16001_010M,,district_not_in_source_table
+0107,Alabama 7th,C16001_011E,,district_not_in_source_table
+0107,Alabama 7th,C16001_011M,,district_not_in_source_table
+0107,Alabama 7th,C16001_012E,,district_not_in_source_table
+0107,Alabama 7th,C16001_012M,,district_not_in_source_table
+0107,Alabama 7th,C16001_013E,,district_not_in_source_table
+0107,Alabama 7th,C16001_013M,,district_not_in_source_table
+0107,Alabama 7th,C16001_014E,,district_not_in_source_table
+0107,Alabama 7th,C16001_014M,,district_not_in_source_table
+0107,Alabama 7th,C16001_015E,,district_not_in_source_table
+0107,Alabama 7th,C16001_015M,,district_not_in_source_table
+0107,Alabama 7th,C16001_016E,,district_not_in_source_table
+0107,Alabama 7th,C16001_016M,,district_not_in_source_table
+0107,Alabama 7th,C16001_017E,,district_not_in_source_table
+0107,Alabama 7th,C16001_017M,,district_not_in_source_table
+0107,Alabama 7th,C16001_018E,,district_not_in_source_table
+0107,Alabama 7th,C16001_018M,,district_not_in_source_table
+0107,Alabama 7th,C16001_019E,,district_not_in_source_table
+0107,Alabama 7th,C16001_019M,,district_not_in_source_table
+0107,Alabama 7th,C16001_020E,,district_not_in_source_table
+0107,Alabama 7th,C16001_020M,,district_not_in_source_table
+0107,Alabama 7th,C16001_021E,,district_not_in_source_table
+0107,Alabama 7th,C16001_021M,,district_not_in_source_table
+0107,Alabama 7th,C16001_022E,,district_not_in_source_table
+0107,Alabama 7th,C16001_022M,,district_not_in_source_table
+0107,Alabama 7th,C16001_023E,,district_not_in_source_table
+0107,Alabama 7th,C16001_023M,,district_not_in_source_table
+0107,Alabama 7th,C16001_024E,,district_not_in_source_table
+0107,Alabama 7th,C16001_024M,,district_not_in_source_table
+0107,Alabama 7th,C16001_025E,,district_not_in_source_table
+0107,Alabama 7th,C16001_025M,,district_not_in_source_table
+0107,Alabama 7th,C16001_026E,,district_not_in_source_table
+0107,Alabama 7th,C16001_026M,,district_not_in_source_table
+0107,Alabama 7th,C16001_027E,,district_not_in_source_table
+0107,Alabama 7th,C16001_027M,,district_not_in_source_table
+0107,Alabama 7th,C16001_028E,,district_not_in_source_table
+0107,Alabama 7th,C16001_028M,,district_not_in_source_table
+0107,Alabama 7th,C16001_029E,,district_not_in_source_table
+0107,Alabama 7th,C16001_029M,,district_not_in_source_table
+0107,Alabama 7th,C16001_030E,,district_not_in_source_table
+0107,Alabama 7th,C16001_030M,,district_not_in_source_table
+0107,Alabama 7th,C16001_031E,,district_not_in_source_table
+0107,Alabama 7th,C16001_031M,,district_not_in_source_table
+0107,Alabama 7th,C16001_032E,,district_not_in_source_table
+0107,Alabama 7th,C16001_032M,,district_not_in_source_table
+0107,Alabama 7th,C16001_033E,,district_not_in_source_table
+0107,Alabama 7th,C16001_033M,,district_not_in_source_table
+0107,Alabama 7th,C16001_034E,,district_not_in_source_table
+0107,Alabama 7th,C16001_034M,,district_not_in_source_table
+0107,Alabama 7th,C16001_035E,,district_not_in_source_table
+0107,Alabama 7th,C16001_035M,,district_not_in_source_table
+0107,Alabama 7th,C16001_036E,,district_not_in_source_table
+0107,Alabama 7th,C16001_036M,,district_not_in_source_table
+0107,Alabama 7th,C16001_037E,,district_not_in_source_table
+0107,Alabama 7th,C16001_037M,,district_not_in_source_table
+0107,Alabama 7th,C16001_038E,,district_not_in_source_table
+0107,Alabama 7th,C16001_038M,,district_not_in_source_table
+0200,Alaska at-large,B01001_001M,-555555555,controlled_estimate_moe
+0200,Alaska at-large,B03002_001M,-555555555,controlled_estimate_moe
+0200,Alaska at-large,B05002_001M,-555555555,controlled_estimate_moe
+0200,Alaska at-large,B05003_001M,-555555555,controlled_estimate_moe
+0501,Arkansas 1st,C16001_001E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_001M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_002E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_002M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_003E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_003M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_004E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_004M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_005E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_005M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_006E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_006M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_007E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_007M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_008E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_008M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_009E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_009M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_010E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_010M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_011E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_011M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_012E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_012M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_013E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_013M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_014E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_014M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_015E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_015M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_016E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_016M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_017E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_017M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_018E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_018M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_019E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_019M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_020E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_020M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_021E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_021M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_022E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_022M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_023E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_023M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_024E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_024M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_025E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_025M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_026E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_026M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_027E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_027M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_028E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_028M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_029E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_029M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_030E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_030M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_031E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_031M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_032E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_032M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_033E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_033M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_034E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_034M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_035E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_035M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_036E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_036M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_037E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_037M,,district_not_in_source_table
+0501,Arkansas 1st,C16001_038E,,district_not_in_source_table
+0501,Arkansas 1st,C16001_038M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_001E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_001M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_002E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_002M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_003E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_003M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_004E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_004M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_005E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_005M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_006E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_006M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_007E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_007M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_008E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_008M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_009E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_009M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_010E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_010M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_011E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_011M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_012E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_012M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_013E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_013M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_014E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_014M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_015E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_015M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_016E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_016M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_017E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_017M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_018E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_018M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_019E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_019M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_020E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_020M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_021E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_021M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_022E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_022M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_023E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_023M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_024E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_024M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_025E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_025M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_026E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_026M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_027E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_027M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_028E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_028M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_029E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_029M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_030E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_030M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_031E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_031M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_032E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_032M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_033E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_033M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_034E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_034M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_035E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_035M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_036E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_036M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_037E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_037M,,district_not_in_source_table
+0504,Arkansas 4th,C16001_038E,,district_not_in_source_table
+0504,Arkansas 4th,C16001_038M,,district_not_in_source_table
+1000,Delaware at-large,B01001_001M,-555555555,controlled_estimate_moe
+1000,Delaware at-large,B03002_001M,-555555555,controlled_estimate_moe
+1000,Delaware at-large,B03002_002M,-555555555,controlled_estimate_moe
+1000,Delaware at-large,B03002_012M,-555555555,controlled_estimate_moe
+1000,Delaware at-large,B05002_001M,-555555555,controlled_estimate_moe
+1000,Delaware at-large,B05003_001M,-555555555,controlled_estimate_moe
+1314,Georgia 14th,C16001_001E,,district_not_in_source_table
+1314,Georgia 14th,C16001_001M,,district_not_in_source_table
+1314,Georgia 14th,C16001_002E,,district_not_in_source_table
+1314,Georgia 14th,C16001_002M,,district_not_in_source_table
+1314,Georgia 14th,C16001_003E,,district_not_in_source_table
+1314,Georgia 14th,C16001_003M,,district_not_in_source_table
+1314,Georgia 14th,C16001_004E,,district_not_in_source_table
+1314,Georgia 14th,C16001_004M,,district_not_in_source_table
+1314,Georgia 14th,C16001_005E,,district_not_in_source_table
+1314,Georgia 14th,C16001_005M,,district_not_in_source_table
+1314,Georgia 14th,C16001_006E,,district_not_in_source_table
+1314,Georgia 14th,C16001_006M,,district_not_in_source_table
+1314,Georgia 14th,C16001_007E,,district_not_in_source_table
+1314,Georgia 14th,C16001_007M,,district_not_in_source_table
+1314,Georgia 14th,C16001_008E,,district_not_in_source_table
+1314,Georgia 14th,C16001_008M,,district_not_in_source_table
+1314,Georgia 14th,C16001_009E,,district_not_in_source_table
+1314,Georgia 14th,C16001_009M,,district_not_in_source_table
+1314,Georgia 14th,C16001_010E,,district_not_in_source_table
+1314,Georgia 14th,C16001_010M,,district_not_in_source_table
+1314,Georgia 14th,C16001_011E,,district_not_in_source_table
+1314,Georgia 14th,C16001_011M,,district_not_in_source_table
+1314,Georgia 14th,C16001_012E,,district_not_in_source_table
+1314,Georgia 14th,C16001_012M,,district_not_in_source_table
+1314,Georgia 14th,C16001_013E,,district_not_in_source_table
+1314,Georgia 14th,C16001_013M,,district_not_in_source_table
+1314,Georgia 14th,C16001_014E,,district_not_in_source_table
+1314,Georgia 14th,C16001_014M,,district_not_in_source_table
+1314,Georgia 14th,C16001_015E,,district_not_in_source_table
+1314,Georgia 14th,C16001_015M,,district_not_in_source_table
+1314,Georgia 14th,C16001_016E,,district_not_in_source_table
+1314,Georgia 14th,C16001_016M,,district_not_in_source_table
+1314,Georgia 14th,C16001_017E,,district_not_in_source_table
+1314,Georgia 14th,C16001_017M,,district_not_in_source_table
+1314,Georgia 14th,C16001_018E,,district_not_in_source_table
+1314,Georgia 14th,C16001_018M,,district_not_in_source_table
+1314,Georgia 14th,C16001_019E,,district_not_in_source_table
+1314,Georgia 14th,C16001_019M,,district_not_in_source_table
+1314,Georgia 14th,C16001_020E,,district_not_in_source_table
+1314,Georgia 14th,C16001_020M,,district_not_in_source_table
+1314,Georgia 14th,C16001_021E,,district_not_in_source_table
+1314,Georgia 14th,C16001_021M,,district_not_in_source_table
+1314,Georgia 14th,C16001_022E,,district_not_in_source_table
+1314,Georgia 14th,C16001_022M,,district_not_in_source_table
+1314,Georgia 14th,C16001_023E,,district_not_in_source_table
+1314,Georgia 14th,C16001_023M,,district_not_in_source_table
+1314,Georgia 14th,C16001_024E,,district_not_in_source_table
+1314,Georgia 14th,C16001_024M,,district_not_in_source_table
+1314,Georgia 14th,C16001_025E,,district_not_in_source_table
+1314,Georgia 14th,C16001_025M,,district_not_in_source_table
+1314,Georgia 14th,C16001_026E,,district_not_in_source_table
+1314,Georgia 14th,C16001_026M,,district_not_in_source_table
+1314,Georgia 14th,C16001_027E,,district_not_in_source_table
+1314,Georgia 14th,C16001_027M,,district_not_in_source_table
+1314,Georgia 14th,C16001_028E,,district_not_in_source_table
+1314,Georgia 14th,C16001_028M,,district_not_in_source_table
+1314,Georgia 14th,C16001_029E,,district_not_in_source_table
+1314,Georgia 14th,C16001_029M,,district_not_in_source_table
+1314,Georgia 14th,C16001_030E,,district_not_in_source_table
+1314,Georgia 14th,C16001_030M,,district_not_in_source_table
+1314,Georgia 14th,C16001_031E,,district_not_in_source_table
+1314,Georgia 14th,C16001_031M,,district_not_in_source_table
+1314,Georgia 14th,C16001_032E,,district_not_in_source_table
+1314,Georgia 14th,C16001_032M,,district_not_in_source_table
+1314,Georgia 14th,C16001_033E,,district_not_in_source_table
+1314,Georgia 14th,C16001_033M,,district_not_in_source_table
+1314,Georgia 14th,C16001_034E,,district_not_in_source_table
+1314,Georgia 14th,C16001_034M,,district_not_in_source_table
+1314,Georgia 14th,C16001_035E,,district_not_in_source_table
+1314,Georgia 14th,C16001_035M,,district_not_in_source_table
+1314,Georgia 14th,C16001_036E,,district_not_in_source_table
+1314,Georgia 14th,C16001_036M,,district_not_in_source_table
+1314,Georgia 14th,C16001_037E,,district_not_in_source_table
+1314,Georgia 14th,C16001_037M,,district_not_in_source_table
+1314,Georgia 14th,C16001_038E,,district_not_in_source_table
+1314,Georgia 14th,C16001_038M,,district_not_in_source_table
+1715,Illinois 15th,C16001_001E,,district_not_in_source_table
+1715,Illinois 15th,C16001_001M,,district_not_in_source_table
+1715,Illinois 15th,C16001_002E,,district_not_in_source_table
+1715,Illinois 15th,C16001_002M,,district_not_in_source_table
+1715,Illinois 15th,C16001_003E,,district_not_in_source_table
+1715,Illinois 15th,C16001_003M,,district_not_in_source_table
+1715,Illinois 15th,C16001_004E,,district_not_in_source_table
+1715,Illinois 15th,C16001_004M,,district_not_in_source_table
+1715,Illinois 15th,C16001_005E,,district_not_in_source_table
+1715,Illinois 15th,C16001_005M,,district_not_in_source_table
+1715,Illinois 15th,C16001_006E,,district_not_in_source_table
+1715,Illinois 15th,C16001_006M,,district_not_in_source_table
+1715,Illinois 15th,C16001_007E,,district_not_in_source_table
+1715,Illinois 15th,C16001_007M,,district_not_in_source_table
+1715,Illinois 15th,C16001_008E,,district_not_in_source_table
+1715,Illinois 15th,C16001_008M,,district_not_in_source_table
+1715,Illinois 15th,C16001_009E,,district_not_in_source_table
+1715,Illinois 15th,C16001_009M,,district_not_in_source_table
+1715,Illinois 15th,C16001_010E,,district_not_in_source_table
+1715,Illinois 15th,C16001_010M,,district_not_in_source_table
+1715,Illinois 15th,C16001_011E,,district_not_in_source_table
+1715,Illinois 15th,C16001_011M,,district_not_in_source_table
+1715,Illinois 15th,C16001_012E,,district_not_in_source_table
+1715,Illinois 15th,C16001_012M,,district_not_in_source_table
+1715,Illinois 15th,C16001_013E,,district_not_in_source_table
+1715,Illinois 15th,C16001_013M,,district_not_in_source_table
+1715,Illinois 15th,C16001_014E,,district_not_in_source_table
+1715,Illinois 15th,C16001_014M,,district_not_in_source_table
+1715,Illinois 15th,C16001_015E,,district_not_in_source_table
+1715,Illinois 15th,C16001_015M,,district_not_in_source_table
+1715,Illinois 15th,C16001_016E,,district_not_in_source_table
+1715,Illinois 15th,C16001_016M,,district_not_in_source_table
+1715,Illinois 15th,C16001_017E,,district_not_in_source_table
+1715,Illinois 15th,C16001_017M,,district_not_in_source_table
+1715,Illinois 15th,C16001_018E,,district_not_in_source_table
+1715,Illinois 15th,C16001_018M,,district_not_in_source_table
+1715,Illinois 15th,C16001_019E,,district_not_in_source_table
+1715,Illinois 15th,C16001_019M,,district_not_in_source_table
+1715,Illinois 15th,C16001_020E,,district_not_in_source_table
+1715,Illinois 15th,C16001_020M,,district_not_in_source_table
+1715,Illinois 15th,C16001_021E,,district_not_in_source_table
+1715,Illinois 15th,C16001_021M,,district_not_in_source_table
+1715,Illinois 15th,C16001_022E,,district_not_in_source_table
+1715,Illinois 15th,C16001_022M,,district_not_in_source_table
+1715,Illinois 15th,C16001_023E,,district_not_in_source_table
+1715,Illinois 15th,C16001_023M,,district_not_in_source_table
+1715,Illinois 15th,C16001_024E,,district_not_in_source_table
+1715,Illinois 15th,C16001_024M,,district_not_in_source_table
+1715,Illinois 15th,C16001_025E,,district_not_in_source_table
+1715,Illinois 15th,C16001_025M,,district_not_in_source_table
+1715,Illinois 15th,C16001_026E,,district_not_in_source_table
+1715,Illinois 15th,C16001_026M,,district_not_in_source_table
+1715,Illinois 15th,C16001_027E,,district_not_in_source_table
+1715,Illinois 15th,C16001_027M,,district_not_in_source_table
+1715,Illinois 15th,C16001_028E,,district_not_in_source_table
+1715,Illinois 15th,C16001_028M,,district_not_in_source_table
+1715,Illinois 15th,C16001_029E,,district_not_in_source_table
+1715,Illinois 15th,C16001_029M,,district_not_in_source_table
+1715,Illinois 15th,C16001_030E,,district_not_in_source_table
+1715,Illinois 15th,C16001_030M,,district_not_in_source_table
+1715,Illinois 15th,C16001_031E,,district_not_in_source_table
+1715,Illinois 15th,C16001_031M,,district_not_in_source_table
+1715,Illinois 15th,C16001_032E,,district_not_in_source_table
+1715,Illinois 15th,C16001_032M,,district_not_in_source_table
+1715,Illinois 15th,C16001_033E,,district_not_in_source_table
+1715,Illinois 15th,C16001_033M,,district_not_in_source_table
+1715,Illinois 15th,C16001_034E,,district_not_in_source_table
+1715,Illinois 15th,C16001_034M,,district_not_in_source_table
+1715,Illinois 15th,C16001_035E,,district_not_in_source_table
+1715,Illinois 15th,C16001_035M,,district_not_in_source_table
+1715,Illinois 15th,C16001_036E,,district_not_in_source_table
+1715,Illinois 15th,C16001_036M,,district_not_in_source_table
+1715,Illinois 15th,C16001_037E,,district_not_in_source_table
+1715,Illinois 15th,C16001_037M,,district_not_in_source_table
+1715,Illinois 15th,C16001_038E,,district_not_in_source_table
+1715,Illinois 15th,C16001_038M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_001E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_001M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_002E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_002M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_003E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_003M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_004E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_004M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_005E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_005M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_006E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_006M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_007E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_007M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_008E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_008M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_009E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_009M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_010E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_010M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_011E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_011M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_012E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_012M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_013E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_013M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_014E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_014M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_015E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_015M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_016E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_016M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_017E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_017M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_018E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_018M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_019E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_019M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_020E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_020M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_021E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_021M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_022E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_022M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_023E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_023M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_024E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_024M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_025E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_025M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_026E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_026M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_027E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_027M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_028E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_028M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_029E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_029M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_030E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_030M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_031E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_031M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_032E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_032M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_033E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_033M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_034E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_034M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_035E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_035M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_036E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_036M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_037E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_037M,,district_not_in_source_table
+2101,Kentucky 1st,C16001_038E,,district_not_in_source_table
+2101,Kentucky 1st,C16001_038M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_001E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_001M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_002E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_002M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_003E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_003M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_004E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_004M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_005E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_005M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_006E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_006M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_007E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_007M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_008E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_008M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_009E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_009M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_010E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_010M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_011E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_011M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_012E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_012M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_013E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_013M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_014E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_014M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_015E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_015M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_016E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_016M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_017E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_017M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_018E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_018M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_019E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_019M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_020E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_020M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_021E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_021M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_022E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_022M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_023E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_023M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_024E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_024M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_025E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_025M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_026E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_026M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_027E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_027M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_028E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_028M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_029E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_029M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_030E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_030M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_031E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_031M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_032E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_032M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_033E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_033M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_034E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_034M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_035E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_035M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_036E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_036M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_037E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_037M,,district_not_in_source_table
+2105,Kentucky 5th,C16001_038E,,district_not_in_source_table
+2105,Kentucky 5th,C16001_038M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_001E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_001M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_002E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_002M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_003E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_003M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_004E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_004M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_005E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_005M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_006E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_006M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_007E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_007M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_008E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_008M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_009E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_009M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_010E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_010M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_011E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_011M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_012E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_012M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_013E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_013M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_014E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_014M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_015E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_015M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_016E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_016M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_017E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_017M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_018E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_018M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_019E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_019M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_020E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_020M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_021E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_021M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_022E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_022M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_023E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_023M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_024E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_024M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_025E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_025M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_026E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_026M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_027E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_027M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_028E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_028M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_029E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_029M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_030E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_030M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_031E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_031M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_032E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_032M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_033E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_033M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_034E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_034M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_035E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_035M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_036E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_036M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_037E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_037M,,district_not_in_source_table
+2205,Louisiana 5th,C16001_038E,,district_not_in_source_table
+2205,Louisiana 5th,C16001_038M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_001E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_001M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_002E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_002M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_003E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_003M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_004E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_004M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_005E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_005M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_006E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_006M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_007E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_007M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_008E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_008M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_009E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_009M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_010E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_010M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_011E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_011M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_012E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_012M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_013E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_013M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_014E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_014M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_015E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_015M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_016E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_016M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_017E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_017M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_018E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_018M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_019E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_019M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_020E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_020M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_021E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_021M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_022E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_022M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_023E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_023M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_024E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_024M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_025E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_025M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_026E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_026M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_027E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_027M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_028E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_028M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_029E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_029M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_030E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_030M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_031E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_031M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_032E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_032M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_033E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_033M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_034E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_034M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_035E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_035M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_036E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_036M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_037E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_037M,,district_not_in_source_table
+2801,Mississippi 1st,C16001_038E,,district_not_in_source_table
+2801,Mississippi 1st,C16001_038M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_001E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_001M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_002E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_002M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_003E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_003M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_004E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_004M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_005E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_005M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_006E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_006M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_007E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_007M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_008E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_008M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_009E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_009M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_010E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_010M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_011E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_011M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_012E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_012M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_013E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_013M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_014E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_014M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_015E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_015M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_016E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_016M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_017E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_017M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_018E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_018M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_019E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_019M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_020E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_020M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_021E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_021M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_022E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_022M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_023E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_023M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_024E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_024M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_025E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_025M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_026E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_026M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_027E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_027M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_028E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_028M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_029E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_029M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_030E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_030M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_031E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_031M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_032E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_032M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_033E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_033M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_034E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_034M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_035E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_035M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_036E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_036M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_037E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_037M,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_038E,,district_not_in_source_table
+2802,Mississippi 2nd,C16001_038M,,district_not_in_source_table
+3000,Montana at-large,B01001_001M,-555555555,controlled_estimate_moe
+3000,Montana at-large,B03002_001M,-555555555,controlled_estimate_moe
+3000,Montana at-large,B05002_001M,-555555555,controlled_estimate_moe
+3000,Montana at-large,B05003_001M,-555555555,controlled_estimate_moe
+3800,North Dakota at-large,B01001_001M,-555555555,controlled_estimate_moe
+3800,North Dakota at-large,B03002_001M,-555555555,controlled_estimate_moe
+3800,North Dakota at-large,B05002_001M,-555555555,controlled_estimate_moe
+3800,North Dakota at-large,B05003_001M,-555555555,controlled_estimate_moe
+3906,Ohio 6th,C16001_001E,,district_not_in_source_table
+3906,Ohio 6th,C16001_001M,,district_not_in_source_table
+3906,Ohio 6th,C16001_002E,,district_not_in_source_table
+3906,Ohio 6th,C16001_002M,,district_not_in_source_table
+3906,Ohio 6th,C16001_003E,,district_not_in_source_table
+3906,Ohio 6th,C16001_003M,,district_not_in_source_table
+3906,Ohio 6th,C16001_004E,,district_not_in_source_table
+3906,Ohio 6th,C16001_004M,,district_not_in_source_table
+3906,Ohio 6th,C16001_005E,,district_not_in_source_table
+3906,Ohio 6th,C16001_005M,,district_not_in_source_table
+3906,Ohio 6th,C16001_006E,,district_not_in_source_table
+3906,Ohio 6th,C16001_006M,,district_not_in_source_table
+3906,Ohio 6th,C16001_007E,,district_not_in_source_table
+3906,Ohio 6th,C16001_007M,,district_not_in_source_table
+3906,Ohio 6th,C16001_008E,,district_not_in_source_table
+3906,Ohio 6th,C16001_008M,,district_not_in_source_table
+3906,Ohio 6th,C16001_009E,,district_not_in_source_table
+3906,Ohio 6th,C16001_009M,,district_not_in_source_table
+3906,Ohio 6th,C16001_010E,,district_not_in_source_table
+3906,Ohio 6th,C16001_010M,,district_not_in_source_table
+3906,Ohio 6th,C16001_011E,,district_not_in_source_table
+3906,Ohio 6th,C16001_011M,,district_not_in_source_table
+3906,Ohio 6th,C16001_012E,,district_not_in_source_table
+3906,Ohio 6th,C16001_012M,,district_not_in_source_table
+3906,Ohio 6th,C16001_013E,,district_not_in_source_table
+3906,Ohio 6th,C16001_013M,,district_not_in_source_table
+3906,Ohio 6th,C16001_014E,,district_not_in_source_table
+3906,Ohio 6th,C16001_014M,,district_not_in_source_table
+3906,Ohio 6th,C16001_015E,,district_not_in_source_table
+3906,Ohio 6th,C16001_015M,,district_not_in_source_table
+3906,Ohio 6th,C16001_016E,,district_not_in_source_table
+3906,Ohio 6th,C16001_016M,,district_not_in_source_table
+3906,Ohio 6th,C16001_017E,,district_not_in_source_table
+3906,Ohio 6th,C16001_017M,,district_not_in_source_table
+3906,Ohio 6th,C16001_018E,,district_not_in_source_table
+3906,Ohio 6th,C16001_018M,,district_not_in_source_table
+3906,Ohio 6th,C16001_019E,,district_not_in_source_table
+3906,Ohio 6th,C16001_019M,,district_not_in_source_table
+3906,Ohio 6th,C16001_020E,,district_not_in_source_table
+3906,Ohio 6th,C16001_020M,,district_not_in_source_table
+3906,Ohio 6th,C16001_021E,,district_not_in_source_table
+3906,Ohio 6th,C16001_021M,,district_not_in_source_table
+3906,Ohio 6th,C16001_022E,,district_not_in_source_table
+3906,Ohio 6th,C16001_022M,,district_not_in_source_table
+3906,Ohio 6th,C16001_023E,,district_not_in_source_table
+3906,Ohio 6th,C16001_023M,,district_not_in_source_table
+3906,Ohio 6th,C16001_024E,,district_not_in_source_table
+3906,Ohio 6th,C16001_024M,,district_not_in_source_table
+3906,Ohio 6th,C16001_025E,,district_not_in_source_table
+3906,Ohio 6th,C16001_025M,,district_not_in_source_table
+3906,Ohio 6th,C16001_026E,,district_not_in_source_table
+3906,Ohio 6th,C16001_026M,,district_not_in_source_table
+3906,Ohio 6th,C16001_027E,,district_not_in_source_table
+3906,Ohio 6th,C16001_027M,,district_not_in_source_table
+3906,Ohio 6th,C16001_028E,,district_not_in_source_table
+3906,Ohio 6th,C16001_028M,,district_not_in_source_table
+3906,Ohio 6th,C16001_029E,,district_not_in_source_table
+3906,Ohio 6th,C16001_029M,,district_not_in_source_table
+3906,Ohio 6th,C16001_030E,,district_not_in_source_table
+3906,Ohio 6th,C16001_030M,,district_not_in_source_table
+3906,Ohio 6th,C16001_031E,,district_not_in_source_table
+3906,Ohio 6th,C16001_031M,,district_not_in_source_table
+3906,Ohio 6th,C16001_032E,,district_not_in_source_table
+3906,Ohio 6th,C16001_032M,,district_not_in_source_table
+3906,Ohio 6th,C16001_033E,,district_not_in_source_table
+3906,Ohio 6th,C16001_033M,,district_not_in_source_table
+3906,Ohio 6th,C16001_034E,,district_not_in_source_table
+3906,Ohio 6th,C16001_034M,,district_not_in_source_table
+3906,Ohio 6th,C16001_035E,,district_not_in_source_table
+3906,Ohio 6th,C16001_035M,,district_not_in_source_table
+3906,Ohio 6th,C16001_036E,,district_not_in_source_table
+3906,Ohio 6th,C16001_036M,,district_not_in_source_table
+3906,Ohio 6th,C16001_037E,,district_not_in_source_table
+3906,Ohio 6th,C16001_037M,,district_not_in_source_table
+3906,Ohio 6th,C16001_038E,,district_not_in_source_table
+3906,Ohio 6th,C16001_038M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_001E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_001M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_002E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_002M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_003E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_003M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_004E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_004M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_005E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_005M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_006E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_006M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_007E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_007M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_008E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_008M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_009E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_009M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_010E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_010M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_011E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_011M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_012E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_012M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_013E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_013M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_014E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_014M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_015E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_015M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_016E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_016M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_017E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_017M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_018E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_018M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_019E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_019M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_020E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_020M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_021E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_021M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_022E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_022M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_023E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_023M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_024E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_024M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_025E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_025M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_026E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_026M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_027E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_027M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_028E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_028M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_029E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_029M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_030E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_030M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_031E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_031M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_032E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_032M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_033E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_033M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_034E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_034M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_035E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_035M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_036E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_036M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_037E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_037M,,district_not_in_source_table
+4505,South Carolina 5th,C16001_038E,,district_not_in_source_table
+4505,South Carolina 5th,C16001_038M,,district_not_in_source_table
+4600,South Dakota at-large,B01001_001M,-555555555,controlled_estimate_moe
+4600,South Dakota at-large,B03002_001M,-555555555,controlled_estimate_moe
+4600,South Dakota at-large,B05002_001M,-555555555,controlled_estimate_moe
+4600,South Dakota at-large,B05003_001M,-555555555,controlled_estimate_moe
+4815,Texas 15th,C16001_001E,,district_not_in_source_table
+4815,Texas 15th,C16001_001M,,district_not_in_source_table
+4815,Texas 15th,C16001_002E,,district_not_in_source_table
+4815,Texas 15th,C16001_002M,,district_not_in_source_table
+4815,Texas 15th,C16001_003E,,district_not_in_source_table
+4815,Texas 15th,C16001_003M,,district_not_in_source_table
+4815,Texas 15th,C16001_004E,,district_not_in_source_table
+4815,Texas 15th,C16001_004M,,district_not_in_source_table
+4815,Texas 15th,C16001_005E,,district_not_in_source_table
+4815,Texas 15th,C16001_005M,,district_not_in_source_table
+4815,Texas 15th,C16001_006E,,district_not_in_source_table
+4815,Texas 15th,C16001_006M,,district_not_in_source_table
+4815,Texas 15th,C16001_007E,,district_not_in_source_table
+4815,Texas 15th,C16001_007M,,district_not_in_source_table
+4815,Texas 15th,C16001_008E,,district_not_in_source_table
+4815,Texas 15th,C16001_008M,,district_not_in_source_table
+4815,Texas 15th,C16001_009E,,district_not_in_source_table
+4815,Texas 15th,C16001_009M,,district_not_in_source_table
+4815,Texas 15th,C16001_010E,,district_not_in_source_table
+4815,Texas 15th,C16001_010M,,district_not_in_source_table
+4815,Texas 15th,C16001_011E,,district_not_in_source_table
+4815,Texas 15th,C16001_011M,,district_not_in_source_table
+4815,Texas 15th,C16001_012E,,district_not_in_source_table
+4815,Texas 15th,C16001_012M,,district_not_in_source_table
+4815,Texas 15th,C16001_013E,,district_not_in_source_table
+4815,Texas 15th,C16001_013M,,district_not_in_source_table
+4815,Texas 15th,C16001_014E,,district_not_in_source_table
+4815,Texas 15th,C16001_014M,,district_not_in_source_table
+4815,Texas 15th,C16001_015E,,district_not_in_source_table
+4815,Texas 15th,C16001_015M,,district_not_in_source_table
+4815,Texas 15th,C16001_016E,,district_not_in_source_table
+4815,Texas 15th,C16001_016M,,district_not_in_source_table
+4815,Texas 15th,C16001_017E,,district_not_in_source_table
+4815,Texas 15th,C16001_017M,,district_not_in_source_table
+4815,Texas 15th,C16001_018E,,district_not_in_source_table
+4815,Texas 15th,C16001_018M,,district_not_in_source_table
+4815,Texas 15th,C16001_019E,,district_not_in_source_table
+4815,Texas 15th,C16001_019M,,district_not_in_source_table
+4815,Texas 15th,C16001_020E,,district_not_in_source_table
+4815,Texas 15th,C16001_020M,,district_not_in_source_table
+4815,Texas 15th,C16001_021E,,district_not_in_source_table
+4815,Texas 15th,C16001_021M,,district_not_in_source_table
+4815,Texas 15th,C16001_022E,,district_not_in_source_table
+4815,Texas 15th,C16001_022M,,district_not_in_source_table
+4815,Texas 15th,C16001_023E,,district_not_in_source_table
+4815,Texas 15th,C16001_023M,,district_not_in_source_table
+4815,Texas 15th,C16001_024E,,district_not_in_source_table
+4815,Texas 15th,C16001_024M,,district_not_in_source_table
+4815,Texas 15th,C16001_025E,,district_not_in_source_table
+4815,Texas 15th,C16001_025M,,district_not_in_source_table
+4815,Texas 15th,C16001_026E,,district_not_in_source_table
+4815,Texas 15th,C16001_026M,,district_not_in_source_table
+4815,Texas 15th,C16001_027E,,district_not_in_source_table
+4815,Texas 15th,C16001_027M,,district_not_in_source_table
+4815,Texas 15th,C16001_028E,,district_not_in_source_table
+4815,Texas 15th,C16001_028M,,district_not_in_source_table
+4815,Texas 15th,C16001_029E,,district_not_in_source_table
+4815,Texas 15th,C16001_029M,,district_not_in_source_table
+4815,Texas 15th,C16001_030E,,district_not_in_source_table
+4815,Texas 15th,C16001_030M,,district_not_in_source_table
+4815,Texas 15th,C16001_031E,,district_not_in_source_table
+4815,Texas 15th,C16001_031M,,district_not_in_source_table
+4815,Texas 15th,C16001_032E,,district_not_in_source_table
+4815,Texas 15th,C16001_032M,,district_not_in_source_table
+4815,Texas 15th,C16001_033E,,district_not_in_source_table
+4815,Texas 15th,C16001_033M,,district_not_in_source_table
+4815,Texas 15th,C16001_034E,,district_not_in_source_table
+4815,Texas 15th,C16001_034M,,district_not_in_source_table
+4815,Texas 15th,C16001_035E,,district_not_in_source_table
+4815,Texas 15th,C16001_035M,,district_not_in_source_table
+4815,Texas 15th,C16001_036E,,district_not_in_source_table
+4815,Texas 15th,C16001_036M,,district_not_in_source_table
+4815,Texas 15th,C16001_037E,,district_not_in_source_table
+4815,Texas 15th,C16001_037M,,district_not_in_source_table
+4815,Texas 15th,C16001_038E,,district_not_in_source_table
+4815,Texas 15th,C16001_038M,,district_not_in_source_table
+4829,Texas 29th,C16001_001E,,district_not_in_source_table
+4829,Texas 29th,C16001_001M,,district_not_in_source_table
+4829,Texas 29th,C16001_002E,,district_not_in_source_table
+4829,Texas 29th,C16001_002M,,district_not_in_source_table
+4829,Texas 29th,C16001_003E,,district_not_in_source_table
+4829,Texas 29th,C16001_003M,,district_not_in_source_table
+4829,Texas 29th,C16001_004E,,district_not_in_source_table
+4829,Texas 29th,C16001_004M,,district_not_in_source_table
+4829,Texas 29th,C16001_005E,,district_not_in_source_table
+4829,Texas 29th,C16001_005M,,district_not_in_source_table
+4829,Texas 29th,C16001_006E,,district_not_in_source_table
+4829,Texas 29th,C16001_006M,,district_not_in_source_table
+4829,Texas 29th,C16001_007E,,district_not_in_source_table
+4829,Texas 29th,C16001_007M,,district_not_in_source_table
+4829,Texas 29th,C16001_008E,,district_not_in_source_table
+4829,Texas 29th,C16001_008M,,district_not_in_source_table
+4829,Texas 29th,C16001_009E,,district_not_in_source_table
+4829,Texas 29th,C16001_009M,,district_not_in_source_table
+4829,Texas 29th,C16001_010E,,district_not_in_source_table
+4829,Texas 29th,C16001_010M,,district_not_in_source_table
+4829,Texas 29th,C16001_011E,,district_not_in_source_table
+4829,Texas 29th,C16001_011M,,district_not_in_source_table
+4829,Texas 29th,C16001_012E,,district_not_in_source_table
+4829,Texas 29th,C16001_012M,,district_not_in_source_table
+4829,Texas 29th,C16001_013E,,district_not_in_source_table
+4829,Texas 29th,C16001_013M,,district_not_in_source_table
+4829,Texas 29th,C16001_014E,,district_not_in_source_table
+4829,Texas 29th,C16001_014M,,district_not_in_source_table
+4829,Texas 29th,C16001_015E,,district_not_in_source_table
+4829,Texas 29th,C16001_015M,,district_not_in_source_table
+4829,Texas 29th,C16001_016E,,district_not_in_source_table
+4829,Texas 29th,C16001_016M,,district_not_in_source_table
+4829,Texas 29th,C16001_017E,,district_not_in_source_table
+4829,Texas 29th,C16001_017M,,district_not_in_source_table
+4829,Texas 29th,C16001_018E,,district_not_in_source_table
+4829,Texas 29th,C16001_018M,,district_not_in_source_table
+4829,Texas 29th,C16001_019E,,district_not_in_source_table
+4829,Texas 29th,C16001_019M,,district_not_in_source_table
+4829,Texas 29th,C16001_020E,,district_not_in_source_table
+4829,Texas 29th,C16001_020M,,district_not_in_source_table
+4829,Texas 29th,C16001_021E,,district_not_in_source_table
+4829,Texas 29th,C16001_021M,,district_not_in_source_table
+4829,Texas 29th,C16001_022E,,district_not_in_source_table
+4829,Texas 29th,C16001_022M,,district_not_in_source_table
+4829,Texas 29th,C16001_023E,,district_not_in_source_table
+4829,Texas 29th,C16001_023M,,district_not_in_source_table
+4829,Texas 29th,C16001_024E,,district_not_in_source_table
+4829,Texas 29th,C16001_024M,,district_not_in_source_table
+4829,Texas 29th,C16001_025E,,district_not_in_source_table
+4829,Texas 29th,C16001_025M,,district_not_in_source_table
+4829,Texas 29th,C16001_026E,,district_not_in_source_table
+4829,Texas 29th,C16001_026M,,district_not_in_source_table
+4829,Texas 29th,C16001_027E,,district_not_in_source_table
+4829,Texas 29th,C16001_027M,,district_not_in_source_table
+4829,Texas 29th,C16001_028E,,district_not_in_source_table
+4829,Texas 29th,C16001_028M,,district_not_in_source_table
+4829,Texas 29th,C16001_029E,,district_not_in_source_table
+4829,Texas 29th,C16001_029M,,district_not_in_source_table
+4829,Texas 29th,C16001_030E,,district_not_in_source_table
+4829,Texas 29th,C16001_030M,,district_not_in_source_table
+4829,Texas 29th,C16001_031E,,district_not_in_source_table
+4829,Texas 29th,C16001_031M,,district_not_in_source_table
+4829,Texas 29th,C16001_032E,,district_not_in_source_table
+4829,Texas 29th,C16001_032M,,district_not_in_source_table
+4829,Texas 29th,C16001_033E,,district_not_in_source_table
+4829,Texas 29th,C16001_033M,,district_not_in_source_table
+4829,Texas 29th,C16001_034E,,district_not_in_source_table
+4829,Texas 29th,C16001_034M,,district_not_in_source_table
+4829,Texas 29th,C16001_035E,,district_not_in_source_table
+4829,Texas 29th,C16001_035M,,district_not_in_source_table
+4829,Texas 29th,C16001_036E,,district_not_in_source_table
+4829,Texas 29th,C16001_036M,,district_not_in_source_table
+4829,Texas 29th,C16001_037E,,district_not_in_source_table
+4829,Texas 29th,C16001_037M,,district_not_in_source_table
+4829,Texas 29th,C16001_038E,,district_not_in_source_table
+4829,Texas 29th,C16001_038M,,district_not_in_source_table
+4834,Texas 34th,C16001_001E,,district_not_in_source_table
+4834,Texas 34th,C16001_001M,,district_not_in_source_table
+4834,Texas 34th,C16001_002E,,district_not_in_source_table
+4834,Texas 34th,C16001_002M,,district_not_in_source_table
+4834,Texas 34th,C16001_003E,,district_not_in_source_table
+4834,Texas 34th,C16001_003M,,district_not_in_source_table
+4834,Texas 34th,C16001_004E,,district_not_in_source_table
+4834,Texas 34th,C16001_004M,,district_not_in_source_table
+4834,Texas 34th,C16001_005E,,district_not_in_source_table
+4834,Texas 34th,C16001_005M,,district_not_in_source_table
+4834,Texas 34th,C16001_006E,,district_not_in_source_table
+4834,Texas 34th,C16001_006M,,district_not_in_source_table
+4834,Texas 34th,C16001_007E,,district_not_in_source_table
+4834,Texas 34th,C16001_007M,,district_not_in_source_table
+4834,Texas 34th,C16001_008E,,district_not_in_source_table
+4834,Texas 34th,C16001_008M,,district_not_in_source_table
+4834,Texas 34th,C16001_009E,,district_not_in_source_table
+4834,Texas 34th,C16001_009M,,district_not_in_source_table
+4834,Texas 34th,C16001_010E,,district_not_in_source_table
+4834,Texas 34th,C16001_010M,,district_not_in_source_table
+4834,Texas 34th,C16001_011E,,district_not_in_source_table
+4834,Texas 34th,C16001_011M,,district_not_in_source_table
+4834,Texas 34th,C16001_012E,,district_not_in_source_table
+4834,Texas 34th,C16001_012M,,district_not_in_source_table
+4834,Texas 34th,C16001_013E,,district_not_in_source_table
+4834,Texas 34th,C16001_013M,,district_not_in_source_table
+4834,Texas 34th,C16001_014E,,district_not_in_source_table
+4834,Texas 34th,C16001_014M,,district_not_in_source_table
+4834,Texas 34th,C16001_015E,,district_not_in_source_table
+4834,Texas 34th,C16001_015M,,district_not_in_source_table
+4834,Texas 34th,C16001_016E,,district_not_in_source_table
+4834,Texas 34th,C16001_016M,,district_not_in_source_table
+4834,Texas 34th,C16001_017E,,district_not_in_source_table
+4834,Texas 34th,C16001_017M,,district_not_in_source_table
+4834,Texas 34th,C16001_018E,,district_not_in_source_table
+4834,Texas 34th,C16001_018M,,district_not_in_source_table
+4834,Texas 34th,C16001_019E,,district_not_in_source_table
+4834,Texas 34th,C16001_019M,,district_not_in_source_table
+4834,Texas 34th,C16001_020E,,district_not_in_source_table
+4834,Texas 34th,C16001_020M,,district_not_in_source_table
+4834,Texas 34th,C16001_021E,,district_not_in_source_table
+4834,Texas 34th,C16001_021M,,district_not_in_source_table
+4834,Texas 34th,C16001_022E,,district_not_in_source_table
+4834,Texas 34th,C16001_022M,,district_not_in_source_table
+4834,Texas 34th,C16001_023E,,district_not_in_source_table
+4834,Texas 34th,C16001_023M,,district_not_in_source_table
+4834,Texas 34th,C16001_024E,,district_not_in_source_table
+4834,Texas 34th,C16001_024M,,district_not_in_source_table
+4834,Texas 34th,C16001_025E,,district_not_in_source_table
+4834,Texas 34th,C16001_025M,,district_not_in_source_table
+4834,Texas 34th,C16001_026E,,district_not_in_source_table
+4834,Texas 34th,C16001_026M,,district_not_in_source_table
+4834,Texas 34th,C16001_027E,,district_not_in_source_table
+4834,Texas 34th,C16001_027M,,district_not_in_source_table
+4834,Texas 34th,C16001_028E,,district_not_in_source_table
+4834,Texas 34th,C16001_028M,,district_not_in_source_table
+4834,Texas 34th,C16001_029E,,district_not_in_source_table
+4834,Texas 34th,C16001_029M,,district_not_in_source_table
+4834,Texas 34th,C16001_030E,,district_not_in_source_table
+4834,Texas 34th,C16001_030M,,district_not_in_source_table
+4834,Texas 34th,C16001_031E,,district_not_in_source_table
+4834,Texas 34th,C16001_031M,,district_not_in_source_table
+4834,Texas 34th,C16001_032E,,district_not_in_source_table
+4834,Texas 34th,C16001_032M,,district_not_in_source_table
+4834,Texas 34th,C16001_033E,,district_not_in_source_table
+4834,Texas 34th,C16001_033M,,district_not_in_source_table
+4834,Texas 34th,C16001_034E,,district_not_in_source_table
+4834,Texas 34th,C16001_034M,,district_not_in_source_table
+4834,Texas 34th,C16001_035E,,district_not_in_source_table
+4834,Texas 34th,C16001_035M,,district_not_in_source_table
+4834,Texas 34th,C16001_036E,,district_not_in_source_table
+4834,Texas 34th,C16001_036M,,district_not_in_source_table
+4834,Texas 34th,C16001_037E,,district_not_in_source_table
+4834,Texas 34th,C16001_037M,,district_not_in_source_table
+4834,Texas 34th,C16001_038E,,district_not_in_source_table
+4834,Texas 34th,C16001_038M,,district_not_in_source_table
+5000,Vermont at-large,B01001_001M,-555555555,controlled_estimate_moe
+5000,Vermont at-large,B03002_001M,-555555555,controlled_estimate_moe
+5000,Vermont at-large,B05002_001M,-555555555,controlled_estimate_moe
+5000,Vermont at-large,B05003_001M,-555555555,controlled_estimate_moe
+5402,West Virginia 2nd,C16001_001E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_001M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_002E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_002M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_003E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_003M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_004E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_004M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_005E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_005M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_006E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_006M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_007E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_007M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_008E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_008M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_009E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_009M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_010E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_010M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_011E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_011M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_012E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_012M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_013E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_013M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_014E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_014M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_015E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_015M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_016E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_016M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_017E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_017M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_018E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_018M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_019E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_019M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_020E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_020M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_021E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_021M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_022E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_022M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_023E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_023M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_024E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_024M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_025E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_025M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_026E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_026M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_027E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_027M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_028E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_028M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_029E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_029M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_030E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_030M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_031E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_031M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_032E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_032M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_033E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_033M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_034E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_034M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_035E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_035M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_036E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_036M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_037E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_037M,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_038E,,district_not_in_source_table
+5402,West Virginia 2nd,C16001_038M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_001E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_001M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_002E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_002M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_003E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_003M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_004E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_004M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_005E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_005M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_006E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_006M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_007E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_007M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_008E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_008M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_009E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_009M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_010E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_010M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_011E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_011M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_012E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_012M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_013E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_013M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_014E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_014M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_015E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_015M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_016E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_016M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_017E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_017M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_018E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_018M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_019E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_019M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_020E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_020M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_021E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_021M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_022E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_022M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_023E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_023M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_024E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_024M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_025E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_025M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_026E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_026M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_027E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_027M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_028E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_028M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_029E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_029M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_030E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_030M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_031E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_031M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_032E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_032M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_033E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_033M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_034E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_034M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_035E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_035M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_036E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_036M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_037E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_037M,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_038E,,district_not_in_source_table
+5403,West Virginia 3rd,C16001_038M,,district_not_in_source_table
+5600,Wyoming at-large,B01001_001M,-555555555,controlled_estimate_moe
+5600,Wyoming at-large,B03002_001M,-555555555,controlled_estimate_moe
+5600,Wyoming at-large,B03002_002M,-555555555,controlled_estimate_moe
+5600,Wyoming at-large,B03002_012M,-555555555,controlled_estimate_moe
+5600,Wyoming at-large,B05002_001M,-555555555,controlled_estimate_moe
+5600,Wyoming at-large,B05003_001M,-555555555,controlled_estimate_moe

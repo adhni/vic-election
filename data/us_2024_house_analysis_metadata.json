@@ -1,0 +1,746 @@
+{
+  "version": 1,
+  "election_key": "us-house-2024",
+  "election_year": 2024,
+  "acs_year": 2024,
+  "congress": 119,
+  "district_count": 435,
+  "join_key": "constituency_code; four-digit string; state FIPS + district, 00 for at-large",
+  "inputs": [
+    {
+      "file": "us_2024_house_fpp.csv",
+      "bytes": 304372,
+      "sha256": "7d5ce57a74fd98299cb3f106631edba23a701d4e73aee5dd6ef1020c8ce9541c"
+    },
+    {
+      "file": "us_2024_house_demographics.csv",
+      "bytes": 337789,
+      "sha256": "1cd2b9e150bfc7dd5b4fdf2d67726fe2affcfaeed153881a3e45112761fbde1b"
+    },
+    {
+      "file": "us_2024_house_demographics_metadata.json",
+      "bytes": 213865,
+      "sha256": "56e2b5febc3bb3a5e8da8b7eacad5dfeaff554ce88ed3dd5528adf3c75a0d9e5"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "us_2024_house_analysis.csv",
+      "bytes": 419504,
+      "sha256": "d9677e6d5adea5c655d74aeea0fc152c227f00f3006789c6daf6649d9340b15c"
+    },
+    {
+      "file": "us_2024_house_analysis_correlations.csv",
+      "bytes": 2544,
+      "sha256": "4fd7e432d986566b1260d48c9525ba84870320e01977245e493e650937989742"
+    }
+  ],
+  "report": {
+    "file": "us_house_2024_analysis.md",
+    "bytes": 5741,
+    "sha256": "89feea80e160ae5ceb59992cca557ce3daf6fbaf142b874d87637ab1275c0a10"
+  },
+  "demographic_metrics": {
+    "population": {
+      "label": "Total resident population",
+      "unit": "people",
+      "numerator": [
+        "B01001_001E"
+      ],
+      "denominator": [],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "sum(numerator)"
+    },
+    "median_age": {
+      "label": "Median age",
+      "unit": "years",
+      "numerator": [
+        "B01002_001E"
+      ],
+      "denominator": [],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "sum(numerator)"
+    },
+    "female_pct": {
+      "label": "Female share of residents",
+      "unit": "percent",
+      "numerator": [
+        "B01001_026E"
+      ],
+      "denominator": [
+        "B01001_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "under_18_pct": {
+      "label": "Residents under 18",
+      "unit": "percent",
+      "numerator": [
+        "B01001_003E",
+        "B01001_004E",
+        "B01001_005E",
+        "B01001_006E",
+        "B01001_027E",
+        "B01001_028E",
+        "B01001_029E",
+        "B01001_030E"
+      ],
+      "denominator": [
+        "B01001_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "age_18_29_pct": {
+      "label": "Residents aged 18–29",
+      "unit": "percent",
+      "numerator": [
+        "B01001_007E",
+        "B01001_008E",
+        "B01001_009E",
+        "B01001_010E",
+        "B01001_011E",
+        "B01001_031E",
+        "B01001_032E",
+        "B01001_033E",
+        "B01001_034E",
+        "B01001_035E"
+      ],
+      "denominator": [
+        "B01001_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "age_65_plus_pct": {
+      "label": "Residents aged 65 and over",
+      "unit": "percent",
+      "numerator": [
+        "B01001_020E",
+        "B01001_021E",
+        "B01001_022E",
+        "B01001_023E",
+        "B01001_024E",
+        "B01001_025E",
+        "B01001_044E",
+        "B01001_045E",
+        "B01001_046E",
+        "B01001_047E",
+        "B01001_048E",
+        "B01001_049E"
+      ],
+      "denominator": [
+        "B01001_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "white_non_hispanic_pct": {
+      "label": "Non-Hispanic White alone residents",
+      "unit": "percent",
+      "numerator": [
+        "B03002_003E"
+      ],
+      "denominator": [
+        "B03002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "black_non_hispanic_pct": {
+      "label": "Non-Hispanic Black alone residents",
+      "unit": "percent",
+      "numerator": [
+        "B03002_004E"
+      ],
+      "denominator": [
+        "B03002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "asian_non_hispanic_pct": {
+      "label": "Non-Hispanic Asian alone residents",
+      "unit": "percent",
+      "numerator": [
+        "B03002_006E"
+      ],
+      "denominator": [
+        "B03002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "native_non_hispanic_pct": {
+      "label": "Non-Hispanic American Indian / Alaska Native alone residents",
+      "unit": "percent",
+      "numerator": [
+        "B03002_005E"
+      ],
+      "denominator": [
+        "B03002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "pacific_non_hispanic_pct": {
+      "label": "Non-Hispanic Native Hawaiian / Pacific Islander alone residents",
+      "unit": "percent",
+      "numerator": [
+        "B03002_007E"
+      ],
+      "denominator": [
+        "B03002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "other_race_non_hispanic_pct": {
+      "label": "Non-Hispanic residents of some other race alone",
+      "unit": "percent",
+      "numerator": [
+        "B03002_008E"
+      ],
+      "denominator": [
+        "B03002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "multiracial_non_hispanic_pct": {
+      "label": "Non-Hispanic residents of two or more races",
+      "unit": "percent",
+      "numerator": [
+        "B03002_009E"
+      ],
+      "denominator": [
+        "B03002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "hispanic_pct": {
+      "label": "Hispanic / Latino residents of any race",
+      "unit": "percent",
+      "numerator": [
+        "B03002_012E"
+      ],
+      "denominator": [
+        "B03002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "foreign_born_pct": {
+      "label": "Foreign-born residents",
+      "unit": "percent",
+      "numerator": [
+        "B05002_013E"
+      ],
+      "denominator": [
+        "B05002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "noncitizen_pct": {
+      "label": "Residents who are not U.S. citizens",
+      "unit": "percent",
+      "numerator": [
+        "B05002_021E"
+      ],
+      "denominator": [
+        "B05002_001E"
+      ],
+      "source_universes": [
+        "Total population"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "citizen_voting_age_population": {
+      "label": "U.S. citizens aged 18 and over (not registered or eligible voters)",
+      "unit": "people",
+      "numerator": [
+        "B29001_001E"
+      ],
+      "denominator": [],
+      "source_universes": [
+        "Citizens 18 years and over"
+      ],
+      "formula": "sum(numerator)"
+    },
+    "cvap_age_18_29_pct": {
+      "label": "Citizens aged 18–29 as a share of citizens aged 18+",
+      "unit": "percent",
+      "numerator": [
+        "B29001_002E"
+      ],
+      "denominator": [
+        "B29001_001E"
+      ],
+      "source_universes": [
+        "Citizens 18 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "cvap_age_65_plus_pct": {
+      "label": "Citizens aged 65+ as a share of citizens aged 18+",
+      "unit": "percent",
+      "numerator": [
+        "B29001_005E"
+      ],
+      "denominator": [
+        "B29001_001E"
+      ],
+      "source_universes": [
+        "Citizens 18 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "bachelors_plus_pct": {
+      "label": "Adults 25+ with a bachelor's degree or higher",
+      "unit": "percent",
+      "numerator": [
+        "B15003_022E",
+        "B15003_023E",
+        "B15003_024E",
+        "B15003_025E"
+      ],
+      "denominator": [
+        "B15003_001E"
+      ],
+      "source_universes": [
+        "Population 25 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "graduate_degree_pct": {
+      "label": "Adults 25+ with a graduate or professional degree",
+      "unit": "percent",
+      "numerator": [
+        "B15003_023E",
+        "B15003_024E",
+        "B15003_025E"
+      ],
+      "denominator": [
+        "B15003_001E"
+      ],
+      "source_universes": [
+        "Population 25 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "less_than_high_school_pct": {
+      "label": "Adults 25+ without a high-school diploma or equivalent",
+      "unit": "percent",
+      "numerator": [
+        "B15003_002E",
+        "B15003_003E",
+        "B15003_004E",
+        "B15003_005E",
+        "B15003_006E",
+        "B15003_007E",
+        "B15003_008E",
+        "B15003_009E",
+        "B15003_010E",
+        "B15003_011E",
+        "B15003_012E",
+        "B15003_013E",
+        "B15003_014E",
+        "B15003_015E",
+        "B15003_016E"
+      ],
+      "denominator": [
+        "B15003_001E"
+      ],
+      "source_universes": [
+        "Population 25 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "high_school_only_pct": {
+      "label": "Adults 25+ with high-school diploma / GED as highest attainment",
+      "unit": "percent",
+      "numerator": [
+        "B15003_017E",
+        "B15003_018E"
+      ],
+      "denominator": [
+        "B15003_001E"
+      ],
+      "source_universes": [
+        "Population 25 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "english_only_pct": {
+      "label": "Residents 5+ speaking only English at home",
+      "unit": "percent",
+      "numerator": [
+        "C16001_002E"
+      ],
+      "denominator": [
+        "C16001_001E"
+      ],
+      "source_universes": [
+        "Population 5 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "spanish_at_home_pct": {
+      "label": "Residents 5+ speaking Spanish at home",
+      "unit": "percent",
+      "numerator": [
+        "C16001_003E"
+      ],
+      "denominator": [
+        "C16001_001E"
+      ],
+      "source_universes": [
+        "Population 5 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "median_household_income": {
+      "label": "Median household income in 2024 inflation-adjusted dollars",
+      "unit": "USD_2024",
+      "numerator": [
+        "B19013_001E"
+      ],
+      "denominator": [],
+      "source_universes": [
+        "Households"
+      ],
+      "formula": "sum(numerator)"
+    },
+    "household_income_under_50k_pct": {
+      "label": "Households with income below $50,000",
+      "unit": "percent",
+      "numerator": [
+        "B19001_002E",
+        "B19001_003E",
+        "B19001_004E",
+        "B19001_005E",
+        "B19001_006E",
+        "B19001_007E",
+        "B19001_008E",
+        "B19001_009E",
+        "B19001_010E"
+      ],
+      "denominator": [
+        "B19001_001E"
+      ],
+      "source_universes": [
+        "Households"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "household_income_100k_plus_pct": {
+      "label": "Households with income of $100,000 or more",
+      "unit": "percent",
+      "numerator": [
+        "B19001_014E",
+        "B19001_015E",
+        "B19001_016E",
+        "B19001_017E"
+      ],
+      "denominator": [
+        "B19001_001E"
+      ],
+      "source_universes": [
+        "Households"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "poverty_pct": {
+      "label": "People below the poverty level, among those with poverty status determined",
+      "unit": "percent",
+      "numerator": [
+        "B17001_002E"
+      ],
+      "denominator": [
+        "B17001_001E"
+      ],
+      "source_universes": [
+        "Population for whom poverty status is determined"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "unemployment_pct": {
+      "label": "Unemployed share of the civilian labor force aged 16+",
+      "unit": "percent",
+      "numerator": [
+        "B23025_005E"
+      ],
+      "denominator": [
+        "B23025_003E"
+      ],
+      "source_universes": [
+        "Population 16 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "labor_force_participation_pct": {
+      "label": "Residents 16+ in the labor force, including Armed Forces",
+      "unit": "percent",
+      "numerator": [
+        "B23025_002E"
+      ],
+      "denominator": [
+        "B23025_001E"
+      ],
+      "source_universes": [
+        "Population 16 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "homeownership_pct": {
+      "label": "Owner-occupied share of occupied housing units",
+      "unit": "percent",
+      "numerator": [
+        "B25003_002E"
+      ],
+      "denominator": [
+        "B25003_001E"
+      ],
+      "source_universes": [
+        "Occupied housing units"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "renter_pct": {
+      "label": "Renter-occupied share of occupied housing units",
+      "unit": "percent",
+      "numerator": [
+        "B25003_003E"
+      ],
+      "denominator": [
+        "B25003_001E"
+      ],
+      "source_universes": [
+        "Occupied housing units"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "median_gross_rent": {
+      "label": "Median monthly gross rent for renter-occupied units paying cash rent",
+      "unit": "USD_2024_per_month",
+      "numerator": [
+        "B25064_001E"
+      ],
+      "denominator": [],
+      "source_universes": [
+        "Renter-occupied housing units paying cash rent"
+      ],
+      "formula": "sum(numerator)"
+    },
+    "median_home_value": {
+      "label": "Median value of owner-occupied housing units",
+      "unit": "USD_2024",
+      "numerator": [
+        "B25077_001E"
+      ],
+      "denominator": [],
+      "source_universes": [
+        "Owner-occupied housing units"
+      ],
+      "formula": "sum(numerator)"
+    },
+    "households": {
+      "label": "Total households",
+      "unit": "households",
+      "numerator": [
+        "B11001_001E"
+      ],
+      "denominator": [],
+      "source_universes": [
+        "Households"
+      ],
+      "formula": "sum(numerator)"
+    },
+    "married_couple_households_pct": {
+      "label": "Married-couple family households as a share of all households",
+      "unit": "percent",
+      "numerator": [
+        "B11001_003E"
+      ],
+      "denominator": [
+        "B11001_001E"
+      ],
+      "source_universes": [
+        "Households"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "living_alone_households_pct": {
+      "label": "One-person households as a share of all households",
+      "unit": "percent",
+      "numerator": [
+        "B11001_008E"
+      ],
+      "denominator": [
+        "B11001_001E"
+      ],
+      "source_universes": [
+        "Households"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "work_from_home_pct": {
+      "label": "Workers 16+ who worked from home",
+      "unit": "percent",
+      "numerator": [
+        "C08301_011E"
+      ],
+      "denominator": [
+        "C08301_001E"
+      ],
+      "source_universes": [
+        "Workers 16 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "public_transit_commute_pct": {
+      "label": "Workers 16+ commuting by public transportation, excluding taxicab",
+      "unit": "percent",
+      "numerator": [
+        "C08301_008E"
+      ],
+      "denominator": [
+        "C08301_001E"
+      ],
+      "source_universes": [
+        "Workers 16 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "manufacturing_employment_pct": {
+      "label": "Civilian employed residents 16+ in manufacturing",
+      "unit": "percent",
+      "numerator": [
+        "C24030_007E",
+        "C24030_034E"
+      ],
+      "denominator": [
+        "C24030_001E"
+      ],
+      "source_universes": [
+        "Civilian employed population 16 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    },
+    "agriculture_mining_employment_pct": {
+      "label": "Civilian employed residents 16+ in agriculture, forestry, fishing and hunting, and mining",
+      "unit": "percent",
+      "numerator": [
+        "C24030_003E",
+        "C24030_030E"
+      ],
+      "denominator": [
+        "C24030_001E"
+      ],
+      "source_universes": [
+        "Civilian employed population 16 years and over"
+      ],
+      "formula": "100 * sum(numerator) / sum(denominator)"
+    }
+  },
+  "vote_groups": {
+    "democratic": [
+      "Democratic",
+      "Write-in (Democratic)"
+    ],
+    "republican": [
+      "Republican",
+      "Write-in (Republican)"
+    ],
+    "other": "Every other source candidate_party value; no inferred affiliation"
+  },
+  "result_fields": {
+    "candidate_count": "All source candidate rows, including generic / named write-ins; candidates are already consolidated across fusion ballot lines by the election builder.",
+    "democratic_named_candidate_count": "Rows labelled exactly Democratic; separately labelled write-ins do not count as named-party nominees.",
+    "republican_named_candidate_count": "Rows labelled exactly Republican; separately labelled write-ins do not count as named-party nominees.",
+    "democratic_votes": "Sum of Democratic and Write-in (Democratic) candidate totals.",
+    "republican_votes": "Sum of Republican and Write-in (Republican) candidate totals.",
+    "other_votes": "All remaining candidate votes, including unclassified write-ins.",
+    "democratic_write_in_votes": "Subset of democratic_votes explicitly labelled Write-in (Democratic).",
+    "republican_write_in_votes": "Subset of republican_votes explicitly labelled Write-in (Republican).",
+    "total_candidate_votes": "D + R + Other; reconciles to source formal_votes; zero can mean no reported poll in an unopposed seat.",
+    "source_total_votes": "Source total_votes, including informal votes; not the denominator of candidate vote shares.",
+    "source_informal_votes": "Source informal_votes, retained without reinterpreting them as candidate votes.",
+    "votes_reported": "true when total_candidate_votes > 0; false for source contests with no reported candidate totals.",
+    "democratic_vote_share_pct": "100 * democratic_votes / total_candidate_votes; blank for zero total.",
+    "republican_vote_share_pct": "100 * republican_votes / total_candidate_votes; blank for zero total.",
+    "other_vote_share_pct": "100 * other_votes / total_candidate_votes; blank for zero total.",
+    "democratic_two_party_share_pct": "100 * D / (D + R), only when two_party_analysis_eligible is true; otherwise blank.",
+    "democratic_two_party_margin_pp": "100 * (D - R) / (D + R), only for eligible contests; signed percentage points.",
+    "candidate_margin_votes": "Highest minus second-highest source candidate total, irrespective of party; blank for one-candidate or zero-total contests.",
+    "candidate_margin_pct": "100 * candidate_margin_votes / total_candidate_votes; not the D–R party margin or an RCV reconstruction.",
+    "two_party_analysis_eligible": "Official result, at least one named D and one named R, positive D/R vote totals, and reported candidate totals.",
+    "two_party_exclusion_reason": "Semicolon-separated source-status, missing-candidate or unavailable-vote reasons; blank for eligible contests.",
+    "multiple_major_party_candidates": "More than one named Democratic or Republican candidate, regardless of eligibility.",
+    "ranked_choice_state": "Source state is Alaska or Maine, whose House voting-system exception is documented in the explorer definition; source published totals remain unchanged.",
+    "demographic_missing_metric_count": "Count of blank demographic indicators, excluding MOE fields.",
+    "demographic_missing_metrics": "Semicolon-separated names of blank demographic indicators; no imputation.",
+    "election_key": "us-house-2024",
+    "election_year": "2024",
+    "elected_member": "Source elected_member",
+    "elected_party": "Source elected_party",
+    "contest_status": "Source contest_status"
+  },
+  "samples": {
+    "both_major_parties": {
+      "n": 397,
+      "definition": "two_party_analysis_eligible=true"
+    },
+    "single_matchup_excluding_ranked_choice_states": {
+      "n": 389,
+      "definition": "Eligible; no multiple named major-party candidates; exclude Alaska and Maine"
+    }
+  },
+  "exploratory_metrics": [
+    "bachelors_plus_pct",
+    "median_household_income",
+    "poverty_pct",
+    "median_age",
+    "age_65_plus_pct",
+    "homeownership_pct",
+    "white_non_hispanic_pct",
+    "black_non_hispanic_pct",
+    "asian_non_hispanic_pct",
+    "hispanic_pct"
+  ],
+  "correlation_method": "Equal-weight districts; pairwise complete cases; Pearson on values; Spearman on average ranks; within-state Pearson on state-demeaned values. n counts districts. No significance claims or measurement-error adjustment.",
+  "interpretation": "District associations, not causal effects or individual voting behavior. No turnout is inferred. Candidate totals retain the source count basis."
+}

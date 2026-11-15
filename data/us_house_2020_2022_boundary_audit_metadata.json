@@ -1,0 +1,278 @@
+{
+  "period": "2020-2022",
+  "districts_audited": 435,
+  "verified_unchanged_districts": 6,
+  "method": "Compare identical 2020 Census block sets against every previous district in the state. Changed sets remain changed even when overlap is high. This does not compare votes or estimate vote transfers.",
+  "baseline_vintage": "Census 116th districts match 2020 election districts outside North Carolina. NC uses its legislature's enacted-2019 map for the 117th Congress.",
+  "north_carolina_method": "Compare all 13 actual 2020 NC polygons with each of 14 Census 2022 polygons in equal-area EPSG:5070. Best intersection/union overlap is below 95% for each. No generalized-polygon approximate equality is accepted.",
+  "split_block_limit": "Whole-block tabulation equivalence is not a general proof of identical legal boundaries. Census lists one split 118th block in Colorado (07/08); neither district matches the earlier membership set.",
+  "references": [
+    "https://www.census.gov/geographies/reference-files/2020/geo/block-assignment-files.html",
+    "https://www.census.gov/geographies/mapping-files/2023/dec/rdo/118-congressional-district-bef.html",
+    "https://www.census.gov/programs-surveys/geography/guidance/geo-areas/congressional-dist.html",
+    "https://www.ncleg.gov/Redistricting"
+  ],
+  "sources": [
+    {
+      "file": "cd118.zip",
+      "url": "https://www2.census.gov/programs-surveys/decennial/rdo/mapping-files/2023/118-congressional-district-bef/cd118.zip",
+      "sha256": "a2f38d0dd7c207fa144a88b66df9f59f8a6e5c27e932fbd4a32d1bcf587c5763"
+    },
+    {
+      "file": "BlockAssign_ST01_AL.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST01_AL.zip",
+      "sha256": "4031d99d9acc6b0d40fb72123ed2029dc1e66525c6fd1d87ef01228ada18411d"
+    },
+    {
+      "file": "BlockAssign_ST02_AK.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST02_AK.zip",
+      "sha256": "686f4283976326621be7173a21036ba2ea65e0b08346e6aac0952718d23b31db"
+    },
+    {
+      "file": "BlockAssign_ST04_AZ.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST04_AZ.zip",
+      "sha256": "0fe372e474a5aea77ebc421f926185a7318fc7c963cf74813ac7bd4c2af0e1cd"
+    },
+    {
+      "file": "BlockAssign_ST05_AR.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST05_AR.zip",
+      "sha256": "199b6bd6c96f2e7b868d307d13c393dffe76f55e15e0df7a67932412351de996"
+    },
+    {
+      "file": "BlockAssign_ST06_CA.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST06_CA.zip",
+      "sha256": "edc540d7e782507c080d6caea087b302f3f406c8572629763f0f7017ebe427a1"
+    },
+    {
+      "file": "BlockAssign_ST08_CO.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST08_CO.zip",
+      "sha256": "9199c97ed89fe42cfea45492095a26c02ae8eda42656abd220a907fdf39c917c"
+    },
+    {
+      "file": "BlockAssign_ST09_CT.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST09_CT.zip",
+      "sha256": "1125c49564224cced90844ab2345df9a2c191a0084c5029ff53ddc9c320c54ba"
+    },
+    {
+      "file": "BlockAssign_ST10_DE.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST10_DE.zip",
+      "sha256": "8f81f5239dca88f378f098325ae630d215bf0c5fd8986a088d2b2b2c4746f6d9"
+    },
+    {
+      "file": "BlockAssign_ST12_FL.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST12_FL.zip",
+      "sha256": "a8eeda07f30d1010f984950dae030bb6276c6d11a99f64a0a4bbebccd9996451"
+    },
+    {
+      "file": "BlockAssign_ST13_GA.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST13_GA.zip",
+      "sha256": "97fee9eee9eb0b338e9f8ea937c2d667c5293a4c1e38182bfe1c4786c4dbd111"
+    },
+    {
+      "file": "BlockAssign_ST15_HI.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST15_HI.zip",
+      "sha256": "99ff6595ad6566804cc4682c9e73b9d854ae127154bffb9b0f2e6e97a7fa8147"
+    },
+    {
+      "file": "BlockAssign_ST16_ID.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST16_ID.zip",
+      "sha256": "31c1e32901138ff732f9eded36bde73231af5e1529fd3a9317d106561a7a4f8a"
+    },
+    {
+      "file": "BlockAssign_ST17_IL.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST17_IL.zip",
+      "sha256": "97c913144c29b33ebaa17546e4976bb19e5cf65d33b26a1ea7609736aeb2c9b6"
+    },
+    {
+      "file": "BlockAssign_ST18_IN.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST18_IN.zip",
+      "sha256": "3158704fa33bc433087d21eff4f93702d0999b3f405085fb58fb64e72cc58eb0"
+    },
+    {
+      "file": "BlockAssign_ST19_IA.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST19_IA.zip",
+      "sha256": "883baba3cc35a45b585293e58ce23c08d3644c5f4e59a92dc329c76d4fde1447"
+    },
+    {
+      "file": "BlockAssign_ST20_KS.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST20_KS.zip",
+      "sha256": "d331ad02ad4ba10a15bce5691c22834b3ca853357637bd3f6df02cc9c75fb816"
+    },
+    {
+      "file": "BlockAssign_ST21_KY.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST21_KY.zip",
+      "sha256": "e3b7573bbad03ab78db313535b0e763ddb1268f0b0d59d760aa0e688793d055a"
+    },
+    {
+      "file": "BlockAssign_ST22_LA.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST22_LA.zip",
+      "sha256": "4b160562136f38e136b4384d591c5fcda351c6da2486bab07b39cc7576afe79e"
+    },
+    {
+      "file": "BlockAssign_ST23_ME.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST23_ME.zip",
+      "sha256": "431631b3352f8bab61258626a824529434e3f51e421e62890f215e47d46cda64"
+    },
+    {
+      "file": "BlockAssign_ST24_MD.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST24_MD.zip",
+      "sha256": "0cff392f34e07b00f2705bab056c902d67c63a32cfbbe30534777ea147d79b93"
+    },
+    {
+      "file": "BlockAssign_ST25_MA.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST25_MA.zip",
+      "sha256": "6d77b72047fef535efe396b675d4ec8cedfbc975e4cab9460431b861353e4f18"
+    },
+    {
+      "file": "BlockAssign_ST26_MI.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST26_MI.zip",
+      "sha256": "d819d7d0d2b5d83e0e5aab54d2674b5a625bde51add10f257a1511abd6014a88"
+    },
+    {
+      "file": "BlockAssign_ST27_MN.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST27_MN.zip",
+      "sha256": "afc53ab51e43091e4454f54e0d57b61f60a73f0d521977a4165965fefabc3e61"
+    },
+    {
+      "file": "BlockAssign_ST28_MS.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST28_MS.zip",
+      "sha256": "d8e4d0ef5f467650394cc902883669143724cd31699a601e52ef185d52c60b8f"
+    },
+    {
+      "file": "BlockAssign_ST29_MO.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST29_MO.zip",
+      "sha256": "9d72554bbb23c0f859741641fcadd98bd2bd4858067ad010eddc881b9f14ccad"
+    },
+    {
+      "file": "BlockAssign_ST30_MT.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST30_MT.zip",
+      "sha256": "7e5fde3990b536705f337bc7c3ffde2da3b2a49b7c9e58c22d6c198c7c0a93a8"
+    },
+    {
+      "file": "BlockAssign_ST31_NE.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST31_NE.zip",
+      "sha256": "9065e5d1e048af09777e815294c201ae548ebeb73f02195cfb2c895aa89ae39e"
+    },
+    {
+      "file": "BlockAssign_ST32_NV.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST32_NV.zip",
+      "sha256": "ea0e6834f8389127a74eb4be4e28b86659fe067af7d4fa0ab91f746060d4adb9"
+    },
+    {
+      "file": "BlockAssign_ST33_NH.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST33_NH.zip",
+      "sha256": "c06b3a004317849b253ef32972f2a6a7e0abf9f71c496e4ddf5578c66c6b7c17"
+    },
+    {
+      "file": "BlockAssign_ST34_NJ.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST34_NJ.zip",
+      "sha256": "179a04d0e2f07f516298218002afe304999fbf272b59387ebb18d550eb34e430"
+    },
+    {
+      "file": "BlockAssign_ST35_NM.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST35_NM.zip",
+      "sha256": "e7507ee4cb1780233151c87aa2a84901dc86fede8680709e71fa14ad13b4df1e"
+    },
+    {
+      "file": "BlockAssign_ST36_NY.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST36_NY.zip",
+      "sha256": "7cf9a890beb47baca04bfa35c74db9300e1044c8a99b2cff559ade8fc1a89236"
+    },
+    {
+      "file": "BlockAssign_ST38_ND.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST38_ND.zip",
+      "sha256": "a89f5f58b9882aaf520c5c77c52b3b49dc198ff533b8436bf04ebfed252529fa"
+    },
+    {
+      "file": "BlockAssign_ST39_OH.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST39_OH.zip",
+      "sha256": "c2b0b18a5a5230572e7ca9a73ca3a0bcbab6e2ffb83505230f614cc23641c1c5"
+    },
+    {
+      "file": "BlockAssign_ST40_OK.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST40_OK.zip",
+      "sha256": "3859f1e17929d0ce91d09b750d31a3da39de398a3fc607044d2a6025452996f6"
+    },
+    {
+      "file": "BlockAssign_ST41_OR.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST41_OR.zip",
+      "sha256": "ad8fe9e57a32aa434b38b92cfff510e0fccbc367721f0c7043732ba9233cc674"
+    },
+    {
+      "file": "BlockAssign_ST42_PA.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST42_PA.zip",
+      "sha256": "f61fb24709191cb1ee9f97b915fe37ef483e4b5f8bca79385790da8ad6d80bf3"
+    },
+    {
+      "file": "BlockAssign_ST44_RI.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST44_RI.zip",
+      "sha256": "0833228c38a62f9c005b0ac9cb238e2c003e270380679657f7eb2f574966c896"
+    },
+    {
+      "file": "BlockAssign_ST45_SC.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST45_SC.zip",
+      "sha256": "ee313741c4dff930cd8959855f6651cf823daf1f82f2f5e28bef17abb67d0d59"
+    },
+    {
+      "file": "BlockAssign_ST46_SD.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST46_SD.zip",
+      "sha256": "b790819eb1f0ea1d0c4fe98c87c61989230817e66804c2ae1d79c379547d8eaa"
+    },
+    {
+      "file": "BlockAssign_ST47_TN.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST47_TN.zip",
+      "sha256": "96dc990f409bbfbd02dedfd75caf6c18d65d70b8102e54100bc1b5a4e3812744"
+    },
+    {
+      "file": "BlockAssign_ST48_TX.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST48_TX.zip",
+      "sha256": "db3f1a4e06aca3d61fb15f1d3581cd08d65120588f33cf00c8265c9f043aa725"
+    },
+    {
+      "file": "BlockAssign_ST49_UT.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST49_UT.zip",
+      "sha256": "57ebe75d5353f004a466d4a7df6897207b1ef19d47849b61b188f9969c0bc2ce"
+    },
+    {
+      "file": "BlockAssign_ST50_VT.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST50_VT.zip",
+      "sha256": "6869df8eecd778986f116f4138ce5d0f692468b944056eb58984dfa51ba3909d"
+    },
+    {
+      "file": "BlockAssign_ST51_VA.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST51_VA.zip",
+      "sha256": "87ebb3582232400286fb0ff4e6a51fdfb1449221c780c9d1a3a574f752010f36"
+    },
+    {
+      "file": "BlockAssign_ST53_WA.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST53_WA.zip",
+      "sha256": "58114c250c830d81ac8f499f29ae71ecae545624f484a1f9cce448182cf09001"
+    },
+    {
+      "file": "BlockAssign_ST54_WV.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST54_WV.zip",
+      "sha256": "949ed08edf0a082f6a9a0c4300fb3c850358115cf2cc0354437116d7da7c060e"
+    },
+    {
+      "file": "BlockAssign_ST55_WI.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST55_WI.zip",
+      "sha256": "75bed98fefe7454b6fc6c5e972744380bf99400d3c6a3b839e7a5e1fb13d093c"
+    },
+    {
+      "file": "BlockAssign_ST56_WY.zip",
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST56_WY.zip",
+      "sha256": "e4ce0356da93caff0870166d44e8491dc5b386580dd4e8504ad1957e76f37f09"
+    },
+    {
+      "file": "nc_2020_official.geojson",
+      "url": "https://services5.arcgis.com/gRcZqepTaRC6tVZL/ArcGIS/rest/services/NCGA_Congress_2019/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+      "sha256": "566d3396be7193853a012007dd8b400316694a20ff46669360f4f7f6da73c888"
+    },
+    {
+      "file": "cb_2022_us_cd118_20m.zip",
+      "url": "https://www2.census.gov/geo/tiger/GENZ2022/shp/cb_2022_us_cd118_20m.zip",
+      "sha256": "510081c2b9087b8663fc532dd7a2925c18f66e3c87e35cba05ef8379629e1b2e"
+    }
+  ],
+  "output_sha256": "bc27b8f1d32d03664fc757babbeb0c5fd6bc31d4e7af843dcd9860c52c645c86"
+}

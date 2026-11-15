@@ -1,0 +1,31 @@
+{
+  "election_years": [
+    2016,
+    2018
+  ],
+  "demographic_year": 2021,
+  "boundary_source": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.116th_Congress.html",
+  "boundary_source_section": "116th Congress",
+  "boundary_evidence": "Census identifies new boundaries in Colorado, Minnesota and Pennsylvania for the 2018 election cycle and confirms all other states had no changes from 2016.",
+  "excluded_changed_plan_states": [
+    "Colorado",
+    "Minnesota",
+    "Pennsylvania"
+  ],
+  "boundary_policy": "Conservatively exclude all seats in the three changed-plan states; no claim every individual seat changed. Other states verified unchanged by Census. No reconstructed votes.",
+  "ranked_choice_policy": "Exclude Alaska and Maine; candidate-count bases have not been standardized across years.",
+  "sample_policy": "Both named major parties and positive reported votes in both years; sensitivity also excludes multiple major-party candidates in either year.",
+  "seat_flip_definition": "Different official elected parties in 2016 and 2018 on unchanged boundaries; general-election snapshots, independent of vote-share eligibility.",
+  "change_definition": "2018 two-party share minus 2016 two-party share in percentage points; Republican change negates Democratic change.",
+  "interpretation": "Fixed 2021 ACS 1-year snapshot on 116th Congress districts, the same areas as 2016 outside the three excluded states. Measured after the elections; does not measure demographic change or causation. Shares and correlations use equal-weight districts.",
+  "districts": 435,
+  "verified_unchanged_districts": 402,
+  "matched_baseline_districts": 307,
+  "matched_sensitivity_districts": 305,
+  "input_sha256": {
+    "data/us_2016_house_fpp.csv": "796c0f3cac9c2c053f4e6d986c61a0140d521472e7fb836eaa803a8364079c7c",
+    "data/us_2018_house_fpp.csv": "4af2177b23285509afb3f3000be8fd7bccc9057dec8ade76b2a081622d0e15fe",
+    "data/us_2021_house_demographics.csv": "f7022e440f5b17b4ec98e0bd9b70880ba125108fb7e6a49d730cae5a9e4fbe6e"
+  },
+  "output_sha256": "f04c98fc445e4b5807e5b5e8ae0918d8d1a5e47e70a7c1f2ff4c767d53a0d511"
+}

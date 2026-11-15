@@ -1,0 +1,29 @@
+{
+  "election_years": [
+    2018,
+    2020
+  ],
+  "demographic_year": 2021,
+  "boundary_source": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.117th_Congress.html",
+  "boundary_source_section": "117th Congress",
+  "boundary_evidence": "Census confirms North Carolina was the only state to change districts between the 116th and 117th Congresses. All other states use the same districts.",
+  "excluded_changed_plan_states": [
+    "North Carolina"
+  ],
+  "boundary_policy": "Exclude North Carolina conservatively; other districts verified unchanged by Census. No reconstructed votes.",
+  "ranked_choice_policy": "Exclude Alaska and Maine; candidate-count bases have not been standardized across years.",
+  "sample_policy": "Both named major parties and positive reported votes in both years; sensitivity also excludes multiple major-party candidates in either year.",
+  "seat_flip_definition": "Different official elected parties in 2018 and 2020 on unchanged boundaries; general-election snapshots, independent of vote-share eligibility.",
+  "change_definition": "2020 two-party share minus 2018 two-party share in percentage points; Republican change negates Democratic change.",
+  "interpretation": "Fixed 2021 ACS 1-year snapshot on 116th Congress boundaries, the same areas as 2018/2020 outside North Carolina. Measured after the elections; does not measure demographic change or causation. The 2024 snapshot is not joined onto these older districts.",
+  "districts": 435,
+  "verified_unchanged_districts": 422,
+  "matched_baseline_districts": 359,
+  "matched_sensitivity_districts": 355,
+  "input_sha256": {
+    "data/us_2018_house_fpp.csv": "4af2177b23285509afb3f3000be8fd7bccc9057dec8ade76b2a081622d0e15fe",
+    "data/us_2020_house_fpp.csv": "b0c29d6475615727fde058b28ee9b6a54fe8f499f903ae4293e6472c271356b6",
+    "data/us_2021_house_demographics.csv": "f7022e440f5b17b4ec98e0bd9b70880ba125108fb7e6a49d730cae5a9e4fbe6e"
+  },
+  "output_sha256": "0c3286be76151500b4edf2a8883c03ac4c2fbe2e8d57fa93d43f746da372c197"
+}

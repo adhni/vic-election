@@ -312,6 +312,13 @@ Ordinary VEC ward result pages do not state candidate party affiliation. The gen
 
 Ward geometry comes from the official Vicmap Admin `WARD_2024` WFS layer produced for the 2024 local elections. The builder filters it to the 30 warded metropolitan councils, uses council-plus-ward identifiers to prevent duplicate-name collisions, and requires all 288 results to join one-to-one. Melbourne's citywide contests use the official Vicmap LGA polygon. Mitchell is excluded because it is not one of the standard 31 metropolitan municipalities, despite being partly included in some planning definitions. Later by-elections and vacancies are not merged into the 2024 general-election snapshot.
 
+## U.S. House 2024 demographics
+
+For the separate 2024 U.S. House demographic dataset, source tables, join keys,
+uncertainty handling and rebuild commands, see [U.S. House 2024 demographics](us_house_2024_demographics.md).
+
+US House election comparison: [2022–2024 matched districts](us_house_2022_2024_comparison.md) uses fixed 2024 ACS demographics, comparable districts in both years, and share change in percentage points.
+
 ## Why long format?
 
 The VEC pages are visually wide tables. Long format is better for:

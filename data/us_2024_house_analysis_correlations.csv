@@ -1,0 +1,21 @@
+sample,metric,label,n,pearson_r,spearman_rho,within_state_pearson_r
+both_major_parties,bachelors_plus_pct,Adults 25+ with a bachelor's degree or higher,397,0.408979,0.393476,0.338271
+both_major_parties,median_household_income,Median household income in 2024 inflation-adjusted dollars,397,0.257725,0.262267,0.008609
+both_major_parties,poverty_pct,"People below the poverty level, among those with poverty status determined",397,0.153501,0.063507,0.332008
+both_major_parties,median_age,Median age,397,-0.283126,-0.26828,-0.47516
+both_major_parties,age_65_plus_pct,Residents aged 65 and over,397,-0.322756,-0.315489,-0.460565
+both_major_parties,homeownership_pct,Owner-occupied share of occupied housing units,397,-0.657854,-0.630368,-0.706102
+both_major_parties,white_non_hispanic_pct,Non-Hispanic White alone residents,397,-0.589614,-0.596392,-0.693637
+both_major_parties,black_non_hispanic_pct,Non-Hispanic Black alone residents,397,0.380399,0.270492,0.655681
+both_major_parties,asian_non_hispanic_pct,Non-Hispanic Asian alone residents,397,0.417228,0.577431,0.256572
+both_major_parties,hispanic_pct,Hispanic / Latino residents of any race,397,0.272684,0.357964,0.236261
+single_matchup_excluding_ranked_choice_states,bachelors_plus_pct,Adults 25+ with a bachelor's degree or higher,389,0.41347,0.400822,0.34689
+single_matchup_excluding_ranked_choice_states,median_household_income,Median household income in 2024 inflation-adjusted dollars,389,0.260627,0.267344,0.013872
+single_matchup_excluding_ranked_choice_states,poverty_pct,"People below the poverty level, among those with poverty status determined",389,0.161956,0.070957,0.327498
+single_matchup_excluding_ranked_choice_states,median_age,Median age,389,-0.293205,-0.278414,-0.481064
+single_matchup_excluding_ranked_choice_states,age_65_plus_pct,Residents aged 65 and over,389,-0.33098,-0.323328,-0.465259
+single_matchup_excluding_ranked_choice_states,homeownership_pct,Owner-occupied share of occupied housing units,389,-0.661499,-0.632867,-0.709097
+single_matchup_excluding_ranked_choice_states,white_non_hispanic_pct,Non-Hispanic White alone residents,389,-0.595406,-0.604392,-0.68896
+single_matchup_excluding_ranked_choice_states,black_non_hispanic_pct,Non-Hispanic Black alone residents,389,0.390678,0.284976,0.646407
+single_matchup_excluding_ranked_choice_states,asian_non_hispanic_pct,Non-Hispanic Asian alone residents,389,0.420664,0.583685,0.259211
+single_matchup_excluding_ranked_choice_states,hispanic_pct,Hispanic / Latino residents of any race,389,0.275383,0.364888,0.239883

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23294f7c'/%3E%3Cpath d='M18 17h30v8H27v7h18v8H27v7h21v8H18z' fill='white'/%3E%3C/svg%3E" />
   <title>Election Results Explorer</title>
+  <link rel="stylesheet" href="us-house-demographics.css" />
   <style>
     :root {
       --bg: #f4f2ee;
@@ -1535,10 +1536,16 @@
       <section class="election-context" aria-labelledby="electionHeading">
         <div>
           <h2 id="electionHeading" class="election-heading">Victorian State 2022</h2>
+          <p id="electionSnapshotNotice" class="data-status hidden"></p>
           <div id="dataStatus" class="data-status" role="status" aria-live="polite" aria-atomic="true"></div>
         </div>
       </section>
       <section id="stateSummary" class="state-summary" aria-label="Election summary"></section>
+
+      <div id="houseViewControls" class="house-view-controls hidden" role="group" aria-label="Election analysis view">
+        <button id="houseResultsView" type="button" aria-pressed="true">Results</button>
+        <button id="houseDemographicsView" type="button" aria-pressed="false" aria-controls="houseDemographicsPanel">Demographics</button>
+      </div>
 
       <div id="explorerGrid" class="explorer-grid" aria-busy="false">
         <section id="explorerMap" class="map-panel" aria-label="Seat map" aria-busy="true">
@@ -1556,6 +1563,7 @@
               <button id="partyVoteMapMode" class="map-mode hidden" type="button" data-map-mode="party-vote" aria-pressed="false">Party vote</button>
               <button id="voteShareMapMode" class="map-mode hidden" type="button" data-map-mode="vote-share" aria-pressed="false">Vote share</button>
               <button id="swingMapMode" class="map-mode hidden" type="button" data-map-mode="swing" aria-pressed="false">Swing</button>
+              <button id="houseSwingMapMode" class="map-mode hidden" type="button" data-map-mode="house-swing" aria-pressed="false">2022 → 2024 swing</button>
               <button id="clusterMapMode" class="map-mode hidden" type="button" data-map-mode="clusters" aria-pressed="false">Clusters</button>
               <button class="map-mode" type="button" data-map-mode="close" aria-pressed="false" aria-label="Highlight margins under 5%">Close races</button>
               <button id="changedMapMode" class="map-mode" type="button" data-map-mode="changed" aria-pressed="false">Preference flips</button>
@@ -1585,6 +1593,133 @@
         <div id="seatMap" class="map-empty">Loading map…</div>
         <div id="mapTooltip" class="map-tooltip"></div>
       </div>
+          <section id="houseSwingRankings" class="house-swing-rankings hidden" aria-labelledby="houseSwingTitle">
+            <h3 id="houseSwingTitle">Biggest swings · 2022 → 2024</h3>
+            <p id="houseSwingRankingNote" class="house-demographic-note"></p>
+            <div id="houseSwingLists" class="house-swing-lists"></div>
+          </section>
+
+        </section>
+
+        <section id="houseDemographicsPanel" class="house-demographics-panel hidden" aria-labelledby="houseDemographicsTitle">
+          <p class="house-eyebrow">U.S. House · District explorer</p>
+          <h2 id="houseDemographicsTitle" class="map-title">Demographics and voting</h2>
+          <p class="map-subtitle">Explore the relationship between a district’s demographics and its vote. Select a dot, map district, or swing ranking.</p>
+          <div class="house-demographics-controls">
+            <label for="houseDemographicMetric">Demographic measure
+              <select id="houseDemographicMetric" disabled><option>Loading measures…</option></select>
+            </label>
+            <label for="houseDemographicSample">District sample
+              <select id="houseDemographicSample">
+                <option value="baseline">Both major parties</option>
+                <option value="sensitivity">Single matchup · no AK / ME</option>
+              </select>
+            </label>
+            <label for="houseDemographicPeriod">Comparison
+              <select id="houseDemographicPeriod">
+                <option value="2022-2024">2022 → 2024</option>
+                <option value="2018-2020">2018 → 2020</option>
+                <option value="2016-2018">2016 → 2018</option>
+              </select>
+            </label>
+            <label for="houseDemographicOutcome">Election outcome
+              <select id="houseDemographicOutcome">
+                <option value="2024">2024 share · all eligible</option>
+                <option value="2008-matched" hidden>2008 share · matched</option>
+                <option value="2012-matched" hidden>2012 share · matched</option>
+                <option value="2016-matched" hidden>2016 share · matched</option>
+                <option value="2018-matched" hidden>2018 share · matched</option>
+                <option value="2020-matched" hidden>2020 share · matched</option>
+                <option value="2022-matched">2022 share · matched</option>
+                <option value="2024-matched">2024 share · matched</option>
+                <option value="2026-matched" hidden>2026 share · matched</option>
+                <option value="change">Swing 2022 → 2024 · matched</option>
+              </select>
+            </label>
+            <label for="houseDemographicParty">Party
+              <select id="houseDemographicParty">
+                <option value="democratic">Democratic</option>
+                <option value="republican">Republican</option>
+              </select>
+            </label>
+            <label for="houseDemographicXRange">X-axis range
+              <select id="houseDemographicXRange">
+                <option value="full">Full range</option>
+                <option value="fit">Fit data</option>
+              </select>
+            </label>
+            <label for="houseDemographicYRange">Y-axis range
+              <select id="houseDemographicYRange">
+                <option value="full">Full range</option>
+                <option value="fit">Fit data</option>
+              </select>
+            </label>
+          </div>
+          <p id="houseDemographicComparisonNote" class="house-demographic-note"></p>
+          <p id="houseDemographicStatus" class="house-demographic-status" role="status" aria-live="polite"></p>
+          <button id="houseDemographicRetry" class="hidden" type="button">Retry demographics</button>
+          <div id="houseDemographicContent" class="hidden">
+            <div id="houseDemographicStatistics" class="house-demographic-statistics" aria-live="polite"></div>
+            <div class="house-chart-key" aria-label="Chart key">
+              <span class="house-key-democratic">Toward Democrats</span>
+              <span class="house-key-neutral">Little change</span>
+              <span class="house-key-republican">Toward Republicans</span>
+              <span class="house-key-flip">Outlined = flipped seat</span>
+            </div>
+            <p id="houseDemographicYLabel" class="house-chart-y-label">Democratic two-party vote share (%)</p>
+            <div id="houseDemographicChart" class="house-demographic-chart" aria-busy="true"></div>
+            <p id="houseDemographicAxis" class="house-chart-x-label"></p>
+            <section id="houseDemographicSelection" class="house-demographic-selection" aria-label="Selected district demographics" tabindex="-1">
+              <p class="house-eyebrow">Selected district</p>
+              <label for="houseDemographicDistrict">District
+                <select id="houseDemographicDistrict"></select>
+              </label>
+              <p id="houseDemographicFlip" class="hidden" aria-live="polite"></p>
+              <p id="houseDemographicSelectedValues" aria-live="polite"></p>
+              <p id="houseDemographicSelectedNote" class="house-demographic-note"></p>
+              <details id="houseDemographicUncertainty">
+                <summary>Estimate uncertainty</summary>
+                <p id="houseDemographicUncertaintyText"></p>
+              </details>
+              <button id="houseDemographicFullResult" type="button">View full district result</button>
+            </section>
+            <details class="house-demographic-method">
+              <summary>Sample and interpretation</summary>
+              <div id="houseDemographicHouseMethods">
+              <p>2024 → 2026 uses provisional <a href="https://www.callthemap.com/results/data">Call the Map</a> counts (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), including <a href="https://civicapi.org">civicAPI</a> feeds, frozen on 14 November 2026. Uncalled races are excluded from the chart and flip markers. Alabama, California, Florida, Louisiana, North Carolina, Ohio, Tennessee, Texas and Utah changed plans: their seats are conservatively excluded from comparison, and no 2024 demographics are assigned to their 2026 maps. Other seats use fixed 2024 ACS demographics. Flips are provisional. <a href="../docs/us_house_2026.md">2026 sources and methods</a>.</p>
+              <p>Each dot is a district, with equal weight. The baseline requires named Democratic and Republican candidates and positive reported party votes. The stricter sample also excludes Alaska, Maine, and multiple major-party candidates. Published candidate totals are used without reconstructing ranked-choice rounds.</p>
+              <p>National r is Pearson correlation; Spearman uses ranks. Within-state r compares departures from state averages. These use demographic point estimates and do not incorporate their uncertainty. They describe districts, not individual voters or causal effects.</p>
+              <p>The sample is election-wide. Map search and filters do not change these statistics. Missing estimates are omitted, never replaced with zero.</p>
+              <p>Choose either party's two-party vote share. Full share axes run from 0% to 100%; full change axes run from −100 to +100 percentage points. Other full axes start at zero. Fit data uses the observed range with a little padding. Axis settings change the scale, not the sample or correlations.</p>
+              <p>2022 → 2024 matched views hold the 2024 ACS demographics fixed and use the same districts for both years and change. All districts in Alabama, Georgia, Louisiana, New York, and North Carolina are conservatively excluded because those states changed plans; some individual seats may be unchanged. Alaska and Maine are excluded because ranked-choice count bases have not been standardized. Both years must have named candidates and positive votes for both major parties. The stricter sample applies to both years. Midterm and presidential turnout and candidate differences can affect the change.</p>
+              <p>2016 → 2018 uses the same fixed 2021 ACS snapshot on historical districts. Colorado, Minnesota and Pennsylvania are conservatively excluded because Census reports changed plans for 2018; other states had no changes from 2016. The historical snapshot was measured after these elections.</p>
+              <p>2018 → 2020 uses 2021 ACS demographics on the historical districts, held fixed for both election results. Census confirms that only North Carolina changed its district plan between those elections; it is excluded. Alaska and Maine are excluded from share comparisons because count bases have not been standardized. The demographic snapshot was measured after both elections. Three citizenship-age measures are unavailable in this older release.</p>
+              <a href="../data/us_2024_house_analysis.csv" download>Download 2024 district data</a> ·
+              <a href="../data/us_2021_house_demographics.csv" download>Download historical district demographics</a> ·
+              </div>
+              <div id="senateComparisonMethods" class="hidden">
+                <p>Senate swing compares the same regular seat six years apart: 2016 → 2022, 2018 → 2024, or 2020 → 2026. Florida/Ohio 2026 specials are excluded. Share is D / (D + R), or R / (D + R), using named party candidates only; grouped Other and independent votes are never reassigned. Alaska and Maine count bases are excluded. County outlines show changes in local leading party; state outlines show changes in the elected party for the same seat. 2026 calls and flips are provisional.</p>
+                <p>The fixed 2024 ACS snapshot describes areas, not individual voters or demographic change. County matches use reporting identifiers, not a boundary audit. Connecticut's incompatible county demographics and Alaska statewide fallbacks are omitted. Missing reporting areas or named major-party votes are excluded. The 2020 Georgia regular race uses its decisive January 2021 runoff. <a href="../docs/us_senate_comparison.md">Senate methods</a>.</p>
+              </div>
+              <div id="houseDemographicPresidentMethods" class="hidden">
+                <p>Each dot is one state or DC, with equal weight. All 51 areas have official statewide presidential totals for 2008, 2012, 2016, 2020 and 2024. Share means D / (D + R), or R / (D + R); swing is the difference in percentage points.</p>
+                <p>Outlined dots changed statewide popular-vote leading party between the selected elections. They do not describe Electoral College allocation, including split electors in Maine and Nebraska.</p>
+                <p>Demographics use the fixed 2024 ACS one-year snapshot in every view. Earlier populations may differ; these charts do not measure demographic change or individual voting behavior. State r is Pearson correlation; Spearman uses ranks. Both use point estimates and do not propagate demographic uncertainty. Each point is a whole state, so no within-state correlation is shown.</p>
+                <p>Alaska, Maine and DC are included. Map search does not change the sample. Missing demographic estimates are omitted, never replaced with zero. Full and fitted axes change only the scale.</p>
+                <a href="../data/us_2024_state_demographics.csv" download>Download state demographics</a> ·
+              </div>
+              <div id="houseDemographicCountyMethods" class="hidden">
+                <p>Each dot is a county or county-level reporting area, with equal weight. County totals use the existing public compilations and historical MIT returns. Alaska is a statewide placeholder and is excluded; DC is included as a county equivalent.</p>
+                <p>Demographics use fixed 2020–2024 ACS five-year estimates, covering small counties too. They are not 2024-only measurements. Earlier populations may differ; these charts do not measure demographic change or individual voting behavior.</p>
+                <p>Comparisons match reporting-area identifiers, including Shannon County’s rename to Oglala Lakota County. Connecticut’s old counties and new planning regions are incompatible with a single demographic join and are excluded. Historical returns already combine Bedford city/county and Kansas City/Jackson reporting areas. This is not an individual boundary audit. No votes or demographic values are reconstructed.</p>
+                <p>Outlined dots changed the local popular-vote leading party. County r and Spearman describe equal-weight reporting areas; missing estimates are omitted and uncertainty is not propagated into correlations. Map search does not change the sample.</p>
+                <a href="../data/us_2024_county_demographics.csv" download>Download county demographics</a> ·
+              </div>
+              <a id="houseComparisonDownload" href="../data/us_house_2022_2024_comparison.csv" download>Download 2022–2024 comparison</a> ·
+              <a id="houseComparisonMethods" href="../docs/us_house_2022_2024_comparison.md">Comparison methodology</a>
+            </details>
+          </div>
+          <div id="houseDemographicTooltip" class="house-demographic-tooltip hidden" role="tooltip"></div>
         </section>
 
         <section class="detail-panel" aria-label="Selected seat result" tabindex="-1">
@@ -1678,6 +1813,7 @@
     </main>
   </div>
 
+  <script src="us-house-demographics.js"></script>
   <script>
     const sampleDistricts = [
       {
@@ -2619,6 +2755,43 @@
         }
       },
       {
+        "key": "us-senate-2026",
+        "label": "United States Senate 2026 · Provisional",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2026,
+        "source": "Call the Map (CC BY 4.0) / civicAPI",
+        "system": "fpp",
+        "contestType": "senate",
+        "systemLabel": "U.S. Senate · 33 regular + 2 special elections",
+        "dataNotice": "Provisional snapshot · 14 November 2026 · 35 races: 34 reported winners, Alaska uncalled · Includes Florida/Ohio special elections. These are races on the ballot, not the full 100-seat Senate. This snapshot does not update live.",
+        "methodNote": "Provisional counts from <a href=\"https://www.callthemap.com/results/data\">Call the Map</a> (<a href=\"https://creativecommons.org/licenses/by/4.0/\">CC BY 4.0</a>) and <a href=\"https://civicapi.org\">civicAPI</a>. Counties show local vote leaders; margins compare two named candidates and Other combines remaining votes. Alaska uses a statewide fallback. <a href=\"../docs/us_senate_2026.md\">Sources and coverage</a>.",
+        "candidateFilterLabel": "Any leading party",
+        "candidateVoteLabel": "Senate candidate vote",
+        "localVoteLabel": "Senate vote",
+        "mapModeLabel": "Red–blue margin",
+        "bipartisanMarginScale": true,
+        "csv": "data/us_2026_senate_state_fpp.csv",
+        "boundaries": "data/us_senate_2026_state_boundaries.geojson",
+        "defaultGeography": "state",
+        "geographies": {
+          "state": {
+            "label": "State",
+            "pluralLabel": "state races",
+            "areaLabel": "Country",
+            "csv": "data/us_2026_senate_state_fpp.csv",
+            "boundaries": "data/us_senate_2026_state_boundaries.geojson"
+          },
+          "county": {
+            "label": "County",
+            "pluralLabel": "counties/reporting areas",
+            "areaLabel": "State",
+            "csv": "data/us_2026_senate_county_fpp.csv",
+            "boundaries": "data/us_senate_2026_county_boundaries.geojson"
+          }
+        }
+      },
+      {
         "key": "us-senate-2024",
         "label": "United States Senate 2024",
         "type": "national",
@@ -2753,9 +2926,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2024_president_county_fpp.csv",
-        "boundaries": "data/us_president_2024_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2024_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -2793,9 +2966,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2020_president_county_fpp.csv",
-        "boundaries": "data/us_president_2020_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2020_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -2833,9 +3006,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2016_president_county_fpp.csv",
-        "boundaries": "data/us_president_2008_2016_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2016_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -2873,9 +3046,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2012_president_county_fpp.csv",
-        "boundaries": "data/us_president_2008_2016_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2012_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -2913,9 +3086,9 @@
         "localVoteLabel": "presidential vote",
         "mapModeLabel": "Red–blue margin",
         "bipartisanMarginScale": true,
-        "csv": "data/us_2008_president_county_fpp.csv",
-        "boundaries": "data/us_president_2008_2016_county_boundaries.geojson",
-        "defaultGeography": "county",
+        "csv": "data/us_2008_president_state_fpp.csv",
+        "boundaries": "data/us_president_state_boundaries.geojson",
+        "defaultGeography": "state",
         "geographies": {
           "county": {
             "label": "County",
@@ -2937,6 +3110,23 @@
           ["John McCain", 45.65],
           ["Other candidates", 1.42]
         ]
+      },
+      {
+        "key": "us-house-2026",
+        "label": "United States House 2026 \u00b7 Provisional",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2026,
+        "source": "Call the Map (CC BY 4.0) / U.S. Census Bureau",
+        "system": "fpp",
+        "systemLabel": "Plurality / state-specific rules",
+        "winnerLabel": "Reported winner \u00b7 provisional",
+        "dataNotice": "Provisional snapshot \u00b7 14 November 2026 \u00b7 421 reported winners, 14 uncalled \u00b7 Counts may change. This snapshot does not update live.",
+        "methodNote": "Provisional counts from <a href=\"https://www.callthemap.com/results/data\">Call the Map</a> and its <a href=\"https://civicapi.org\">civicAPI</a> feeds (<a href=\"https://creativecommons.org/licenses/by/4.0/\">CC BY 4.0</a>), snapshot 14 November 2026. These are source-reported winners, not certified final results. Uncalled races show the current leader only. Alaska and Maine use ranked-choice voting; transfer rounds are not reconstructed.",
+        "csv": "data/us_2026_house_fpp.csv",
+        "boundaries": "data/us_2026_congressional_boundaries.geojson",
+        "totalSeats": 435,
+        "areaLabel": "State"
       },
       {
         "key": "us-house-2024",
@@ -5963,7 +6153,7 @@
     }
 
     function rankedForOutcome(d, totals) {
-      const rows = ranked(totals);
+      const rows = ranked(totals).filter(([candidate]) => !d.groupedCandidates?.has(candidate));
       if (activeElection().jurisdiction !== "India") return rows;
       return rows.filter(([candidate]) => partyLabel(getParty(d, candidate)) !== "NOTA");
     }
@@ -6025,6 +6215,7 @@
     }
 
     function winningParty(d) {
+      if (d.contest_status === "provisional-uncalled") return "Not called";
       if (d.contest_status === "void") return "No certified winner";
       if (activeElection().contestType === "presidential" && !d.formal_votes) return "No digitised vote";
       if (activeElection().contestType === "party-list") {
@@ -6036,6 +6227,7 @@
     }
 
     function winningBloc(d) {
+      if (d.contest_status === "provisional-uncalled") return "Not called";
       if (d.contest_status === "void") return "No certified winner";
       if (isMultiMemberElection()) return leadingElectedBloc(d);
       if (activeElection().contestType === "party-list") return winningParty(d);
@@ -6252,6 +6444,7 @@
         : system === "fpp"
           ? (membersOnly ? ["party"] : ["party", "close"])
           : system === "senate-stv" ? ["party"] : ["party", "close", "changed"];
+      if (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024", "us-house-2026"].includes(year) || ((year?.startsWith("us-president-") || year?.startsWith("us-senate-")) && ["state", "county"].includes(geography || definition.defaultGeography))) baseMapModes.push("house-swing");
       const allowedMapModes = geographyDefinitionSupported(config)
         ? [...baseMapModes, "vote-share", "swing", "clusters"]
         : baseMapModes;
@@ -6286,6 +6479,7 @@
       else params.delete("mode");
       if (geographyDefinitionSupported() && activeAnalysisBloc !== geographyDefaultBloc()) params.set("bloc", activeAnalysisBloc);
       else params.delete("bloc");
+      houseDemographics.writeUrlState(params);
       const query = params.toString();
       const next = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
       const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
@@ -6356,10 +6550,16 @@
       if (!pendingDistrictFromUrl && !pendingCouncilFromUrl) updateUrlState(replace);
     }
 
+    function houseSwingSupported() {
+      return (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024", "us-house-2026"].includes(activeElectionYear) || ((activeElectionYear.startsWith("us-president-") || activeElectionYear.startsWith("us-senate-")) && ["state", "county"].includes(activeGeography))) && datasetMeta.kind === "official";
+    }
+
     function mapVisual(d, context = {}) {
+      if (activeMapMode === "house-swing" && houseSwingSupported()) return houseDemographics.swingVisual(d.district);
       if (geographyMapModes.has(activeMapMode) && geographyAnalysisSupported()) {
         return geographyMapVisual(d, context);
       }
+      if (d.contest_status === "provisional-uncalled") return { color: "#8b9098", fill: hexToRgba("#8b9098", .65), label: "Not called" };
       if (activeElection().localElection && activeMapMode === "party") {
         if (d.contest_status === "uncontested") {
           return { color: "#8b9098", fill: hexToRgba("#8b9098", .42), label: "Uncontested" };
@@ -6439,6 +6639,14 @@
     }
 
     function tooltipHtml(d) {
+      if (d.contest_status === "provisional-uncalled" && activeMapMode !== "house-swing") {
+        const [leader] = getWinnerFromFinal(d);
+        return `<strong>${d.district}</strong><div>Not called · provisional</div><span>Current leader: ${shortName(leader)}</span>`;
+      }
+      if (activeMapMode === "house-swing" && houseSwingSupported()) {
+        const visual = houseDemographics.swingVisual(d.district);
+        return `<strong>${d.district}</strong><div>${visual.label}</div><span>${visual.detail}</span>`;
+      }
       if (geographyMapModes.has(activeMapMode) && geographyAnalysisSupported()) {
         const share = geographyAreaShare(d.district);
         if (activeMapMode === "swing") {
@@ -6563,6 +6771,10 @@
 
     function renderMapLegend(context = {}) {
       const legend = document.getElementById("mapLegend");
+      if (activeMapMode === "house-swing" && houseSwingSupported()) {
+        legend.innerHTML = houseDemographics.swingLegend().map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
+        return;
+      }
       if (activeMapMode === "vote-share" && geographyAnalysisSupported()) {
         const scale = context.voteShareScale;
         if (!scale) {
@@ -6610,7 +6822,9 @@
           ["#8eb6dc", "Democratic"],
           ["#ece9e4", "Close"],
           ["#e79a92", "Republican"],
-          ["#b51f24", "Strong Republican"]
+          ["#b51f24", "Strong Republican"],
+          ...(activeElectionYear === "us-senate-2026" && allDistricts.some(d => winningParty(d) === "Independent") ? [["#7a7f87", "Independent leader"]] : []),
+          ...(allDistricts.some(d => d.contest_status === "provisional-uncalled") ? [["#8b9098", "Not called"]] : [])
         ].map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
         return;
       }
@@ -6655,8 +6869,8 @@
       }).join("");
     }
 
-    function revealSelectedResult(moveFocus = false) {
-      const target = document.getElementById("districtSummary");
+    function revealSelectedResult(moveFocus = false, fullResult = false) {
+      const target = document.getElementById(!fullResult && houseDemographics.isActive() ? "houseDemographicSelection" : "districtSummary");
       if (!target) return;
       requestAnimationFrame(() => {
         const rect = target.getBoundingClientRect();
@@ -6856,6 +7070,8 @@
     }
 
     function mapDistrictTitle(d, visual) {
+      if (d.contest_status === "provisional-uncalled" && activeMapMode !== "house-swing") return `${d.district} · Not called · provisional`;
+      if (activeMapMode === "house-swing" && houseSwingSupported()) return `${d.district} · ${visual.label} · ${visual.detail}`;
       const [winner] = getWinnerFromFinal(d);
       const winnerParty = getParty(d, winner);
       const localState = activeElection().contestType === "party-list" ? localResultState(d) : null;
@@ -7258,7 +7474,9 @@
         [...winnerCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([ticket, areas]) => {
-            const winsLabel = activeElection().contestType === "governor" && activeGeography === "state"
+            const winsLabel = activeElectionYear === "us-senate-2026"
+              ? (ticket === "Not called" ? "uncalled" : activeGeography === "state" ? "reported wins" : "local leads")
+              : activeElection().contestType === "governor" && activeGeography === "state"
               ? "race wins"
               : activeElection().contestType === "referendum" ? "local leads" : "area wins";
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> ${winsLabel}</span>`);
@@ -7428,6 +7646,7 @@
         const contested = rankingPool.filter(d =>
           d.contest_status !== "cancelled"
           && d.contest_status !== "void"
+          && d.contest_status !== "provisional-uncalled"
           && d.formal_votes > 0
           && localResultState(d).status !== "aggregated"
         );
@@ -7450,7 +7669,8 @@
               return `${shortName(winner)} over ${shortName(runnerUp)} · ${d.electorate_type}`;
             }, d => pct(finalMargin(d), d.formal_votes), `No contested ${electorateLabel(2)} loaded.`)}
           </section>`;
-        target.innerHTML = card(`Closest ${electorateLabel(2)}`, closest) + card("Largest winning margins", largest);
+        const namedCountyPairs = activeElectionYear === "us-senate-2026" && activeGeography === "county";
+        target.innerHTML = card(namedCountyPairs ? "Closest named-candidate margins" : `Closest ${electorateLabel(2)}`, closest) + card(namedCountyPairs ? "Largest named-candidate margins" : "Largest winning margins", largest);
         return;
       }
       if (isMultiMemberElection()) {
@@ -7663,12 +7883,18 @@
       const partyList = activeElection().contestType === "party-list";
       const analyticalLocalVote = presidential || senate || governor || referendum || partyList;
       const geographySupported = geographyAnalysisSupported();
+      if (activeMapMode === "house-swing" && !houseSwingSupported()) activeMapMode = "party";
+      document.getElementById("houseSwingMapMode").textContent = `${houseDemographics.periodLabel()} swing`;
+      document.getElementById("houseSwingMapMode").classList.toggle("hidden", !houseSwingSupported());
       const geographyComparisonAvailable = Boolean(currentGeographyElection()?.comparisonKey);
       const geographyClustersAvailable = geographyClustersSupported();
       if (geographyMapModes.has(activeMapMode) && geographyAnalysisLoadState !== "loading" && (!geographySupported || (activeMapMode === "swing" && !geographyComparisonAvailable) || (activeMapMode === "clusters" && !geographyClustersAvailable))) {
         activeMapMode = "party";
       }
       document.getElementById("electionHeading").textContent = activeElection().label;
+      const snapshotNotice = document.getElementById("electionSnapshotNotice");
+      snapshotNotice.textContent = activeElection().dataNotice || "";
+      snapshotNotice.classList.toggle("hidden", !activeElection().dataNotice);
       document.title = `${activeElection().label} · Election Results Explorer`;
       document.getElementById("councilControl").classList.toggle("hidden", !activeElection().localCouncilFilter);
       const geographyModes = document.getElementById("geographyModes");
@@ -7683,7 +7909,7 @@
       document.getElementById("voteShareMapMode").classList.toggle("hidden", !geographySupported);
       document.getElementById("swingMapMode").classList.toggle("hidden", !geographySupported || !geographyComparisonAvailable);
       document.getElementById("clusterMapMode").classList.toggle("hidden", !geographyClustersAvailable);
-      document.getElementById("geographyMetricControl").classList.toggle("hidden", !geographySupported);
+      document.getElementById("geographyMetricControl").classList.toggle("hidden", !geographySupported || activeMapMode === "house-swing");
       document.querySelector('[data-map-mode="party"]').textContent = activeElection().mapModeLabel || (activeElection().jurisdiction === "Germany" ? "Erststimme" : "Winner");
       document.getElementById("partyVoteMapMode").textContent = activeElection().jurisdiction === "Germany" ? "Zweitstimme" : "Party vote";
       document.getElementById("changedMapMode").classList.toggle("hidden", compactAnalytical);
@@ -7719,6 +7945,9 @@
         document.getElementById("mapSubtitle").textContent = geographyMapModes.has(activeMapMode)
           ? `${activeAnalysisBloc} ${activeMapMode === "vote-share" ? "vote share" : activeMapMode === "swing" ? "same-boundary swing" : `nearest-${electorateLabel(1)} clusters`}. Click an area for its history.`
           : "Click a seat to explore its result and political geography.";
+      }
+      if (activeMapMode === "house-swing" && houseSwingSupported()) {
+        document.getElementById("mapSubtitle").textContent = `${houseDemographics.periodLabel()} change in two-party share. Blue toward Democrats; red toward Republicans. Grey ${(activeElectionYear.startsWith("us-president-") || activeElectionYear.startsWith("us-senate-")) ? (activeGeography === "county" ? "counties" : "states") : "districts"} are not comparable.`;
       }
       document.getElementById("rankingsSubtitle").textContent = activeElection().membersOnly
         ? "Constituency-level margins are unavailable in the published result."
@@ -7929,6 +8158,8 @@
     function setupMapModes() {
       const selectMode = mode => {
         activeMapMode = mode;
+        if (mode === "house-swing" && houseSwingSupported()) houseDemographics.showSwing();
+        updateHouseDemographics();
         updateElectionSpecificUi();
         renderSeatMap();
         renderGeographyAnalysis();
@@ -8019,6 +8250,7 @@
     }
 
     function renderLoadState() {
+      updateHouseDemographics();
       const loading = dataLoadState === "loading";
       const detailPanel = document.querySelector(".detail-panel");
       detailPanel.classList.add("state-message");
@@ -8045,6 +8277,7 @@
     }
 
     function renderNoMatches() {
+      updateHouseDemographics();
       document.querySelector(".detail-panel").classList.add("state-message");
       document.querySelector(".rankings-panel").classList.remove("hidden");
       document.getElementById("geographyAnalysis").classList.add("hidden");
@@ -8143,6 +8376,10 @@
           const winnerTicket = getParty(d, winner);
           const [runnerUp] = getSecondFromFinal(d);
           const reported = d.formal_votes > 0;
+          const provisionalSenate = activeElectionYear === "us-senate-2026";
+          const localLeaderLabel = provisionalSenate
+            ? (d.contest_status === "provisional-uncalled" ? "Current leader · not called" : activeGeography === "state" ? "Reported winner · provisional" : "Current local vote leader")
+            : activeElection().localLeaderLabel || "Local vote leader";
           const drilldown = activeGeography === "province"
             ? `<button id="provinceDrilldown" type="button">View kabupaten/kota in ${d.district}</button>`
             : "";
@@ -8151,13 +8388,15 @@
             <div class="result-facts">
               <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
               <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
-              <div class="fact-item"><span class="fact-label">${activeElection().localLeaderLabel || "Local vote leader"}</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) : "No digitised vote"}</span></div>
-              <div class="fact-item"><span class="fact-label">${activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
+              <div class="fact-item"><span class="fact-label">${localLeaderLabel}</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) + (provisionalSenate ? " " + shortName(winner) : "") : "No digitised vote"}</span></div>
+              <div class="fact-item"><span class="fact-label">${provisionalSenate && activeGeography === "county" ? "Named-candidate margin" : activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
               <div class="fact-item"><span class="fact-label">${activeElection().validVotesLabel || "Valid votes"}</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
               <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available"}</span></div>
             </div>
             <p class="pref-impact">${activeElection().methodNote}</p>
-            ${d.result_note ? `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>` : ""}
+            ${d.result_note ? (provisionalSenate
+              ? `<details><summary>Source and counting notes</summary><p class="pref-impact">${d.result_note}</p></details>`
+              : `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>`) : ""}
             ${drilldown}
           `;
           const drillButton = document.getElementById("provinceDrilldown");
@@ -8170,6 +8409,7 @@
         const teamElection = Boolean(activeElection().teamElection);
         const uncontested = d.contest_status === "uncontested";
         const singleCandidate = d.contest_status === "single-candidate";
+        const votesUnreported = activeElectionYear === "us-house-2026" && !d.formal_votes;
         const members = electedMembers(d);
         const memberList = members.map(name => shortName(name)).join(" · ");
         const systemLabel = activeElection().systemLabel || (teamElection && d.electorate_type === "GRC" ? "Plurality block vote" : "First past the post");
@@ -8199,10 +8439,10 @@
           <div class="result-facts">
             <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel || "Area"}</span><span class="fact-value">${d.electorate_type}</span></div>
             <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${systemLabel}</span></div>
-            <div class="fact-item"><span class="fact-label">${teamElection && members.length > 1 ? "Winning team" : activeElection().winnerLabel || "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
+            <div class="fact-item"><span class="fact-label">${d.contest_status === "provisional-uncalled" ? "Current leader · not called" : teamElection && members.length > 1 ? "Winning team" : activeElection().winnerLabel || "MP elected"}</span><span class="fact-value">${badgeHtml(winnerParty)} ${shortName(winner)}</span></div>
             ${teamElection ? `<div class="fact-item"><span class="fact-label">Members elected</span><span class="fact-value">${memberList}</span></div>` : ""}
-            <div class="fact-item"><span class="fact-label">Winning margin</span><span class="fact-value">${uncontested ? "Uncontested" : singleCandidate ? "Not published" : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`}</span></div>
-            <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${singleCandidate ? "Not published" : fmt.format(d.formal_votes)}</span></div>
+            <div class="fact-item"><span class="fact-label">${d.contest_status === "provisional-uncalled" ? "Current margin" : "Winning margin"}</span><span class="fact-value">${uncontested ? "Uncontested" : singleCandidate || votesUnreported ? "Not published" : `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}`}</span></div>
+            <div class="fact-item"><span class="fact-label">Valid votes</span><span class="fact-value">${singleCandidate || votesUnreported ? "Not published" : fmt.format(d.formal_votes)}</span></div>
             <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${turnoutLabel}</span></div>
           </div>
           <p class="pref-impact">${methodNote}</p>
@@ -8622,6 +8862,19 @@
       renderSeatMap();
       updateDataStatus();
       renderGeographyAnalysis();
+      updateHouseDemographics();
+    }
+
+    function updateHouseDemographics() {
+      houseDemographics.update({
+        electionKey: activeElectionYear,
+        geography: activeGeography,
+        mapMode: activeMapMode,
+        official: datasetMeta.kind === "official",
+        ready: dataLoadState === "ready",
+        district: activeDistrict?.district || "",
+        districtNames: allDistricts.map(district => district.district)
+      });
     }
 
     function syncSelectedDistrictUi() {
@@ -8704,6 +8957,7 @@
           partyMap: {},
           partyVote: {},
           statusMap: {},
+          groupedCandidates: new Set(),
           electedSet: new Set(),
           electedOrder: {},
           first: {},
@@ -8711,6 +8965,7 @@
         };
 
         entries.forEach(r => {
+          if (r.candidate_grouped === "true") d.groupedCandidates.add(r.candidate);
           if (r.candidate) d.partyMap[r.candidate] = r.candidate_party || d.partyMap[r.candidate] || "Independent";
           if (r.excluded_candidate && r.excluded_party) d.partyMap[r.excluded_candidate] = r.excluded_party || d.partyMap[r.excluded_candidate] || "Independent";
           if (r.candidate && r.candidate_status) d.statusMap[r.candidate] = r.candidate_status;
@@ -9040,6 +9295,9 @@
       activeElectionAbortController = controller;
       activeElectionYear = requestedYear;
       const election = electionYears[requestedYear];
+      if (!requestedGeography && ["us-president-", "us-senate-"].some(prefix => previousYear.startsWith(prefix) && requestedYear.startsWith(prefix)) && election.geographies?.[activeGeography]) {
+        requestedGeography = activeGeography;
+      }
       if (requestedGeography && election.geographies?.[requestedGeography]) {
         activeGeography = requestedGeography;
       } else if (requestedYear !== previousYear || !election.geographies?.[activeGeography]) {
@@ -9243,6 +9501,25 @@
     setupMapModes();
     setupRankings();
     setupMapZoom();
+    houseDemographics.setup({
+      parseCSV,
+      assetPath: dataAssetPath,
+      onSelect: name => selectDistrictByName(name),
+      onFullResult: () => revealSelectedResult(true, true),
+      onUrlChange: () => updateUrlState(),
+      onDataChange: () => { updateElectionSpecificUi(); renderSeatMap(); },
+      onPeriodChange: async (year, kind, geography) => {
+        suppressUrlUpdate = true;
+        try { await loadElection(`us-${kind}-${year}`, false, ["president", "senate"].includes(kind) ? geography : ""); }
+        finally { suppressUrlUpdate = false; }
+      },
+      onSwingChange: enabled => {
+        if (enabled) activeMapMode = "house-swing";
+        else if (activeMapMode === "house-swing") activeMapMode = "party";
+        updateElectionSpecificUi();
+        renderSeatMap();
+      }
+    });
     window.addEventListener("popstate", restoreUrlState);
     const initialUrlState = readUrlState();
     activeElectionYear = initialUrlState.year || "2022";

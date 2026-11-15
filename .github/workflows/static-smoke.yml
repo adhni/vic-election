@@ -8,7 +8,8 @@ on:
 
 jobs:
   explorer-ux:
-    runs-on: ubuntu-latest
+    # Match the Ubuntu version supported by the pinned Playwright release.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
 
     steps:
@@ -22,6 +23,18 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Check explorer interactions and responsive layouts
         run: python scripts/test_explorer_ux.py --screenshots tmp/explorer-ux
+      - name: Check House demographics and linked map
+        run: python scripts/test_house_demographics_ux.py --screenshots tmp/explorer-ux
+      - name: Check provisional House 2026
+        run: python scripts/test_house_2026_ux.py
+      - name: Check Senate six-year swing
+        run: python scripts/test_senate_swing_ux.py
+      - name: Check provisional Senate 2026
+        run: python scripts/test_senate_2026_ux.py
+      - name: Check presidential state demographics
+        run: python scripts/test_president_demographics_ux.py --screenshots tmp/explorer-ux
+      - name: Check presidential county demographics
+        run: python scripts/test_president_county_demographics_ux.py --screenshots tmp/explorer-ux
       - name: Upload browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -120,7 +133,28 @@ jobs:
           python scripts/validate_turkiye_presidential.py
           python scripts/validate_taiwan_presidential.py
           python scripts/validate_us_house.py
+          python scripts/validate_us_house_demographics.py
+          python scripts/validate_us_house_demographics.py --year 2021
+          python scripts/test_us_house_demographics.py
+          python scripts/validate_us_house_analysis.py
+          python scripts/test_us_house_analysis.py
+          python scripts/build_us_house_comparison.py --check
+          python scripts/build_us_house_comparison.py --period 2018-2020 --check
+          python scripts/build_us_house_comparison.py --period 2016-2018 --check
+          python scripts/build_us_house_comparison.py --period 2020-2022 --check
+          python scripts/build_us_house_2026.py --check
+          python scripts/test_us_house_2026.py
+          python scripts/test_us_house_comparison.py
+          python scripts/test_us_house_boundary_audit.py
+          python scripts/build_us_president_demographics.py --check
+          python scripts/test_us_president_demographics.py
+          python scripts/build_us_president_county_demographics.py --check
+          python scripts/test_us_president_county_demographics.py
           python scripts/validate_us_presidential.py
+          python scripts/build_us_senate_2026.py --check
+          python scripts/test_us_senate_2026.py
+          python scripts/build_us_senate_comparison.py --check
+          python scripts/test_us_senate_comparison.py
           python scripts/validate_us_senate.py
           python scripts/validate_us_governor.py
           python scripts/validate_indonesia_presidential.py

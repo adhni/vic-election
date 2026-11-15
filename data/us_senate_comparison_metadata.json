@@ -1,0 +1,80 @@
+{
+  "periods": [
+    [
+      2016,
+      2022
+    ],
+    [
+      2018,
+      2024
+    ],
+    [
+      2020,
+      2026
+    ]
+  ],
+  "summary": {
+    "2016-2022-state": {
+      "rows": 34,
+      "eligible": 30,
+      "stricter": 29
+    },
+    "2016-2022-county": {
+      "rows": 2060,
+      "eligible": 1895,
+      "stricter": 1830
+    },
+    "2018-2024-state": {
+      "rows": 33,
+      "eligible": 28,
+      "stricter": 28
+    },
+    "2018-2024-county": {
+      "rows": 1877,
+      "eligible": 1630,
+      "stricter": 1630
+    },
+    "2020-2026-state": {
+      "rows": 35,
+      "eligible": 27,
+      "stricter": 26
+    },
+    "2020-2026-county": {
+      "rows": 2444,
+      "eligible": 1933,
+      "stricter": 1869
+    }
+  },
+  "policy": "Regular seats only, paired six years apart by Senate class. Florida/Ohio 2026 specials are excluded. Positive named D/R votes required in both years; grouped Other is never allocated to a party. Exclude Alaska/Maine count bases and incompatible Connecticut county demographics. County matches are reporting-identifier matches, not individual boundary audits. County flip flags describe local party leaders, not Senate seats.",
+  "demographics": "Fixed 2024 ACS state one-year/county five-year snapshot, not demographic change or causation. Earlier populations can differ.",
+  "provisional_2026": "Call the Map / civicAPI snapshot 2026-11-14T15:01:38Z, CC BY 4.0. Uncalled Alaska excluded. County source residuals retained without imputation; see us_2026_senate_metadata.json.",
+  "class_sources": [
+    "https://www.senate.gov/senators/Class_I.htm",
+    "https://www.senate.gov/senators/Class_II.htm",
+    "https://www.senate.gov/senators/Class_III.htm"
+  ],
+  "input_sha256": {
+    "us_2016_senate_county_fpp.csv": "a87ec1a1ae80f97270437948329c5c0053c8dbb287ba5dc84daa6822f5bbf846",
+    "us_2016_senate_state_fpp.csv": "b19c5462fcfe01c0d81a4383c85043cd0f706fbbca4779fb68075e6a9ec31346",
+    "us_2018_senate_county_fpp.csv": "36780d036fe3c96660801032f807bd6b4e3f918439b2fc894488a83757fb7da1",
+    "us_2018_senate_state_fpp.csv": "c63e1213135816927f8aea0ea96aef061186e88583b55019255ba1dbcc296d0c",
+    "us_2020_senate_county_fpp.csv": "da85a34b0083035956eec349c4fa1b7eaee9e473eb9c7e67936b5e9cfae01daa",
+    "us_2020_senate_state_fpp.csv": "cddf0481bd253f1d0a86629e83944bc2c758d919f7fd9dae49bfba9c12c6ddbb",
+    "us_2022_senate_county_fpp.csv": "0410ad13fdf329a6056623ed6bd3956e36a4d8ebc64ec2f8e91e9bfb5b97ecaf",
+    "us_2022_senate_state_fpp.csv": "be2219f16a3314baf02486ad9cfed3495e72563284fe64125268306117f02afc",
+    "us_2024_county_demographics.csv": "2ce62db18019cdb1a53816e7705320d24c31ec67f158077853c15f40cb7c7741",
+    "us_2024_senate_county_fpp.csv": "48b9db41889ea93c23867767b3c2914c36cff808964d6e769db92c3e011f263e",
+    "us_2024_senate_state_fpp.csv": "0e6734486bfd0069541e4a7b5fb069630cedcde00954b2d981f7aaf6598ff09a",
+    "us_2024_state_demographics.csv": "747979bb153e368ad6b4776ddddd037f0b137c46eaed9ee1869f7e201075ab2c",
+    "us_2026_senate_county_fpp.csv": "e14450931261d7bd2cee6af6c0516008a13e50d8cd10aca0ae3352fbd30dd84c",
+    "us_2026_senate_state_fpp.csv": "f530857cbad128645ba2d852016c9eabcdf681f379f66d741e63ce3a8daac573"
+  },
+  "output_sha256": {
+    "us_senate_state_2016_2022_comparison.csv": "76e8838d69876c35370eaeb58be6770bda0afcbd147e5bc705ada83999987498",
+    "us_senate_county_2016_2022_comparison.csv": "d4cbdf1a53b7090222c3840038909f52e2c39212f8f6fc254d9459adf89bb067",
+    "us_senate_state_2018_2024_comparison.csv": "4555e96e6a01ba9a9abac620a8ecae175456fd2c1184b66978b62c77721b8eff",
+    "us_senate_county_2018_2024_comparison.csv": "fd7f00455170b69abbbb372000fdc8b3a0e52f23aa1b110a4faf09afdb380617",
+    "us_senate_state_2020_2026_comparison.csv": "28f867072075eb0863a84e7ba85975367b04d738365547a73f01b703dbb71903",
+    "us_senate_county_2020_2026_comparison.csv": "d30a4141948402ab4ae7ea08b93860b5c0516a0ad487ad31f44f3fb0392af578"
+  }
+}
