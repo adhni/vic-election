@@ -15,8 +15,7 @@ from build_us_house_analysis import read_csv, summarize_result, formatted
 ROOT = Path(__file__).resolve().parents[1]
 STEM = 'us_house_2022_2024_comparison'
 CHANGED_STATES = {'Alabama', 'Georgia', 'Louisiana', 'New York', 'North Carolina'}
-UNCHANGED_2020_STATES = {'Alaska', 'Delaware', 'North Dakota', 'South Dakota', 'Vermont', 'Wyoming'}
-BOUNDARY_2020_SOURCE = 'https://www.census.gov/programs-surveys/geography/guidance/geo-areas/congressional-dist.html'
+BOUNDARY_2020_SOURCE = 'https://www.census.gov/geographies/reference-files/2020/geo/block-assignment-files.html'
 BOUNDARY_SOURCE = 'https://www.census.gov/programs-surveys/acs/technical-documentation/table-and-geography-changes/2024/geography-changes.html'
 
 
@@ -32,22 +31,33 @@ def build_rows(root=ROOT, period='2022-2024'):
     codes = {row['constituency_code'] for row in demographics}
     if len(codes) != 435 or set(years[end]) != codes or (start == 2022 and set(years[start]) != codes):
         raise ValueError('Expected the same 435 district identifiers in both elections and demographics')
+    boundary_audit = {}
+    if start == 2020:
+        audit_path = root / 'data/us_house_2020_2022_boundary_audit.csv'
+        audit_meta = json.loads((root / 'data/us_house_2020_2022_boundary_audit_metadata.json').read_text())
+        if hashlib.sha256(audit_path.read_bytes()).hexdigest() != audit_meta['output_sha256']:
+            raise ValueError('Boundary audit hash mismatch')
+        boundary_audit = {row['constituency_code']: row for row in read_csv(audit_path)}
+        if len(boundary_audit) != 435 or boundary_audit.keys() != codes:
+            raise ValueError('Boundary audit must cover all 435 voting districts')
     output = []
     for demo in demographics:
         code, state = demo['constituency_code'], demo['state']
-        contests = {year: summarize_result(years[year][code]) if code in years[year] else {
+        audit = boundary_audit.get(code)
+        stable = audit['boundary_unchanged_verified'] == 'true' if audit else state not in CHANGED_STATES
+        source_codes = {start: audit['previous_constituency_code'] if audit and stable else code, end: code}
+        contests = {year: summarize_result(years[year][source_codes[year]]) if source_codes[year] in years[year] else {
             'elected_party': '', 'contest_status': 'missing_previous_district', 'democratic_votes': '', 'republican_votes': '',
             'two_party_analysis_eligible': 'false', 'two_party_exclusion_reason': 'missing_previous_district',
             'multiple_major_party_candidates': 'false', 'democratic_two_party_share_pct': '',
         } for year in years}
-        if any(years[year][code][0]['electorate_type'] != state for year in years if code in years[year]):
+        if any(years[year][source_codes[year]][0]['electorate_type'] != state for year in years if source_codes[year] in years[year]):
             raise ValueError(f'State identity mismatch: {code}')
         reasons = []
-        stable = state in UNCHANGED_2020_STATES if start == 2020 else state not in CHANGED_STATES
-        if stable and code not in years[start]:
+        if stable and source_codes[start] not in years[start]:
             raise ValueError(f'Unchanged district missing from previous election: {code}')
         if not stable:
-            reasons.append('state_plan_changed_not_individually_verified')
+            reasons.append('district_boundary_changed' if start == 2020 else 'state_plan_changed_not_individually_verified')
         # The compact sources can mix first and decisive RCV counts across years.
         if state in {'Alaska', 'Maine'}:
             reasons.append('ranked_choice_count_basis_not_standardized')
@@ -61,6 +71,9 @@ def build_rows(root=ROOT, period='2022-2024'):
                'comparison_eligible': str(eligible).lower(),
                'comparison_sensitivity_eligible': str(eligible and not multiple).lower(),
                'comparison_exclusion_reason': ';'.join(reasons)}
+        if audit:
+            row['boundary_audit_method'] = audit['audit_method']
+            row['boundary_previous_constituency_code'] = audit['previous_constituency_code']
         for year, result in contests.items():
             for field in ('elected_party', 'democratic_votes', 'republican_votes', 'two_party_analysis_eligible',
                           'multiple_major_party_candidates', 'democratic_two_party_share_pct'):
@@ -85,6 +98,8 @@ def artifacts(root=ROOT, period='2022-2024'):
     writer.writerows(rows)
     content = buffer.getvalue().encode()
     inputs = [f'data/us_{year}_house_fpp.csv' for year in (start, end)] + ['data/us_2024_house_analysis.csv']
+    if start == 2020:
+        inputs.extend(['data/us_house_2020_2022_boundary_audit.csv', 'data/us_house_2020_2022_boundary_audit_metadata.json'])
     metadata = {
         'election_years': [2022, 2024], 'demographic_year': 2024,
         'boundary_source': BOUNDARY_SOURCE,
@@ -107,14 +122,15 @@ def artifacts(root=ROOT, period='2022-2024'):
     if start == 2020:
         metadata.update({
             'election_years': [start, end], 'boundary_source': BOUNDARY_2020_SOURCE,
-            'boundary_source_section': 'What are Congressional Districts?',
-            'boundary_evidence': 'Census identifies six single-member states as the exceptions to new 2022 plans: Alaska, Delaware, North Dakota, South Dakota, Vermont, Wyoming.',
-            'excluded_changed_plan_states': sorted({row['state'] for row in rows} - UNCHANGED_2020_STATES),
-            'boundary_policy': 'Conservatively include only the six verified unchanged at-large states. All other districts remain unverified and excluded; no reconstructed votes.',
+            'boundary_source_section': '2020 Redistricting Data Block Assignment Files; 118th Congress Block Equivalency Files',
+            'boundary_evidence': 'All 435 districts audited individually. Compare 2020 Census block membership with every previous in-state district; NC uses its actual 2020 election polygons. Six exact matches remain.',
+            'boundary_audit': 'data/us_house_2020_2022_boundary_audit.csv',
+            'boundary_policy': 'Use individual district audit results, not a state exclusion list. Only exact verified matches are eligible; high overlap alone is not an unchanged boundary. No reconstructed votes.',
             'seat_flip_definition': 'Different official elected parties in 2020 and 2022 on verified unchanged boundaries; blank where unavailable. General-election snapshots, not intervening by-elections.',
             'change_definition': '2022 two-party share minus 2020 two-party share in percentage points; Republican change is the negative of Democratic change.',
-            'sample_note': 'Only Delaware, Vermont and Wyoming pass all contest and count-basis checks. This tiny sample does not describe national patterns.',
+            'sample_note': 'Individual audit: six unchanged district matches, then three comparable contests (Delaware, Vermont, Wyoming). Other districts have changed block membership or materially different NC polygons. This small sample does not describe national patterns.',
         })
+        metadata.pop('excluded_changed_plan_states', None)
     return content, (json.dumps(metadata, indent=2) + '\n').encode(), metadata
 
 

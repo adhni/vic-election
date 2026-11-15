@@ -168,7 +168,7 @@
     const eligible = row && row[state.sample === "sensitivity" ? "comparison_sensitivity_eligible" : "comparison_eligible"] === "true";
     if (!eligible) {
       let detail = !row ? (error ? "Comparison unavailable; open Demographics to retry." : "Loading comparison…")
-        : row.boundary_unchanged_verified !== "true" ? "State plan changed; district not individually verified."
+        : row.boundary_unchanged_verified !== "true" ? (row.boundary_audit_method ? "District boundaries changed between the two elections." : "State plan changed; district not individually verified.")
         : ["Alaska", "Maine"].includes(row.state) ? "Ranked-choice count bases not standardized."
         : row.comparison_eligible !== "true" ? "Both years need reported votes and named candidates for both parties."
         : "Multiple major-party candidates in at least one year.";
@@ -304,7 +304,7 @@
 
   function exclusionNote(row) {
     if (matched() && row.comparison_eligible !== "true") {
-      if (row.boundary_unchanged_verified !== "true") return "Not plotted: this state's congressional plan changed. This district has not been individually verified as unchanged.";
+      if (row.boundary_unchanged_verified !== "true") return row.boundary_audit_method ? "Not plotted: this district’s boundaries changed between the two elections." : "Not plotted: this state's congressional plan changed. This district has not been individually verified as unchanged.";
       if (["Alaska", "Maine"].includes(row.state)) return "Not plotted: ranked-choice count bases have not been standardized across years.";
       return "Not plotted: both years need named Democratic and Republican candidates with positive reported votes.";
     }
@@ -499,7 +499,11 @@
     dom.download.textContent = `Download ${periodLabel()} comparison`;
     dom.outcome.value = state.outcome;
     dom.comparisonNote.textContent = matched() ? `2024 ACS demographics held fixed · Same matched districts for both years and change · Map and full results show ${context.electionKey === "us-house-2022" ? "2022" : "2024"}` : "2024 ACS demographics and 2024 election results";
-    if (state.period === "2020-2022") dom.comparisonNote.textContent += " · Only 3 comparable seats: Delaware, Vermont, Wyoming. This small sample does not represent the country.";
+    if (state.period === "2020-2022" && data) {
+      const unchanged = data.rows.filter(row => row.boundary_unchanged_verified === "true").length;
+      const comparable = sampleRows().length;
+      dom.comparisonNote.textContent += ` · District audit: ${unchanged} unchanged seats; ${comparable} with comparable contests. This small sample does not represent the country.`;
+    }
     dom.panel.classList.toggle("house-republican", state.party === "republican");
     if (!data) {
       dom.status.textContent = error || "Loading district demographics…";

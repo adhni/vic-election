@@ -77,6 +77,13 @@ class EarlierComparisonTests(unittest.TestCase):
     def test_2020_period_uses_only_verified_contested_seats(self):
         rows = build_rows(period='2020-2022')
         self.assertEqual(len(rows), 435)
+        with (ROOT / 'data/us_house_2020_2022_boundary_audit.csv').open() as handle:
+            audit = {r['constituency_code']: r for r in csv.DictReader(handle)}
+        for row in rows:
+            self.assertEqual(row['boundary_unchanged_verified'], audit[row['constituency_code']]['boundary_unchanged_verified'])
+            self.assertEqual(row['boundary_audit_method'], audit[row['constituency_code']]['audit_method'])
+            if row['boundary_unchanged_verified'] == 'false':
+                self.assertIn('district_boundary_changed', row['comparison_exclusion_reason'])
         self.assertEqual({r['district'] for r in rows if r['comparison_eligible'] == 'true'},
                          {'Delaware at-large', 'Vermont at-large', 'Wyoming at-large'})
         self.assertEqual(sum(r['boundary_unchanged_verified'] == 'true' for r in rows), 6)

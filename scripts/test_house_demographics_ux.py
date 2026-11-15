@@ -494,7 +494,10 @@ def check_earlier_period(browser, base_url):
     page.locator("#houseDemographicPeriod").select_option("2020-2022")
     expect(page.locator(".house-scatter-point")).to_have_count(3)
     assert set(page.locator(".house-scatter-point").evaluate_all("els => els.map(e => e.dataset.district)")) == {r["district"] for r in matched}
-    expect(page.locator("#houseDemographicComparisonNote")).to_contain_text("Only 3 comparable seats")
+    expect(page.locator("#houseDemographicComparisonNote")).to_contain_text("District audit: 6 unchanged seats; 3 with comparable contests")
+    page.locator("#houseDemographicDistrict").select_option("Hawaii 2nd")
+    expect(page.locator("#houseDemographicSelectedNote")).to_contain_text("this district’s boundaries changed")
+    expect(page.locator("#houseDemographicSelectedNote")).not_to_contain_text("not been individually verified")
     expect(page.locator("#mapSubtitle")).to_contain_text("2020 → 2022")
     expect(page.locator("#houseSwingTitle")).to_contain_text("2020 → 2022")
     expect(page.locator("#houseDemographicYLabel")).to_contain_text("2022 − 2020")
