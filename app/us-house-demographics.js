@@ -321,9 +321,10 @@
     dom.chart.querySelectorAll(".house-scatter-point").forEach(point => {
       const selected = point.dataset.district === row.district;
       point.setAttribute("aria-pressed", String(selected));
-      point.setAttribute("r", selected ? "6" : "4");
+      point.setAttribute("r", selected ? "7" : point.classList.contains("house-seat-flipped") ? "5" : "4");
       if (!dom.chart.contains(document.activeElement)) point.setAttribute("tabindex", selected || (!points.some(p => p.row.district === row.district) && point.dataset.index === "0") ? "0" : "-1");
     });
+    dom.chart.querySelectorAll(".house-seat-flipped").forEach(point => point.parentNode.appendChild(point));
     const selected = dom.chart.querySelector('[aria-pressed="true"]');
     if (selected) selected.parentNode.appendChild(selected);
   }
@@ -401,7 +402,7 @@
     points = rows.map((row, index) => ({ row, index, x: x(Number(row[state.metric])), y: y(voteShare(row)) }));
     points.forEach(point => {
       const label = `${point.row.district}: ${format(point.row[state.metric])}; ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}${flipLabel(point.row) ? " · " + flipLabel(point.row) : ""}`;
-      const circle = svgElement("circle", { cx: point.x, cy: point.y, r: 4, class: "house-scatter-point", role: "button", "data-district": point.row.district, "data-index": point.index, "aria-label": label, "aria-pressed": "false", tabindex: "-1" });
+      const circle = svgElement("circle", { cx: point.x, cy: point.y, r: point.row.seat_flipped === "true" ? 5 : 4, class: `house-scatter-point${point.row.seat_flipped === "true" ? " house-seat-flipped" : ""}`, role: "button", "data-district": point.row.district, "data-index": point.index, "aria-label": label, "aria-pressed": "false", tabindex: "-1" });
       if (changing()) circle.style.fill = swingVisual(point.row.district).color;
       graph.append(circle);
     });

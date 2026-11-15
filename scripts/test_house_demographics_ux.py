@@ -453,17 +453,26 @@ def check_seat_flip_badges(browser, base_url):
     page = browser.new_page(viewport={"width": 1440, "height": 1050})
     open_demographics(page, base_url)
     page.locator("#houseDemographicOutcome").select_option("change")
+    with (ROOT / "data/us_house_2022_2024_comparison.csv").open() as handle:
+        flips = {row["district"] for row in csv.DictReader(handle) if row["seat_flipped"] == "true" and row["comparison_eligible"] == "true"}
+    expect(page.get_by_text("Outlined = flipped seat", exact=True)).to_be_visible()
+    assert set(page.locator(".house-seat-flipped").evaluate_all("els => els.map(e => e.dataset.district)")) == flips
     for district, text in (("California 13th", "Flipped to Democrat"), ("Colorado 8th", "Flipped to Republican")):
         page.locator("#houseDemographicDistrict").select_option(district)
         expect(page.locator("#houseDemographicFlip")).to_contain_text(text)
         expect(page.locator("#houseDemographicFlip")).to_contain_text("2022 → 2024")
         marker = page.locator(f'.house-scatter-point[data-district="{district}"]')
         expect(marker).to_have_attribute("aria-label", re.compile(text))
+        expect(marker).to_have_class(re.compile("house-seat-flipped"))
+        assert marker.evaluate("e => getComputedStyle(e).strokeWidth") == "2px"
         expect(page.locator(f'.district-shape[data-district="{district}"]')).to_have_attribute("aria-label", re.compile(text))
         page.locator("#houseDemographicParty").select_option("republican")
         expect(page.locator("#houseDemographicFlip")).to_contain_text(text)
     page.locator("#houseDemographicDistrict").select_option("Montana 2nd")
     expect(page.locator("#houseDemographicFlip")).to_be_hidden()
+    held = page.locator('.house-scatter-point[data-district="Montana 2nd"]')
+    expect(held).not_to_have_class(re.compile("house-seat-flipped"))
+    assert held.evaluate("e => getComputedStyle(e).stroke") == "rgb(255, 255, 255)"
     page.locator("#houseDemographicDistrict").select_option("New York 19th")
     expect(page.locator("#houseDemographicFlip")).to_be_hidden()
     page.locator("#houseDemographicDistrict").select_option("Alaska at-large")

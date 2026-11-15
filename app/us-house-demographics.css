@@ -120,3 +120,10 @@
 .house-flip-badge, .house-swing-lists .house-flip-badge { display: inline-flex; align-items: center; border: 1px solid #c9ddef; border-radius: 99px; padding: 4px 8px; background: #eaf3fc; color: #2166ac; font-size: 10px; font-weight: 700; line-height: 1.4; }
 .house-flip-badge.house-flip-republican { border-color: #f0d2ce; background: #fcefeb; color: #b51f24; }
 #houseDemographicFlip { color: var(--muted); font-size: 11px; }
+
+.house-chart-key { display: flex; }
+.house-chart-key > span:not(.house-key-flip) { display: none; }
+.house-swing-view .house-chart-key > span { display: inline-flex; }
+.house-chart-key .house-key-flip::before { box-sizing: border-box; width: 11px; height: 11px; background: #f4f5f2; border: 2px solid #242b34; }
+.house-scatter-point.house-seat-flipped { stroke: #242b34; stroke-width: 2; fill-opacity: 1; }
+.house-scatter-point:not(.house-seat-flipped):is([aria-pressed="true"], :hover, :focus-visible) { stroke: #fff; stroke-width: 2; filter: drop-shadow(0 0 2px rgba(0,0,0,.5)); }

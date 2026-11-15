@@ -35,7 +35,7 @@ We also exclude Alaska and Maine because the compact election sources can mix fi
 
 Two-party share = party votes / (Democratic votes + Republican votes). Candidate totals follow the existing official-source election files, including their documented limitations. No hypothetical results on redrawn boundaries are estimated. Year-specific source shares remain in the download for audit even on excluded districts; eligibility is explicit, and change is blank unless comparable.
 
-A small **Flipped to Democrat/Republican** badge identifies a changed winning party in the selected district, chart/map tooltips, and any affected swing ranking row. It compares the official elected parties in the 2022 and 2024 general-election snapshots on verified unchanged boundaries, independently of two-party share eligibility. Large swings in held seats do not receive a badge; unverified changed-plan districts remain unlabelled. This does not track intervening by-elections or party switches.
+**Flipped seats have a larger dot with a dark outline directly on the scatterplot**, explained by the chart key. A small **Flipped to Democrat/Republican** badge also identifies a changed winning party in the selected district, chart/map tooltips, and any affected swing ranking row. It compares the official elected parties in the 2022 and 2024 general-election snapshots on verified unchanged boundaries, independently of two-party share eligibility. Large swings in held seats do not receive a badge; unverified changed-plan districts remain unlabelled. This does not track intervening by-elections or party switches.
 
 ## Files and reproduction
 
