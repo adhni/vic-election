@@ -29,6 +29,21 @@ class ComparisonTests(unittest.TestCase):
                 self.assertEqual(row['comparison_eligible'], 'false')
                 self.assertEqual(row['democratic_share_change_pp'], '')
 
+    def test_flips_use_elected_parties_and_verified_boundaries(self):
+        for row in self.rows:
+            parties = {year: self.sources[year][row['constituency_code']][0]['elected_party'] for year in (2022, 2024)}
+            statuses = [self.sources[year][row['constituency_code']][0]['contest_status'] for year in (2022, 2024)]
+            for year in parties:
+                self.assertEqual(row[f'elected_party_{year}'], parties[year])
+            valid = row['state'] not in CHANGED_STATES and all(parties.values()) and all(status in {'official', 'uncontested'} for status in statuses)
+            self.assertEqual(row['seat_flipped'], str(parties[2022] != parties[2024]).lower() if valid else '')
+        by_name = {row['district']: row for row in self.rows}
+        self.assertEqual(by_name['California 13th']['seat_flipped'], 'true')
+        self.assertEqual(by_name['Colorado 8th']['seat_flipped'], 'true')
+        self.assertEqual(by_name['Montana 2nd']['seat_flipped'], 'false')  # big swing, same winning party
+        self.assertEqual(by_name['Alaska at-large']['seat_flipped'], 'true')  # known winners, excluded vote-count comparison
+        self.assertEqual(by_name['New York 19th']['seat_flipped'], '')  # changed plan
+
     def test_independent_vote_arithmetic_and_common_sample(self):
         for row in self.rows:
             shares = {}

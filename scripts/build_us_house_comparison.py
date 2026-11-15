@@ -53,9 +53,13 @@ def build_rows(root=ROOT):
                'comparison_sensitivity_eligible': str(eligible and not multiple).lower(),
                'comparison_exclusion_reason': ';'.join(reasons)}
         for year, result in contests.items():
-            for field in ('democratic_votes', 'republican_votes', 'two_party_analysis_eligible',
+            for field in ('elected_party', 'democratic_votes', 'republican_votes', 'two_party_analysis_eligible',
                           'multiple_major_party_candidates', 'democratic_two_party_share_pct'):
                 row[f'{field}_{year}'] = result[field]
+        # Winner changes use official elected parties, independently of share eligibility.
+        winner_comparable = stable and all(result['elected_party'] and result['contest_status'] in {'official', 'uncontested'}
+                                           for result in contests.values())
+        row['seat_flipped'] = str(contests[2022]['elected_party'] != contests[2024]['elected_party']).lower() if winner_comparable else ''
         # Delta is withheld when boundaries or contest/count bases are not comparable.
         row['democratic_share_change_pp'] = formatted(float(contests[2024]['democratic_two_party_share_pct'])
                                                      - float(contests[2022]['democratic_two_party_share_pct'])) if eligible else ''
@@ -80,6 +84,7 @@ def artifacts(root=ROOT):
         'boundary_policy': 'Exclude every district in a changed-plan state conservatively; no claim that each excluded district changed.',
         'ranked_choice_policy': 'Exclude Alaska and Maine; candidate-count bases have not been standardized across years.',
         'sample_policy': 'Both named major parties and positive reported votes in both years; sensitivity also excludes multiple major-party candidates in either year.',
+        'seat_flip_definition': 'Different official elected parties in 2022 and 2024 on verified unchanged boundaries; blank where winner comparison is unavailable. Independent of swing eligibility; general-election snapshots, not intervening by-elections.',
         'change_definition': '2024 two-party share minus 2022 two-party share in percentage points; Republican change is the negative of Democratic change.',
         'interpretation': 'Fixed 2024 ACS snapshot, equal-weight districts. Does not measure demographic change, individual voting behavior, or causation. Midterm/presidential turnout and candidate differences can affect changes.',
         'districts': len(rows),

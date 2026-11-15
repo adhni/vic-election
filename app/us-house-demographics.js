@@ -130,6 +130,18 @@
 
   // Map direction always uses Democratic change, independently of the chart's party.
   const swingColors = { democraticStrong: "#2166ac", democratic: "#9ecae1", neutral: "#f1efeb", republican: "#efaaa3", republicanStrong: "#b51f24", excluded: "#8b9098" };
+  function flipLabel(row) {
+    if (row?.seat_flipped !== "true") return "";
+    const party = row.elected_party_2024 === "Democratic" ? "Democrat" : row.elected_party_2024;
+    return `Flipped to ${party}`;
+  }
+  function flipBadge(row) {
+    const badge = document.createElement("span");
+    badge.className = `house-flip-badge${row.elected_party_2024 === "Republican" ? " house-flip-republican" : ""}`;
+    badge.textContent = flipLabel(row);
+    badge.title = `2022 → 2024: ${row.elected_party_2022} → ${row.elected_party_2024}`;
+    return badge;
+  }
   function swingLegend() {
     return [[swingColors.democraticStrong, "Toward D ≥5 pp"], [swingColors.democratic, "Toward D 0.5–5 pp"],
       [swingColors.neutral, "Less than 0.5 pp"], [swingColors.republican, "Toward R 0.5–5 pp"],
@@ -152,7 +164,7 @@
       : (magnitude >= 5 ? swingColors.republicanStrong : swingColors.republican);
     return { color, fill: color,
       label: delta === 0 ? "No change in two-party share" : `${magnitude.toFixed(1)} pp toward ${delta > 0 ? "Democrats" : "Republicans"}`,
-      detail: `Democratic share: ${Number(row.democratic_two_party_share_pct_2022).toFixed(1)}% in 2022 → ${Number(row.democratic_two_party_share_pct_2024).toFixed(1)}% in 2024` };
+      detail: `Democratic share: ${Number(row.democratic_two_party_share_pct_2022).toFixed(1)}% in 2022 → ${Number(row.democratic_two_party_share_pct_2024).toFixed(1)}% in 2024${flipLabel(row) ? " · " + flipLabel(row) : ""}` };
   }
   function showSwing() {
     state.view = true;
@@ -185,6 +197,7 @@
           const name = document.createElement("strong"), detail = document.createElement("span");
           const share = year => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
           name.textContent = row.district;
+          if (flipLabel(row)) name.append(document.createTextNode(" "), flipBadge(row));
           detail.textContent = `${share(2022).toFixed(1)}% → ${share(2024).toFixed(1)}% · ${outcomeFormat(voteShare(row))}`;
           button.type = "button";
           button.dataset.district = row.district;
@@ -278,6 +291,9 @@
     dom.selection.classList.toggle("hidden", !row);
     if (!row) return;
     dom.district.value = row.district;
+    dom.flip.classList.toggle("hidden", !flipLabel(row));
+    dom.flip.replaceChildren();
+    if (flipLabel(row)) dom.flip.append(flipBadge(row), document.createTextNode(" · 2022 → 2024"));
     dom.values.textContent = `${format(row[state.metric])} · ${outcomeLabel()}: ${outcomeFormat(voteShare(row))}`;
     if (matched() && row.comparison_eligible === "true") {
       const share = year => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
@@ -384,7 +400,7 @@
     });
     points = rows.map((row, index) => ({ row, index, x: x(Number(row[state.metric])), y: y(voteShare(row)) }));
     points.forEach(point => {
-      const label = `${point.row.district}: ${format(point.row[state.metric])}; ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}`;
+      const label = `${point.row.district}: ${format(point.row[state.metric])}; ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}${flipLabel(point.row) ? " · " + flipLabel(point.row) : ""}`;
       const circle = svgElement("circle", { cx: point.x, cy: point.y, r: 4, class: "house-scatter-point", role: "button", "data-district": point.row.district, "data-index": point.index, "aria-label": label, "aria-pressed": "false", tabindex: "-1" });
       if (changing()) circle.style.fill = swingVisual(point.row.district).color;
       graph.append(circle);
@@ -409,7 +425,7 @@
 
   function showTooltip(point) {
     if (!point || !graph) { dom.tooltip.classList.add("hidden"); return; }
-    dom.tooltip.textContent = `${point.row.district}\n${format(point.row[state.metric])} · ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}`;
+    dom.tooltip.textContent = `${point.row.district}\n${format(point.row[state.metric])} · ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}${flipLabel(point.row) ? " · " + flipLabel(point.row) : ""}`;
     dom.tooltip.classList.remove("hidden");
     const box = graph.getBoundingClientRect(), parent = dom.panel.getBoundingClientRect();
     const px = box.left - parent.left + point.x;
@@ -479,7 +495,7 @@
 
   function setup(options) {
     callbacks = options;
-    const ids = { controls: "houseViewControls", grid: "explorerGrid", panel: "houseDemographicsPanel", resultsButton: "houseResultsView", demographicsButton: "houseDemographicsView", metric: "houseDemographicMetric", sample: "houseDemographicSample", party: "houseDemographicParty", outcome: "houseDemographicOutcome", comparisonNote: "houseDemographicComparisonNote", xRange: "houseDemographicXRange", yRange: "houseDemographicYRange", yLabel: "houseDemographicYLabel", status: "houseDemographicStatus", retry: "houseDemographicRetry", content: "houseDemographicContent", statistics: "houseDemographicStatistics", chart: "houseDemographicChart", axis: "houseDemographicAxis", selection: "houseDemographicSelection", district: "houseDemographicDistrict", values: "houseDemographicSelectedValues", note: "houseDemographicSelectedNote", uncertainty: "houseDemographicUncertaintyText", fullResult: "houseDemographicFullResult", swingRankings: "houseSwingRankings", swingRankingNote: "houseSwingRankingNote", swingLists: "houseSwingLists", tooltip: "houseDemographicTooltip" };
+    const ids = { controls: "houseViewControls", grid: "explorerGrid", panel: "houseDemographicsPanel", resultsButton: "houseResultsView", demographicsButton: "houseDemographicsView", metric: "houseDemographicMetric", sample: "houseDemographicSample", party: "houseDemographicParty", outcome: "houseDemographicOutcome", comparisonNote: "houseDemographicComparisonNote", xRange: "houseDemographicXRange", yRange: "houseDemographicYRange", yLabel: "houseDemographicYLabel", status: "houseDemographicStatus", retry: "houseDemographicRetry", content: "houseDemographicContent", statistics: "houseDemographicStatistics", chart: "houseDemographicChart", axis: "houseDemographicAxis", selection: "houseDemographicSelection", district: "houseDemographicDistrict", values: "houseDemographicSelectedValues", flip: "houseDemographicFlip", note: "houseDemographicSelectedNote", uncertainty: "houseDemographicUncertaintyText", fullResult: "houseDemographicFullResult", swingRankings: "houseSwingRankings", swingRankingNote: "houseSwingRankingNote", swingLists: "houseSwingLists", tooltip: "houseDemographicTooltip" };
     dom = Object.fromEntries(Object.entries(ids).map(([key, id]) => [key, document.getElementById(id)]));
     readLocation();
     dom.resultsButton.onclick = () => { state.view = false; render(); callbacks.onUrlChange(); };

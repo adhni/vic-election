@@ -449,6 +449,34 @@ def check_swing_map(browser, base_url, screenshots):
     print("PASS: all 435 swing colours, excluded geography, top shifts, linked keyboard selection, party-invariant map, URLs, history, mobile and map-only loading", flush=True)
 
 
+def check_seat_flip_badges(browser, base_url):
+    page = browser.new_page(viewport={"width": 1440, "height": 1050})
+    open_demographics(page, base_url)
+    page.locator("#houseDemographicOutcome").select_option("change")
+    for district, text in (("California 13th", "Flipped to Democrat"), ("Colorado 8th", "Flipped to Republican")):
+        page.locator("#houseDemographicDistrict").select_option(district)
+        expect(page.locator("#houseDemographicFlip")).to_contain_text(text)
+        expect(page.locator("#houseDemographicFlip")).to_contain_text("2022 → 2024")
+        marker = page.locator(f'.house-scatter-point[data-district="{district}"]')
+        expect(marker).to_have_attribute("aria-label", re.compile(text))
+        expect(page.locator(f'.district-shape[data-district="{district}"]')).to_have_attribute("aria-label", re.compile(text))
+        page.locator("#houseDemographicParty").select_option("republican")
+        expect(page.locator("#houseDemographicFlip")).to_contain_text(text)
+    page.locator("#houseDemographicDistrict").select_option("Montana 2nd")
+    expect(page.locator("#houseDemographicFlip")).to_be_hidden()
+    page.locator("#houseDemographicDistrict").select_option("New York 19th")
+    expect(page.locator("#houseDemographicFlip")).to_be_hidden()
+    page.locator("#houseDemographicDistrict").select_option("Alaska at-large")
+    expect(page.locator("#houseDemographicFlip")).to_contain_text("Flipped to Republican")
+    expect(page.locator("#houseDemographicSelectedValues")).to_contain_text("Not comparable")
+    page.set_viewport_size({"width": 320, "height": 1000})
+    page.locator("#houseDemographicDistrict").select_option("California 13th")
+    expect(page.locator("#houseDemographicFlip")).to_contain_text("Flipped to Democrat")
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth + 1")
+    page.close()
+    print("PASS: actual winner flips, party-independent badges, held seats, unverified boundaries, excluded-count races and mobile", flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--screenshots", type=Path)
@@ -471,6 +499,7 @@ def main():
             check_election_comparison(browser, base_url, args.screenshots)
             check_2022_entry(browser, base_url)
             check_swing_map(browser, base_url, args.screenshots)
+            check_seat_flip_badges(browser, base_url)
             check_retry(browser, base_url)
             check_pending_election_switch(browser, base_url)
             check_layout_and_touch(browser, base_url, args.screenshots)

@@ -17,6 +17,7 @@
   "boundary_policy": "Exclude every district in a changed-plan state conservatively; no claim that each excluded district changed.",
   "ranked_choice_policy": "Exclude Alaska and Maine; candidate-count bases have not been standardized across years.",
   "sample_policy": "Both named major parties and positive reported votes in both years; sensitivity also excludes multiple major-party candidates in either year.",
+  "seat_flip_definition": "Different official elected parties in 2022 and 2024 on verified unchanged boundaries; blank where winner comparison is unavailable. Independent of swing eligibility; general-election snapshots, not intervening by-elections.",
   "change_definition": "2024 two-party share minus 2022 two-party share in percentage points; Republican change is the negative of Democratic change.",
   "interpretation": "Fixed 2024 ACS snapshot, equal-weight districts. Does not measure demographic change, individual voting behavior, or causation. Midterm/presidential turnout and candidate differences can affect changes.",
   "districts": 435,
@@ -28,5 +29,5 @@
     "data/us_2024_house_fpp.csv": "7d5ce57a74fd98299cb3f106631edba23a701d4e73aee5dd6ef1020c8ce9541c",
     "data/us_2024_house_analysis.csv": "d9677e6d5adea5c655d74aeea0fc152c227f00f3006789c6daf6649d9340b15c"
   },
-  "output_sha256": "1c1a8499ad781c97e6a4efeed9fe93aff50ef6d457df2f0170cc03537503c2d2"
+  "output_sha256": "fc01a136976c2fa6a54e87df8bd0805e517665e46dc402e02a214cc3136c5cf1"
 }
