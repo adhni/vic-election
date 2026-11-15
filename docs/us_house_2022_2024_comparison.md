@@ -1,5 +1,7 @@
 # US House 2022–2024 comparison
 
+The selector now also offers [2024 → 2026 provisional results](us_house_2026.md), with a dated snapshot, actual 2026 maps, 236 matched seats and explicit exclusions for uncalled races and changed plans.
+
 The demographic chart supports 2022 share, 2024 share, and 2024 minus 2022 change in **percentage points**, for either party. Demographics remain the **2024 ACS one-year snapshot** throughout. This answers whether districts with a particular demographic profile shifted between elections; it does not measure demographic change or how individuals voted.
 
 ## Available views

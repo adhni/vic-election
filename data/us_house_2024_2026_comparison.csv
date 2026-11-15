@@ -1,0 +1,436 @@
+constituency_code,district,state,demographic_year,boundary_unchanged_verified,comparison_eligible,comparison_sensitivity_eligible,comparison_exclusion_reason,elected_party_2024,democratic_votes_2024,republican_votes_2024,democratic_two_party_share_pct_2024,elected_party_2026,elected_member_2026,democratic_votes_2026,republican_votes_2026,democratic_two_party_share_pct_2026,result_called_2026,seat_flipped,democratic_share_change_pp
+0101,Alabama 1st,Alabama,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,70929,258619,21.523117,Republican,Jerry Carl,94925,137016,40.926356,true,,
+0102,Alabama 2nd,Alabama,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,158041,131414,54.599506,Democratic,Shomari C. Figures,124422,107049,53.752738,true,,
+0103,Alabama 3rd,Alabama,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_democratic_candidate,Republican,0,243848,,Republican,Mike Rogers,79926,141800,36.047193,true,,
+0104,Alabama 4th,Alabama,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_democratic_candidate,Republican,0,274498,,Republican,Robert B. Aderholt,53633,160008,25.104264,true,,
+0105,Alabama 5th,Alabama,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_democratic_candidate,Republican,0,250322,,Republican,Dale W. Strong,124763,142080,46.755208,true,,
+0106,Alabama 6th,Alabama,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,102504,243741,29.604471,Republican,Gary Palmer,110957,149921,42.532141,true,,
+0107,Alabama 7th,Alabama,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,186723,106312,63.720375,Democratic,Terri Sewell,174823,77085,69.399543,true,,
+0200,Alaska at-large,Alaska,2024,true,false,false,2026:race_not_called;ranked_choice_count_basis_not_standardized,Republican,156245,159550,49.476717,,,21187,132053,13.826025,false,,
+0401,Arizona 1st,Arizona,2024,true,true,true,,Republican,208966,225538,48.092998,Democratic,Amish Shah,185813,161118,53.559065,true,true,5.466067
+0402,Arizona 2nd,Arizona,2024,true,true,true,,Republican,184985,221413,45.518187,Republican,Eli Crane,160084,163530,49.467576,true,false,3.949389
+0403,Arizona 3rd,Arizona,2024,true,true,true,,Democratic,143336,53705,72.744251,Democratic,Yassamin Ansari,130716,2020,98.478182,true,false,25.733931
+0404,Arizona 4th,Arizona,2024,true,true,true,,Democratic,176428,152052,53.710424,Democratic,Greg Stanton,159251,89811,63.940304,true,false,10.22988
+0405,Arizona 5th,Arizona,2024,true,true,true,,Republican,167680,255628,39.611819,Republican,Mark Lamb,157036,167969,48.318026,true,false,8.706207
+0406,Arizona 6th,Arizona,2024,true,true,true,,Republican,204774,215596,48.712801,Democratic,JoAnna Mendoza,190058,160972,54.142951,true,true,5.43015
+0407,Arizona 7th,Arizona,2024,true,true,true,,Democratic,171954,99057,63.449085,Democratic,Adelita Grijalva,148177,57712,71.969362,true,false,8.520277
+0408,Arizona 8th,Arizona,2024,true,true,true,,Republican,160344,208269,43.49928,Republican,"Abraham ""Abe"" Hamadeh",140203,147023,48.812782,true,false,5.313502
+0409,Arizona 9th,Arizona,2024,true,true,true,,Republican,132640,249583,34.702255,Republican,Paul Gosar,123129,166469,42.517214,true,false,7.814959
+0501,Arkansas 1st,Arkansas,2024,true,true,true,,Republican,64113,194711,24.770887,Republican,Rick Crawford,60304,127245,32.15373,true,false,7.382843
+0502,Arkansas 2nd,Arkansas,2024,true,true,true,,Republican,125777,180509,41.065214,Republican,French Hill,123209,127550,49.134428,true,false,8.069214
+0503,Arkansas 3rd,Arkansas,2024,true,true,true,,Republican,95652,192101,33.241009,Republican,Steve Womack,96591,127497,43.104048,true,false,9.863039
+0504,Arkansas 4th,Arkansas,2024,true,true,true,,Republican,73207,197046,27.088321,Republican,Bruce Westerman,69324,131470,34.524936,true,false,7.436615
+0601,California 1st,California,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,110636,208592,34.657361,Democratic,Mike McGuire,161643,114195,58.6007,true,,
+0602,California 2nd,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,272883,106734,71.883767,Democratic,Jared Huffman,207788,102664,66.930798,true,,
+0603,California 3rd,California,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,188067,234246,44.53261,Democratic,Ami Bera,175672,123243,58.769884,true,,
+0604,California 4th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called;2026:both_named_major_parties_need_positive_votes,Democratic,227730,114950,66.455585,,,248435,0,100,false,,
+0605,California 5th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,140919,227643,38.234815,Republican,Tom McClintock,127226,160543,44.211155,true,,
+0606,California 6th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2026:both_named_major_parties_need_positive_votes,Democratic,165408,121664,57.618995,Democratic,Richard Pan,158747,0,100,true,,
+0607,California 7th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2026:both_named_major_parties_need_positive_votes,Democratic,197429,98341,66.750854,Democratic,Doris Matsui,251751,0,100,true,,
+0608,California 8th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,201962,71068,73.970626,Democratic,John Garamendi,189090,68459,73.419039,true,,
+0609,California 9th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,130183,121174,51.792073,Democratic,Josh Harder,142387,69842,67.091208,true,,
+0610,California 10th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,242325,122219,66.473457,Democratic,Mark DeSaulnier,213252,92690,69.703408,true,,
+0611,California 11th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2026:both_named_major_parties_need_positive_votes,Democratic,274796,64315,81.034234,Democratic,Scott Wiener,300795,0,100,true,,
+0612,California 12th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_republican_candidate;2026:both_named_major_parties_need_positive_votes,Democratic,283025,0,,Democratic,Lateefah Simon,257312,0,100,true,,
+0613,California 13th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,105554,105367,50.044329,Democratic,Adam Gray,106405,64158,62.384573,true,,
+0614,California 14th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2026:both_named_major_parties_need_positive_votes,Democratic,187263,89125,67.753665,Democratic,Aisha Wahab,212224,0,100,true,,
+0615,California 15th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,211648,77896,73.097008,Democratic,Kevin Mullin,196694,49341,79.945536,true,,
+0616,California 16th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_republican_candidate,Democratic,308476,0,,Democratic,Sam Liccardo,217789,61687,77.927622,true,,
+0617,California 17th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,172462,82415,67.664795,Democratic,Ro Khanna,152940,57509,72.673189,true,,
+0618,California 18th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,147674,80832,64.625874,Democratic,Zoe Lofgren,143694,53307,72.940746,true,,
+0619,California 19th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,252458,111862,69.295674,Democratic,Jimmy Panetta,221204,85675,72.08183,true,,
+0620,California 20th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_democratic_candidate,Republican,0,288788,,Republican,Vince Fong,96320,152557,38.701849,true,,
+0621,California 21st,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,102798,92733,52.573761,Democratic,Jim Costa,101829,56177,64.446287,true,,
+0622,California 22nd,California,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,78023,89484,46.578949,Democratic,Randy Villegas,99696,47355,67.796887,true,,
+0623,California 23rd,California,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called,Republican,105563,159286,39.857806,,,104728,108006,49.229554,false,,
+0624,California 24th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,214724,127755,62.696983,Democratic,Salud Carbajal,187234,95600,66.199255,true,,
+0625,California 25th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,137837,107194,56.252882,Democratic,Raul Ruiz,134806,69756,65.899825,true,,
+0626,California 26th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,187393,146913,56.054333,Democratic,Jacqui Irwin,164433,96929,62.91389,true,,
+0627,California 27th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,154040,146050,51.331267,Democratic,George Whitesides,148956,83037,64.20711,true,,
+0628,California 28th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,204489,110455,64.928686,Democratic,Judy Chu,181333,79194,69.602383,true,,
+0629,California 29th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2026:both_named_major_parties_need_positive_votes,Democratic,146312,63374,69.776714,Democratic,Luz Maria Rivas,174725,0,100,true,,
+0630,California 30th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,213100,98559,68.376014,Democratic,Laura Friedman,201469,58073,77.624816,true,,
+0631,California 31st,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,148095,99856,59.727527,Democratic,Gil Cisneros,158126,80047,66.391237,true,,
+0632,California 32nd,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,212934,108711,66.201558,Democratic,Brad Sherman,182516,88695,67.29668,true,,
+0633,California 33rd,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,137197,96078,58.813418,Democratic,Pete Aguilar,139462,62778,68.958663,true,,
+0634,California 34th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_republican_candidate;2026:both_named_major_parties_need_positive_votes,Democratic,189414,0,,Democratic,Angela Gonzales-Torres,174431,0,100,true,,
+0635,California 35th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,136413,97142,58.407227,Democratic,Norma J. Torres,138258,68424,66.894069,true,,
+0636,California 36th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,246002,111985,68.718138,Democratic,Ted W. Lieu,223690,82671,73.015168,true,,
+0637,California 37th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_republican_candidate;2026:both_named_major_parties_need_positive_votes,Democratic,160364,0,,Democratic,Sydney Kamlager-Dove,183206,0,100,true,,
+0638,California 38th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,165110,110818,59.838074,Democratic,Hilda Solis,145246,70107,67.445543,true,,
+0639,California 39th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,130191,99469,56.688583,Democratic,Mark Takano,122551,55766,68.726481,true,,
+0640,California 40th,California,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called;2026:both_named_major_parties_need_positive_votes,Republican,171637,211998,44.739661,,,0,238473,0,false,,
+0641,California 41st,California,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,171229,183216,48.309047,Democratic,Linda Sánchez,170959,82001,67.583412,true,,
+0642,California 42nd,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,159153,74410,68.141358,Democratic,Robert Garcia,174960,107503,61.940856,true,,
+0643,California 43rd,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,160080,53152,75.07316,Democratic,Maxine Waters,155911,32027,82.958742,true,,
+0644,California 44th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,164765,66087,71.372568,Democratic,Nanette Diaz Barragan,148691,33158,81.766191,true,,
+0645,California 45th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,158264,157611,50.103364,Democratic,Derek Tran,151434,96826,60.998147,true,,
+0646,California 46th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,134013,77279,63.425496,Democratic,Lou Correa,139372,55441,71.541427,true,,
+0647,California 47th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,181721,171554,51.438964,Democratic,Dave Min,166642,117905,58.563963,true,,
+0648,California 48th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,146665,213625,40.707486,Democratic,Marni von Wilpert,158038,107117,59.60212,true,,
+0649,California 49th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,197397,180950,52.173534,Democratic,Mike Levin,185741,128200,59.164302,true,,
+0650,California 50th,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,231836,128859,64.274803,Democratic,Scott Peters,190261,109853,63.396243,true,,
+0651,California 51st,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,198835,128749,60.697409,Democratic,Sara Jacobs,184748,95532,65.915513,true,,
+0652,California 52nd,California,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,172217,87501,66.309228,Democratic,Juan Vargas,152372,60587,71.549923,true,,
+0801,Colorado 1st,Colorado,2024,true,true,true,,Democratic,264694,74598,78.013628,Democratic,Melat Kiros,239082,43070,84.735178,true,false,6.72155
+0802,Colorado 2nd,Colorado,2024,true,true,true,,Democratic,284994,120633,70.260116,Democratic,Joe Neguse,278499,87354,76.123197,true,false,5.863081
+0803,Colorado 3rd,Colorado,2024,true,true,true,,Republican,182147,201951,47.422012,Republican,Jeff Hurd,159512,165497,49.079256,true,false,1.657244
+0804,Colorado 4th,Colorado,2024,true,false,false,2026:race_not_called,Republican,188249,240213,43.935985,,,187745,184220,50.473835,false,,
+0805,Colorado 5th,Colorado,2024,true,true,true,,Republican,147972,197924,42.779333,Democratic,Jessica Killin,157799,141984,52.637741,true,true,9.858408
+0806,Colorado 6th,Colorado,2024,true,true,true,,Democratic,202686,132174,60.528579,Democratic,Jason Crow,195047,92314,67.875251,true,false,7.346672
+0807,Colorado 7th,Colorado,2024,true,true,true,,Democratic,235688,175273,57.350454,Democratic,Brittany Pettersen,230008,136948,62.679994,true,false,5.32954
+0808,Colorado 8th,Colorado,2024,true,true,true,,Republican,160871,163320,49.622291,Democratic,Manny Rutinel,160954,117709,57.759372,true,true,8.137081
+0901,Connecticut 1st,Connecticut,2024,true,true,true,,Democratic,208649,115065,64.454735,Democratic,Luke Bronin,170480,78461,68.48209,true,false,4.027355
+0902,Connecticut 2nd,Connecticut,2024,true,true,true,,Democratic,218162,157878,58.015637,Democratic,Joe Courtney,182381,109653,62.451975,true,false,4.436338
+0903,Connecticut 3rd,Connecticut,2024,true,true,true,,Democratic,193684,135113,58.906864,Democratic,Rosa L. DeLauro,151261,87885,63.250483,true,false,4.343619
+0904,Connecticut 4th,Connecticut,2024,true,true,true,,Democratic,200791,122793,62.052203,Democratic,Jim Himes,157485,78059,66.86012,true,false,4.807917
+0905,Connecticut 5th,Connecticut,2024,true,true,true,,Democratic,180268,157258,53.408626,Democratic,Jahana Hayes,146353,106667,57.842463,true,false,4.433837
+1000,Delaware at-large,Delaware,2024,true,true,true,,Democratic,287830,209606,57.86272,Democratic,Sarah McBride,243687,135016,64.347787,true,false,6.485067
+1201,Florida 1st,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,140980,274108,33.963882,Republican,Jimmy Patronis,103752,181952,36.314507,true,,
+1202,Florida 2nd,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,154323,247957,38.362086,Republican,Austin Rogers,148279,161185,47.914782,true,,
+1203,Florida 3rd,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,150283,241174,38.390679,Republican,Kat Cammack,129176,165664,43.812237,true,,
+1204,Florida 4th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,165912,222364,42.730429,Republican,Aaron Bean,144926,151217,48.937844,true,,
+1205,Florida 5th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,156570,267471,36.923316,Republican,John Rutherford,145345,188076,43.592035,true,,
+1206,Florida 6th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,143050,284414,33.464806,Republican,Randy Fine,132374,195388,40.387232,true,,
+1207,Florida 7th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,179917,233937,43.473544,Republican,Ryan Elijah,159682,161302,49.747651,true,,
+1208,Florida 8th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,170096,280352,37.761517,Republican,Mike Haridopolos,149667,169928,46.830207,true,,
+1209,Florida 9th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,178785,138076,56.423795,Democratic,Darren Soto,143329,141810,50.266361,true,,
+1210,Florida 10th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified;2026:both_named_major_parties_need_positive_votes,Democratic,181455,109460,62.373889,Democratic,Maxwell Frost,0,0,,true,,
+1211,Florida 11th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,176726,269277,39.624397,Republican,Joe Strada,168226,193591,46.494775,true,,
+1212,Florida 12th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,124949,306487,28.96119,Republican,Gus Bilirakis,131435,150869,46.557966,true,,
+1213,Florida 13th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,185930,225636,45.176229,Republican,Anna Paulina Luna,152698,155189,49.595468,true,,
+1214,Florida 14th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,199423,145643,57.792712,Democratic,Kathy Castor,153785,137702,52.758785,true,,
+1215,Florida 15th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,152361,195334,43.820302,Republican,Laurel Lee,137543,163375,45.707801,true,,
+1216,Florida 16th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,168625,247516,40.521121,Republican,Sydney Gruters,161138,175653,47.845103,true,,
+1217,Florida 17th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,164566,291347,36.095922,Republican,Greg Steube,143712,209188,40.723151,true,,
+1218,Florida 18th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,119637,225170,34.696801,Republican,Scott Franklin,127747,137704,48.124513,true,,
+1219,Florida 19th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,140038,275708,33.683547,Republican,Jim Schwartzel,122441,198766,38.119032,true,,
+1220,Florida 20th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified;2024:candidate_vote_totals_unavailable;uncontested;no_named_republican_candidate;no_positive_democratic_votes,Democratic,0,0,,Democratic,Debbie Wasserman Schultz,182712,53396,77.384926,true,,
+1221,Florida 21st,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,171312,277435,38.175631,Republican,Brian Mast,153268,184334,45.39902,true,,
+1222,Florida 22nd,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,201608,165248,54.955623,Democratic,Pia Dandiya,153183,141943,51.904271,true,,
+1223,Florida 23rd,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,196311,178006,52.44512,Democratic,Lois Frankel,170028,88939,65.656242,true,,
+1224,Florida 24th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,194874,90692,68.241317,Democratic,Oliver Gilbert,164895,39547,80.656127,true,,
+1225,Florida 25th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,186942,156208,54.478217,Democratic,Jared Moskowitz,143930,130881,52.374177,true,,
+1226,Florida 26th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,89072,217199,29.08274,Republican,Mario Diaz-Balart,112899,114581,49.630297,true,,
+1227,Florida 27th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called,Republican,130708,199159,39.624455,,,123438,124528,49.780212,false,,
+1228,Florida 28th,Florida,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,115280,210057,35.434027,Republican,Carlos Giménez,107907,125034,46.323747,true,,
+1301,Georgia 1st,Georgia,2024,true,true,true,,Republican,135281,220576,38.015551,Republican,"James ""Jim"" Kingston",132609,140266,48.596977,true,false,10.581426
+1302,Georgia 2nd,Georgia,2024,true,true,true,,Democratic,176028,136473,56.32878,Democratic,Sanford Bishop,148422,95638,60.813734,true,false,4.484954
+1303,Georgia 3rd,Georgia,2024,true,true,true,,Republican,138749,273036,33.694525,Republican,Brian Jack,133240,188624,41.396366,true,false,7.701841
+1304,Georgia 4th,Georgia,2024,true,true,true,,Democratic,229290,74071,75.583216,Democratic,"Henry ""Hank"" Johnson Jr.",217340,45644,82.643811,true,false,7.060595
+1305,Georgia 5th,Georgia,2024,true,true,true,,Democratic,294470,49221,85.678706,Democratic,Nikema Williams,274922,29862,90.202242,true,false,4.523536
+1306,Georgia 6th,Georgia,2024,true,true,true,,Democratic,277027,93909,74.683234,Democratic,Lucy McBath,264024,62379,80.888962,true,false,6.205728
+1307,Georgia 7th,Georgia,2024,true,true,true,,Republican,149535,275907,35.148152,Republican,Rich McCormick,149457,191624,43.818624,true,false,8.670472
+1308,Georgia 8th,Georgia,2024,true,true,true,,Republican,104434,231547,31.083305,Republican,Austin Scott,105005,160171,39.598229,true,false,8.514924
+1309,Georgia 9th,Georgia,2024,true,true,true,,Republican,121754,271062,30.995173,Republican,Andrew Clyde,125653,182986,40.711964,true,false,9.716791
+1310,Georgia 10th,Georgia,2024,true,true,true,,Republican,150274,256442,36.948141,Republican,Houston Gaines,151125,174843,46.361913,true,false,9.413772
+1311,Georgia 11th,Georgia,2024,true,true,true,,Republican,131064,269849,32.691382,Republican,John Cowan,146967,182230,44.644088,true,false,11.952706
+1312,Georgia 12th,Georgia,2024,true,true,true,,Republican,135417,205849,39.680777,Republican,Rick W. Allen,129621,140896,47.916027,true,false,8.23525
+1313,Georgia 13th,Georgia,2024,true,true,true,,Democratic,256902,100730,71.834176,Democratic,Jasmine Clark,248094,62680,79.831003,true,false,7.996827
+1314,Georgia 14th,Georgia,2024,true,true,true,,Republican,134759,243446,35.631205,Republican,Clay Fuller,118446,168830,41.230733,true,false,5.599528
+1501,Hawaii 1st,Hawaii,2024,true,true,true,,Democratic,164237,64373,71.841564,Democratic,Ed Case,126337,40308,75.812056,true,false,3.970492
+1502,Hawaii 2nd,Hawaii,2024,true,true,true,,Democratic,166251,75471,68.77777,Democratic,Jill N. Tokuda,129931,65441,66.504412,true,false,-2.273358
+1601,Idaho 1st,Idaho,2024,true,true,true,,Republican,118656,331049,26.385297,Republican,Russ Fulcher,110112,244717,31.032413,true,false,4.647116
+1602,Idaho 2nd,Idaho,2024,true,true,true,,Republican,126229,250119,33.5405,Republican,Mike Simpson,133156,170868,43.797858,true,false,10.257358
+1701,Illinois 1st,Illinois,2024,true,true,true,,Democratic,208398,108064,65.852456,Democratic,Jonathan Jackson,173891,66109,72.454583,true,false,6.602127
+1702,Illinois 2nd,Illinois,2024,true,true,true,,Democratic,195777,94004,67.56033,Democratic,Donna Miller,159450,57280,73.570802,true,false,6.010472
+1703,Illinois 3rd,Illinois,2024,true,true,true,,Democratic,174825,84987,67.28904,Democratic,Delia Ramirez,156820,45722,77.425917,true,false,10.136877
+1704,Illinois 4th,Illinois,2024,true,true,true,,Democratic,139343,56323,71.214723,Democratic,Patty Garcia,115858,25801,81.786544,true,false,10.571821
+1705,Illinois 5th,Illinois,2024,true,true,true,,Democratic,251025,112931,68.971249,Democratic,Mike Quigley,213959,63286,77.173258,true,false,8.202009
+1706,Illinois 6th,Illinois,2024,true,true,true,,Democratic,196647,166116,54.208119,Democratic,Sean Casten,168682,99288,62.948091,true,false,8.739972
+1707,Illinois 7th,Illinois,2024,true,true,true,,Democratic,222408,44598,83.297005,Democratic,La Shawn Ford,184477,22067,89.316078,true,false,6.019073
+1708,Illinois 8th,Illinois,2024,true,true,true,,Democratic,172920,130153,57.055561,Democratic,Melissa Bean,138727,76884,64.341337,true,false,7.285776
+1709,Illinois 9th,Illinois,2024,true,true,true,,Democratic,231722,107106,68.389271,Democratic,Daniel K. Biss,201881,60703,76.882445,true,false,8.493174
+1710,Illinois 10th,Illinois,2024,true,true,true,,Democratic,196358,131025,59.978069,Democratic,Brad Schneider,168886,71236,70.333414,true,false,10.355345
+1711,Illinois 11th,Illinois,2024,true,true,true,,Democratic,199825,159630,55.591103,Democratic,Bill Foster,171344,95124,64.301905,true,false,8.710802
+1712,Illinois 12th,Illinois,2024,true,true,true,,Republican,94875,272754,25.807268,Republican,Mike Bost,85843,195813,30.477959,true,false,4.670691
+1713,Illinois 13th,Illinois,2024,true,true,true,,Democratic,191339,137917,58.112532,Democratic,Nikki Budzinski,158019,94026,62.694757,true,false,4.582225
+1714,Illinois 14th,Illinois,2024,true,true,true,,Democratic,183446,149464,55.103782,Democratic,Lauren Underwood,153408,91758,62.573114,true,false,7.469332
+1715,Illinois 15th,Illinois,2024,true,false,false,2024:no_named_democratic_candidate,Republican,0,308825,,Republican,Mary Miller,95354,192713,33.101327,true,false,
+1716,Illinois 16th,Illinois,2024,true,false,false,2024:no_named_democratic_candidate,Republican,0,310925,,Republican,Darin LaHood,121569,173330,41.223944,true,false,
+1717,Illinois 17th,Illinois,2024,true,true,true,,Democratic,170261,142567,54.426394,Democratic,Eric Sorensen,142041,94042,60.165704,true,false,5.73931
+1801,Indiana 1st,Indiana,2024,true,true,true,,Democratic,172467,145056,54.31638,Democratic,Frank J. Mrvan,140319,82821,62.88384,true,false,8.56746
+1802,Indiana 2nd,Indiana,2024,true,true,true,,Republican,101962,184848,35.550364,Republican,Rudy Yakym,89179,98843,47.430088,true,false,11.879724
+1803,Indiana 3rd,Indiana,2024,true,true,true,,Republican,97871,202653,32.566783,Republican,Marlin A. Stutzman,90253,109737,45.128756,true,false,12.561973
+1804,Indiana 4th,Indiana,2024,true,true,true,,Republican,100091,209794,32.299401,Republican,Jim Baird,97223,115173,45.774403,true,false,13.475002
+1805,Indiana 5th,Indiana,2024,true,true,true,,Republican,136554,203293,40.181023,Democratic,J.D. Ford,134497,125872,51.656303,true,true,11.47528
+1806,Indiana 6th,Indiana,2024,true,true,true,,Republican,99841,201357,33.147962,Republican,Jefferson Shreve,90652,111169,44.91703,true,false,11.769068
+1807,Indiana 7th,Indiana,2024,true,true,true,,Democratic,185987,78792,70.242353,Democratic,André Carson,159348,42252,79.041667,true,false,8.799314
+1808,Indiana 8th,Indiana,2024,true,true,true,,Republican,95311,219941,30.233274,Republican,Mark Messmer,95362,117714,44.754923,true,false,14.521649
+1809,Indiana 9th,Indiana,2024,true,true,true,,Republican,113400,222884,33.721497,Republican,Erin Houchin,98233,122201,44.563452,true,false,10.841955
+1901,Iowa 1st,Iowa,2024,true,true,true,,Republican,206156,206955,49.903295,Democratic,Christina Bohannan,184006,150719,54.972291,true,true,5.068996
+1902,Iowa 2nd,Iowa,2024,true,true,true,,Republican,169740,233340,42.110747,Democratic,Lindsay James,171577,157775,52.095327,true,true,9.98458
+1903,Iowa 3rd,Iowa,2024,true,true,true,,Republican,197962,213746,48.083107,Democratic,Sarah Trone Garriott,189435,163687,53.645765,true,true,5.562658
+1904,Iowa 4th,Iowa,2024,true,true,true,,Republican,122175,250522,32.781321,Republican,Chris McGowan,124128,178959,40.954577,true,false,8.173256
+2001,Kansas 1st,Kansas,2024,true,true,true,,Republican,93965,210493,30.863042,Republican,Tracey Mann,95911,150544,38.916232,true,false,8.05319
+2002,Kansas 2nd,Kansas,2024,true,true,true,,Republican,115685,172847,40.09434,Republican,Derek Schmidt,110677,125843,46.793929,true,false,6.699589
+2003,Kansas 3rd,Kansas,2024,true,true,true,,Democratic,209871,167570,55.603657,Democratic,Sharice Davids,201050,129537,60.816064,true,false,5.212407
+2004,Kansas 4th,Kansas,2024,true,true,true,,Republican,106632,198465,34.950196,Republican,Ron Estes,114568,139155,45.154755,true,false,10.204559
+2101,Kentucky 1st,Kentucky,2024,true,true,true,,Republican,85524,252729,25.284033,Republican,James Comer,73910,153992,32.430606,true,false,7.146573
+2102,Kentucky 2nd,Kentucky,2024,true,true,true,,Republican,93029,252826,26.898267,Republican,Brett Guthrie,81111,145139,35.850166,true,false,8.951899
+2103,Kentucky 3rd,Kentucky,2024,true,true,true,,Democratic,203100,124713,61.956054,Democratic,Morgan McGarvey,174775,73717,70.334256,true,false,8.378202
+2104,Kentucky 4th,Kentucky,2024,true,false,false,2024:no_named_democratic_candidate,Republican,0,278386,,Republican,Ed Gallrein,103713,137623,42.974525,true,false,
+2105,Kentucky 5th,Kentucky,2024,true,false,false,2024:uncontested;no_named_democratic_candidate,Republican,0,261407,,Republican,Hal Rogers,49805,139808,26.266659,true,false,
+2106,Kentucky 6th,Kentucky,2024,true,true,true,,Republican,130345,222293,36.962834,Democratic,Zach Dembo,138777,114030,54.894445,true,true,17.931611
+2201,Louisiana 1st,Louisiana,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,85911,265028,24.480323,Republican,Steve Scalise,89440,169672,34.517892,true,,
+2202,Louisiana 2nd,Louisiana,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,216491,88693,70.93786,Democratic,"Troy A. Carter, Sr.",192286,36369,84.094378,true,,
+2203,Louisiana 3rd,Louisiana,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,81157,239525,25.307626,Republican,Clay Higgins,85923,144864,37.230433,true,,
+2204,Louisiana 4th,Louisiana,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_democratic_candidate,Republican,0,306248,,Republican,Mike Johnson,85767,144592,37.231886,true,,
+2205,Louisiana 5th,Louisiana,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called,Republican,82981,236870,25.943643,,,84210,143713,36.946688,false,,
+2206,Louisiana 6th,Louisiana,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called,Democratic,184296,111737,62.255222,,,108505,150729,41.856007,false,,
+2301,Maine 1st,Maine,2024,true,false,false,ranked_choice_count_basis_not_standardized,Democratic,249798,154849,61.732325,Democratic,Chellie Pingree,247947,127098,66.111267,true,false,
+2302,Maine 2nd,Maine,2024,true,false,false,ranked_choice_count_basis_not_standardized,Democratic,197151,194445,50.345509,Republican,Paul LePage,164855,170360,49.178885,true,true,
+2401,Maryland 1st,Maryland,2024,true,true,true,,Republican,154985,246356,38.616787,Republican,Andy Harris,150881,164989,47.766803,true,false,9.150016
+2402,Maryland 2nd,Maryland,2024,true,true,true,,Democratic,223797,152079,59.540114,Democratic,"John ""Johnny O"" Olszewski, Jr.",189156,101422,65.096463,true,false,5.556349
+2403,Maryland 3rd,Maryland,2024,true,true,true,,Democratic,236681,151186,61.021175,Democratic,Sarah Elfreth,211989,100054,67.935829,true,false,6.914654
+2404,Maryland 4th,Maryland,2024,true,true,true,,Democratic,239596,30454,88.722829,Democratic,Glenn F. Ivey,173181,11676,93.683766,true,false,4.960937
+2405,Maryland 5th,Maryland,2024,true,true,true,,Democratic,283619,133985,67.915777,Democratic,Adrian Boafo,224047,92154,70.85588,true,false,2.940103
+2406,Maryland 6th,Maryland,2024,true,true,true,,Democratic,199788,175974,53.168761,Democratic,April McClain Delaney,161140,104077,60.757795,true,false,7.589034
+2407,Maryland 7th,Maryland,2024,true,true,true,,Democratic,232849,49799,82.381266,Democratic,Kweisi Mfume,176468,31159,84.9928,true,false,2.611534
+2408,Maryland 8th,Maryland,2024,true,true,true,,Democratic,292101,77821,78.962862,Democratic,Jamie Raskin,229736,40848,84.903764,true,false,5.940902
+2501,Massachusetts 1st,Massachusetts,2024,true,false,false,2024:no_named_republican_candidate;2026:both_named_major_parties_need_positive_votes,Democratic,223325,0,,Democratic,Richard E. Neal,177556,0,100,true,false,
+2502,Massachusetts 2nd,Massachusetts,2024,true,false,false,2024:no_named_republican_candidate;2026:both_named_major_parties_need_positive_votes,Democratic,251441,0,,Democratic,James P. McGovern,198782,0,100,true,false,
+2503,Massachusetts 3rd,Massachusetts,2024,true,false,false,2024:no_named_republican_candidate,Democratic,264698,0,,Democratic,Lori Loureiro Trahan,174853,78849,68.920623,true,false,
+2504,Massachusetts 4th,Massachusetts,2024,true,false,false,2024:no_named_republican_candidate,Democratic,289347,0,,Democratic,Jake Auchincloss,192770,97619,66.383369,true,false,
+2505,Massachusetts 5th,Massachusetts,2024,true,false,false,2024:no_named_republican_candidate;2026:both_named_major_parties_need_positive_votes,Democratic,286689,0,,Democratic,Katherine M. Clark,206925,0,100,true,false,
+2506,Massachusetts 6th,Massachusetts,2024,true,false,false,2024:no_named_republican_candidate,Democratic,321186,0,,Democratic,Dan Koh,206308,119144,63.391222,true,false,
+2507,Massachusetts 7th,Massachusetts,2024,true,false,false,2024:no_named_republican_candidate;2026:both_named_major_parties_need_positive_votes,Democratic,232094,0,,Democratic,Ayanna S. Pressley,158384,0,100,true,false,
+2508,Massachusetts 8th,Massachusetts,2024,true,true,true,,Democratic,265432,110638,70.580477,Democratic,Stephen F. Lynch,195606,75619,72.119458,true,false,1.538981
+2509,Massachusetts 9th,Massachusetts,2024,true,true,true,,Democratic,251931,193822,56.518072,Democratic,Bill Keating,213587,137282,60.873716,true,false,4.355644
+2601,Michigan 1st,Michigan,2024,true,true,true,,Republican,180937,282264,39.062308,Republican,Jack Bergman,179076,217728,45.129585,true,false,6.067277
+2602,Michigan 2nd,Michigan,2024,true,true,true,,Republican,135824,279167,32.729384,Republican,John Moolenaar,132543,220406,37.553018,true,false,4.823634
+2603,Michigan 3rd,Michigan,2024,true,true,true,,Democratic,225510,183952,55.074708,Democratic,Hillary Scholten,212868,153724,58.066734,true,false,2.992026
+2604,Michigan 4th,Michigan,2024,true,true,true,,Republican,184641,234489,44.053396,Democratic,Sean McCann,186238,179505,50.920455,true,true,6.867059
+2605,Michigan 5th,Michigan,2024,true,true,true,,Republican,134282,269215,33.279554,Republican,Tim Walberg,130093,199526,39.467688,true,false,6.188134
+2606,Michigan 6th,Michigan,2024,true,true,true,,Democratic,281162,158658,63.926606,Democratic,Debbie Dingell,262933,118422,68.947044,true,false,5.020438
+2607,Michigan 7th,Michigan,2024,true,true,true,,Republican,209959,226722,48.080636,Democratic,William Lawrence,202672,189485,51.681342,true,true,3.600706
+2608,Michigan 8th,Michigan,2024,true,true,true,,Democratic,217490,189317,53.462699,Democratic,Kristen McDonald Rivet,195877,147857,56.985052,true,false,3.522353
+2609,Michigan 9th,Michigan,2024,true,true,true,,Republican,138138,312593,30.647548,Republican,Lisa McClain,137276,247817,35.647493,true,false,4.999945
+2610,Michigan 10th,Michigan,2024,true,true,true,,Republican,191363,217437,46.81091,Democratic,Christina Hines,188078,162347,53.671399,true,true,6.860489
+2611,Michigan 11th,Michigan,2024,true,true,true,,Democratic,260780,177432,59.510009,Democratic,Jeremy Moss,238750,144529,62.291438,true,false,2.781429
+2612,Michigan 12th,Michigan,2024,true,true,true,,Democratic,253354,92490,73.256728,Democratic,Rashida Tlaib,247185,68960,78.187224,true,false,4.930496
+2613,Michigan 13th,Michigan,2024,true,true,true,,Democratic,220788,78917,73.668441,Democratic,Donavan McKinney,209882,54484,79.390693,true,false,5.722252
+2701,Minnesota 1st,Minnesota,2024,true,false,false,2026:race_not_called,Republican,156375,220929,41.44536,,,163055,162733,50.049419,false,,
+2702,Minnesota 2nd,Minnesota,2024,true,true,true,,Democratic,231751,175621,56.889281,Democratic,Matt Little,214282,160645,57.152992,true,false,0.263711
+2703,Minnesota 3rd,Minnesota,2024,true,true,true,,Democratic,240209,170427,58.49682,Democratic,Kelly Morrison,242079,135504,64.112791,true,false,5.615971
+2704,Minnesota 4th,Minnesota,2024,true,true,true,,Democratic,242802,117618,67.366406,Democratic,Betty McCollum,245699,90067,73.175664,true,false,5.809258
+2705,Minnesota 5th,Minnesota,2024,true,true,true,,Democratic,261066,86213,75.174715,Democratic,Ilhan Omar,263496,55851,82.510874,true,false,7.336159
+2706,Minnesota 6th,Minnesota,2024,true,true,true,,Republican,155836,260095,37.466791,Republican,Tom Emmer,162212,204702,44.209815,true,false,6.743024
+2707,Minnesota 7th,Minnesota,2024,true,true,true,,Republican,114979,275098,29.475975,Republican,Michelle Fischbach,115859,214677,35.051855,true,false,5.57588
+2708,Minnesota 8th,Minnesota,2024,true,true,true,,Republican,176724,244498,41.955074,Republican,Pete Stauber,168427,190667,46.903318,true,false,4.948244
+2801,Mississippi 1st,Mississippi,2024,true,true,true,,Republican,96697,223589,30.190829,Republican,Trent Kelly,99147,141401,41.217138,true,false,11.026309
+2802,Mississippi 2nd,Mississippi,2024,true,true,true,,Democratic,177885,108956,62.015193,Democratic,Bennie Thompson,168760,73898,69.54644,true,false,7.531247
+2803,Mississippi 3rd,Mississippi,2024,true,false,false,2024:uncontested;no_named_democratic_candidate,Republican,0,265159,,Republican,Michael Guest,106206,147004,41.943841,true,false,
+2804,Mississippi 4th,Mississippi,2024,true,true,true,,Republican,75771,215095,26.05014,Republican,Mike Ezell,79367,133614,37.264826,true,false,11.214686
+2901,Missouri 1st,Missouri,2024,true,true,true,,Democratic,233312,56453,80.517661,Democratic,Wesley Bell,189175,32362,85.392056,true,false,4.874395
+2902,Missouri 2nd,Missouri,2024,true,true,true,,Republican,182056,233444,43.816125,Democratic,Fred Wellman,169477,153132,52.533252,true,true,8.717127
+2903,Missouri 3rd,Missouri,2024,true,true,true,,Republican,138532,240620,36.537325,Republican,Bob Onder,125284,149268,45.632157,true,false,9.094832
+2904,Missouri 4th,Missouri,2024,true,true,true,,Republican,96568,259886,27.091294,Republican,Mark Alford,89196,154256,36.638023,true,false,9.546729
+2905,Missouri 5th,Missouri,2024,true,true,true,,Democratic,199900,120957,62.301898,Democratic,Emanuel Cleaver,179256,72572,71.181918,true,false,8.88002
+2906,Missouri 6th,Missouri,2024,true,true,true,,Republican,100999,265210,27.579606,Republican,Chris Stigall,100460,151374,39.891357,true,false,12.311751
+2907,Missouri 7th,Missouri,2024,true,true,true,,Republican,96655,263231,26.857116,Republican,Eric Burlison,90186,158413,36.2777,true,false,9.420584
+2908,Missouri 8th,Missouri,2024,true,true,true,,Republican,77649,271249,22.255502,Republican,Jason Smith,65754,152685,30.101768,true,false,7.846266
+3001,Montana 1st,Montana,2024,true,true,true,,Republican,143783,168529,46.038257,Democratic,Sam Forstag,135096,124747,51.991395,true,true,5.953138
+3002,Montana 2nd,Montana,2024,true,true,true,,Republican,93713,181832,34.010053,Republican,Troy Downing,71179,128185,35.703036,true,false,1.692983
+3101,Nebraska 1st,Nebraska,2024,true,true,true,,Republican,124498,187559,39.895916,Republican,Mike Flood,121340,128772,48.514266,true,false,8.61835
+3102,Nebraska 2nd,Nebraska,2024,true,true,true,,Republican,154369,160198,49.073488,Democratic,Denise Powell,145503,104611,58.174672,true,true,9.101184
+3103,Nebraska 3rd,Nebraska,2024,true,true,true,,Republican,59287,243481,19.58166,Republican,Adrian Smith,49066,174289,21.96772,true,false,2.38606
+3201,Nevada 1st,Nevada,2024,true,true,true,,Democratic,167885,143650,53.889611,Democratic,Dina Titus,140944,89724,61.102537,true,false,7.212926
+3202,Nevada 2nd,Nevada,2024,true,false,false,2024:no_named_democratic_candidate,Republican,0,219919,,Democratic,Teresa Benitez-Thompson,161624,142761,53.098543,true,true,
+3203,Nevada 3rd,Nevada,2024,true,true,true,,Democratic,191304,181084,51.372225,Democratic,Susie Lee,161418,103197,61.001077,true,false,9.628852
+3204,Nevada 4th,Nevada,2024,true,true,true,,Democratic,174926,148061,54.158836,Democratic,Steven Horsford,152281,95097,61.558021,true,false,7.399185
+3301,New Hampshire 1st,New Hampshire,2024,true,true,true,,Democratic,218577,185936,54.034605,Democratic,Stefany Shaheen,180763,136115,57.044983,true,false,3.010378
+3302,New Hampshire 2nd,New Hampshire,2024,true,true,true,,Democratic,211641,187810,52.982969,Democratic,Maggie Goodlander,185900,122645,60.250531,true,false,7.267562
+3401,New Jersey 1st,New Jersey,2024,true,true,true,,Democratic,208808,144390,59.119248,Democratic,Donald Norcross,181836,76463,70.397485,true,false,11.278237
+3402,New Jersey 2nd,New Jersey,2024,true,true,true,,Republican,153117,215946,41.488039,Democratic,Zack Mullock,137722,130305,51.383629,true,true,9.89559
+3403,New Jersey 3rd,New Jersey,2024,true,true,true,,Democratic,202034,169454,54.385068,Democratic,Herb Conaway,173675,97630,64.01467,true,false,9.629602
+3404,New Jersey 4th,New Jersey,2024,true,true,true,,Republican,124803,265652,31.963479,Republican,Chris Smith,109668,157739,41.011641,true,false,9.048162
+3405,New Jersey 5th,New Jersey,2024,true,true,true,,Democratic,208359,165287,55.763744,Democratic,Josh Gottheimer,170168,94149,64.380271,true,false,8.616527
+3406,New Jersey 6th,New Jersey,2024,true,true,true,,Democratic,170275,122519,58.155222,Democratic,Frank Pallone,148155,65247,69.42531,true,false,11.270088
+3407,New Jersey 7th,New Jersey,2024,true,true,true,,Republican,200025,223331,47.24747,Democratic,Rebecca Bennett,192270,137128,58.370118,true,true,11.122648
+3408,New Jersey 8th,New Jersey,2024,true,false,false,2026:both_named_major_parties_need_positive_votes,Democratic,116434,68152,63.078457,Democratic,Rob Menendez,112079,0,100,true,false,
+3409,New Jersey 9th,New Jersey,2024,true,true,true,,Democratic,130514,117939,52.53066,Democratic,Nellie Pou,123779,58909,67.754313,true,false,15.223653
+3410,New Jersey 10th,New Jersey,2024,true,true,true,,Democratic,182020,54405,76.988474,Democratic,LaMonica McIver,154299,28007,84.637368,true,false,7.648894
+3411,New Jersey 11th,New Jersey,2024,true,true,true,,Democratic,222583,164556,57.494337,Democratic,Analilia Mejia,170498,107369,61.359571,true,false,3.865234
+3412,New Jersey 12th,New Jersey,2024,true,true,true,,Democratic,196871,117222,62.679206,Democratic,Adam Hamawy,168166,66417,71.687207,true,false,9.008001
+3501,New Mexico 1st,New Mexico,2024,true,true,true,,Democratic,193203,149546,56.368655,Democratic,Melanie Stansbury,179858,102778,63.635913,true,false,7.267258
+3502,New Mexico 2nd,New Mexico,2024,true,true,true,,Democratic,138177,127145,52.078983,Democratic,Gabe Vasquez,123753,86875,58.754297,true,false,6.675314
+3503,New Mexico 3rd,New Mexico,2024,true,true,true,,Democratic,162342,126085,56.285299,Democratic,Teresa Leger Fernandez,141444,87964,61.656089,true,false,5.37079
+3601,New York 1st,New York,2024,true,true,true,,Republican,183540,226285,44.784969,Republican,Nick LaLota,145869,152546,48.881256,true,false,4.096287
+3602,New York 2nd,New York,2024,true,true,true,,Republican,136371,202597,40.231231,Republican,Andrew Garbarino,118680,124271,48.849356,true,false,8.618125
+3603,New York 3rd,New York,2024,true,true,true,,Democratic,187651,174693,51.78808,Democratic,Tom Suozzi,141870,115330,55.159409,true,false,3.371329
+3604,New York 4th,New York,2024,true,true,true,,Democratic,191760,183157,51.147321,Democratic,Laura Gillen,146755,111878,56.742566,true,false,5.595245
+3605,New York 5th,New York,2024,true,true,true,,Democratic,168425,56689,74.817648,Democratic,Gregory Meeks,129931,31082,80.695969,true,false,5.878321
+3606,New York 6th,New York,2024,true,true,true,,Democratic,120205,74559,61.718285,Democratic,Grace Meng,92474,41225,69.165813,true,false,7.447528
+3607,New York 7th,New York,2024,true,true,true,,Democratic,172795,48435,78.106496,Democratic,Claire Valdez,135179,24370,84.725696,true,false,6.6192
+3608,New York 8th,New York,2024,true,true,true,,Democratic,168036,54863,75.38661,Democratic,Hakeem Jeffries,128197,31969,80.040083,true,false,4.653473
+3609,New York 9th,New York,2024,true,true,true,,Democratic,173207,60064,74.251407,Democratic,Yvette Clarke,146503,30378,82.825742,true,false,8.574335
+3610,New York 10th,New York,2024,true,true,true,,Democratic,206206,37555,84.593516,Democratic,Brad Lander,167343,31912,83.984342,true,false,-0.609174
+3611,New York 11th,New York,2024,true,true,true,,Republican,93586,167099,35.900033,Republican,Nicole Malliotakis,79370,101719,43.829277,true,false,7.929244
+3612,New York 12th,New York,2024,true,true,true,,Democratic,260165,62989,80.508055,Democratic,Micah Lasher,193614,50212,79.406626,true,false,-1.101429
+3613,New York 13th,New York,2024,true,true,true,,Democratic,181800,35822,83.539348,Democratic,Darializa Avila Chevalier,141014,18308,88.508806,true,false,4.969458
+3614,New York 14th,New York,2024,true,true,true,,Democratic,132714,59078,69.196838,Democratic,Alexandria Ocasio-Cortez,107129,29505,78.405814,true,false,9.208976
+3615,New York 15th,New York,2024,true,true,true,,Democratic,130392,36010,78.359635,Democratic,Ritchie Torres,93812,13004,87.825794,true,false,9.466159
+3616,New York 16th,New York,2024,true,true,true,,Democratic,217668,86408,71.58342,Democratic,George Latimer,173981,54938,76.001118,true,false,4.417698
+3617,New York 17th,New York,2024,true,true,true,,Republican,173899,197845,46.779235,Democratic,Cait Conley,167198,148207,53.010574,true,true,6.231339
+3618,New York 18th,New York,2024,true,true,true,,Democratic,207106,155129,57.174486,Democratic,Pat Ryan,169001,99621,62.914058,true,false,5.739572
+3619,New York 19th,New York,2024,true,true,true,,Democratic,192647,184290,51.108541,Democratic,Josh Riley,167555,124621,57.347284,true,false,6.238743
+3620,New York 20th,New York,2024,true,true,true,,Democratic,221997,141151,61.131274,Democratic,Paul Tonko,183640,104538,63.724504,true,false,2.59323
+3621,New York 21st,New York,2024,true,true,true,,Republican,132447,215996,38.011095,Republican,Anthony Constantino,136052,140940,49.117664,true,false,11.106569
+3622,New York 22nd,New York,2024,true,true,true,,Democratic,194450,161939,54.561168,Democratic,John Mannion,161630,114681,58.495681,true,false,3.934513
+3623,New York 23rd,New York,2024,true,true,true,,Republican,128397,246969,34.205815,Republican,Nick Langworthy,120661,182436,39.809368,true,false,5.603553
+3624,New York 24th,New York,2024,true,true,true,,Republican,123317,235867,34.332543,Republican,Claudia Tenney,112697,171722,39.623584,true,false,5.291041
+3625,New York 25th,New York,2024,true,true,true,,Democratic,219175,141195,60.819436,Democratic,Joseph Morelle,176500,103471,63.042244,true,false,2.222808
+3626,New York 26th,New York,2024,true,true,true,,Democratic,209131,111772,65.169537,Democratic,Tim Kennedy,165081,84906,66.035834,true,false,0.866297
+3701,North Carolina 1st,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,186341,180034,50.86073,Democratic,Don Davis,157490,146696,51.774243,true,,
+3702,North Carolina 2nd,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,268662,128164,67.702721,Democratic,Deborah K. Ross,246446,76976,76.199516,true,,
+3703,North Carolina 3rd,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called;2024:no_named_democratic_candidate,Republican,0,248276,,,,118434,118176,50.05452,false,,
+3704,North Carolina 4th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,308064,112084,73.322734,Democratic,Valerie P. Foushee,284548,68019,80.707497,true,,
+3705,North Carolina 5th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called,Republican,162390,238304,40.527185,,,139770,139439,50.059275,false,,
+3706,North Carolina 6th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_democratic_candidate,Republican,0,233303,,Democratic,Cyril Jefferson,140707,134103,51.201557,true,,
+3707,North Carolina 7th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called,Republican,179512,254022,41.406672,,,158391,160702,49.63788,false,,
+3708,North Carolina 8th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,161709,238640,40.392008,Republican,Mark Harris,142659,147683,49.134813,true,,
+3709,North Carolina 9th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,140852,210042,40.140897,Democratic,Richard N. Ojeda II,139456,133196,51.147984,true,,
+3710,North Carolina 10th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,155383,233814,39.923997,Republican,Pat Harrigan,144081,146590,49.568412,true,,
+3711,North Carolina 11th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,186977,245546,43.229377,Democratic,Jamie Ager,196251,141885,58.039073,true,,
+3712,North Carolina 12th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,259627,91128,74.019472,Democratic,Alma S. Adams,220770,51022,81.227556,true,,
+3713,North Carolina 13th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,171835,243655,41.357193,Democratic,Paul Barringer,160860,152864,51.274369,true,,
+3714,North Carolina 14th,North Carolina,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,168269,232987,41.935572,Democratic,Lakesha Womack,147920,141353,51.135087,true,,
+3800,North Dakota at-large,North Dakota,2024,true,true,true,,Republican,109231,249101,30.483183,Republican,Julie Fedorchak,85892,134477,38.976444,true,false,8.493261
+3901,Ohio 1st,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,213916,177993,54.583079,Democratic,Greg Landsman,176453,139343,55.875629,true,,
+3902,Ohio 2nd,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,96401,268211,26.439338,Republican,David J. Taylor,97638,175411,35.758417,true,,
+3903,Ohio 3rd,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,242632,100355,70.740874,Democratic,Joyce Beatty,231925,68407,77.222873,true,,
+3904,Ohio 4th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,125905,273297,31.539171,Republican,Jim Jordan,95497,197084,32.639508,true,,
+3905,Ohio 5th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,123024,255633,32.489562,Republican,Bob Latta,128142,163382,43.955901,true,,
+3906,Ohio 6th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,122515,245860,33.258229,Republican,Michael A. Rulli,107310,163675,39.599978,true,,
+3907,Ohio 7th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,144613,204494,41.42369,Democratic,Brian Poindexter,180614,148177,54.932769,true,,
+3908,Ohio 8th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,140625,237503,37.189788,Republican,Warren Davidson,154828,168689,47.857763,true,,
+3909,Ohio 9th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,181098,178716,50.331004,Democratic,Marcy Kaptur,159306,142830,52.726587,true,,
+3910,Ohio 10th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,145420,213695,40.493992,Democratic,Kristina Knickerbocker,149024,144086,50.842346,true,,
+3911,Ohio 11th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,236883,59394,79.953219,Democratic,Shontel M. Brown,219971,43373,83.529908,true,,
+3912,Ohio 12th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,119738,260450,31.494419,Republican,Troy Balderson,131211,191926,40.605378,true,,
+3913,Ohio 13th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,197466,188924,51.10536,Democratic,Emilia Sykes,190593,122078,60.956405,true,,
+3914,Ohio 14th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,140431,243427,36.584101,Republican,David P. Joyce,146651,179467,44.968692,true,,
+3915,Ohio 15th,Ohio,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,151411,196338,43.540312,Democratic,Don Leonard,149287,130225,53.409871,true,,
+4001,Oklahoma 1st,Oklahoma,2024,true,true,true,,Republican,107903,188832,36.363422,Republican,Mark Tedford,110707,121397,47.697153,true,false,11.333731
+4002,Oklahoma 2nd,Oklahoma,2024,true,true,true,,Republican,68841,238123,22.426408,Republican,Josh Brecheen,61409,144054,29.888106,true,false,7.461698
+4003,Oklahoma 3rd,Oklahoma,2024,true,false,false,2024:candidate_vote_totals_unavailable;uncontested;no_named_democratic_candidate;no_positive_republican_votes,Republican,0,0,,Republican,Frank Lucas,68832,122181,36.035244,true,false,
+4004,Oklahoma 4th,Oklahoma,2024,true,true,true,,Republican,86641,199962,30.230319,Republican,Tom Cole,86108,125631,40.667048,true,false,10.436729
+4005,Oklahoma 5th,Oklahoma,2024,true,true,true,,Republican,134471,207636,39.306708,Republican,Stephanie Bice,127687,131023,49.355263,true,false,10.048555
+4101,Oregon 1st,Oregon,2024,true,true,true,,Democratic,241556,98908,70.949058,Democratic,Suzanne Bonamici,230771,92675,71.347613,true,false,0.398555
+4102,Oregon 2nd,Oregon,2024,true,true,true,,Republican,115337,224601,33.928834,Republican,Cliff Bentz,118585,189687,38.467652,true,false,4.538818
+4103,Oregon 3rd,Oregon,2024,true,true,true,,Democratic,226405,84344,72.857837,Democratic,Maxine E Dexter,236480,68521,77.534172,true,false,4.676335
+4104,Oregon 4th,Oregon,2024,true,true,true,,Democratic,195862,166430,54.061917,Democratic,Val Hoyle,183146,146022,55.639066,true,false,1.577149
+4105,Oregon 5th,Oregon,2024,true,true,true,,Democratic,191365,180420,51.471953,Democratic,Janelle S Bynum,195056,158996,55.092472,true,false,3.620519
+4106,Oregon 6th,Oregon,2024,true,true,true,,Democratic,180869,157634,53.432023,Democratic,Andrea Salinas,177257,126237,58.405438,true,false,4.973415
+4201,Pennsylvania 1st,Pennsylvania,2024,true,true,true,,Republican,202042,261390,43.596903,Democratic,Bob Harvie,189795,169233,52.863565,true,true,9.266662
+4202,Pennsylvania 2nd,Pennsylvania,2024,true,true,true,,Democratic,193691,77355,71.460564,Democratic,Brendan Boyle,150647,35662,80.858681,true,false,9.398117
+4203,Pennsylvania 3rd,Pennsylvania,2024,true,false,false,2024:uncontested;no_named_republican_candidate;2026:both_named_major_parties_need_positive_votes,Democratic,340223,0,,Democratic,Chris Rabb,258169,0,100,true,false,
+4204,Pennsylvania 4th,Pennsylvania,2024,true,true,true,,Democratic,269066,186457,59.067489,Democratic,Madeleine Dean,233156,113871,67.186703,true,false,8.119214
+4205,Pennsylvania 5th,Pennsylvania,2024,true,true,true,,Democratic,267754,142355,65.288496,Democratic,Mary Gay Scanlon,215673,83059,72.196149,true,false,6.907653
+4206,Pennsylvania 6th,Pennsylvania,2024,true,true,true,,Democratic,235625,183638,56.199808,Democratic,Chrissy Houlahan,201238,110836,64.484065,true,false,8.284257
+4207,Pennsylvania 7th,Pennsylvania,2024,true,true,true,,Republican,199626,203688,49.496422,Democratic,Bob Brooks,165509,129072,56.184547,true,true,6.688125
+4208,Pennsylvania 8th,Pennsylvania,2024,true,true,true,,Republican,189411,195663,49.188208,Democratic,Paige Cognetti,154060,128739,54.476855,true,true,5.288647
+4209,Pennsylvania 9th,Pennsylvania,2024,true,true,true,,Republican,115523,276212,29.490089,Republican,Dan Meuser,104027,165751,38.560224,true,false,9.070135
+4210,Pennsylvania 10th,Pennsylvania,2024,true,true,true,,Republican,200434,205567,49.367859,Democratic,Janelle Stelson,175174,142253,55.185602,true,true,5.817743
+4211,Pennsylvania 11th,Pennsylvania,2024,true,true,true,,Republican,149641,253672,37.102945,Republican,Lloyd Smucker,135225,167894,44.611192,true,false,7.508247
+4212,Pennsylvania 12th,Pennsylvania,2024,true,true,true,,Democratic,234802,181426,56.41187,Democratic,Summer Lee,196365,102807,65.636156,true,false,9.224286
+4213,Pennsylvania 13th,Pennsylvania,2024,true,true,true,,Republican,104823,301460,25.800489,Republican,John Joyce,91726,189919,32.567949,true,false,6.76746
+4214,Pennsylvania 14th,Pennsylvania,2024,true,true,true,,Republican,134755,268380,33.426768,Republican,Guy Reschenthaler,117701,159216,42.504072,true,false,9.077304
+4215,Pennsylvania 15th,Pennsylvania,2024,true,true,true,,Republican,111408,279027,28.534327,Republican,Glenn Thompson,97260,171287,36.217124,true,false,7.682797
+4216,Pennsylvania 16th,Pennsylvania,2024,true,true,true,,Republican,146709,256923,36.347217,Republican,Mike Kelly,132690,154693,46.171833,true,false,9.824616
+4217,Pennsylvania 17th,Pennsylvania,2024,true,true,true,,Democratic,242838,207900,53.875644,Democratic,Chris Deluzio,208847,123115,62.912924,true,false,9.03728
+4401,Rhode Island 1st,Rhode Island,2024,true,true,true,,Democratic,139352,70742,66.328405,Democratic,Gabriel Amo,112107,44901,71.402094,true,false,5.073689
+4402,Rhode Island 2nd,Rhode Island,2024,true,true,true,,Democratic,153439,109381,58.381782,Democratic,Seth Magaziner,121020,73905,62.085417,true,false,3.703635
+4501,South Carolina 1st,South Carolina,2024,true,true,true,,Republican,162582,227502,41.678715,Democratic,Nancy Lacore,162103,158751,50.522356,true,true,8.843641
+4502,South Carolina 2nd,South Carolina,2024,true,true,true,,Republican,142985,211514,40.334387,Republican,Joe Wilson,144865,147791,49.500096,true,false,9.165709
+4503,South Carolina 3rd,South Carolina,2024,true,true,true,,Republican,87735,248451,26.097161,Republican,Sheri Biggs,93955,173960,35.068958,true,false,8.971797
+4504,South Carolina 4th,South Carolina,2024,true,true,true,,Republican,128976,206916,38.398057,Republican,William Timmons,129742,146944,46.891422,true,false,8.493365
+4505,South Carolina 5th,South Carolina,2024,true,true,true,,Republican,130592,228260,36.391604,Republican,Wes Climer,135203,151497,47.158354,true,false,10.76675
+4506,South Carolina 6th,South Carolina,2024,true,true,true,,Democratic,182056,112360,61.836313,Democratic,James E Jim Clyburn,181118,79898,69.389616,true,false,7.553303
+4507,South Carolina 7th,South Carolina,2024,true,true,true,,Republican,129522,240326,35.020333,Republican,Russell Fry,131445,172439,43.254992,true,false,8.234659
+4600,South Dakota at-large,South Dakota,2024,true,true,true,,Republican,117818,303630,27.955525,Republican,Marty Jackley,109997,195588,35.99555,true,false,8.040025
+4701,Tennessee 1st,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,64021,257825,19.891812,Republican,Diana Harshbarger,69207,133592,34.125908,true,,
+4702,Tennessee 2nd,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,111316,250782,30.741954,Republican,Tim Burchett,103311,144892,41.62359,true,,
+4703,Tennessee 3rd,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,102841,236519,30.304397,Republican,Chuck Fleischmann,95051,136110,41.11896,true,,
+4704,Tennessee 4th,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified;2026:race_not_called,Republican,83832,219133,27.670523,,,95585,95305,50.073341,false,,
+4705,Tennessee 5th,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,142387,205075,40.979157,Republican,Charlie Hatcher,99841,110408,47.487027,true,,
+4706,Tennessee 6th,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,106144,225543,32.001254,Republican,Johnny Garrett,113177,120950,48.340004,true,,
+4707,Tennessee 7th,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,122764,191992,39.00291,Republican,Matt Van Epps,115867,121100,48.895838,true,,
+4708,Tennessee 8th,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,85043,240411,26.130575,Republican,David Kustoff,102406,114045,47.311401,true,,
+4709,Tennessee 9th,Tennessee,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,159522,57411,73.535147,Republican,Brent Taylor,109429,111968,49.426596,true,,
+4801,Texas 1st,Texas,2024,false,false,false,state_plan_changed_not_individually_verified;2024:uncontested;no_named_democratic_candidate,Republican,0,258523,,Republican,Nathaniel Moran,81598,181987,30.956997,true,,
+4802,Texas 2nd,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,112252,214631,34.340116,Republican,Steve Toth,139384,144881,49.033121,true,,
+4803,Texas 3rd,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,142953,237794,37.545404,Republican,Keith Self,151689,169276,47.260293,true,,
+4804,Texas 4th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,111696,241603,31.615148,Republican,Pat Fallon,134720,171745,43.959343,true,,
+4805,Texas 5th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,107712,192185,35.916331,Republican,Lance Gooden,122969,130327,48.547549,true,,
+4806,Texas 6th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,98319,188119,34.324706,Republican,Jake Ellzey,128566,140111,47.851509,true,,
+4807,Texas 7th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,149820,94651,61.283342,Democratic,Lizzie Pannill Fletcher,161126,62600,72.019345,true,,
+4808,Texas 8th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,108754,233423,31.782966,Republican,Jessica Hart Steinmann,124840,141874,46.806692,true,,
+4809,Texas 9th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified;2024:uncontested;no_named_republican_candidate,Democratic,184141,0,,Democratic,Leticia Gutierrez,98269,72445,57.563527,true,,
+4810,Texas 10th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,118280,221229,34.838546,Republican,Chris Gober,138832,161425,46.237723,true,,
+4811,Texas 11th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified;2024:uncontested;no_named_democratic_candidate,Republican,0,211975,,Republican,August Pfluger,94353,138627,40.498326,true,,
+4812,Texas 12th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,124154,215564,36.546194,Republican,Craig Goldman,127828,144714,46.902129,true,,
+4813,Texas 13th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified;2024:uncontested;no_named_democratic_candidate,Republican,0,240622,,Republican,Ronny Jackson,84385,158206,34.784885,true,,
+4814,Texas 14th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,95875,210320,31.311746,Republican,Randy Weber,129931,152618,45.985298,true,,
+4815,Texas 15th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,95965,127804,42.885744,Democratic,Bobby Pulido,126395,76375,62.334172,true,,
+4816,Texas 16th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,131391,89281,59.54131,Democratic,Veronica Escobar,139555,57562,70.798054,true,,
+4817,Texas 17th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,97941,193101,33.651844,Republican,Pete Sessions,124469,143558,46.438978,true,,
+4818,Texas 18th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,151834,66810,69.443479,Democratic,Christian Dashaun Menefee,193768,31438,86.040336,true,,
+4819,Texas 19th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_democratic_candidate,Republican,0,214950,,Republican,Tom Sell,67674,154079,30.517738,true,,
+4820,Texas 20th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified;2024:uncontested;no_named_republican_candidate,Democratic,157890,0,,Democratic,Joaquin Castro,151058,43562,77.616894,true,,
+4821,Texas 21st,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,153765,263744,36.829146,Republican,Mark Teixeira,163021,194898,45.546897,true,,
+4822,Texas 22nd,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,127604,209285,37.877164,Republican,Trever Nehls,140115,150520,48.209954,true,,
+4823,Texas 23rd,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,109373,180720,37.702737,Democratic,Katy Padilla Stout,143130,120566,54.278412,true,,
+4824,Texas 24th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,149518,227108,39.69933,Republican,Beth Van Duyne,150125,172011,46.602988,true,,
+4825,Texas 25th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_democratic_candidate,Republican,0,263042,,Republican,Roger Williams,123079,142827,46.286658,true,,
+4826,Texas 26th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,138558,241096,36.495862,Republican,Brandon Gill,148596,183221,44.782516,true,,
+4827,Texas 27th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,94596,183980,33.956981,Republican,Michael Cloud,138072,144627,48.84064,true,,
+4828,Texas 28th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,125280,112018,52.794377,Democratic,Henry Cuellar,113433,51126,68.931508,true,,
+4829,Texas 29th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,99379,52830,65.291146,Democratic,Sylvia Garcia,134277,33698,79.938681,true,,
+4830,Texas 30th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified;2024:no_named_republican_candidate,Democratic,197650,0,,Democratic,Frederick D. Haynes III,187119,39306,82.640609,true,,
+4831,Texas 31st,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,126470,229087,35.569543,Republican,John Carter,136961,164167,45.482652,true,,
+4832,Texas 32nd,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,140536,85941,62.0531,Republican,Jace Yarbrough,134945,142977,48.55499,true,,
+4833,Texas 33rd,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,114289,51864,68.785397,Democratic,Colin Allred,151093,41198,78.57518,true,,
+4834,Texas 34th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,102780,97603,51.291776,Democratic,Vicente Gonzalez,112667,80572,58.304483,true,,
+4835,Texas 35th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,170509,82610,67.363177,Democratic,Johnny C. Garcia,140973,113112,55.482614,true,,
+4836,Texas 36th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,91009,206009,30.640904,Republican,Brian Babin,119848,138121,46.458295,true,,
+4837,Texas 37th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Democratic,252980,80366,75.891116,Democratic,Greg Casar,254957,49469,83.750074,true,,
+4838,Texas 38th,Texas,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,127640,215030,37.248665,Republican,Jon Bonck,144833,157590,47.890868,true,,
+4901,Utah 1st,Utah,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,117319,230975,33.683899,Democratic,Ben McAdams,174492,65190,72.801462,true,,
+4902,Utah 2nd,Utah,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,121114,205234,37.111917,Republican,Blake D. Moore,109504,128006,46.105006,true,,
+4903,Utah 3rd,Utah,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,122780,242496,33.612939,Republican,Celeste Maloy,91988,145942,38.661791,true,,
+4904,Utah 4th,Utah,2024,false,false,false,state_plan_changed_not_individually_verified,Republican,109838,230627,32.261172,Republican,Mike Kennedy,104009,142819,42.13825,true,,
+5000,Vermont at-large,Vermont,2024,true,false,false,2024:no_named_republican_candidate,Democratic,218398,0,,Democratic,Becca Balint,198759,94079,67.873363,true,false,
+5101,Virginia 1st,Virginia,2024,true,true,true,,Republican,208445,269657,43.598437,Democratic,Shannon L. Taylor,212154,200049,51.46833,true,true,7.869893
+5102,Virginia 2nd,Virginia,2024,true,true,true,,Republican,191666,207368,48.032498,Democratic,Elaine G. Luria,182882,152114,54.592294,true,true,6.559796
+5103,Virginia 3rd,Virginia,2024,true,true,true,,Democratic,219926,93801,70.101075,Democratic,"Robert C. ""Bobby"" Scott",186251,60387,75.515938,true,false,5.414863
+5104,Virginia 4th,Virginia,2024,true,true,true,,Democratic,252885,121814,67.490172,Democratic,Jennifer L. McClellan,230609,81794,73.817793,true,false,6.327621
+5105,Virginia 5th,Virginia,2024,true,true,true,,Republican,184229,249564,42.469334,Republican,John J. McGuire III,178403,184142,49.208512,true,false,6.739178
+5106,Virginia 6th,Virginia,2024,true,true,true,,Republican,141612,256933,35.532249,Republican,Ben L. Cline,144195,177180,44.868145,true,false,9.335896
+5107,Virginia 7th,Virginia,2024,true,true,true,,Democratic,203336,192847,51.323757,Democratic,Eugene S. Vindman,196075,122195,61.606498,true,false,10.282741
+5108,Virginia 8th,Virginia,2024,true,true,true,,Democratic,274593,94676,74.361238,Democratic,"Donald S. Beyer, Jr.",259261,57992,81.720583,true,false,7.359345
+5109,Virginia 9th,Virginia,2024,true,true,true,,Republican,109570,290645,27.377784,Republican,H. Morgan Griffith,103087,195307,34.547276,true,false,7.169492
+5110,Virginia 10th,Virginia,2024,true,true,true,,Democratic,215131,196343,52.283012,Democratic,Suhas Subramanyam,207223,122089,62.92604,true,false,10.643028
+5111,Virginia 11th,Virginia,2024,true,true,true,,Democratic,273529,134802,66.987077,Democratic,James R. Walkinshaw,256593,83080,75.541182,true,false,8.554105
+5301,Washington 1st,Washington,2024,true,true,true,,Democratic,227213,132538,63.158407,Democratic,Suzan DelBene,198059,94721,67.647722,true,false,4.489315
+5302,Washington 2nd,Washington,2024,true,true,true,,Democratic,263750,148167,64.02989,Democratic,Rick Larsen,230569,114641,66.790939,true,false,2.761049
+5303,Washington 3rd,Washington,2024,true,true,true,,Democratic,215177,199054,51.946136,Democratic,Marie Gluesenkamp Perez,189802,160595,54.167701,true,false,2.221565
+5304,Washington 4th,Washington,2024,true,false,false,2024:no_named_democratic_candidate,Republican,0,289652,,Republican,Amanda McKinney,111621,130634,46.075829,true,false,
+5305,Washington 5th,Washington,2024,true,false,false,2026:race_not_called,Republican,156074,240619,39.343775,,,151062,164742,47.8341,false,,
+5306,Washington 6th,Washington,2024,true,true,true,,Democratic,239687,182182,56.815504,Democratic,Emily Randall,223381,133747,62.549282,true,false,5.733778
+5307,Washington 7th,Washington,2024,true,true,true,,Democratic,352286,66220,84.177049,Democratic,Pramila Jayapal,323297,44516,87.897111,true,false,3.720062
+5308,Washington 8th,Washington,2024,true,true,true,,Democratic,224607,190675,54.085417,Democratic,Kim Schrier,193482,144885,57.181108,true,false,3.095691
+5309,Washington 9th,Washington,2024,true,false,false,2024:no_named_republican_candidate,Democratic,273381,0,,Democratic,Adam Smith,189326,59174,76.187525,true,false,
+5310,Washington 10th,Washington,2024,true,true,true,,Democratic,203732,143492,58.674516,Democratic,Marilyn Strickland,174446,97054,64.25267,true,false,5.578154
+5401,West Virginia 1st,West Virginia,2024,true,true,true,,Republican,90038,228491,28.266814,Republican,Carol Miller,82705,119087,40.985272,true,false,12.718458
+5402,West Virginia 2nd,West Virginia,2024,true,true,true,,Republican,110775,268190,29.230932,Republican,Riley Moore,98615,144109,40.62845,true,false,11.397518
+5501,Wisconsin 1st,Wisconsin,2024,true,true,true,,Republican,172402,212515,44.789396,Democratic,Mitchell Berman,158839,146885,51.955031,true,true,7.165635
+5502,Wisconsin 2nd,Wisconsin,2024,true,false,false,2026:both_named_major_parties_need_positive_votes,Democratic,320317,136357,70.141282,Democratic,Mark Pocan,317125,0,100,true,false,
+5503,Wisconsin 3rd,Wisconsin,2024,true,true,true,,Republican,200808,212064,48.636866,Democratic,Rebecca Cooke,172757,150873,53.381022,true,true,4.744156
+5504,Wisconsin 4th,Wisconsin,2024,true,true,true,,Democratic,249938,74921,76.937379,Democratic,Gwen Moore,211898,46301,82.067707,true,false,5.130328
+5505,Wisconsin 5th,Wisconsin,2024,true,true,true,,Republican,165653,300521,35.534586,Republican,Scott Fitzgerald,153277,220992,40.953699,true,false,5.419113
+5506,Wisconsin 6th,Wisconsin,2024,true,true,true,,Republican,159042,251889,38.702848,Republican,Glenn Grothman,141346,172138,45.088745,true,false,6.385897
+5507,Wisconsin 7th,Wisconsin,2024,true,true,true,,Republican,156524,273553,36.394413,Republican,Michael Alfonso,146869,193911,43.097893,true,false,6.70348
+5508,Wisconsin 8th,Wisconsin,2024,true,true,true,,Republican,178666,240040,42.670991,Republican,Tony Wied,151471,177258,46.077772,true,false,3.406781
+5600,Wyoming at-large,Wyoming,2024,true,true,true,,Republican,60778,184680,24.761059,Republican,Chuck Gray,61689,99906,38.175067,true,false,13.414008

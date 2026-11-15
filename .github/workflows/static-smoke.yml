@@ -24,6 +24,8 @@ jobs:
         run: python scripts/test_explorer_ux.py --screenshots tmp/explorer-ux
       - name: Check House demographics and linked map
         run: python scripts/test_house_demographics_ux.py --screenshots tmp/explorer-ux
+      - name: Check provisional House 2026
+        run: python scripts/test_house_2026_ux.py
       - name: Check presidential state demographics
         run: python scripts/test_president_demographics_ux.py --screenshots tmp/explorer-ux
       - name: Check presidential county demographics
@@ -135,6 +137,8 @@ jobs:
           python scripts/build_us_house_comparison.py --period 2018-2020 --check
           python scripts/build_us_house_comparison.py --period 2016-2018 --check
           python scripts/build_us_house_comparison.py --period 2020-2022 --check
+          python scripts/build_us_house_2026.py --check
+          python scripts/test_us_house_2026.py
           python scripts/test_us_house_comparison.py
           python scripts/test_us_house_boundary_audit.py
           python scripts/build_us_president_demographics.py --check

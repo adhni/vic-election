@@ -1,0 +1,35 @@
+{
+  "election_years": [
+    2024,
+    2026
+  ],
+  "demographic_year": 2024,
+  "provisional": true,
+  "snapshot_published_utc": "2026-11-14T15:01:38Z",
+  "districts": 435,
+  "verified_unchanged_districts": 262,
+  "matched_baseline_districts": 236,
+  "matched_sensitivity_districts": 236,
+  "boundary_source": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.120th_Congress.html",
+  "excluded_changed_plan_states": [
+    "Alabama",
+    "California",
+    "Florida",
+    "Louisiana",
+    "North Carolina",
+    "Ohio",
+    "Tennessee",
+    "Texas",
+    "Utah"
+  ],
+  "boundary_policy": "Census identifies nine states with new 2026 plans and confirms continuity for all other states. Exclude every seat in changed-plan states conservatively, including from demographic joins; no claim every excluded seat changed.",
+  "result_policy": "Dated provisional reported counts, not certified final results. Require a source-reported winner, positive named D/R votes in both years; exclude AK/ME count bases. Sensitivity also excludes multiple major-party candidates in either year.",
+  "flip_definition": "Different 2024 elected party and 2026 source-reported winning party on unchanged boundaries. Blank for uncalled or unverified districts; provisional, not certified flips.",
+  "interpretation": "Fixed 2024 ACS snapshot on unchanged districts, equal-weight districts; not demographic change or causation. No 2024 ACS values assigned to redrawn 2026 seats.",
+  "source_credit": "Call the Map, CC BY 4.0, https://www.callthemap.com/results; underlying published counts retain row-level source links.",
+  "input_sha256": {
+    "data/us_2024_house_fpp.csv": "7d5ce57a74fd98299cb3f106631edba23a701d4e73aee5dd6ef1020c8ce9541c",
+    "data/us_2024_house_demographics.csv": "1cd2b9e150bfc7dd5b4fdf2d67726fe2affcfaeed153881a3e45112761fbde1b"
+  },
+  "output_sha256": "90a72f32d6cbdeaa85040c13919b6d1f43b7c0b30d371c3a52021413b12ddba7"
+}

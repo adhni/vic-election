@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "election_year": 2026,
+  "congress": 120,
+  "provisional": true,
+  "snapshot_published_utc": "2026-11-14T15:01:38Z",
+  "districts": 435,
+  "candidate_rows": 1491,
+  "source_reported_winners": 421,
+  "uncalled_races": 14,
+  "source_credit": "Call the Map, licensed CC BY 4.0. Counts compiled from published state/county results and civicAPI; not a Clerk certified compilation.",
+  "source_page": "https://www.callthemap.com/results/data",
+  "license": {
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "words": "Licensed under Creative Commons Attribution 4.0 (CC BY 4.0): free to copy, share and adapt, commercially too, with credit to Call the Map (callthemap.com/results). The counts themselves are official public records from state and county election offices. Rows whose source is civicAPI must also credit civicAPI (civicapi.org), as its terms ask."
+  },
+  "sources": {
+    "manifest": {
+      "url": "https://www.callthemap.com/results/data/2026/manifest.json",
+      "sha256": "e5731da5f8a85d90cb14fe35f99a259d132108b61f8d5349c2da58b23e4fc344"
+    },
+    "all_races": {
+      "url": "https://www.callthemap.com/results/data/2026/races.csv",
+      "sha256": "a7a0ab47007b98dcf32fce9b1c2cc9e22febc85ac527d44042ee544e323eb6e6",
+      "bytes": 745963
+    },
+    "boundaries": {
+      "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/0/query?where=STATE+NOT+IN+%28%2711%27%2C%2760%27%2C%2766%27%2C%2769%27%2C%2772%27%2C%2778%27%29&outFields=GEOID%2CSTATE%2CCD120%2CCDSESSN%2CNAME&returnGeometry=true&outSR=4326&maxAllowableOffset=0.005&geometryPrecision=5&f=geojson",
+      "sha256": "17d60ca5e7616882a1e4e14e2a67c96230379a96b877126cb78a4e18c78ab558",
+      "note": "Official Census TIGERweb 120th Congress, simplified at 0.005 degrees for display. ZZ unassigned-water features omitted; Alaska antimeridian unwrapped; invalid polygon rings repaired for display."
+    },
+    "boundary_continuity": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.120th_Congress.html",
+    "missouri_correction": "https://www.census.gov/programs-surveys/geography/technical-documentation/user-note/120cd.html"
+  },
+  "outputs": {
+    "us_2026_house_source.csv": {
+      "bytes": 396236,
+      "sha256": "4fd5d91ec36581adf34abba7f1a9b793a10bcd6c89655da9433f3302a7241d21"
+    },
+    "us_2026_house_fpp.csv": {
+      "bytes": 665704,
+      "sha256": "e0caa8a69a656d2a2d92d929088f32f62b67bdb162a275a696f9f1bec83e8621"
+    },
+    "us_house_2024_2026_comparison.csv": {
+      "bytes": 74343,
+      "sha256": "90a72f32d6cbdeaa85040c13919b6d1f43b7c0b30d371c3a52021413b12ddba7"
+    },
+    "us_2026_congressional_boundaries.geojson": {
+      "bytes": 1420258,
+      "sha256": "00c9a6fef30e1cdc1d32953e278a3a7b0eefb70fa92db11aa1e46fdceb17a286"
+    },
+    "us_house_2024_2026_comparison_metadata.json": {
+      "bytes": 1959,
+      "sha256": "171654974ce8ea8b35c496929dc680fedbbbcf52593b065a752a6bf28b78e32a"
+    }
+  }
+}

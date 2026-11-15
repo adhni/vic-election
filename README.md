@@ -35,7 +35,7 @@ The app is map-first and party/bloc-first:
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
 - United States Senate results for the 2024, 2022, 2020, 2018, and 2016 regular election cycles, with county/reporting-area and official state views; concurrent special elections are excluded
 - United States governor results for 2024, 2022, 2020, 2018, and 2016, with county/reporting-area and state-race views
-- United States congressional-district results and winner-party map for the 2024 House election
+- United States House results for 2016–2024, plus a [provisional 2026 snapshot](docs/us_house_2026.md) with current district maps, uncalled-seat labels and 2024 → 2026 demographic/swing comparisons
 - Indonesian presidential results for 2024, 2019, and 2014, with election-year province and kabupaten/kota views
 - Argentine presidential results for 2023 and 2019 by province, including the 2023 runoff
 - Brazilian presidential results for 2022 and 2018 by state, with both rounds shown separately
@@ -58,9 +58,11 @@ and reports exploratory correlations for 397 districts plus a sensitivity sample
 The [2022–2024 comparison](docs/us_house_2022_2024_comparison.md) is available
 from both House election pages. It holds the 2024 demographics fixed for 312
 matched districts and includes a swing map, linked chart, and biggest-shift rankings.
-The comparison dropdown also offers 2020 → 2022. An individual audit of all
-435 district boundaries finds six exact matches; three pass the contest checks.
-The small sample and downloadable boundary evidence are clearly labelled.
+The comparison dropdown also offers 2016 → 2018 and 2018 → 2020 on historical
+districts. **2024 → 2026** uses a provisional 14 November 2026 snapshot, with
+236 matched districts and fixed 2024 demographics. Uncalled races and states
+with changed plans are excluded; flips are provisional. The sparse 2020 → 2022
+audit remains downloadable rather than appearing in the chart selector.
 
 ## Greece, Poland, and Belgium
 
