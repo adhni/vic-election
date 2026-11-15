@@ -71,8 +71,11 @@ def check_historical(page, base):
     page.locator('#houseDemographicsView').click()
     expect(page.locator('.house-scatter-point')).to_have_count(518)
     page.go_back(wait_until='networkidle')
+    expect(page.locator('#electionYear')).to_have_value('us-governor-2016')
+    expect(page.locator('#houseViewControls')).to_be_hidden()
+    page.go_forward(wait_until='networkidle')
     expect(page.locator('#houseDemographicPeriod')).to_have_value('previous-2024')
-    page.locator('#houseDemographicsView').click()
+    expect(page.locator('.house-scatter-point')).to_have_count(518)
 
 
 def main():
