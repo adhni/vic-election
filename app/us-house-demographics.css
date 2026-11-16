@@ -130,3 +130,15 @@
 
 .house-demographic-statistics .house-statistic-unavailable { font-size: 12px; letter-spacing: -.03em; }
 @media (max-width: 480px) { .house-demographic-statistics .house-statistic-unavailable { font-size: 10px; } }
+
+.house-before-after { max-height: 640px; overflow-y: auto; overscroll-behavior: contain; }
+.house-before-after svg { overflow: hidden; }
+.house-change-row { cursor: pointer; outline: none; }
+.house-change-background { fill: transparent; }
+.house-change-row[aria-pressed="true"] .house-change-background,
+.house-change-row:hover .house-change-background,
+.house-change-row:focus-visible .house-change-background { fill: #e8eef5; }
+.house-change-row:focus-visible .house-change-background { stroke: #2166ac; stroke-width: 2; }
+.house-demographic-chart .house-change-name { fill: var(--ink); font-weight: 650; font-size: 12px; }
+.house-before-after-view .house-key-neutral::before { background: #8b9098; }
+.house-demographics-panel > label[for="houseChartType"] { display: grid; gap: 5px; margin: 12px 0; font-size: 12px; font-weight: 700; color: var(--muted); }

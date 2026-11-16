@@ -2,7 +2,7 @@
 (() => {
   "use strict";
   const ns = "http://www.w3.org/2000/svg";
-  const defaults = { view: false, metric: "bachelors_plus_pct", sample: "baseline", party: "democratic", xRange: "full", yRange: "full", outcome: "2024", period: "2022-2024" };
+  const defaults = { view: false, metric: "bachelors_plus_pct", sample: "baseline", party: "democratic", xRange: "full", yRange: "full", outcome: "2024", period: "2022-2024", chart: "demographics" };
   const presidentialPeriods = ["2008-2012", "2012-2016", "2016-2020", "2020-2024"];
   const senatePeriods = ["2016-2022", "2018-2024", "2020-2026"];
   const senateKeys = [2016, 2018, 2020, 2022, 2024, 2026].map(year => `us-senate-${year}`);
@@ -82,6 +82,7 @@
     state = {
       period: compatiblePeriod(params.get("year"), params.get("demographicPeriod")) ? params.get("demographicPeriod") : defaultPeriod(params.get("year")),
       view: params.get("view") === "demographics",
+      chart: params.get("demographicChart") === "before-after" ? "before-after" : "demographics",
       metric: params.get("demographic") || defaults.metric,
       sample: params.get("demographicSample") === "sensitivity" ? "sensitivity" : "baseline",
       party: params.get("demographicParty") === "republican" ? "republican" : "democratic",
@@ -90,13 +91,15 @@
       outcome: ["2008-matched", "2012-matched", "2016-matched", "2018-matched", "2020-matched", "2022-matched", "2024-matched", "2026-matched", "previous-matched", "change"].includes(params.get("demographicOutcome")) ? params.get("demographicOutcome") : params.get("year") === "us-house-2022" ? "2022-matched" : "2024"
     };
     normalizeOutcome();
+    if (state.chart === "before-after") state.outcome = "change";
     if (data && !data.metrics[state.metric]) state.metric = defaults.metric;
   }
 
   function writeUrlState(params) {
-    ["view", "demographic", "demographicSample", "demographicParty", "demographicX", "demographicY", "demographicOutcome", "demographicPeriod"].forEach(key => params.delete(key));
+    ["demographicChart", "view", "demographic", "demographicSample", "demographicParty", "demographicX", "demographicY", "demographicOutcome", "demographicPeriod"].forEach(key => params.delete(key));
     if (!supportedKey(context.electionKey) || (isRegional() && !["state", "county"].includes(context.geography)) || !context.official || !state.view) return;
     params.set("view", "demographics");
+    if (state.chart === "before-after") params.set("demographicChart", state.chart);
     if (state.period !== defaults.period) params.set("demographicPeriod", state.period);
     if (state.metric !== defaults.metric) params.set("demographic", state.metric);
     if (state.sample !== defaults.sample) params.set("demographicSample", state.sample);
@@ -479,7 +482,7 @@
     if (!matched() && row.votes_reported !== "true") return "Not plotted: candidate vote totals were not reported for this unopposed contest.";
     if (!matched() && row.two_party_analysis_eligible !== "true") return "Not plotted: this contest does not include both named major-party candidates.";
     if (state.sample === "sensitivity" && (row.multiple_major_party_candidates === "true" || row.ranked_choice_state === "true")) return "Not plotted in the stricter sample. This district remains available on the map and in the results.";
-    if (!finite(row[state.metric])) return "Not plotted: this demographic estimate was not published for the district.";
+    if (state.chart !== "before-after" && !finite(row[state.metric])) return "Not plotted: this demographic estimate was not published for the district.";
     return "";
   }
 
@@ -497,7 +500,7 @@
       const delta = share(endYear()) - share(startYear(row));
       const metric = document.createElement("span"), cards = document.createElement("span");
       metric.className = "house-selected-metric";
-      metric.textContent = `${data.metrics[state.metric].label}: ${format(row[state.metric])}`;
+      metric.textContent = state.chart === "before-after" ? `${partyLabel()} two-party shares` : `${data.metrics[state.metric].label}: ${format(row[state.metric])}`;
       cards.className = "house-share-cards";
       [[`${startYear(row)}:`, `${share(startYear(row)).toFixed(1)}%`], [`${endYear()}:`, `${share(endYear()).toFixed(1)}%`], ["Change:", `${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`]].forEach(([label, value], index) => {
         const card = document.createElement("span"), caption = document.createElement("span"), number = document.createElement("strong");
@@ -522,7 +525,7 @@
       if (!dom.chart.contains(document.activeElement)) point.setAttribute("tabindex", selected || (!points.some(p => p.row.district === row.district) && point.dataset.index === "0") ? "0" : "-1");
     });
     dom.chart.querySelectorAll(".house-seat-flipped").forEach(point => point.parentNode.appendChild(point));
-    const selected = dom.chart.querySelector('[aria-pressed="true"]');
+    const selected = dom.chart.querySelector('.house-scatter-point[aria-pressed="true"]');
     if (selected) selected.parentNode.appendChild(selected);
   }
 
@@ -561,11 +564,66 @@
     return { low, high, ticks: ticks.length >= 2 ? ticks : [low, high] };
   }
 
-  function draw(rows) {
-    if (!isActive() || !data) return;
+  function chartRows() {
+    return sampleRows().filter(row => state.chart === "before-after"
+      ? finite(row[`democratic_two_party_share_pct_${startYear(row)}`]) && finite(row[`democratic_two_party_share_pct_${endYear()}`])
+      : finite(row[state.metric]) && finite(voteShare(row)));
+  }
+
+  function drawBeforeAfter(rows) {
     const width = dom.chart.clientWidth;
     if (width < 1) return;
-    const key = `${state.outcome}|${state.metric}|${state.sample}|${state.party}|${state.xRange}|${state.yRange}|${width}`;
+    const key = `before-after|${state.period}|${state.sample}|${state.party}|${state.yRange}|${context.district}|${width}`;
+    if (key === geometryKey) { renderSelection(); return; }
+    geometryKey = key;
+    points = [];
+    dom.tooltip.classList.add("hidden");
+    const sorted = rows.slice().sort((a, b) => Math.abs(Number(b.democratic_share_change_pp)) - Math.abs(Number(a.democratic_share_change_pp)) || a.district.localeCompare(b.district));
+    const selected = rows.find(row => row.district === context.district);
+    const shown = selected ? [selected, ...sorted.filter(row => row !== selected).slice(0, 19)] : sorted.slice(0, 20);
+    dom.beforeNote.textContent = `${rows.length} comparable ${isRegional() ? areaPlural() : "districts"} · ${rows.length > 20 ? "Biggest swings plus your selected area (up to 20 rows)" : "All comparable areas"}. Hollow dot = previous election; filled dot = current election. Outlined dot = flipped. Select a row or choose any area below.`;
+    dom.axis.textContent = `${partyLabel()} two-party vote share (%)`;
+    if (!shown.length) {
+      graph = null;
+      dom.chart.textContent = "No comparable election results are available in this sample.";
+      renderSelection();
+      return;
+    }
+    const share = (row, year) => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
+    const range = axisRange(rows.flatMap(row => [share(row, startYear(row)), share(row, endYear())]), state.yRange === "fit", true, 4);
+    const left = 22, right = width - 22, height = 30 + shown.length * 70;
+    const x = value => left + (value - range.low) / (range.high - range.low) * (right - left);
+    graph = svgElement("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "group", "aria-label": "Previous and current election shares", "data-x-min": range.low, "data-x-max": range.high });
+    range.ticks.forEach(value => {
+      graph.append(svgElement("text", { x: x(value), y: 12, "text-anchor": "middle" }, `${Number(value.toFixed(1))}%`));
+    });
+    shown.forEach((row, index) => {
+      const before = share(row, startYear(row)), after = share(row, endYear()), delta = after - before;
+      const label = `${row.district} · ${periodLabel(row)}: ${before.toFixed(1)}% → ${after.toFixed(1)}% (${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp)${flipLabel(row) ? " · " + flipLabel(row) : ""}`;
+      const group = svgElement("g", { class: "house-change-row", role: "button", tabindex: "0", "data-district": row.district, "data-before": before, "data-after": after, "data-baseline-year": startYear(row), "data-election-year": endYear(), "aria-label": label, "aria-pressed": String(row.district === context.district), transform: `translate(0, ${25 + index * 70})` });
+      group.append(svgElement("title", {}, label));
+      group.append(svgElement("rect", { x: 0, y: 0, width, height: 68, rx: 5, class: "house-change-background" }));
+      const maxChars = Math.max(18, Math.floor((width - 20) / 7));
+      group.append(svgElement("text", { x: 10, y: 16, class: "house-change-name" }, row.district.length > maxChars ? row.district.slice(0, maxChars - 1) + "…" : row.district));
+      group.append(svgElement("text", { x: 10, y: 32 }, `${startYear(row)}: ${before.toFixed(1)}% → ${endYear()}: ${after.toFixed(1)}% · ${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`));
+      const color = Math.abs(Number(row.democratic_share_change_pp)) < .5 ? "#8b9098" : swingVisual(row.district).color;
+      group.append(svgElement("line", { x1: left, x2: right, y1: 51, y2: 51, stroke: "#d4d7db", "stroke-width": 1 }));
+      group.append(svgElement("line", { x1: x(before), x2: x(after), y1: 51, y2: 51, stroke: color, "stroke-width": 4, class: "house-change-connection" }));
+      group.append(svgElement("circle", { cx: x(before), cy: 51, r: 5, fill: "white", stroke: color, "stroke-width": 2, class: "house-change-before" }));
+      group.append(svgElement("circle", { cx: x(after), cy: 51, r: row.seat_flipped === "true" ? 7 : 5, fill: color, stroke: row.seat_flipped === "true" ? "#242b34" : color, "stroke-width": row.seat_flipped === "true" ? 2 : 1, class: `house-change-after${row.seat_flipped === "true" ? " house-change-flipped" : ""}` }));
+      graph.append(group);
+    });
+    dom.chart.replaceChildren(graph);
+    dom.chart.scrollTop = 0;
+    renderSelection();
+  }
+
+  function draw(rows) {
+    if (!isActive() || !data) return;
+    if (state.chart === "before-after") { drawBeforeAfter(rows); return; }
+    const width = dom.chart.clientWidth;
+    if (width < 1) return;
+    const key = `scatter|${state.outcome}|${state.metric}|${state.sample}|${state.party}|${state.xRange}|${state.yRange}|${width}`;
     if (key === geometryKey) { renderSelection(); return; }
     geometryKey = key;
     dom.tooltip.classList.add("hidden");
@@ -679,11 +737,20 @@
     dom.content.classList.toggle("hidden", !data);
     dom.retry.classList.toggle("hidden", !error);
     dom.chart.setAttribute("aria-busy", String(!data && !error));
+    const beforeAfter = state.chart === "before-after";
+    dom.chartType.value = state.chart;
+    dom.chart.classList.toggle("house-before-after", beforeAfter);
+    dom.panel.classList.toggle("house-before-after-view", beforeAfter);
+    dom.beforeNote.classList.toggle("hidden", !beforeAfter);
+    dom.statistics.classList.toggle("hidden", beforeAfter);
+    document.getElementById("houseDemographicUncertainty").classList.toggle("hidden", beforeAfter);
+    [dom.metric, dom.outcome, dom.xRange].forEach(control => control.closest("label").classList.toggle("hidden", beforeAfter));
+    dom.yRange.closest("label").firstChild.textContent = beforeAfter ? "Share axis" : "Y-axis range";
     dom.sample.value = state.sample;
     dom.party.value = state.party;
     dom.xRange.value = state.xRange;
     dom.yRange.value = state.yRange;
-    dom.yLabel.textContent = outcomeLabel();
+    dom.yLabel.textContent = beforeAfter ? "Change since last election" : outcomeLabel();
     dom.period.value = state.period;
     dom.swingTitle.textContent = `Biggest swings · ${periodLabel()}`;
     dom.outcome.querySelector('[value="2024"]').hidden = regional;
@@ -719,8 +786,8 @@
     }
     dom.metric.value = state.metric;
     const sample = sampleRows();
-    const rows = sample.filter(row => finite(row[state.metric]) && finite(voteShare(row)));
-    dom.status.textContent = `${rows.length} ${regional ? areaPlural() : "districts"} · ${(regional ? data.rows.length : 435) - sample.length} excluded by sample · ${sample.length - rows.length} missing this measure`;
+    const rows = chartRows();
+    dom.status.textContent = beforeAfter ? `${rows.length} comparable ${regional ? areaPlural() : "districts"} · ${data.rows.length - rows.length} excluded by sample or missing results` : `${rows.length} ${regional ? areaPlural() : "districts"} · ${(regional ? data.rows.length : 435) - sample.length} excluded by sample · ${sample.length - rows.length} missing this measure`;
     const values = statistics(rows);
     if (regional) values[2] = sample.filter(row => row.seat_flipped === "true").length;
     dom.statistics.replaceChildren(...[regional ? (isCounty() ? "County r" : "State r") : "National r", "Spearman ρ", regional ? (isCounty() ? "Flipped counties" : "Flipped states") : "Within-state r"].map((label, index) => {
@@ -772,7 +839,7 @@
 
   function setup(options) {
     callbacks = options;
-    const ids = { controls: "houseViewControls", grid: "explorerGrid", panel: "houseDemographicsPanel", resultsButton: "houseResultsView", demographicsButton: "houseDemographicsView", metric: "houseDemographicMetric", sample: "houseDemographicSample", party: "houseDemographicParty", outcome: "houseDemographicOutcome", period: "houseDemographicPeriod", swingTitle: "houseSwingTitle", download: "houseComparisonDownload", comparisonNote: "houseDemographicComparisonNote", xRange: "houseDemographicXRange", yRange: "houseDemographicYRange", yLabel: "houseDemographicYLabel", status: "houseDemographicStatus", retry: "houseDemographicRetry", content: "houseDemographicContent", statistics: "houseDemographicStatistics", chart: "houseDemographicChart", axis: "houseDemographicAxis", selection: "houseDemographicSelection", district: "houseDemographicDistrict", values: "houseDemographicSelectedValues", flip: "houseDemographicFlip", note: "houseDemographicSelectedNote", uncertainty: "houseDemographicUncertaintyText", fullResult: "houseDemographicFullResult", swingRankings: "houseSwingRankings", swingRankingNote: "houseSwingRankingNote", swingLists: "houseSwingLists", tooltip: "houseDemographicTooltip" };
+    const ids = { chartType: "houseChartType", beforeNote: "houseBeforeAfterNote", controls: "houseViewControls", grid: "explorerGrid", panel: "houseDemographicsPanel", resultsButton: "houseResultsView", demographicsButton: "houseDemographicsView", metric: "houseDemographicMetric", sample: "houseDemographicSample", party: "houseDemographicParty", outcome: "houseDemographicOutcome", period: "houseDemographicPeriod", swingTitle: "houseSwingTitle", download: "houseComparisonDownload", comparisonNote: "houseDemographicComparisonNote", xRange: "houseDemographicXRange", yRange: "houseDemographicYRange", yLabel: "houseDemographicYLabel", status: "houseDemographicStatus", retry: "houseDemographicRetry", content: "houseDemographicContent", statistics: "houseDemographicStatistics", chart: "houseDemographicChart", axis: "houseDemographicAxis", selection: "houseDemographicSelection", district: "houseDemographicDistrict", values: "houseDemographicSelectedValues", flip: "houseDemographicFlip", note: "houseDemographicSelectedNote", uncertainty: "houseDemographicUncertaintyText", fullResult: "houseDemographicFullResult", swingRankings: "houseSwingRankings", swingRankingNote: "houseSwingRankingNote", swingLists: "houseSwingLists", tooltip: "houseDemographicTooltip" };
     dom = Object.fromEntries(Object.entries(ids).map(([key, id]) => [key, document.getElementById(id)]));
     readLocation();
     dom.resultsButton.onclick = () => { state.view = false; render(); callbacks.onUrlChange(); };
@@ -788,6 +855,13 @@
       callbacks.onSwingChange(true);
       callbacks.onUrlChange();
     };
+    dom.chartType.onchange = () => {
+      state.chart = dom.chartType.value;
+      if (state.chart === "before-after") state.outcome = "change";
+      render();
+      callbacks.onSwingChange(changing());
+      callbacks.onUrlChange();
+    };
     dom.outcome.onchange = () => { state.outcome = dom.outcome.value; render(); callbacks.onSwingChange(changing()); callbacks.onUrlChange(); };
     dom.party.onchange = () => { state.party = dom.party.value; render(); callbacks.onUrlChange(); };
     dom.xRange.onchange = () => { state.xRange = dom.xRange.value; render(); callbacks.onUrlChange(); };
@@ -796,6 +870,11 @@
     dom.retry.onclick = () => { error = ""; render(); };
     dom.fullResult.onclick = callbacks.onFullResult;
     dom.chart.addEventListener("click", event => {
+      if (state.chart === "before-after") {
+        const row = event.target.closest(".house-change-row");
+        if (row) callbacks.onSelect(row.dataset.district);
+        return;
+      }
       const target = event.target.closest(".house-scatter-point");
       const point = target ? points[Number(target.dataset.index)] : nearest(event, 24);
       if (point) callbacks.onSelect(point.row.district);
@@ -807,6 +886,17 @@
     });
     dom.chart.addEventListener("focusout", () => dom.tooltip.classList.add("hidden"));
     dom.chart.addEventListener("keydown", event => {
+      if (state.chart === "before-after") {
+        const row = event.target.closest(".house-change-row");
+        if (!row) return;
+        if (["Enter", " "].includes(event.key)) { event.preventDefault(); callbacks.onSelect(row.dataset.district); }
+        if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          const rows = [...dom.chart.querySelectorAll(".house-change-row")], index = rows.indexOf(row);
+          rows[event.key === "Home" ? 0 : event.key === "End" ? rows.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + rows.length) % rows.length].focus();
+        }
+        return;
+      }
       const target = event.target.closest(".house-scatter-point");
       if (!target) return;
       if (event.key === "Enter" || event.key === " ") {
@@ -824,7 +914,7 @@
     let frame;
     const resize = new ResizeObserver(() => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => { if (isActive() && data) draw(sampleRows().filter(row => finite(row[state.metric]) && finite(voteShare(row)))); });
+      frame = requestAnimationFrame(() => { if (isActive() && data) draw(chartRows()); });
     });
     resize.observe(dom.chart);
     window.addEventListener("popstate", () => { readLocation(); render(); });
