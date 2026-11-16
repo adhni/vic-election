@@ -1,0 +1,437 @@
+{
+  "version": 1,
+  "election_year": 2026,
+  "provisional": true,
+  "snapshot_published_utc": "2026-11-15T18:19:21Z",
+  "source_credit": "Call the Map (callthemap.com/results), CC BY 4.0; civicAPI (civicapi.org) for its feeds. Compiled provisional counts, not a certified FEC compilation.",
+  "source_page": "https://www.callthemap.com/results/data",
+  "license": {
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "words": "Licensed under Creative Commons Attribution 4.0 (CC BY 4.0): free to copy, share and adapt, commercially too, with credit to Call the Map (callthemap.com/results). The counts themselves are official public records from state and county election offices. Rows whose source is civicAPI must also credit civicAPI (civicapi.org), as its terms ask."
+  },
+  "sources": {
+    "races.csv": {
+      "url": "https://www.callthemap.com/results/data/2026/races.csv",
+      "sha256": "a3299f9aba6c23e59eb790e160093a02b6e1c6f46cdf0716ff33269fa17aea38",
+      "bytes": 742719
+    },
+    "counties.csv": {
+      "url": "https://www.callthemap.com/results/data/2026/counties.csv",
+      "sha256": "4258d2f7fcc507c5130d7c028e5dd526a12e2c2a273cd99b0451806a38cf14a1",
+      "bytes": 2344818
+    }
+  },
+  "manifest_sha256": "4d7e5092615a4cb1baa19b8c4a8188f80e63456c355078cf9f6f310ec1192699",
+  "scope_sources": [
+    "https://www.nga.org/governors/elections/"
+  ],
+  "scope_policy": "All 36 states holding gubernatorial elections in 2026. County view includes Connecticut planning regions and a labelled Alaska statewide fallback.",
+  "county_policy": "Two named source candidates plus other votes combined. Never relabel an independent as Democratic or infer a combined Other candidate winner. Unresolved local leaders are explicitly flagged. Alaska uses exact statewide counts on a labelled statewide shape, not its 40 state House reporting districts.",
+  "boundary_input_sha256": {
+    "us_president_state_boundaries.geojson": "672b5cc87d111aee7d885e3f11efec36f40e8206690e44e3d1103bdd04a6f1c0",
+    "us_president_2024_county_boundaries.geojson": "753af6a45e9bf3b79cc71c17db79b9a54c8bd922b0bd6fe7fd669314d2dd729d"
+  },
+  "summary": {
+    "state_races": 36,
+    "source_candidate_rows": 256,
+    "source_reported_winners": 36,
+    "uncalled_states": [],
+    "county_map_areas": 2151,
+    "actual_county_reporting_areas": 2150,
+    "unresolved_local_leaders": [
+      "Franklin County, Arkansas"
+    ],
+    "statewide_fallbacks": [
+      "AK"
+    ],
+    "reconciliation": {
+      "AK": {
+        "state_votes": 277456,
+        "source_county_votes": 277456,
+        "unallocated_to_counties": 0,
+        "map_policy": "statewide_fallback",
+        "named_candidate_differences": {
+          "Jonathan S. \"JKT\" Kreiss-Tomkins": 0,
+          "Bernadette M. Wilson": 0
+        }
+      },
+      "AL": {
+        "state_votes": 1684735,
+        "source_county_votes": 1684735,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Doug Jones": 0,
+          "Tommy Tuberville": 0
+        }
+      },
+      "AR": {
+        "state_votes": 887473,
+        "source_county_votes": 887473,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Fred Love": 0,
+          "Sarah Huckabee Sanders": 0
+        }
+      },
+      "AZ": {
+        "state_votes": 2579147,
+        "source_county_votes": 2579147,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Katie Hobbs": 0,
+          "Andy Biggs": 0
+        }
+      },
+      "CA": {
+        "state_votes": 13035917,
+        "source_county_votes": 13035917,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Xavier Becerra": 0,
+          "Steve Hilton": 0
+        }
+      },
+      "CO": {
+        "state_votes": 2681244,
+        "source_county_votes": 2681244,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Phil Weiser": 0,
+          "Victor Marx": 0
+        }
+      },
+      "CT": {
+        "state_votes": 1298117,
+        "source_county_votes": 1298117,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Ned Lamont": 0,
+          "Ryan Fazio": 0
+        }
+      },
+      "FL": {
+        "state_votes": 8279364,
+        "source_county_votes": 8279364,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "David Jolly": 0,
+          "Byron Donalds": 0
+        }
+      },
+      "GA": {
+        "state_votes": 4184814,
+        "source_county_votes": 4184814,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Keisha Lance Bottoms": 0,
+          "Rick Jackson": 0
+        }
+      },
+      "HI": {
+        "state_votes": 384703,
+        "source_county_votes": 384703,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Josh Green": 0,
+          "Gary Cordery": 0
+        }
+      },
+      "IA": {
+        "state_votes": 1369344,
+        "source_county_votes": 1369344,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Rob Sand": 0,
+          "Zach Lahn": 0
+        }
+      },
+      "ID": {
+        "state_votes": 717758,
+        "source_county_votes": 717758,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Terri Pickens": 0,
+          "Brad Little": 0
+        }
+      },
+      "IL": {
+        "state_votes": 4198675,
+        "source_county_votes": 4198675,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "JB Pritzker": 0,
+          "Darren Bailey": 0
+        }
+      },
+      "KS": {
+        "state_votes": 1094842,
+        "source_county_votes": 1094842,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Cindy Holscher": 0,
+          "Ty Masterson": 0
+        }
+      },
+      "MA": {
+        "state_votes": 2627180,
+        "source_county_votes": 2627180,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Maura Healey": 0,
+          "Michael Roger Minogue": 0
+        }
+      },
+      "MD": {
+        "state_votes": 2206741,
+        "source_county_votes": 2206741,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Wes Moore": 0,
+          "Dan Cox": 0
+        }
+      },
+      "ME": {
+        "state_votes": 711565,
+        "source_county_votes": 711565,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Hannah Pingree": 0,
+          "Bobby Charles": 0
+        }
+      },
+      "MI": {
+        "state_votes": 4775523,
+        "source_county_votes": 4775523,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Jocelyn Benson": 0,
+          "John James": 0
+        }
+      },
+      "MN": {
+        "state_votes": 2831179,
+        "source_county_votes": 2831179,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Amy Klobuchar": 0,
+          "Lisa Demuth": 0
+        }
+      },
+      "NE": {
+        "state_votes": 764484,
+        "source_county_votes": 764484,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Lynne Walz": 0,
+          "Jim Pillen": 0
+        }
+      },
+      "NH": {
+        "state_votes": 631943,
+        "source_county_votes": 631943,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Cinde Warmington": 0,
+          "Kelly Ayotte": 0
+        }
+      },
+      "NM": {
+        "state_votes": 725896,
+        "source_county_votes": 725896,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Deb Haaland": 0,
+          "Greggory D Hull": 0
+        }
+      },
+      "NV": {
+        "state_votes": 1091581,
+        "source_county_votes": 1091581,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Aaron Ford": 0,
+          "Joe Lombardo": 0
+        }
+      },
+      "NY": {
+        "state_votes": 6062765,
+        "source_county_votes": 6062765,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Kathy Hochul": 0,
+          "Bruce Blakeman": 0
+        }
+      },
+      "OH": {
+        "state_votes": 4597270,
+        "source_county_votes": 4597270,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Amy Acton": 0,
+          "Vivek Ramaswamy": 0
+        }
+      },
+      "OK": {
+        "state_votes": 1120930,
+        "source_county_votes": 1120930,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Cyndi Munson": 0,
+          "Mike Mazzei": 0
+        }
+      },
+      "OR": {
+        "state_votes": 1974950,
+        "source_county_votes": 1974950,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Tina Kotek": 0,
+          "Christine Drazan": 0
+        }
+      },
+      "PA": {
+        "state_votes": 5012874,
+        "source_county_votes": 5012874,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Josh Shapiro": 0,
+          "Stacy Garrity": 0
+        }
+      },
+      "RI": {
+        "state_votes": 359691,
+        "source_county_votes": 359691,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Helena Buonanno Foulkes": 0,
+          "Kenneth Block": 0
+        }
+      },
+      "SC": {
+        "state_votes": 2038214,
+        "source_county_votes": 2038214,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Jermaine Johnson": 0,
+          "Alan Wilson": 0
+        }
+      },
+      "SD": {
+        "state_votes": 304495,
+        "source_county_votes": 304495,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Dan Ahlers": 0,
+          "Larry Rhoden": 0
+        }
+      },
+      "TN": {
+        "state_votes": 2101263,
+        "source_county_votes": 2101263,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Jerri Green": 0,
+          "Marsha Blackburn": 0
+        }
+      },
+      "TX": {
+        "state_votes": 9930054,
+        "source_county_votes": 9930054,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Gina Hinojosa": 0,
+          "Greg Abbott": 0
+        }
+      },
+      "VT": {
+        "state_votes": 309055,
+        "source_county_votes": 309055,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Amanda Janoo": 0,
+          "Phil Scott": 0
+        }
+      },
+      "WI": {
+        "state_votes": 2668814,
+        "source_county_votes": 2668814,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "David Crowley": 0,
+          "Tom Tiffany": 0
+        }
+      },
+      "WY": {
+        "state_votes": 188624,
+        "source_county_votes": 188624,
+        "unallocated_to_counties": 0,
+        "map_policy": "source_counties_without_imputation",
+        "named_candidate_differences": {
+          "Kenneth R. Casner": 0,
+          "Eric Barlow": 0
+        }
+      }
+    }
+  },
+  "outputs": {
+    "us_2026_governor_state_fpp.csv": {
+      "sha256": "aa86fc13ee1983c49113ad422c6e493446eefda4e4d024dd7b343f7f58b5bcce",
+      "bytes": 149615
+    },
+    "us_2026_governor_county_fpp.csv": {
+      "sha256": "7e470c893f799343d8df83bf7a03622955d7d6a667b630b4dd2f4fd918fe51b2",
+      "bytes": 5181109
+    },
+    "us_governor_2026_state_boundaries.geojson": {
+      "sha256": "95baecc49c9085c4fe1eafc349241c43b46f7051bbd914a56e8c0c2b6607caab",
+      "bytes": 395628
+    },
+    "us_governor_2026_county_boundaries.geojson": {
+      "sha256": "99fe82985fc44bbd9d316edc152839be062399aea977a869851a8ef6f56bb86b",
+      "bytes": 1350424
+    },
+    "us_2026_governor_source.csv": {
+      "sha256": "bc26640b5c9e272687b14bec9672e31e6599cb6bfa78dcbfb2b2f4d7ebe15bd4",
+      "bytes": 69228
+    },
+    "us_2026_governor_county_source.csv": {
+      "sha256": "f1642c998a2297b2c2193402dd46ca9fa7d57802b24c87f7090fd76cf7d99511",
+      "bytes": 265875
+    }
+  }
+}

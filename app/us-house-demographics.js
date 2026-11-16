@@ -2,7 +2,7 @@
 (() => {
   "use strict";
   const ns = "http://www.w3.org/2000/svg";
-  const defaults = { view: false, metric: "bachelors_plus_pct", sample: "baseline", party: "democratic", xRange: "full", yRange: "full", outcome: "2024", period: "2022-2024" };
+  const defaults = { view: false, metric: "bachelors_plus_pct", sample: "baseline", party: "democratic", xRange: "full", yRange: "full", outcome: "2024", period: "2022-2024", chart: "demographics" };
   const presidentialPeriods = ["2008-2012", "2012-2016", "2016-2020", "2020-2024"];
   const senatePeriods = ["2016-2022", "2018-2024", "2020-2026"];
   const senateKeys = [2016, 2018, 2020, 2022, 2024, 2026].map(year => `us-senate-${year}`);
@@ -10,14 +10,22 @@
   const houseKeys = [2016, 2018, 2020, 2022, 2024, 2026].map(year => `us-house-${year}`);
   const presidentKeys = [2008, 2012, 2016, 2020, 2024].map(year => `us-president-${year}`);
   function isPresidential(key = context.electionKey) { return presidentKeys.includes(key); }
+  const governorKeys = [2018, 2020, 2022, 2024, 2026].map(year => `us-governor-${year}`);
+  function isGovernor(key = context.electionKey) { return governorKeys.includes(key); }
   function isSenate(key = context.electionKey) { return senateKeys.includes(key); }
-  function isRegional(key = context.electionKey) { return isPresidential(key) || isSenate(key); }
-  function availablePeriods(key = context.electionKey) { return isSenate(key) ? senatePeriods : isPresidential(key) ? presidentialPeriods : housePeriods; }
+  function isRegional(key = context.electionKey) { return isPresidential(key) || isSenate(key) || isGovernor(key); }
+  function availablePeriods(key = context.electionKey) { return isGovernor(key) ? [`previous-${key.slice(-4)}`] : isSenate(key) ? senatePeriods : isPresidential(key) ? presidentialPeriods : housePeriods; }
   function isCounty() { return isRegional() && context.geography === "county"; }
-  function datasetKind() { return isRegional() ? `${isSenate() ? "senate" : "president"}${isCounty() ? "-county" : ""}` : "house"; }
+  function comparisonFile(period, county = isCounty()) {
+    const scope = county ? "county" : "state";
+    if (isGovernor()) return `us_governor_${scope}_${period.slice(-4)}_previous_comparison.csv`;
+    const family = isSenate() ? `senate_${scope}` : isPresidential() ? (county ? "president_county" : "president") : "house";
+    return `us_${family}_${period.replace("-", "_")}_comparison.csv`;
+  }
+  function datasetKind() { return isRegional() ? `${isGovernor() ? context.electionKey.slice(3) : isSenate() ? "senate" : "president"}${isCounty() ? "-county" : ""}` : "house"; }
   function areaLabel() { return isCounty() ? "county" : "state"; }
-  function areaPlural() { return isCounty() ? "counties/reporting areas" : isSenate() ? "state races" : "states/DC"; }
-  function supportedKey(key) { return houseKeys.includes(key) || presidentKeys.includes(key) || senateKeys.includes(key); }
+  function areaPlural() { return isCounty() ? "counties/reporting areas" : isSenate() || isGovernor() ? "state races" : "states/DC"; }
+  function supportedKey(key) { return houseKeys.includes(key) || presidentKeys.includes(key) || senateKeys.includes(key) || isGovernor(key); }
   const periods = {
     "2008-2012": [2008, 2012],
     "2012-2016": [2012, 2016],
@@ -29,9 +37,11 @@
     "2024-2026": [2024, 2026],
     "2016-2022": [2016, 2022],
     "2018-2024": [2018, 2024],
-    "2020-2026": [2020, 2026]
+    "2020-2026": [2020, 2026],
+    ...Object.fromEntries([2018, 2020, 2022, 2024, 2026].map(year => [`previous-${year}`, [year - 4, year]]))
   };
   function defaultPeriod(key) {
+    if (isGovernor(key)) return `previous-${key.slice(-4)}`;
     if (isSenate(key)) return senatePeriods.find(period => periods[period].includes(Number(key.slice(-4))));
     if (isPresidential(key)) {
       const year = Number(key.slice(-4));
@@ -39,8 +49,9 @@
     }
     return key === "us-house-2026" ? "2024-2026" : key === "us-house-2016" ? "2016-2018" : ["us-house-2018", "us-house-2020"].includes(key) ? "2018-2020" : "2022-2024";
   }
-  function compatiblePeriod(key, period) { return availablePeriods(key).includes(period) && periods[period]?.some(year => key === `us-${isSenate(key) ? "senate" : isPresidential(key) ? "president" : "house"}-${year}`); }
+  function compatiblePeriod(key, period) { if (isGovernor(key)) return period === `previous-${key.slice(-4)}`; return availablePeriods(key).includes(period) && periods[period]?.some(year => key === `us-${isSenate(key) ? "senate" : isPresidential(key) ? "president" : "house"}-${year}`); }
   function normalizeOutcome() {
+    if (state.period.startsWith("previous-")) { if (!["change", "previous-matched", `${endYear()}-matched`].includes(state.outcome)) state.outcome = "change"; return; }
     if (!["change", ...periods[state.period].map(year => `${year}-matched`), ...(state.period === "2022-2024" ? ["2024"] : [])].includes(state.outcome)) state.outcome = "change";
   }
   let state = { ...defaults };
@@ -71,21 +82,24 @@
     state = {
       period: compatiblePeriod(params.get("year"), params.get("demographicPeriod")) ? params.get("demographicPeriod") : defaultPeriod(params.get("year")),
       view: params.get("view") === "demographics",
+      chart: params.get("demographicChart") === "before-after" ? "before-after" : "demographics",
       metric: params.get("demographic") || defaults.metric,
       sample: params.get("demographicSample") === "sensitivity" ? "sensitivity" : "baseline",
       party: params.get("demographicParty") === "republican" ? "republican" : "democratic",
       xRange: params.get("demographicX") === "fit" ? "fit" : "full",
       yRange: params.get("demographicY") === "fit" ? "fit" : "full",
-      outcome: ["2008-matched", "2012-matched", "2016-matched", "2018-matched", "2020-matched", "2022-matched", "2024-matched", "2026-matched", "change"].includes(params.get("demographicOutcome")) ? params.get("demographicOutcome") : params.get("year") === "us-house-2022" ? "2022-matched" : "2024"
+      outcome: ["2008-matched", "2012-matched", "2016-matched", "2018-matched", "2020-matched", "2022-matched", "2024-matched", "2026-matched", "previous-matched", "change"].includes(params.get("demographicOutcome")) ? params.get("demographicOutcome") : params.get("year") === "us-house-2022" ? "2022-matched" : "2024"
     };
     normalizeOutcome();
+    if (state.chart === "before-after") state.outcome = "change";
     if (data && !data.metrics[state.metric]) state.metric = defaults.metric;
   }
 
   function writeUrlState(params) {
-    ["view", "demographic", "demographicSample", "demographicParty", "demographicX", "demographicY", "demographicOutcome", "demographicPeriod"].forEach(key => params.delete(key));
+    ["demographicChart", "view", "demographic", "demographicSample", "demographicParty", "demographicX", "demographicY", "demographicOutcome", "demographicPeriod"].forEach(key => params.delete(key));
     if (!supportedKey(context.electionKey) || (isRegional() && !["state", "county"].includes(context.geography)) || !context.official || !state.view) return;
     params.set("view", "demographics");
+    if (state.chart === "before-after") params.set("demographicChart", state.chart);
     if (state.period !== defaults.period) params.set("demographicPeriod", state.period);
     if (state.metric !== defaults.metric) params.set("demographic", state.metric);
     if (state.sample !== defaults.sample) params.set("demographicSample", state.sample);
@@ -95,16 +109,16 @@
     if (state.outcome !== defaults.outcome) params.set("demographicOutcome", state.outcome);
   }
 
-  function startYear() { return periods[state.period][0]; }
+  function startYear(row) { return isGovernor() && row ? Number(row.baseline_year) : periods[state.period][0]; }
   function endYear() { return periods[state.period][1]; }
-  function periodLabel() { return `${startYear()} → ${endYear()}`; }
+  function periodLabel(row) { return isGovernor() && !row ? `Previous election → ${endYear()}` : `${startYear(row)} → ${endYear()}`; }
   function activatePeriod() {
     if (!data || data.kind !== datasetKind() || data.period === state.period && data.electionKey === context.electionKey) return;
-    if ((isCounty() || isSenate()) && !context.ready) return;
+    if ((isCounty() || isSenate() || isGovernor()) && !context.ready) return;
     const historical = !isRegional() && startYear() < 2022;
     data.metrics = historical ? data.historicalMetrics : data.latestMetrics;
-    data.rows = isSenate() ? [] : (historical ? data.historicalRows : data.baseRows).map(row => ({ ...row, ...data.comparisons[state.period].get(row.constituency_code) }));
-    if (isCounty() || isSenate()) {
+    data.rows = isSenate() || isGovernor() ? [] : (historical ? data.historicalRows : data.baseRows).map(row => ({ ...row, ...data.comparisons[state.period].get(row.constituency_code) }));
+    if (isCounty() || isSenate() || isGovernor()) {
       const base = new Map(data.baseRows.map(row => [row.constituency_code, row]));
       const year = context.electionKey.slice(-4), names = new Set(context.districtNames);
       data.rows = [...data.comparisons[state.period].values()].map(row => ({
@@ -134,6 +148,7 @@
   function matched() { return state.outcome !== "2024"; }
   function changing() { return state.outcome === "change"; }
   function outcomeLabel() {
+    if (isGovernor()) return changing() ? `${partyLabel()} share change since previous election (pp)` : `${partyLabel()} two-party share · ${state.outcome === "previous-matched" ? "previous election" : endYear()} (%)`;
     return changing() ? `${partyLabel()} share change, ${endYear()} − ${startYear()} (pp)`
       : `${partyLabel()} two-party vote share${matched() ? " · " + state.outcome.slice(0, 4) : ""} (%)`;
   }
@@ -143,7 +158,7 @@
   function voteShare(row) {
     if (matched() && row.comparison_eligible !== "true") return null;
     const field = changing() ? "democratic_share_change_pp"
-      : matched() ? `democratic_two_party_share_pct_${state.outcome.slice(0, 4)}` : "democratic_two_party_share_pct";
+      : matched() ? `democratic_two_party_share_pct_${state.outcome === "previous-matched" ? startYear(row) : state.outcome.slice(0, 4)}` : "democratic_two_party_share_pct";
     if (!finite(row[field])) return null;
     const democratic = Number(row[field]);
     return state.party === "republican" ? (changing() ? -democratic : 100 - democratic) : democratic;
@@ -217,7 +232,7 @@
     const badge = document.createElement("span");
     badge.className = `house-flip-badge${row[`elected_party_${endYear()}`] === "Republican" ? " house-flip-republican" : ""}`;
     badge.textContent = flipLabel(row);
-    badge.title = `${periodLabel()}: ${row[`elected_party_${startYear()}`]} → ${row[`elected_party_${endYear()}`]}`;
+    badge.title = `${periodLabel(row)}: ${row[`elected_party_${startYear(row)}`]} → ${row[`elected_party_${endYear()}`]}`;
     return badge;
   }
   function swingLegend() {
@@ -230,13 +245,13 @@
     const eligible = row && row[state.sample === "sensitivity" ? "comparison_sensitivity_eligible" : "comparison_eligible"] === "true";
     if (!eligible) {
       let detail = !row ? (error ? "Comparison unavailable; open Demographics to retry." : "Loading comparison…")
-        : isCounty() || isSenate() ? exclusionNote(row)
+        : isCounty() || isSenate() || isGovernor() ? exclusionNote(row) || "Multiple major-party candidates in at least one year."
         : row.boundary_unchanged_verified !== "true" ? (row.boundary_audit_method ? "District boundaries changed between the two elections." : "State plan changed; district not individually verified.")
         : row.result_called_2026 === "false" ? "2026 race not called in this provisional snapshot."
         : ["Alaska", "Maine"].includes(row.state) ? "Ranked-choice count bases not standardized."
         : row.comparison_eligible !== "true" ? "Both years need reported votes and named candidates for both parties."
         : "Multiple major-party candidates in at least one year.";
-      return { color: swingColors.excluded, fill: swingColors.excluded, label: "Not comparable", detail };
+      return { color: swingColors.excluded, fill: swingColors.excluded, label: "Not comparable", detail: (isGovernor() && row ? periodLabel(row) + " · " : "") + detail };
     }
     const delta = Number(row.democratic_share_change_pp), magnitude = Math.abs(delta);
     const color = magnitude < .5 ? swingColors.neutral : delta > 0
@@ -244,7 +259,7 @@
       : (magnitude >= 5 ? swingColors.republicanStrong : swingColors.republican);
     return { color, fill: color,
       label: delta === 0 ? "No change in two-party share" : `${magnitude.toFixed(1)} pp toward ${delta > 0 ? "Democrats" : "Republicans"}`,
-      detail: `Democratic share: ${Number(row[`democratic_two_party_share_pct_${startYear()}`]).toFixed(1)}% in ${startYear()} → ${Number(row[`democratic_two_party_share_pct_${endYear()}`]).toFixed(1)}% in ${endYear()}${flipLabel(row) ? " · " + flipLabel(row) : ""}` };
+      detail: `Democratic share: ${Number(row[`democratic_two_party_share_pct_${startYear(row)}`]).toFixed(1)}% in ${startYear(row)} → ${Number(row[`democratic_two_party_share_pct_${endYear()}`]).toFixed(1)}% in ${endYear()}${flipLabel(row) ? " · " + flipLabel(row) : ""}` };
   }
   function showSwing() {
     state.view = true;
@@ -278,7 +293,7 @@
           const share = year => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
           name.textContent = row.district;
           if (flipLabel(row)) name.append(document.createTextNode(" "), flipBadge(row));
-          detail.textContent = `${share(startYear()).toFixed(1)}% → ${share(endYear()).toFixed(1)}% · ${outcomeFormat(voteShare(row))}`;
+          detail.textContent = `${share(startYear(row)).toFixed(1)}% → ${share(endYear()).toFixed(1)}% · ${outcomeFormat(voteShare(row))}${isGovernor() ? " · " + periodLabel(row) : ""}`;
           button.type = "button";
           button.dataset.district = row.district;
           button.setAttribute("aria-pressed", String(row.district === context.district));
@@ -399,8 +414,8 @@
     controller = new AbortController();
     const signal = controller.signal;
     const selectedPeriods = availablePeriods();
-    const senate = isSenate();
-    const paths = [`us_2024_${county ? "county" : "state"}_demographics.csv`, `us_2024_${county ? "county" : "state"}_demographics_metadata.json`, ...selectedPeriods.map(period => `us_${senate ? `senate_${county ? "county" : "state"}` : county ? "president_county" : "president"}_${period.replace("-", "_")}_comparison.csv`)];
+    const senate = isSenate(), governor = isGovernor();
+    const paths = [`us_2024_${county ? "county" : "state"}_demographics.csv`, `us_2024_${county ? "county" : "state"}_demographics_metadata.json`, ...selectedPeriods.map(period => comparisonFile(period, county))];
     promise = Promise.all(paths.map(async path => {
       const response = await fetch(callbacks.assetPath(`data/${path}`), { signal });
       if (!response.ok) throw new Error("State data could not be loaded.");
@@ -412,13 +427,14 @@
       const mapped = {};
       comparisons.forEach((body, index) => {
         const rows = callbacks.parseCSV(body), byCode = new Map(rows.map(row => [row.constituency_code, row]));
-        if (senate ? rows.length < (county ? 1000 : 30) || byCode.size !== rows.length : county ? rows.length < 3000 || byCode.size !== rows.length || rows.some(row => !row.demographic_constituency_code) : rows.length !== 51 || byCode.size !== 51 || baseRows.some(row => byCode.get(row.constituency_code)?.district !== row.district)) throw new Error("State comparison coverage mismatch.");
+        if (senate || governor ? rows.length < (governor ? (county ? 500 : 11) : (county ? 1000 : 30)) || byCode.size !== rows.length : county ? rows.length < 3000 || byCode.size !== rows.length || rows.some(row => !row.demographic_constituency_code) : rows.length !== 51 || byCode.size !== 51 || baseRows.some(row => byCode.get(row.constituency_code)?.district !== row.district)) throw new Error("State comparison coverage mismatch.");
+        if (governor && (rows.length !== context.districtNames.length || rows.some(row => Number(row.election_year) !== endYear() || Number(row.baseline_year) !== endYear() - (["New Hampshire", "Vermont"].includes(row.state) ? 2 : 4)))) throw new Error("Governor baseline coverage mismatch.");
         mapped[selectedPeriods[index]] = byCode;
       });
       data = { kind, baseRows, latestMetrics: metadata.metrics, comparisons: mapped };
       activatePeriod();
     }).catch(reason => {
-      if (id === requestId && reason.name !== "AbortError") error = `${senate ? "Senate" : "Presidential"} demographics could not be loaded. Check your connection and retry.`;
+      if (id === requestId && reason.name !== "AbortError") error = `${governor ? "Governor" : senate ? "Senate" : "Presidential"} demographics could not be loaded. Check your connection and retry.`;
     }).finally(() => {
       if (id !== requestId) return;
       promise = null;
@@ -429,6 +445,18 @@
   }
 
   function exclusionNote(row) {
+    if (isGovernor() && row.comparison_eligible !== "true") {
+      const reason = row.comparison_exclusion_reason || "";
+      return reason.includes("previous_election_data_unavailable") ? `Not compared: the previous election (${row.baseline_year}) is before the available governor data, which starts in 2016.`
+        : reason.includes("local_leader_unresolved") ? "Not compared: grouped Other votes prevent identifying a local candidate leader."
+        : reason.includes("special_election") ? "Not compared: a special election cannot substitute for the previous regular election."
+        : reason.includes("race_not_called") ? "Not compared: this race is not called in the provisional snapshot."
+        : reason.includes("alaska_statewide") ? "Not compared: Alaska is a statewide fallback, not a county."
+        : reason.includes("ranked_choice") ? "Not compared: Alaska's count bases have not been standardized."
+        : reason.includes("connecticut") ? "Not compared: Connecticut county/planning-region geography cannot be matched across results and the fixed demographics."
+        : reason.includes("previous_reporting_area_missing") ? "Not compared: this reporting area is missing from the preceding election."
+        : "Not compared: both elections need positive named Democratic and Republican votes; independent and grouped Other votes are not assigned to either party.";
+    }
     if (isSenate() && row.comparison_eligible !== "true") {
       const reason = row.comparison_exclusion_reason || "";
       return reason.includes("special_election") ? "Not compared: this special election is not the same regular Senate seat six years later."
@@ -454,7 +482,7 @@
     if (!matched() && row.votes_reported !== "true") return "Not plotted: candidate vote totals were not reported for this unopposed contest.";
     if (!matched() && row.two_party_analysis_eligible !== "true") return "Not plotted: this contest does not include both named major-party candidates.";
     if (state.sample === "sensitivity" && (row.multiple_major_party_candidates === "true" || row.ranked_choice_state === "true")) return "Not plotted in the stricter sample. This district remains available on the map and in the results.";
-    if (!finite(row[state.metric])) return "Not plotted: this demographic estimate was not published for the district.";
+    if (state.chart !== "before-after" && !finite(row[state.metric])) return "Not plotted: this demographic estimate was not published for the district.";
     return "";
   }
 
@@ -465,16 +493,16 @@
     dom.district.value = row.district;
     dom.flip.classList.toggle("hidden", !flipLabel(row));
     dom.flip.replaceChildren();
-    if (flipLabel(row)) dom.flip.append(flipBadge(row), document.createTextNode(` · ${periodLabel()}`));
+    if (flipLabel(row)) dom.flip.append(flipBadge(row), document.createTextNode(` · ${periodLabel(row)}`));
     dom.values.textContent = `${format(row[state.metric])} · ${outcomeLabel()}: ${outcomeFormat(voteShare(row))}`;
     if (matched() && row.comparison_eligible === "true") {
       const share = year => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
-      const delta = share(endYear()) - share(startYear());
+      const delta = share(endYear()) - share(startYear(row));
       const metric = document.createElement("span"), cards = document.createElement("span");
       metric.className = "house-selected-metric";
-      metric.textContent = `${data.metrics[state.metric].label}: ${format(row[state.metric])}`;
+      metric.textContent = state.chart === "before-after" ? `${partyLabel()} two-party shares` : `${data.metrics[state.metric].label}: ${format(row[state.metric])}`;
       cards.className = "house-share-cards";
-      [[`${startYear()}:`, `${share(startYear()).toFixed(1)}%`], [`${endYear()}:`, `${share(endYear()).toFixed(1)}%`], ["Change:", `${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`]].forEach(([label, value], index) => {
+      [[`${startYear(row)}:`, `${share(startYear(row)).toFixed(1)}%`], [`${endYear()}:`, `${share(endYear()).toFixed(1)}%`], ["Change:", `${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`]].forEach(([label, value], index) => {
         const card = document.createElement("span"), caption = document.createElement("span"), number = document.createElement("strong");
         caption.textContent = `${label} ${index < 2 ? partyLabel() + " share" : partyLabel() + " share change"}`;
         number.textContent = value;
@@ -484,7 +512,7 @@
       });
       dom.values.replaceChildren(metric, cards);
     }
-    dom.note.textContent = exclusionNote(row) || (isRegional() ? `${endYear()} ${isCounty() ? "county/reporting-area" : "statewide"} popular-vote leader: ${row[`elected_party_${endYear()}`]}` : state.period === "2024-2026" ? `2026 reported winner (provisional): ${row.elected_member_2026} · ${row.elected_party_2026}` : startYear() < 2022 ? `${endYear()} elected party: ${row[`elected_party_${endYear()}`]}` : `2024 elected member: ${row.elected_member} · ${row.elected_party}`);
+    dom.note.textContent = (isGovernor() ? `${periodLabel(row)} · ` : "") + (exclusionNote(row) || (isRegional() ? `${endYear()} ${isCounty() ? "county/reporting-area" : "statewide"} popular-vote leader: ${row[`elected_party_${endYear()}`]}` : state.period === "2024-2026" ? `2026 reported winner (provisional): ${row.elected_member_2026} · ${row.elected_party_2026}` : startYear() < 2022 ? `${endYear()} elected party: ${row[`elected_party_${endYear()}`]}` : `2024 elected member: ${row.elected_member} · ${row.elected_party}`));
     const definition = data.metrics[state.metric];
     const moe = row[`${state.metric}_moe`];
     dom.uncertainty.textContent = !finite(row[state.metric]) ? "The estimate and its uncertainty are unavailable; no value has been imputed."
@@ -497,7 +525,7 @@
       if (!dom.chart.contains(document.activeElement)) point.setAttribute("tabindex", selected || (!points.some(p => p.row.district === row.district) && point.dataset.index === "0") ? "0" : "-1");
     });
     dom.chart.querySelectorAll(".house-seat-flipped").forEach(point => point.parentNode.appendChild(point));
-    const selected = dom.chart.querySelector('[aria-pressed="true"]');
+    const selected = dom.chart.querySelector('.house-scatter-point[aria-pressed="true"]');
     if (selected) selected.parentNode.appendChild(selected);
   }
 
@@ -536,11 +564,66 @@
     return { low, high, ticks: ticks.length >= 2 ? ticks : [low, high] };
   }
 
-  function draw(rows) {
-    if (!isActive() || !data) return;
+  function chartRows() {
+    return sampleRows().filter(row => state.chart === "before-after"
+      ? finite(row[`democratic_two_party_share_pct_${startYear(row)}`]) && finite(row[`democratic_two_party_share_pct_${endYear()}`])
+      : finite(row[state.metric]) && finite(voteShare(row)));
+  }
+
+  function drawBeforeAfter(rows) {
     const width = dom.chart.clientWidth;
     if (width < 1) return;
-    const key = `${state.outcome}|${state.metric}|${state.sample}|${state.party}|${state.xRange}|${state.yRange}|${width}`;
+    const key = `before-after|${state.period}|${state.sample}|${state.party}|${state.yRange}|${context.district}|${width}`;
+    if (key === geometryKey) { renderSelection(); return; }
+    geometryKey = key;
+    points = [];
+    dom.tooltip.classList.add("hidden");
+    const sorted = rows.slice().sort((a, b) => Math.abs(Number(b.democratic_share_change_pp)) - Math.abs(Number(a.democratic_share_change_pp)) || a.district.localeCompare(b.district));
+    const selected = rows.find(row => row.district === context.district);
+    const shown = selected ? [selected, ...sorted.filter(row => row !== selected).slice(0, 19)] : sorted.slice(0, 20);
+    dom.beforeNote.textContent = `${rows.length} comparable ${isRegional() ? areaPlural() : "districts"} · ${rows.length > 20 ? "Biggest swings plus your selected area (up to 20 rows)" : "All comparable areas"}. Hollow dot = previous election; filled dot = current election. Outlined dot = flipped. Select a row or choose any area below.`;
+    dom.axis.textContent = `${partyLabel()} two-party vote share (%)`;
+    if (!shown.length) {
+      graph = null;
+      dom.chart.textContent = "No comparable election results are available in this sample.";
+      renderSelection();
+      return;
+    }
+    const share = (row, year) => state.party === "republican" ? 100 - Number(row[`democratic_two_party_share_pct_${year}`]) : Number(row[`democratic_two_party_share_pct_${year}`]);
+    const range = axisRange(rows.flatMap(row => [share(row, startYear(row)), share(row, endYear())]), state.yRange === "fit", true, 4);
+    const left = 22, right = width - 22, height = 30 + shown.length * 70;
+    const x = value => left + (value - range.low) / (range.high - range.low) * (right - left);
+    graph = svgElement("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "group", "aria-label": "Previous and current election shares", "data-x-min": range.low, "data-x-max": range.high });
+    range.ticks.forEach(value => {
+      graph.append(svgElement("text", { x: x(value), y: 12, "text-anchor": "middle" }, `${Number(value.toFixed(1))}%`));
+    });
+    shown.forEach((row, index) => {
+      const before = share(row, startYear(row)), after = share(row, endYear()), delta = after - before;
+      const label = `${row.district} · ${periodLabel(row)}: ${before.toFixed(1)}% → ${after.toFixed(1)}% (${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp)${flipLabel(row) ? " · " + flipLabel(row) : ""}`;
+      const group = svgElement("g", { class: "house-change-row", role: "button", tabindex: "0", "data-district": row.district, "data-before": before, "data-after": after, "data-baseline-year": startYear(row), "data-election-year": endYear(), "aria-label": label, "aria-pressed": String(row.district === context.district), transform: `translate(0, ${25 + index * 70})` });
+      group.append(svgElement("title", {}, label));
+      group.append(svgElement("rect", { x: 0, y: 0, width, height: 68, rx: 5, class: "house-change-background" }));
+      const maxChars = Math.max(18, Math.floor((width - 20) / 7));
+      group.append(svgElement("text", { x: 10, y: 16, class: "house-change-name" }, row.district.length > maxChars ? row.district.slice(0, maxChars - 1) + "…" : row.district));
+      group.append(svgElement("text", { x: 10, y: 32 }, `${startYear(row)}: ${before.toFixed(1)}% → ${endYear()}: ${after.toFixed(1)}% · ${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`));
+      const color = Math.abs(Number(row.democratic_share_change_pp)) < .5 ? "#8b9098" : swingVisual(row.district).color;
+      group.append(svgElement("line", { x1: left, x2: right, y1: 51, y2: 51, stroke: "#d4d7db", "stroke-width": 1 }));
+      group.append(svgElement("line", { x1: x(before), x2: x(after), y1: 51, y2: 51, stroke: color, "stroke-width": 4, class: "house-change-connection" }));
+      group.append(svgElement("circle", { cx: x(before), cy: 51, r: 5, fill: "white", stroke: color, "stroke-width": 2, class: "house-change-before" }));
+      group.append(svgElement("circle", { cx: x(after), cy: 51, r: row.seat_flipped === "true" ? 7 : 5, fill: color, stroke: row.seat_flipped === "true" ? "#242b34" : color, "stroke-width": row.seat_flipped === "true" ? 2 : 1, class: `house-change-after${row.seat_flipped === "true" ? " house-change-flipped" : ""}` }));
+      graph.append(group);
+    });
+    dom.chart.replaceChildren(graph);
+    dom.chart.scrollTop = 0;
+    renderSelection();
+  }
+
+  function draw(rows) {
+    if (!isActive() || !data) return;
+    if (state.chart === "before-after") { drawBeforeAfter(rows); return; }
+    const width = dom.chart.clientWidth;
+    if (width < 1) return;
+    const key = `scatter|${state.outcome}|${state.metric}|${state.sample}|${state.party}|${state.xRange}|${state.yRange}|${width}`;
     if (key === geometryKey) { renderSelection(); return; }
     geometryKey = key;
     dom.tooltip.classList.add("hidden");
@@ -573,7 +656,7 @@
     });
     points = rows.map((row, index) => ({ row, index, x: x(Number(row[state.metric])), y: y(voteShare(row)) }));
     points.forEach(point => {
-      const label = `${point.row.district}: ${format(point.row[state.metric])}; ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}${flipLabel(point.row) ? " · " + flipLabel(point.row) : ""}`;
+      const label = `${point.row.district}${isGovernor() ? " · " + periodLabel(point.row) : ""}: ${format(point.row[state.metric])}; ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}${flipLabel(point.row) ? " · " + flipLabel(point.row) : ""}`;
       const circle = svgElement("circle", { cx: point.x, cy: point.y, r: point.row.seat_flipped === "true" ? 5 : 4, class: `house-scatter-point${point.row.seat_flipped === "true" ? " house-seat-flipped" : ""}`, role: "button", "data-district": point.row.district, "data-index": point.index, "aria-label": label, "aria-pressed": "false", tabindex: "-1" });
       if (changing()) circle.style.fill = swingVisual(point.row.district).color;
       graph.append(circle);
@@ -598,7 +681,7 @@
 
   function showTooltip(point) {
     if (!point || !graph) { dom.tooltip.classList.add("hidden"); return; }
-    dom.tooltip.textContent = `${point.row.district}\n${format(point.row[state.metric])} · ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}${flipLabel(point.row) ? " · " + flipLabel(point.row) : ""}`;
+    dom.tooltip.textContent = `${point.row.district}${isGovernor() ? " · " + periodLabel(point.row) : ""}\n${format(point.row[state.metric])} · ${outcomeLabel()}: ${outcomeFormat(voteShare(point.row))}${flipLabel(point.row) ? " · " + flipLabel(point.row) : ""}`;
     dom.tooltip.classList.remove("hidden");
     const box = graph.getBoundingClientRect(), parent = dom.panel.getBoundingClientRect();
     const px = box.left - parent.left + point.x;
@@ -625,11 +708,11 @@
     dom.resultsButton.setAttribute("aria-pressed", String(!active));
     dom.demographicsButton.setAttribute("aria-pressed", String(active));
     const presidential = isPresidential();
-    const regional = isRegional(), senate = isSenate();
-    document.querySelector("#houseDemographicsPanel > .house-eyebrow").textContent = regional ? `U.S. ${senate ? "Senate" : "President"} · ${isCounty() ? "County" : "State"} explorer` : "U.S. House · District explorer";
-    document.querySelector("#houseDemographicsPanel > .map-subtitle").textContent = regional ? `Compare ${areaLabel()} demographics and ${senate ? "Senate" : "presidential"} votes. Select a dot, map area or swing ranking.` : "Explore the relationship between a district’s demographics and its vote. Select a dot, map district, or swing ranking.";
+    const regional = isRegional(), senate = isSenate(), governor = isGovernor();
+    document.querySelector("#houseDemographicsPanel > .house-eyebrow").textContent = regional ? `U.S. ${governor ? "Governor" : senate ? "Senate" : "President"} · ${isCounty() ? "County" : "State"} explorer` : "U.S. House · District explorer";
+    document.querySelector("#houseDemographicsPanel > .map-subtitle").textContent = regional ? `Compare ${areaLabel()} demographics and ${governor ? "governor" : senate ? "Senate" : "presidential"} votes. Select a dot, map area or swing ranking.` : "Explore the relationship between a district’s demographics and its vote. Select a dot, map district, or swing ranking.";
     dom.sample.closest("label").classList.toggle("hidden", presidential);
-    dom.sample.closest("label").firstChild.textContent = senate ? "Sample" : "District sample";
+    dom.sample.closest("label").firstChild.textContent = senate || governor ? "Sample" : "District sample";
     dom.district.closest("label").firstChild.textContent = regional ? (isCounty() ? "County / reporting area" : "State") : "District";
     dom.selection.querySelector(".house-eyebrow").textContent = regional ? `Selected ${areaLabel()}` : "Selected district";
     dom.selection.setAttribute("aria-label", regional ? `Selected ${areaLabel()} demographics` : "Selected district demographics");
@@ -637,14 +720,16 @@
     dom.panel.querySelector(".house-key-flip").textContent = regional ? `Outlined = flipped ${areaLabel()}` : "Outlined = flipped seat";
     document.getElementById("houseDemographicHouseMethods").classList.toggle("hidden", regional);
     document.getElementById("houseDemographicPresidentMethods").classList.toggle("hidden", !presidential || isCounty());
-    document.getElementById("houseDemographicCountyMethods").classList.toggle("hidden", !isCounty() || senate);
+    document.getElementById("houseDemographicCountyMethods").classList.toggle("hidden", !isCounty() || senate || governor);
+    document.getElementById("governorComparisonMethods").classList.toggle("hidden", !governor);
     document.getElementById("senateComparisonMethods").classList.toggle("hidden", !senate);
-    document.getElementById("houseComparisonMethods").href = senate ? "../docs/us_senate_comparison.md" : regional ? "../docs/us_president_state_demographics.md" : "../docs/us_house_2022_2024_comparison.md";
+    document.getElementById("houseComparisonMethods").href = governor ? "../docs/us_governor_comparison.md" : senate ? "../docs/us_senate_comparison.md" : regional ? "../docs/us_president_state_demographics.md" : "../docs/us_house_2022_2024_comparison.md";
     const periodOptions = availablePeriods().slice().reverse();
-    if (dom.period.dataset.kind !== (senate ? "senate" : regional ? "president" : "house")) {
-      dom.period.replaceChildren(...periodOptions.map(period => new Option(period.replace("-", " → "), period)));
-      dom.period.dataset.kind = senate ? "senate" : regional ? "president" : "house";
+    if (dom.period.dataset.kind !== (governor ? context.electionKey : senate ? "senate" : regional ? "president" : "house")) {
+      dom.period.replaceChildren(...periodOptions.map(period => new Option(governor ? "Since previous election" : period.replace("-", " → "), period)));
+      dom.period.dataset.kind = governor ? context.electionKey : senate ? "senate" : regional ? "president" : "house";
     }
+    dom.period.closest("label").classList.toggle("hidden", governor);
     if (!active) {
       if (supported() && context.mapMode === "house-swing" && !data && !error) void load();
       return;
@@ -652,25 +737,40 @@
     dom.content.classList.toggle("hidden", !data);
     dom.retry.classList.toggle("hidden", !error);
     dom.chart.setAttribute("aria-busy", String(!data && !error));
+    const beforeAfter = state.chart === "before-after";
+    dom.chartType.value = state.chart;
+    dom.chart.classList.toggle("house-before-after", beforeAfter);
+    dom.panel.classList.toggle("house-before-after-view", beforeAfter);
+    dom.beforeNote.classList.toggle("hidden", !beforeAfter);
+    dom.statistics.classList.toggle("hidden", beforeAfter);
+    document.getElementById("houseDemographicUncertainty").classList.toggle("hidden", beforeAfter);
+    [dom.metric, dom.outcome, dom.xRange].forEach(control => control.closest("label").classList.toggle("hidden", beforeAfter));
+    dom.yRange.closest("label").firstChild.textContent = beforeAfter ? "Share axis" : "Y-axis range";
     dom.sample.value = state.sample;
     dom.party.value = state.party;
     dom.xRange.value = state.xRange;
     dom.yRange.value = state.yRange;
-    dom.yLabel.textContent = outcomeLabel();
+    dom.yLabel.textContent = beforeAfter ? "Change since last election" : outcomeLabel();
     dom.period.value = state.period;
     dom.swingTitle.textContent = `Biggest swings · ${periodLabel()}`;
     dom.outcome.querySelector('[value="2024"]').hidden = regional;
     dom.outcome.querySelector('[value="2024"]').disabled = context.electionKey !== "us-house-2024" || state.period !== "2022-2024";
     for (const year of [2008, 2012, 2016, 2018, 2020, 2022, 2024, 2026]) {
       const option = dom.outcome.querySelector(`[value="${year}-matched"]`);
-      option.hidden = option.disabled = ![startYear(), endYear()].includes(year);
+      option.hidden = option.disabled = !(governor ? [endYear()] : [startYear(), endYear()]).includes(year);
     }
-    dom.outcome.querySelector('[value="change"]').textContent = `Swing ${periodLabel()} · matched`;
-    dom.download.href = `../data/us_${senate ? `senate_${isCounty() ? "county" : "state"}` : regional ? (isCounty() ? "president_county" : "president") : "house"}_${state.period.replace("-", "_")}_comparison.csv`;
+    dom.outcome.querySelector('[value="previous-matched"]').hidden = dom.outcome.querySelector('[value="previous-matched"]').disabled = !governor;
+    dom.outcome.querySelector('[value="change"]').textContent = governor ? "Swing since previous election" : `Swing ${periodLabel()} · matched`;
+    dom.download.href = `../data/${comparisonFile(state.period)}`;
     dom.download.textContent = `Download ${periodLabel()} comparison`;
     dom.outcome.value = state.outcome;
     const vintage = isCounty() ? "2020–2024 ACS five-year demographics" : !regional && startYear() < 2022 ? "2021 ACS demographics on historical districts" : "2024 ACS demographics";
     dom.comparisonNote.textContent = matched() ? `${vintage} held fixed · Same matched ${regional ? areaPlural() : "districts"} for both years and change · Map and full results show ${context.electionKey.slice(-4)}` : "2024 ACS demographics and 2024 election results";
+    if (governor) {
+      dom.comparisonNote.textContent += ` · ${endYear()-4} → ${endYear()} in states with four-year terms; ${endYear()-2} → ${endYear()} in New Hampshire and Vermont · Actual years shown on selection · No annualisation · Fixed demographics; earlier populations may differ.`;
+      if (endYear() === 2018) dom.comparisonNote.textContent += " · Only New Hampshire and Vermont have a preceding election in the available data; other states need 2014 results.";
+      if (endYear() === 2026) dom.comparisonNote.textContent += " · Provisional: 15 November 2026.";
+    }
     if (senate) dom.comparisonNote.textContent += " · Same regular Senate seat, six years apart · Special elections excluded · Fixed demographic snapshot; earlier populations may differ.";
     if (senate && endYear() === 2026) dom.comparisonNote.textContent += " · Provisional: 14 November 2026 · Uncalled races excluded.";
     if (state.period === "2024-2026") dom.comparisonNote.textContent += " · Provisional snapshot: 14 November 2026 · Flips provisional · Uncalled races and changed-plan states excluded.";
@@ -686,8 +786,8 @@
     }
     dom.metric.value = state.metric;
     const sample = sampleRows();
-    const rows = sample.filter(row => finite(row[state.metric]) && finite(voteShare(row)));
-    dom.status.textContent = `${rows.length} ${regional ? areaPlural() : "districts"} · ${(regional ? data.rows.length : 435) - sample.length} excluded by sample · ${sample.length - rows.length} missing this measure`;
+    const rows = chartRows();
+    dom.status.textContent = beforeAfter ? `${rows.length} comparable ${regional ? areaPlural() : "districts"} · ${data.rows.length - rows.length} excluded by sample or missing results` : `${rows.length} ${regional ? areaPlural() : "districts"} · ${(regional ? data.rows.length : 435) - sample.length} excluded by sample · ${sample.length - rows.length} missing this measure`;
     const values = statistics(rows);
     if (regional) values[2] = sample.filter(row => row.seat_flipped === "true").length;
     dom.statistics.replaceChildren(...[regional ? (isCounty() ? "County r" : "State r") : "National r", "Spearman ρ", regional ? (isCounty() ? "Flipped counties" : "Flipped states") : "Within-state r"].map((label, index) => {
@@ -739,7 +839,7 @@
 
   function setup(options) {
     callbacks = options;
-    const ids = { controls: "houseViewControls", grid: "explorerGrid", panel: "houseDemographicsPanel", resultsButton: "houseResultsView", demographicsButton: "houseDemographicsView", metric: "houseDemographicMetric", sample: "houseDemographicSample", party: "houseDemographicParty", outcome: "houseDemographicOutcome", period: "houseDemographicPeriod", swingTitle: "houseSwingTitle", download: "houseComparisonDownload", comparisonNote: "houseDemographicComparisonNote", xRange: "houseDemographicXRange", yRange: "houseDemographicYRange", yLabel: "houseDemographicYLabel", status: "houseDemographicStatus", retry: "houseDemographicRetry", content: "houseDemographicContent", statistics: "houseDemographicStatistics", chart: "houseDemographicChart", axis: "houseDemographicAxis", selection: "houseDemographicSelection", district: "houseDemographicDistrict", values: "houseDemographicSelectedValues", flip: "houseDemographicFlip", note: "houseDemographicSelectedNote", uncertainty: "houseDemographicUncertaintyText", fullResult: "houseDemographicFullResult", swingRankings: "houseSwingRankings", swingRankingNote: "houseSwingRankingNote", swingLists: "houseSwingLists", tooltip: "houseDemographicTooltip" };
+    const ids = { chartType: "houseChartType", beforeNote: "houseBeforeAfterNote", controls: "houseViewControls", grid: "explorerGrid", panel: "houseDemographicsPanel", resultsButton: "houseResultsView", demographicsButton: "houseDemographicsView", metric: "houseDemographicMetric", sample: "houseDemographicSample", party: "houseDemographicParty", outcome: "houseDemographicOutcome", period: "houseDemographicPeriod", swingTitle: "houseSwingTitle", download: "houseComparisonDownload", comparisonNote: "houseDemographicComparisonNote", xRange: "houseDemographicXRange", yRange: "houseDemographicYRange", yLabel: "houseDemographicYLabel", status: "houseDemographicStatus", retry: "houseDemographicRetry", content: "houseDemographicContent", statistics: "houseDemographicStatistics", chart: "houseDemographicChart", axis: "houseDemographicAxis", selection: "houseDemographicSelection", district: "houseDemographicDistrict", values: "houseDemographicSelectedValues", flip: "houseDemographicFlip", note: "houseDemographicSelectedNote", uncertainty: "houseDemographicUncertaintyText", fullResult: "houseDemographicFullResult", swingRankings: "houseSwingRankings", swingRankingNote: "houseSwingRankingNote", swingLists: "houseSwingLists", tooltip: "houseDemographicTooltip" };
     dom = Object.fromEntries(Object.entries(ids).map(([key, id]) => [key, document.getElementById(id)]));
     readLocation();
     dom.resultsButton.onclick = () => { state.view = false; render(); callbacks.onUrlChange(); };
@@ -750,9 +850,16 @@
       state.period = dom.period.value;
       state.outcome = "change";
       state.yRange = "fit";
-      await callbacks.onPeriodChange(endYear(), isSenate() ? "senate" : isPresidential() ? "president" : "house", context.geography);
+      await callbacks.onPeriodChange(endYear(), isGovernor() ? "governor" : isSenate() ? "senate" : isPresidential() ? "president" : "house", context.geography);
       render();
       callbacks.onSwingChange(true);
+      callbacks.onUrlChange();
+    };
+    dom.chartType.onchange = () => {
+      state.chart = dom.chartType.value;
+      if (state.chart === "before-after") state.outcome = "change";
+      render();
+      callbacks.onSwingChange(changing());
       callbacks.onUrlChange();
     };
     dom.outcome.onchange = () => { state.outcome = dom.outcome.value; render(); callbacks.onSwingChange(changing()); callbacks.onUrlChange(); };
@@ -763,6 +870,11 @@
     dom.retry.onclick = () => { error = ""; render(); };
     dom.fullResult.onclick = callbacks.onFullResult;
     dom.chart.addEventListener("click", event => {
+      if (state.chart === "before-after") {
+        const row = event.target.closest(".house-change-row");
+        if (row) callbacks.onSelect(row.dataset.district);
+        return;
+      }
       const target = event.target.closest(".house-scatter-point");
       const point = target ? points[Number(target.dataset.index)] : nearest(event, 24);
       if (point) callbacks.onSelect(point.row.district);
@@ -774,6 +886,21 @@
     });
     dom.chart.addEventListener("focusout", () => dom.tooltip.classList.add("hidden"));
     dom.chart.addEventListener("keydown", event => {
+      if (state.chart === "before-after") {
+        const row = event.target.closest(".house-change-row");
+        if (!row) return;
+        if (["Enter", " "].includes(event.key)) {
+          event.preventDefault();
+          callbacks.onSelect(row.dataset.district);
+          dom.chart.querySelector('.house-change-row[aria-pressed="true"]')?.focus({ preventScroll: true });
+        }
+        if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          const rows = [...dom.chart.querySelectorAll(".house-change-row")], index = rows.indexOf(row);
+          rows[event.key === "Home" ? 0 : event.key === "End" ? rows.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + rows.length) % rows.length].focus();
+        }
+        return;
+      }
       const target = event.target.closest(".house-scatter-point");
       if (!target) return;
       if (event.key === "Enter" || event.key === " ") {
@@ -791,7 +918,7 @@
     let frame;
     const resize = new ResizeObserver(() => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => { if (isActive() && data) draw(sampleRows().filter(row => finite(row[state.metric]) && finite(voteShare(row)))); });
+      frame = requestAnimationFrame(() => { if (isActive() && data) draw(chartRows()); });
     });
     resize.observe(dom.chart);
     window.addEventListener("popstate", () => { readLocation(); render(); });

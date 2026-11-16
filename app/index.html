@@ -1632,6 +1632,7 @@
                 <option value="2020-matched" hidden>2020 share · matched</option>
                 <option value="2022-matched">2022 share · matched</option>
                 <option value="2024-matched">2024 share · matched</option>
+                <option value="previous-matched" hidden>Previous election share · matched</option>
                 <option value="2026-matched" hidden>2026 share · matched</option>
                 <option value="change">Swing 2022 → 2024 · matched</option>
               </select>
@@ -1658,7 +1659,14 @@
           <p id="houseDemographicComparisonNote" class="house-demographic-note"></p>
           <p id="houseDemographicStatus" class="house-demographic-status" role="status" aria-live="polite"></p>
           <button id="houseDemographicRetry" class="hidden" type="button">Retry demographics</button>
+          <label for="houseChartType">Chart
+            <select id="houseChartType">
+              <option value="demographics">Demographics and voting</option>
+              <option value="before-after">Change since last election</option>
+            </select>
+          </label>
           <div id="houseDemographicContent" class="hidden">
+            <p id="houseBeforeAfterNote" class="house-demographic-note hidden"></p>
             <div id="houseDemographicStatistics" class="house-demographic-statistics" aria-live="polite"></div>
             <div class="house-chart-key" aria-label="Chart key">
               <span class="house-key-democratic">Toward Democrats</span>
@@ -1685,6 +1693,7 @@
             </section>
             <details class="house-demographic-method">
               <summary>Sample and interpretation</summary>
+              <p>Change since last election connects previous and current shares. It shows up to 20 areas with the biggest swings, keeping your selected comparable area first. Missing demographics do not exclude an otherwise valid election comparison. <a href="../docs/election_before_after.md">Before-and-after chart guide</a>.</p>
               <div id="houseDemographicHouseMethods">
               <p>2024 → 2026 uses provisional <a href="https://www.callthemap.com/results/data">Call the Map</a> counts (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), including <a href="https://civicapi.org">civicAPI</a> feeds, frozen on 14 November 2026. Uncalled races are excluded from the chart and flip markers. Alabama, California, Florida, Louisiana, North Carolina, Ohio, Tennessee, Texas and Utah changed plans: their seats are conservatively excluded from comparison, and no 2024 demographics are assigned to their 2026 maps. Other seats use fixed 2024 ACS demographics. Flips are provisional. <a href="../docs/us_house_2026.md">2026 sources and methods</a>.</p>
               <p>Each dot is a district, with equal weight. The baseline requires named Democratic and Republican candidates and positive reported party votes. The stricter sample also excludes Alaska, Maine, and multiple major-party candidates. Published candidate totals are used without reconstructing ranked-choice rounds.</p>
@@ -1696,6 +1705,10 @@
               <p>2018 → 2020 uses 2021 ACS demographics on the historical districts, held fixed for both election results. Census confirms that only North Carolina changed its district plan between those elections; it is excluded. Alaska and Maine are excluded from share comparisons because count bases have not been standardized. The demographic snapshot was measured after both elections. Three citizenship-age measures are unavailable in this older release.</p>
               <a href="../data/us_2024_house_analysis.csv" download>Download 2024 district data</a> ·
               <a href="../data/us_2021_house_demographics.csv" download>Download historical district demographics</a> ·
+              </div>
+              <div id="governorComparisonMethods" class="hidden">
+                <p>Governor swing uses each state's preceding regular election: two years earlier for New Hampshire and Vermont, and four years earlier for other states. Data starts in 2016, so 2018 comparisons are limited to New Hampshire and Vermont; earlier baselines are labelled unavailable. Selected states, counties, rankings and map tooltips show the actual years. Shares are D / (D + R), or R / (D + R); change is in percentage points without annualising. Independent and grouped Other votes are never reassigned.</p>
+                <p>Alaska count bases, unmatched reporting areas, Connecticut's old county/new planning-region geography, unresolved local leaders and missing named D/R votes are excluded. Maine's governor uses plurality and is included when eligible. The same fixed 2024 ACS snapshot describes areas, not individual voters or demographic change. State flips refer to elected parties; county flips refer to local leaders. 2026 results are provisional. <a href="../docs/us_governor_comparison.md">Governor swing methods</a>.</p>
               </div>
               <div id="senateComparisonMethods" class="hidden">
                 <p>Senate swing compares the same regular seat six years apart: 2016 → 2022, 2018 → 2024, or 2020 → 2026. Florida/Ohio 2026 specials are excluded. Share is D / (D + R), or R / (D + R), using named party candidates only; grouped Other and independent votes are never reassigned. Alaska and Maine count bases are excluded. County outlines show changes in local leading party; state outlines show changes in the elected party for the same seat. 2026 calls and flips are provisional.</p>
@@ -2635,6 +2648,44 @@
         ]
       },
       {
+        "key": "us-governor-2026",
+        "label": "United States Governor 2026 · Provisional",
+        "type": "national",
+        "jurisdiction": "United States",
+        "year": 2026,
+        "source": "Call the Map (CC BY 4.0) / civicAPI",
+        "system": "fpp",
+        "contestType": "governor",
+        "systemLabel": "Statewide gubernatorial elections",
+        "provisionalStatewide": true,
+        "dataNotice": "Provisional snapshot · 15 November 2026, 18:19 UTC · 36 races, 36 source-reported winners · Counts may change. This snapshot does not update live.",
+        "methodNote": "Provisional counts from <a href=\"https://www.callthemap.com/results/data\">Call the Map</a> (<a href=\"https://creativecommons.org/licenses/by/4.0/\">CC BY 4.0</a>) and <a href=\"https://civicapi.org\">civicAPI</a>. Counties show local vote leaders; margins compare two named candidates and Other combines remaining votes. Connecticut uses planning regions; Alaska uses a labelled statewide fallback. Grey areas have no identifiable local leader. <a href=\"../docs/us_governor_2026.md\">Sources and coverage</a>.",
+        "candidateFilterLabel": "Any leading party",
+        "candidateVoteLabel": "Governor candidate vote",
+        "localVoteLabel": "gubernatorial vote",
+        "mapModeLabel": "Red–blue margin",
+        "bipartisanMarginScale": true,
+        "csv": "data/us_2026_governor_state_fpp.csv",
+        "boundaries": "data/us_governor_2026_state_boundaries.geojson",
+        "defaultGeography": "state",
+        "geographies": {
+          "state": {
+            "label": "State",
+            "pluralLabel": "state races",
+            "areaLabel": "Country",
+            "csv": "data/us_2026_governor_state_fpp.csv",
+            "boundaries": "data/us_governor_2026_state_boundaries.geojson"
+          },
+          "county": {
+            "label": "County",
+            "pluralLabel": "counties/reporting areas",
+            "areaLabel": "State",
+            "csv": "data/us_2026_governor_county_fpp.csv",
+            "boundaries": "data/us_governor_2026_county_boundaries.geojson"
+          }
+        }
+      },
+      {
         "key": "us-governor-2024",
         "label": "United States Governor 2024",
         "type": "national",
@@ -2756,6 +2807,7 @@
       },
       {
         "key": "us-senate-2026",
+        "provisionalStatewide": true,
         "label": "United States Senate 2026 · Provisional",
         "type": "national",
         "jurisdiction": "United States",
@@ -6215,6 +6267,7 @@
     }
 
     function winningParty(d) {
+      if (d.contest_status === "provisional-local-unresolved") return "Local leader unavailable";
       if (d.contest_status === "provisional-uncalled") return "Not called";
       if (d.contest_status === "void") return "No certified winner";
       if (activeElection().contestType === "presidential" && !d.formal_votes) return "No digitised vote";
@@ -6227,6 +6280,7 @@
     }
 
     function winningBloc(d) {
+      if (d.contest_status === "provisional-local-unresolved") return "Local leader unavailable";
       if (d.contest_status === "provisional-uncalled") return "Not called";
       if (d.contest_status === "void") return "No certified winner";
       if (isMultiMemberElection()) return leadingElectedBloc(d);
@@ -6444,7 +6498,7 @@
         : system === "fpp"
           ? (membersOnly ? ["party"] : ["party", "close"])
           : system === "senate-stv" ? ["party"] : ["party", "close", "changed"];
-      if (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024", "us-house-2026"].includes(year) || ((year?.startsWith("us-president-") || year?.startsWith("us-senate-")) && ["state", "county"].includes(geography || definition.defaultGeography))) baseMapModes.push("house-swing");
+      if (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024", "us-house-2026"].includes(year) || ((year?.startsWith("us-president-") || year?.startsWith("us-senate-") || ["us-governor-2018", "us-governor-2020", "us-governor-2022", "us-governor-2024", "us-governor-2026"].includes(year)) && ["state", "county"].includes(geography || definition.defaultGeography))) baseMapModes.push("house-swing");
       const allowedMapModes = geographyDefinitionSupported(config)
         ? [...baseMapModes, "vote-share", "swing", "clusters"]
         : baseMapModes;
@@ -6551,10 +6605,11 @@
     }
 
     function houseSwingSupported() {
-      return (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024", "us-house-2026"].includes(activeElectionYear) || ((activeElectionYear.startsWith("us-president-") || activeElectionYear.startsWith("us-senate-")) && ["state", "county"].includes(activeGeography))) && datasetMeta.kind === "official";
+      return (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024", "us-house-2026"].includes(activeElectionYear) || ((activeElectionYear.startsWith("us-president-") || activeElectionYear.startsWith("us-senate-") || ["us-governor-2018", "us-governor-2020", "us-governor-2022", "us-governor-2024", "us-governor-2026"].includes(activeElectionYear)) && ["state", "county"].includes(activeGeography))) && datasetMeta.kind === "official";
     }
 
     function mapVisual(d, context = {}) {
+      if (d.contest_status === "provisional-local-unresolved" && activeMapMode !== "house-swing") return { color: "#8b9098", fill: hexToRgba("#8b9098", .65), label: "Local leader unavailable" };
       if (activeMapMode === "house-swing" && houseSwingSupported()) return houseDemographics.swingVisual(d.district);
       if (geographyMapModes.has(activeMapMode) && geographyAnalysisSupported()) {
         return geographyMapVisual(d, context);
@@ -6639,6 +6694,7 @@
     }
 
     function tooltipHtml(d) {
+      if (d.contest_status === "provisional-local-unresolved" && activeMapMode !== "house-swing") return `<strong>${d.district}</strong><div>Local leader unavailable</div><span>Grouped Other votes prevent identifying an individual candidate leader.</span>`;
       if (d.contest_status === "provisional-uncalled" && activeMapMode !== "house-swing") {
         const [leader] = getWinnerFromFinal(d);
         return `<strong>${d.district}</strong><div>Not called · provisional</div><span>Current leader: ${shortName(leader)}</span>`;
@@ -6823,8 +6879,9 @@
           ["#ece9e4", "Close"],
           ["#e79a92", "Republican"],
           ["#b51f24", "Strong Republican"],
-          ...(activeElectionYear === "us-senate-2026" && allDistricts.some(d => winningParty(d) === "Independent") ? [["#7a7f87", "Independent leader"]] : []),
-          ...(allDistricts.some(d => d.contest_status === "provisional-uncalled") ? [["#8b9098", "Not called"]] : [])
+          ...(activeElection().provisionalStatewide && allDistricts.some(d => winningParty(d) === "Independent") ? [["#7a7f87", "Independent leader"]] : []),
+          ...(allDistricts.some(d => d.contest_status === "provisional-uncalled") ? [["#8b9098", "Not called"]] : []),
+          ...(allDistricts.some(d => d.contest_status === "provisional-local-unresolved") ? [["#8b9098", "Local leader unavailable"]] : [])
         ].map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
         return;
       }
@@ -7070,6 +7127,7 @@
     }
 
     function mapDistrictTitle(d, visual) {
+      if (d.contest_status === "provisional-local-unresolved" && activeMapMode !== "house-swing") return `${d.district} · Local leader unavailable · grouped Other votes`;
       if (d.contest_status === "provisional-uncalled" && activeMapMode !== "house-swing") return `${d.district} · Not called · provisional`;
       if (activeMapMode === "house-swing" && houseSwingSupported()) return `${d.district} · ${visual.label} · ${visual.detail}`;
       const [winner] = getWinnerFromFinal(d);
@@ -7474,8 +7532,8 @@
         [...winnerCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([ticket, areas]) => {
-            const winsLabel = activeElectionYear === "us-senate-2026"
-              ? (ticket === "Not called" ? "uncalled" : activeGeography === "state" ? "reported wins" : "local leads")
+            const winsLabel = activeElection().provisionalStatewide
+              ? (ticket === "Local leader unavailable" ? "unresolved" : ticket === "Not called" ? "uncalled" : activeGeography === "state" ? "reported wins" : "local leads")
               : activeElection().contestType === "governor" && activeGeography === "state"
               ? "race wins"
               : activeElection().contestType === "referendum" ? "local leads" : "area wins";
@@ -7647,6 +7705,7 @@
           d.contest_status !== "cancelled"
           && d.contest_status !== "void"
           && d.contest_status !== "provisional-uncalled"
+          && d.contest_status !== "provisional-local-unresolved"
           && d.formal_votes > 0
           && localResultState(d).status !== "aggregated"
         );
@@ -7669,7 +7728,7 @@
               return `${shortName(winner)} over ${shortName(runnerUp)} · ${d.electorate_type}`;
             }, d => pct(finalMargin(d), d.formal_votes), `No contested ${electorateLabel(2)} loaded.`)}
           </section>`;
-        const namedCountyPairs = activeElectionYear === "us-senate-2026" && activeGeography === "county";
+        const namedCountyPairs = activeElection().provisionalStatewide && activeGeography === "county";
         target.innerHTML = card(namedCountyPairs ? "Closest named-candidate margins" : `Closest ${electorateLabel(2)}`, closest) + card(namedCountyPairs ? "Largest named-candidate margins" : "Largest winning margins", largest);
         return;
       }
@@ -7884,7 +7943,7 @@
       const analyticalLocalVote = presidential || senate || governor || referendum || partyList;
       const geographySupported = geographyAnalysisSupported();
       if (activeMapMode === "house-swing" && !houseSwingSupported()) activeMapMode = "party";
-      document.getElementById("houseSwingMapMode").textContent = `${houseDemographics.periodLabel()} swing`;
+      document.getElementById("houseSwingMapMode").textContent = ["us-governor-2018", "us-governor-2020", "us-governor-2022", "us-governor-2024", "us-governor-2026"].includes(activeElectionYear) ? "Swing since previous election" : `${houseDemographics.periodLabel()} swing`;
       document.getElementById("houseSwingMapMode").classList.toggle("hidden", !houseSwingSupported());
       const geographyComparisonAvailable = Boolean(currentGeographyElection()?.comparisonKey);
       const geographyClustersAvailable = geographyClustersSupported();
@@ -7947,7 +8006,7 @@
           : "Click a seat to explore its result and political geography.";
       }
       if (activeMapMode === "house-swing" && houseSwingSupported()) {
-        document.getElementById("mapSubtitle").textContent = `${houseDemographics.periodLabel()} change in two-party share. Blue toward Democrats; red toward Republicans. Grey ${(activeElectionYear.startsWith("us-president-") || activeElectionYear.startsWith("us-senate-")) ? (activeGeography === "county" ? "counties" : "states") : "districts"} are not comparable.`;
+        document.getElementById("mapSubtitle").textContent = `${houseDemographics.periodLabel()} change in two-party share. Blue toward Democrats; red toward Republicans. Grey ${(activeElectionYear.startsWith("us-president-") || activeElectionYear.startsWith("us-senate-") || ["us-governor-2018", "us-governor-2020", "us-governor-2022", "us-governor-2024", "us-governor-2026"].includes(activeElectionYear)) ? (activeGeography === "county" ? "counties" : "states") : "districts"} are not comparable.`;
       }
       document.getElementById("rankingsSubtitle").textContent = activeElection().membersOnly
         ? "Constituency-level margins are unavailable in the published result."
@@ -8376,8 +8435,9 @@
           const winnerTicket = getParty(d, winner);
           const [runnerUp] = getSecondFromFinal(d);
           const reported = d.formal_votes > 0;
-          const provisionalSenate = activeElectionYear === "us-senate-2026";
-          const localLeaderLabel = provisionalSenate
+          const provisionalStatewide = activeElection().provisionalStatewide;
+          const localLeaderUnavailable = d.contest_status === "provisional-local-unresolved";
+          const localLeaderLabel = localLeaderUnavailable ? "Local leader unavailable" : provisionalStatewide
             ? (d.contest_status === "provisional-uncalled" ? "Current leader · not called" : activeGeography === "state" ? "Reported winner · provisional" : "Current local vote leader")
             : activeElection().localLeaderLabel || "Local vote leader";
           const drilldown = activeGeography === "province"
@@ -8388,13 +8448,13 @@
             <div class="result-facts">
               <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
               <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
-              <div class="fact-item"><span class="fact-label">${localLeaderLabel}</span><span class="fact-value">${reported ? badgeHtml(winnerTicket) + (provisionalSenate ? " " + shortName(winner) : "") : "No digitised vote"}</span></div>
-              <div class="fact-item"><span class="fact-label">${provisionalSenate && activeGeography === "county" ? "Named-candidate margin" : activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
+              <div class="fact-item"><span class="fact-label">${localLeaderLabel}</span><span class="fact-value">${localLeaderUnavailable ? "Grouped Other votes prevent identifying a candidate leader" : reported ? badgeHtml(winnerTicket) + (provisionalStatewide ? " " + shortName(winner) : "") : "No digitised vote"}</span></div>
+              <div class="fact-item"><span class="fact-label">${provisionalStatewide && activeGeography === "county" ? "Named-candidate margin" : activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
               <div class="fact-item"><span class="fact-label">${activeElection().validVotesLabel || "Valid votes"}</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
               <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available"}</span></div>
             </div>
             <p class="pref-impact">${activeElection().methodNote}</p>
-            ${d.result_note ? (provisionalSenate
+            ${d.result_note ? (provisionalStatewide
               ? `<details><summary>Source and counting notes</summary><p class="pref-impact">${d.result_note}</p></details>`
               : `<p class="pref-impact"><strong>Data note:</strong> ${d.result_note}</p>`) : ""}
             ${drilldown}
@@ -9295,7 +9355,7 @@
       activeElectionAbortController = controller;
       activeElectionYear = requestedYear;
       const election = electionYears[requestedYear];
-      if (!requestedGeography && ["us-president-", "us-senate-"].some(prefix => previousYear.startsWith(prefix) && requestedYear.startsWith(prefix)) && election.geographies?.[activeGeography]) {
+      if (!requestedGeography && ["us-president-", "us-senate-", "us-governor-"].some(prefix => previousYear.startsWith(prefix) && requestedYear.startsWith(prefix)) && election.geographies?.[activeGeography]) {
         requestedGeography = activeGeography;
       }
       if (requestedGeography && election.geographies?.[requestedGeography]) {
@@ -9510,7 +9570,7 @@
       onDataChange: () => { updateElectionSpecificUi(); renderSeatMap(); },
       onPeriodChange: async (year, kind, geography) => {
         suppressUrlUpdate = true;
-        try { await loadElection(`us-${kind}-${year}`, false, ["president", "senate"].includes(kind) ? geography : ""); }
+        try { await loadElection(`us-${kind}-${year}`, false, ["president", "senate", "governor"].includes(kind) ? geography : ""); }
         finally { suppressUrlUpdate = false; }
       },
       onSwingChange: enabled => {
