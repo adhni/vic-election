@@ -889,7 +889,11 @@
       if (state.chart === "before-after") {
         const row = event.target.closest(".house-change-row");
         if (!row) return;
-        if (["Enter", " "].includes(event.key)) { event.preventDefault(); callbacks.onSelect(row.dataset.district); }
+        if (["Enter", " "].includes(event.key)) {
+          event.preventDefault();
+          callbacks.onSelect(row.dataset.district);
+          dom.chart.querySelector('.house-change-row[aria-pressed="true"]')?.focus({ preventScroll: true });
+        }
         if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
           event.preventDefault();
           const rows = [...dom.chart.querySelectorAll(".house-change-row")], index = rows.indexOf(row);
