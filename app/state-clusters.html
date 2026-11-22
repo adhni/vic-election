@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Group the 50 U.S. states by presidential voting histories from 2008 to 2024. See which states vote similarly and explore their election histories.">
+  <title>State voting clusters · Election Explorer</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23294f7c'/%3E%3Cpath d='M18 17h30v8H27v7h18v8H27v7h21v8H18z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="state-clusters.css">
+  <script src="voting-methods.js" defer></script>
+  <script src="state-clusters.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#clusterControls">Skip to cluster controls</a>
+  <div class="shell">
+    <header class="site-header">
+      <a class="brand" href="../">ELECTION <span>EXPLORER</span></a>
+      <nav aria-label="Main navigation"><a href="./?year=us-president-2024">Election results</a><a href="county-clusters.html">County groups</a><a href="../">Home</a></nav>
+    </header>
+    <main id="main">
+      <section class="intro">
+        <p class="eyebrow">Presidential voting · 2008–2024</p>
+        <h1>States that vote alike.</h1>
+        <p class="intro-copy">Which states tend to vote similarly? Pick a state to see its voting history and find others that vote like it.</p>
+        <div class="facts"><span><strong>50</strong> states</span><span><strong>5</strong> elections</span><span>Democrats &amp; Republicans</span></div>
+      </section>
+
+      <section id="clusterControls" class="controls" aria-label="Cluster controls">
+        <label>Methodology<select id="methodology"><option value="similarity">Voting similarity</option><option value="bands">Political bands</option></select></label>
+        <label>Number of groups<select id="clusterCount"><option value="2">2 groups · broad picture</option><option value="3">3 groups</option><option value="4" selected>4 groups · more detail</option><option value="5">5 groups · finer detail</option><option value="7">7 groups · most detail</option></select></label>
+        <label>Inspect a state<select id="stateSelect" disabled><option>Loading states…</option></select></label>
+        <label>Highlight a group<select id="groupFilter" disabled><option value="all">All groups</option></select></label>
+        <label>Map colours<select id="colorMode"><option value="groups">Distinct group colours</option><option value="party">Blue to red · party leaning</option></select></label>
+        <button id="resetClusters" type="button">Reset view</button>
+        <a id="modelDownload" class="download" href="../data/us_state_presidential_clusters.csv" download>Download data</a>
+      </section>
+      <p id="methodSummary" class="coverage-note"></p>
+      <p id="clusterStatus" class="status" role="status" aria-live="polite">Loading election results…</p>
+      <div id="clusterContent" hidden>
+        <div class="workspace">
+          <section class="panel map-panel" aria-labelledby="mapTitle">
+            <div class="panel-heading"><h2 id="mapTitle">Which states vote alike?</h2><p>Click a state to explore. States with the same colour have similar voting histories.</p></div>
+            <div id="clusterLegend" class="legend" role="group" aria-label="Highlight cluster"></div>
+            <div id="partyColorKey" class="party-color-key" hidden><div class="party-color-bar" aria-hidden="true"></div><div class="party-color-labels"><span>Democratic</span><span>Even split</span><span>Republican</span></div><p>Shades show each group’s average across all five elections.</p></div>
+            <svg id="clusterMap" viewBox="0 0 960 580" role="group" aria-label="Map of 50 states coloured by voting-history cluster"></svg>
+            <p class="map-note">States can vote similarly even when they are far apart. Alaska and Hawaii are shown separately to fit the map.</p>
+          </section>
+          <aside class="panel selection-panel" aria-labelledby="selectedStateName">
+            <div class="panel-heading"><p id="selectedGroup" class="group-badge"></p><h2 id="selectedStateName"></h2><p id="selectedStateNote"></p></div>
+            <dl id="selectedStateStats" class="state-stats"></dl>
+            <details class="vote-details"><summary>See votes for each election</summary><div class="table-wrap"><table class="state-votes"><caption>Presidential votes in the selected state</caption><thead><tr><th scope="col">Year</th><th scope="col">Democratic votes</th><th scope="col">Republican votes</th><th scope="col">Democratic %*</th></tr></thead><tbody id="stateVoteRows"></tbody></table></div>
+            <p class="note selection-note">*Percentages count votes for Democrats and Republicans only.</p></details>
+            <a id="openStateResults" class="text-link" href="./?year=us-president-2024">Open this state’s 2024 results</a>
+          </aside>
+        </div>
+
+        <section class="panel profiles" aria-labelledby="profileTitle">
+          <div class="panel-heading"><h2 id="profileTitle">How the groups voted</h2><p>Above 50% means more support for Democrats; below 50% means more support for Republicans. Each coloured line shows a group’s average. The dashed black line shows your selected state.</p></div>
+          <svg id="profileChart" viewBox="0 0 1000 340" role="img" aria-labelledby="profileChartTitle profileChartDescription"><title id="profileChartTitle">Group voting profiles, 2008 to 2024</title><desc id="profileChartDescription"></desc></svg>
+          <div id="profileLegend" class="legend"></div>
+          <details class="profile-details"><summary>See exact percentages</summary><div class="table-wrap"><table class="profile-table"><caption class="sr-only">Group mean Democratic two-party vote shares by election</caption><thead><tr><th scope="col">Group</th><th scope="col">States</th><th scope="col">2008</th><th scope="col">2012</th><th scope="col">2016</th><th scope="col">2020</th><th scope="col">2024</th></tr></thead><tbody id="profileRows"></tbody></table></div></details>
+        </section>
+
+        <section aria-labelledby="groupsTitle" class="memberships">
+          <div class="section-heading"><h2 id="groupsTitle">Inside each group</h2><p>These descriptions summarise each group’s average across 2008–2024. Individual states and elections can differ. Choose any state below to explore it.</p></div>
+          <div id="groupCards" class="group-cards"></div>
+        </section>
+
+        <details id="methodDetails" class="panel methods">
+          <summary>How this works</summary>
+          <div id="similarityDetails">
+          <p>We compare how each state voted in five presidential elections. States with similar results go in the same group. Start with four groups; choose fewer for a broad picture, or more for finer differences. This describes past results, not a prediction.</p>
+          <p>Group labels use average Democratic support: below 30% is “Very strongly Republican”, 30% to below 40% is “Strongly Republican”, 40% to below 47% is “Leans Republican”, 47% through 53% is “Closely split”, above 53% through 60% is “Leans Democratic”, above 60% through 70% is “Strongly Democratic”, and above 70% is “Very strongly Democratic”. These are descriptions of the group average, not every state in it. Percentages here count votes for the two major parties only.</p>
+        <section aria-labelledby="comparisonTitle" class="comparison">
+          <div class="section-heading"><h2 id="comparisonTitle">Compare the number of groups</h2><p>Higher separation and stability are useful checks, not proof of a correct number.</p></div>
+          <div id="modelCards" class="model-cards" role="group" aria-label="Compare cluster models"></div>
+          <p id="modelInterpretation" class="note"></p>
+        </section>
+
+          <h2>Statistical details</h2>
+          <p>Ward clustering groups states with similar levels of Democratic two-party support across the five presidential elections. It uses Euclidean distance between five-value histories. States and elections receive equal weight; the inputs are not standardized within each state. This mainly captures partisan leaning, with changes over time contributing to distance.</p>
+          <p>Four groups is the starting view, not a claim that four is optimal. Compare 2, 3, 4, 5 or 7 groups. Separation is the mean silhouette score (−1 to 1); higher means states are better separated from other groups. Stability is the adjusted Rand agreement after leaving out each election and refitting the model; 1 means identical groupings. These checks describe this dataset, not future electoral outcomes.</p>
+          <details><summary>Inspect sensitivity to individual elections</summary><p>The table compares each refit with the complete five-election grouping. Group numbers may change in a refit; adjusted Rand is independent of those numbers.</p><div class="table-wrap"><table><thead><tr><th scope="col">Election left out</th><th scope="col">Agreement (adjusted Rand)</th></tr></thead><tbody id="sensitivityRows"></tbody></table></div></details>
+          <p>The analysis uses state-level election returns and cannot describe individual voters or establish causes.</p>
+          </div>
+          <div id="bandsDetails" hidden><p>Political bands use each place’s average Democratic percentage across the five elections. Each election has equal weight, counting votes for Democrats and Republicans only. These are chosen cutoffs, not official categories. Sizes follow the results.</p><div class="table-wrap"><table><caption>Average Democratic support</caption><thead><tr><th scope="col">Label</th><th scope="col">Cutoff</th></tr></thead><tbody id="bandThresholdRows"></tbody></table></div><p>“Swing / competitive” means an average close to 50%, not necessarily changing winners. A history averaging 50% is placed in the Democratic half when using two or four bands; this boundary rule does not mean Democrats won an election. Empty bands remain visible. These are historical descriptions, not predictions.</p></div>
+          <div class="method-links"><a href="../docs/us_state_clusters.md">Sources and full methodology</a><a href="../data/us_state_presidential_clusters.json" download class="ward-tree-export">Download models and Ward tree</a></div>
+        </details>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

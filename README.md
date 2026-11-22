@@ -33,6 +33,13 @@ The app is map-first and party/bloc-first:
 - Belgian Federal Chamber results for 2024 and 2019 across all 11 multi-member constituencies
 - Japanese single-member constituency results and winner-party maps for the 2026 and 2024 House elections
 - United States presidential results for 2024, 2020, 2016, 2012, and 2008, with county/reporting-area and state/DC maps using a red–blue margin scale
+- State and county grouping methods include voting similarity and clearly labelled [political bands](docs/us_county_clusters.md#methodology-option-political-bands), with 2, 3, 4, 5 or 7 categories
+- [NYC three-election groups](app/nyc-history-dots.html): estimated 2017/2025 histories on 2021 reporting areas, with explicit coverage exclusions, Cuomo + Sliwa as the 2025 opposing side, and linked dots/maps
+- [County demographic scatterplot](app/county-dots.html?view=demographics): compare 42 ACS measures with presidential support or swing
+- [One county, one dot](app/county-dots.html): interactive county group sizes and voting patterns, with a Counties / Population toggle, search, filters and linked election histories
+- [County voting groups](docs/us_county_clusters.md): compare 3,103 county reporting areas across five presidential elections, with a state zoom, clear group descriptions and linked voting histories
+- [State voting-history clusters](docs/us_state_clusters.md): Ward clustering of all 50 states across five presidential elections, with 2–5 or 7 groups, linked maps/profiles and sensitivity diagnostics
+- New York City mayoral general elections for [2025](docs/nyc_mayor_2025.md), [2021 and 2017](docs/nyc_mayor_history.md), with certified candidate totals across boroughs, Assembly districts and precinct-level election district maps; historical boundary limits are labelled
 - United States Senate results for the 2016–2024 regular cycles, plus [provisional 2026 State and County results](docs/us_senate_2026.md) for all 33 regular races and the Florida/Ohio specials; earlier cycles exclude concurrent special elections
 - [Before-and-after election chart](docs/election_before_after.md) with connected vote shares, actual comparison years and outlined party flips
 - United States governor results for 2016–2024, plus [provisional 2026 State and County results](docs/us_governor_2026.md) for 36 state races, with Connecticut planning regions, a labelled Alaska fallback and 2018–2026 [swing since each state’s previous election](docs/us_governor_comparison.md)

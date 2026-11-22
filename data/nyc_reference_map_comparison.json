@@ -1,0 +1,674 @@
+{
+  "purpose": "Reference-map inspection only. No votes allocated and no multi-year clusters built.",
+  "source_sha256": {
+    "data/nyc_precinct_dots.json": "b1d0524781a177401da11de9afd37d2033d7032f09c846d5899934b7e8b475d1",
+    "data/nyc_2017_mayor_ed_boundaries.geojson": "f21a6bc45b6a6333d902c298969b2bd0a8ebeb5b4e18be34df3fd9638407c541",
+    "data/nyc_2017_mayor_metadata.json": "6d1ffb919329d1493a65f86f2e504cbfeac7c2820e5d3190109bb081a116d452",
+    "data/nyc_2021_mayor_ed_boundaries.geojson": "07b176e072ca71b29176acbfad60a786be92abd77a4809d8a356ef4aed251f2b",
+    "data/nyc_2021_mayor_metadata.json": "3e637b8a0b55161b665d10c5fe3d7a37975946843f91433374c00349b7a855c1",
+    "data/nyc_2025_mayor_ed_boundaries.geojson": "ba04ff081f5f54b1c1b93d1773d8370491c707ab4d42cd93be37cd399eda3d07",
+    "data/nyc_2025_mayor_metadata.json": "fedeb29d3fe858fefd0d5ef11c777013396b3192ebfa1f880905debbe894de62"
+  },
+  "projection": "EPSG:32618",
+  "numerical_overlap_floor_m2": 0.01,
+  "metric_meaning": "Votes in a source area that lacks one sufficiently dominant target measure split exposure, not how many votes actually move or allocation accuracy.",
+  "area_proxy_limit": "The outside-dominant-target proxy assumes votes uniformly distributed within each source geometry. It is not measured voting uncertainty or validated vote allocation.",
+  "coverage_limit": "Coverage sums intersection areas and can overstate coverage when target polygons overlap; below-99pct coverage is therefore a conservative gap flag.",
+  "incomplete_target_rule": "A source is flagged if at least 1% of its mapped area intersects a target with known missing combined-component geometry.",
+  "unmapped_limit": "This audit uses mapped reporting areas only; it does not recover missing source geometry or unmatched components.",
+  "directional_comparisons": {
+    "2017-to-2021": {
+      "source_year": 2017,
+      "target_year": 2021,
+      "source_areas": 5720,
+      "total_recorded_votes": 1148665,
+      "total_two_side_votes": 1077060,
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "source_areas_not_contained_to_tolerance": 50,
+          "recorded_votes_in_those_areas": 2954,
+          "pct_recorded_votes_in_those_areas": 0.2571681038422865,
+          "pct_two_side_votes_in_those_areas": 0.2522607839860361
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "source_areas_not_contained_to_tolerance": 83,
+          "recorded_votes_in_those_areas": 11393,
+          "pct_recorded_votes_in_those_areas": 0.9918470572360087,
+          "pct_two_side_votes_in_those_areas": 0.9800753904146473
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "source_areas_not_contained_to_tolerance": 269,
+          "recorded_votes_in_those_areas": 51965,
+          "pct_recorded_votes_in_those_areas": 4.523947364984569,
+          "pct_two_side_votes_in_those_areas": 4.503277440439716
+        }
+      ],
+      "areas_intersecting_multiple_targets_at_least_1pct": 41,
+      "pct_votes_in_multiple_target_areas_at_1pct": 0.892079065698006,
+      "pct_votes_in_areas_with_upper_bound_coverage_below_99pct": 0.04344173453530838,
+      "pct_votes_in_source_geometries_known_incomplete": 0.3653806810514815,
+      "pct_votes_in_sources_touching_incomplete_targets": 0.5901633635568246,
+      "clean_subset_areas": 5590,
+      "pct_votes_in_clean_subset": 99.22057344830738,
+      "clean_subset_pct_votes_in_noncontained_areas_at_99pct": 0.9514684411500449,
+      "uniform_area_outside_dominant_target_proxy_pct": 0.07035507929153018,
+      "largest_vote_areas_without_99pct_dominant_target": [
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 042",
+          "votes": 580,
+          "two_side_votes": 535,
+          "largest_target_fraction": 0.9509610070449259,
+          "summed_coverage_fraction": 0.9994368191385382,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 67 ED 042"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 043",
+          "votes": 558,
+          "two_side_votes": 489,
+          "largest_target_fraction": 0.8111093902903979,
+          "summed_coverage_fraction": 0.9993723686925754,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 3,
+          "best_target": "Manhattan \u00b7 AD 67 ED 043"
+        },
+        {
+          "name": "Brooklyn \u00b7 AD 57 ED 090",
+          "votes": 513,
+          "two_side_votes": 492,
+          "largest_target_fraction": 0.7868266395070805,
+          "summed_coverage_fraction": 0.9997428640664621,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Brooklyn \u00b7 AD 57 ED 090"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 71 ED 019",
+          "votes": 491,
+          "two_side_votes": 474,
+          "largest_target_fraction": 0.8631933482387473,
+          "summed_coverage_fraction": 1.0000775298693843,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 71 ED 019"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 046",
+          "votes": 454,
+          "two_side_votes": 404,
+          "largest_target_fraction": 0.907135341819888,
+          "summed_coverage_fraction": 1.0005638495190459,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 67 ED 046"
+        }
+      ]
+    },
+    "2017-to-2025": {
+      "source_year": 2017,
+      "target_year": 2025,
+      "source_areas": 5720,
+      "total_recorded_votes": 1148665,
+      "total_two_side_votes": 1077060,
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "source_areas_not_contained_to_tolerance": 3375,
+          "recorded_votes_in_those_areas": 722657,
+          "pct_recorded_votes_in_those_areas": 62.91277265347164,
+          "pct_two_side_votes_in_those_areas": 63.05201195847957
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "source_areas_not_contained_to_tolerance": 3543,
+          "recorded_votes_in_those_areas": 752665,
+          "pct_recorded_votes_in_those_areas": 65.5251966413184,
+          "pct_two_side_votes_in_those_areas": 65.67099325942844
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "source_areas_not_contained_to_tolerance": 4045,
+          "recorded_votes_in_those_areas": 838006,
+          "pct_recorded_votes_in_those_areas": 72.95477793786701,
+          "pct_two_side_votes_in_those_areas": 73.08153677603848
+        }
+      ],
+      "areas_intersecting_multiple_targets_at_least_1pct": 3522,
+      "pct_votes_in_multiple_target_areas_at_1pct": 65.30615975937283,
+      "pct_votes_in_areas_with_upper_bound_coverage_below_99pct": 0.09271632721463612,
+      "pct_votes_in_source_geometries_known_incomplete": 0.3653806810514815,
+      "pct_votes_in_sources_touching_incomplete_targets": 2.476440041265295,
+      "clean_subset_areas": 5510,
+      "pct_votes_in_clean_subset": 97.17271789425115,
+      "clean_subset_pct_votes_in_noncontained_areas_at_99pct": 65.25310677671972,
+      "uniform_area_outside_dominant_target_proxy_pct": 22.004740986958232,
+      "largest_vote_areas_without_99pct_dominant_target": [
+        {
+          "name": "Queens \u00b7 AD 23 ED 002",
+          "votes": 620,
+          "two_side_votes": 598,
+          "largest_target_fraction": 0.7013696775114683,
+          "summed_coverage_fraction": 0.999891934957625,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Queens \u00b7 AD 23 ED 002"
+        },
+        {
+          "name": "Queens \u00b7 AD 23 ED 003",
+          "votes": 595,
+          "two_side_votes": 571,
+          "largest_target_fraction": 0.7702166369858423,
+          "summed_coverage_fraction": 0.9994827688101574,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Queens \u00b7 AD 23 ED 003"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 042",
+          "votes": 580,
+          "two_side_votes": 535,
+          "largest_target_fraction": 0.5068038915036438,
+          "summed_coverage_fraction": 1.0000000000005818,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 3,
+          "best_target": "Manhattan \u00b7 AD 67 ED 039"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 043",
+          "votes": 558,
+          "two_side_votes": 489,
+          "largest_target_fraction": 0.8494716333632554,
+          "summed_coverage_fraction": 0.9999918698353989,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 3,
+          "best_target": "Manhattan \u00b7 AD 67 ED 039"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 69 ED 040",
+          "votes": 547,
+          "two_side_votes": 479,
+          "largest_target_fraction": 0.7354455046603443,
+          "summed_coverage_fraction": 1.0000104699091525,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 69 ED 035"
+        }
+      ]
+    },
+    "2021-to-2017": {
+      "source_year": 2021,
+      "target_year": 2017,
+      "source_areas": 5697,
+      "total_recorded_votes": 1125258,
+      "total_two_side_votes": 1066186,
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "source_areas_not_contained_to_tolerance": 70,
+          "recorded_votes_in_those_areas": 6159,
+          "pct_recorded_votes_in_those_areas": 0.5473411430978495,
+          "pct_two_side_votes_in_those_areas": 0.5484033742705307
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "source_areas_not_contained_to_tolerance": 108,
+          "recorded_votes_in_those_areas": 14213,
+          "pct_recorded_votes_in_those_areas": 1.263088109571316,
+          "pct_two_side_votes_in_those_areas": 1.272573453412444
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "source_areas_not_contained_to_tolerance": 285,
+          "recorded_votes_in_those_areas": 53633,
+          "pct_recorded_votes_in_those_areas": 4.7662847098176595,
+          "pct_two_side_votes_in_those_areas": 4.786406874597866
+        }
+      ],
+      "areas_intersecting_multiple_targets_at_least_1pct": 53,
+      "pct_votes_in_multiple_target_areas_at_1pct": 0.8232778616104041,
+      "pct_votes_in_areas_with_upper_bound_coverage_below_99pct": 0.43954364243577915,
+      "pct_votes_in_source_geometries_known_incomplete": 0.5549838348183261,
+      "pct_votes_in_sources_touching_incomplete_targets": 0.3568959296445793,
+      "clean_subset_areas": 5570,
+      "pct_votes_in_clean_subset": 99.27136709981178,
+      "clean_subset_pct_votes_in_noncontained_areas_at_99pct": 1.1528486857005762,
+      "uniform_area_outside_dominant_target_proxy_pct": 0.15563690359039672,
+      "largest_vote_areas_without_99pct_dominant_target": [
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 042",
+          "votes": 619,
+          "two_side_votes": 589,
+          "largest_target_fraction": 0.914453043797775,
+          "summed_coverage_fraction": 0.999999999999603,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 67 ED 042"
+        },
+        {
+          "name": "Queens \u00b7 AD 23 ED 049",
+          "votes": 530,
+          "two_side_votes": 511,
+          "largest_target_fraction": 0.9365871773905641,
+          "summed_coverage_fraction": 0.937477481647831,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 1,
+          "best_target": "Queens \u00b7 AD 23 ED 049"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 71 ED 083",
+          "votes": 509,
+          "two_side_votes": 468,
+          "largest_target_fraction": 0.9400651237242963,
+          "summed_coverage_fraction": 1.0011281886364336,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 71 ED 083"
+        },
+        {
+          "name": "Queens \u00b7 AD 23 ED 051",
+          "votes": 473,
+          "two_side_votes": 453,
+          "largest_target_fraction": 0.9834918462570319,
+          "summed_coverage_fraction": 0.9836925811984414,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 1,
+          "best_target": "Queens \u00b7 AD 23 ED 051"
+        },
+        {
+          "name": "Queens \u00b7 AD 23 ED 040",
+          "votes": 462,
+          "two_side_votes": 438,
+          "largest_target_fraction": 0.9192432756686924,
+          "summed_coverage_fraction": 0.9194645193947533,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 1,
+          "best_target": "Queens \u00b7 AD 23 ED 040"
+        }
+      ]
+    },
+    "2021-to-2025": {
+      "source_year": 2021,
+      "target_year": 2025,
+      "source_areas": 5697,
+      "total_recorded_votes": 1125258,
+      "total_two_side_votes": 1066186,
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "source_areas_not_contained_to_tolerance": 3377,
+          "recorded_votes_in_those_areas": 708262,
+          "pct_recorded_votes_in_those_areas": 62.942187480560015,
+          "pct_two_side_votes_in_those_areas": 62.92776307323488
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "source_areas_not_contained_to_tolerance": 3543,
+          "recorded_votes_in_those_areas": 736414,
+          "pct_recorded_votes_in_those_areas": 65.44401372840717,
+          "pct_two_side_votes_in_those_areas": 65.44871157565377
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "source_areas_not_contained_to_tolerance": 4015,
+          "recorded_votes_in_those_areas": 815414,
+          "pct_recorded_votes_in_those_areas": 72.46462589024028,
+          "pct_two_side_votes_in_those_areas": 72.486039021334
+        }
+      ],
+      "areas_intersecting_multiple_targets_at_least_1pct": 3527,
+      "pct_votes_in_multiple_target_areas_at_1pct": 65.20860104971482,
+      "pct_votes_in_areas_with_upper_bound_coverage_below_99pct": 0.12921481118108025,
+      "pct_votes_in_source_geometries_known_incomplete": 0.5549838348183261,
+      "pct_votes_in_sources_touching_incomplete_targets": 2.666499593870917,
+      "clean_subset_areas": 5485,
+      "pct_votes_in_clean_subset": 96.81948495367284,
+      "clean_subset_pct_votes_in_noncontained_areas_at_99pct": 65.14880184750552,
+      "uniform_area_outside_dominant_target_proxy_pct": 22.080800606954316,
+      "largest_vote_areas_without_99pct_dominant_target": [
+        {
+          "name": "Brooklyn \u00b7 AD 52 ED 027",
+          "votes": 765,
+          "two_side_votes": 706,
+          "largest_target_fraction": 0.28523353870541635,
+          "summed_coverage_fraction": 0.9999329058839801,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 6,
+          "best_target": "Brooklyn \u00b7 AD 52 ED 026"
+        },
+        {
+          "name": "Queens \u00b7 AD 23 ED 002",
+          "votes": 665,
+          "two_side_votes": 605,
+          "largest_target_fraction": 0.7013696775114683,
+          "summed_coverage_fraction": 0.999891934957625,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Queens \u00b7 AD 23 ED 002"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 042",
+          "votes": 619,
+          "two_side_votes": 589,
+          "largest_target_fraction": 0.541275431880701,
+          "summed_coverage_fraction": 1.0000000000002693,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 67 ED 039"
+        },
+        {
+          "name": "Queens \u00b7 AD 23 ED 003",
+          "votes": 599,
+          "two_side_votes": 553,
+          "largest_target_fraction": 0.7702071665922605,
+          "summed_coverage_fraction": 0.999473645574809,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Queens \u00b7 AD 23 ED 003"
+        },
+        {
+          "name": "Queens \u00b7 AD 23 ED 008",
+          "votes": 575,
+          "two_side_votes": 537,
+          "largest_target_fraction": 0.8776197684392807,
+          "summed_coverage_fraction": 0.9999723900041496,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Queens \u00b7 AD 23 ED 006"
+        }
+      ]
+    },
+    "2025-to-2017": {
+      "source_year": 2025,
+      "target_year": 2017,
+      "source_areas": 4102,
+      "total_recorded_votes": 2194204,
+      "total_two_side_votes": 2174547,
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "source_areas_not_contained_to_tolerance": 3538,
+          "recorded_votes_in_those_areas": 2012556,
+          "pct_recorded_votes_in_those_areas": 91.72146254404787,
+          "pct_two_side_votes_in_those_areas": 91.71891892886197
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "source_areas_not_contained_to_tolerance": 3604,
+          "recorded_votes_in_those_areas": 2035752,
+          "pct_recorded_votes_in_those_areas": 92.77861128682656,
+          "pct_two_side_votes_in_those_areas": 92.7776681764064
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "source_areas_not_contained_to_tolerance": 3701,
+          "recorded_votes_in_those_areas": 2065471,
+          "pct_recorded_votes_in_those_areas": 94.13304323572467,
+          "pct_two_side_votes_in_those_areas": 94.13045567651561
+        }
+      ],
+      "areas_intersecting_multiple_targets_at_least_1pct": 3566,
+      "pct_votes_in_multiple_target_areas_at_1pct": 92.58920319168136,
+      "pct_votes_in_areas_with_upper_bound_coverage_below_99pct": 2.9988095910863346,
+      "pct_votes_in_source_geometries_known_incomplete": 1.3463196676334561,
+      "pct_votes_in_sources_touching_incomplete_targets": 2.5045984785370914,
+      "clean_subset_areas": 3937,
+      "pct_votes_in_clean_subset": 96.25982816547595,
+      "clean_subset_pct_votes_in_noncontained_areas_at_99pct": 92.55232970209792,
+      "uniform_area_outside_dominant_target_proxy_pct": 38.38975607267335,
+      "largest_vote_areas_without_99pct_dominant_target": [
+        {
+          "name": "Brooklyn \u00b7 AD 50 ED 001",
+          "votes": 1403,
+          "two_side_votes": 1390,
+          "largest_target_fraction": 0.8768238074718091,
+          "summed_coverage_fraction": 0.9997985215449121,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Brooklyn \u00b7 AD 50 ED 003"
+        },
+        {
+          "name": "Brooklyn \u00b7 AD 44 ED 011",
+          "votes": 1274,
+          "two_side_votes": 1263,
+          "largest_target_fraction": 0.5089188178366486,
+          "summed_coverage_fraction": 0.9996690072439854,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 3,
+          "best_target": "Brooklyn \u00b7 AD 57 ED 073"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 038",
+          "votes": 1271,
+          "two_side_votes": 1259,
+          "largest_target_fraction": 0.5060535633024927,
+          "summed_coverage_fraction": 0.9991697918838062,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 4,
+          "best_target": "Manhattan \u00b7 AD 67 ED 050"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 71 ED 004",
+          "votes": 1254,
+          "two_side_votes": 1241,
+          "largest_target_fraction": 0.6123278440902743,
+          "summed_coverage_fraction": 1.0001894201460386,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 3,
+          "best_target": "Manhattan \u00b7 AD 71 ED 083"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 76 ED 054",
+          "votes": 1245,
+          "two_side_votes": 1241,
+          "largest_target_fraction": 0.5184033275752911,
+          "summed_coverage_fraction": 1.000023091273336,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 76 ED 068"
+        }
+      ]
+    },
+    "2025-to-2021": {
+      "source_year": 2025,
+      "target_year": 2021,
+      "source_areas": 4102,
+      "total_recorded_votes": 2194204,
+      "total_two_side_votes": 2174547,
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "source_areas_not_contained_to_tolerance": 3531,
+          "recorded_votes_in_those_areas": 2012801,
+          "pct_recorded_votes_in_those_areas": 91.73262832444021,
+          "pct_two_side_votes_in_those_areas": 91.72981775054758
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "source_areas_not_contained_to_tolerance": 3593,
+          "recorded_votes_in_those_areas": 2033335,
+          "pct_recorded_votes_in_those_areas": 92.66845744516007,
+          "pct_two_side_votes_in_those_areas": 92.66702444233212
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "source_areas_not_contained_to_tolerance": 3689,
+          "recorded_votes_in_those_areas": 2060355,
+          "pct_recorded_votes_in_those_areas": 93.89988351128702,
+          "pct_two_side_votes_in_those_areas": 93.89702774876791
+        }
+      ],
+      "areas_intersecting_multiple_targets_at_least_1pct": 3562,
+      "pct_votes_in_multiple_target_areas_at_1pct": 92.5782197097444,
+      "pct_votes_in_areas_with_upper_bound_coverage_below_99pct": 2.305619714484159,
+      "pct_votes_in_source_geometries_known_incomplete": 1.3463196676334561,
+      "pct_votes_in_sources_touching_incomplete_targets": 3.0495797109111096,
+      "clean_subset_areas": 3907,
+      "pct_votes_in_clean_subset": 95.74082446299433,
+      "clean_subset_pct_votes_in_noncontained_areas_at_99pct": 92.41213490997734,
+      "uniform_area_outside_dominant_target_proxy_pct": 38.32477541215252,
+      "largest_vote_areas_without_99pct_dominant_target": [
+        {
+          "name": "Brooklyn \u00b7 AD 50 ED 001",
+          "votes": 1403,
+          "two_side_votes": 1390,
+          "largest_target_fraction": 0.8768238074718091,
+          "summed_coverage_fraction": 0.9997985215449121,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Brooklyn \u00b7 AD 50 ED 003"
+        },
+        {
+          "name": "Brooklyn \u00b7 AD 44 ED 011",
+          "votes": 1274,
+          "two_side_votes": 1263,
+          "largest_target_fraction": 0.5070707984074649,
+          "summed_coverage_fraction": 0.9978200866687641,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 3,
+          "best_target": "Brooklyn \u00b7 AD 57 ED 073"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 67 ED 038",
+          "votes": 1271,
+          "two_side_votes": 1259,
+          "largest_target_fraction": 0.5097167062454483,
+          "summed_coverage_fraction": 0.9997872594802962,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 67 ED 050"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 71 ED 004",
+          "votes": 1254,
+          "two_side_votes": 1241,
+          "largest_target_fraction": 0.6685750520165366,
+          "summed_coverage_fraction": 1.0001895202133628,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 71 ED 083"
+        },
+        {
+          "name": "Manhattan \u00b7 AD 76 ED 054",
+          "votes": 1245,
+          "two_side_votes": 1241,
+          "largest_target_fraction": 0.5184033275752911,
+          "summed_coverage_fraction": 1.000023091273336,
+          "source_geometry_incomplete": false,
+          "touches_incomplete_target_at_1pct": false,
+          "targets_at_least_1pct": 2,
+          "best_target": "Manhattan \u00b7 AD 76 ED 068"
+        }
+      ]
+    }
+  },
+  "reference_comparisons": {
+    "2017": {
+      "target_areas": 5720,
+      "source_years_requiring_conversion": [
+        2021,
+        2025
+      ],
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 46.13440184357286,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 30.75626789571524
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 47.02084969819894,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 31.347233132132626
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 49.44966397277116,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 32.96644264851411
+        }
+      ],
+      "mean_uniform_area_outside_dominant_proxy_across_all_three_pct": 12.848464325421249
+    },
+    "2021": {
+      "target_areas": 5697,
+      "source_years_requiring_conversion": [
+        2017,
+        2025
+      ],
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 45.99489821414125,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 30.663265476094168
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 46.830152251198044,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 31.220101500798695
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 49.21191543813579,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 32.80794362542386
+        }
+      ],
+      "mean_uniform_area_outside_dominant_proxy_across_all_three_pct": 12.79837683048135
+    },
+    "2025": {
+      "target_areas": 4102,
+      "source_years_requiring_conversion": [
+        2017,
+        2021
+      ],
+      "containment_sensitivity": [
+        {
+          "minimum_dominant_target_fraction": 0.95,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 62.92748006701583,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 41.951653378010555
+        },
+        {
+          "minimum_dominant_target_fraction": 0.99,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 65.48460518486279,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 43.65640345657519
+        },
+        {
+          "minimum_dominant_target_fraction": 0.999,
+          "mean_pct_votes_in_noncontained_areas_among_converted_elections": 72.70970191405365,
+          "mean_pct_votes_in_noncontained_areas_across_all_three_elections": 48.473134609369104
+        }
+      ],
+      "mean_uniform_area_outside_dominant_proxy_across_all_three_pct": 14.695180531304183
+    }
+  }
+}

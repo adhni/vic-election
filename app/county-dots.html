@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Every county is one dot. Explore county voting groups, their sizes and their election histories.">
+  <title>One county, one dot · Election Explorer</title>
+  <link rel="stylesheet" href="state-clusters.css">
+  <link rel="stylesheet" href="county-dots.css">
+  <script src="voting-methods.js" defer></script>
+  <script src="county-map.js" defer></script>
+  <script src="population-dots.js" defer></script>
+  <script src="county-demographics.js" defer></script>
+  <script src="county-dots.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#dotControls">Skip to controls</a>
+  <div class="shell dot-shell">
+    <header class="site-header">
+      <a class="brand" href="../">ELECTION <span>EXPLORER</span></a>
+      <nav aria-label="Main navigation"><a href="nyc-history-dots.html">NYC voting groups</a><a href="county-clusters.html">County map</a><a href="state-clusters.html">State groups</a><a href="../">Home</a></nav>
+    </header>
+    <main>
+      <section class="intro">
+        <p class="eyebrow">County voting · 2008–2024</p>
+        <h1 id="dotPageTitle">One county. One dot.</h1>
+        <p id="dotIntro" class="intro-copy">See how big each voting group really is. Every dot is one county, whether it has a thousand voters or a million. Click a dot to meet the county.</p>
+        <p id="dotMethodSummary" class="current-groups">These are the existing voting groups. Their sizes have not been balanced.</p>
+      </section>
+
+      <section id="dotControls" class="controls" aria-label="County dot controls">
+        <label>Methodology<select id="dotMethod" disabled><option value="similarity">Voting similarity</option><option value="bands">Political bands</option></select></label>
+        <label>Number of groups<select id="dotGroupCount" disabled><option value="2">2 groups</option><option value="3">3 groups</option><option value="4">4 groups</option><option value="5" selected>5 groups</option><option value="7">7 groups</option></select></label>
+        <label>Choose a state<select id="dotState" disabled><option value="all">All available states</option></select></label>
+        <label>Show a group<select id="dotGroup" disabled><option value="all">All groups</option></select></label>
+        <label>Colours<select id="dotColors" disabled><option value="party">Blue to red</option><option value="groups">Distinct group colours</option></select></label>
+        <label class="search-label">Find a county<input id="dotSearch" type="search" placeholder="County or state name" autocomplete="off" disabled></label>
+        <button id="dotReset" type="button" disabled>Reset</button>
+      </section>
+
+      <p id="dotStatus" class="status" role="status" aria-live="polite">Loading county voting histories…</p>
+      <div id="dotContent" hidden>
+        <div class="dot-workspace">
+          <div class="linked-county-views">
+            <section class="panel county-map-panel" aria-labelledby="countyMapTitle">
+              <div class="dot-panel-heading"><div><h2 id="countyMapTitle">Where these counties are</h2><p>Click a county here or a dot below to see the same voting history. Choose a state above to zoom in.</p></div></div>
+              <div id="countyMapLegend" class="dot-legend" role="group" aria-label="Filter map by voting group"></div>
+              <svg id="dotCountyMap" viewBox="0 0 960 590" role="group" aria-label="County map linked to the voting group dots"></svg>
+              <p id="countyMapNote" class="county-map-note">Pale counties don’t match the filters. Hawaii is shown separately. Alaska, Connecticut and DC aren’t included.</p>
+            </section>
+          <section class="panel dots-panel" aria-labelledby="dotChartTitle">
+            <div class="dot-panel-heading">
+              <div><h2 id="dotChartTitle">How many counties are in each group?</h2><p id="dotChartHelp">Every dot has the same size. Longer blocks mean more counties.</p></div>
+              <div class="view-switch" role="group" aria-label="Dot layout"><button id="viewGroups" type="button" aria-pressed="true">By group</button><button id="viewPatterns" type="button" aria-pressed="false">Voting patterns</button><button id="viewDemographics" type="button" aria-pressed="false">Demographics</button></div>
+            </div>
+            <div class="dot-unit-controls" role="group" aria-label="What each dot represents"><span>Count by</span><button id="countCounties" type="button" aria-pressed="true">Counties</button><button id="countPopulation" type="button" aria-pressed="false">Population</button></div>
+            <p id="populationDotNote" class="population-dot-note" hidden></p>
+            <div id="demographicControls" class="demographic-controls" hidden>
+              <label>Horizontal axis · demographic<select id="demographicMetric"></select></label>
+              <label>Vertical axis · voting<select id="demographicOutcome"></select></label>
+              <label>Party<select id="demographicParty"><option value="democratic">Democratic</option><option value="republican">Republican</option></select></label>
+              <p id="demographicDefinition"></p>
+            </div>
+            <div id="dotLegend" class="dot-legend" role="group" aria-label="Filter by voting group"></div>
+            <div id="dotColorNote" class="dot-color-note">Blue = more Democratic. Red = more Republican. Grey = more evenly split. Shades describe the group average.</div>
+            <p class="dot-keyboard">Hover for a name; click for the story. On a dot, use arrow keys to browse counties.</p>
+            <div id="groupDotChart" class="group-dot-chart"></div>
+            <div id="patternWrap" hidden><svg id="patternChart" role="group" aria-label="Each county plotted by average Democratic support and change since 2008"></svg><p class="pattern-note">This view shows two parts of each county’s history. The groups themselves compare all five elections. Dots can overlap; use the county picker below to select any matching county.</p></div>
+            <div id="demographicWrap" hidden><svg id="demographicChart" role="group" aria-label="County demographics compared with voting"></svg><p id="demographicCoverage" class="pattern-note"></p><p class="pattern-note">Each dot is one county. Estimates describe residents or the population named in the selected measure, not voters specifically. Earlier elections use the same 2020–2024 demographic snapshot. Missing estimates are left out; dots may overlap. These patterns don’t establish causes.</p></div>
+            <p id="dotEmpty" class="dot-empty" hidden>No counties match. Try a different name or clear a filter.</p>
+            <div class="county-picker"><label for="dotCounty">Pick a county by name</label><select id="dotCounty"></select></div>
+          </section>
+
+          </div>
+          <aside class="panel county-story" aria-labelledby="storyName">
+            <div id="storyContent">
+              <p id="storyGroup" class="story-badge"></p>
+              <h2 id="storyName"></h2>
+              <p id="storySummary"></p>
+              <p id="storyPopulation" class="story-population"></p>
+              <p id="storyDemographic" class="story-demographic" hidden></p>
+              <div class="story-vote"><span>2024 votes for the two major parties</span><div class="vote-bar" aria-hidden="true"><span id="storyDemBar"></span><span id="storyRepBar"></span></div><div class="vote-labels"><strong id="storyDemShare"></strong><strong id="storyRepShare"></strong></div></div>
+              <h3>How this county voted</h3>
+              <div class="story-history"><table><caption class="sr-only">County presidential voting history, counting Democratic and Republican votes</caption><thead><tr><th scope="col">Election</th><th scope="col">Democratic</th><th scope="col">Republican</th></tr></thead><tbody id="storyHistory"></tbody></table></div>
+              <p id="storyShift" class="story-shift"></p>
+              <a id="storyMapLink" class="story-map-link" href="county-clusters.html">Find this county on the map</a>
+            </div>
+            <p id="storyEmpty" hidden>Select a county to see its voting history.</p>
+          </aside>
+        </div>
+        <details id="dotBandDetails" class="panel dot-about" hidden><summary>Political band cutoffs</summary><p>Average Democratic support across the five elections, with every election weighted equally and only Democratic and Republican votes counted. These are chosen cutoffs, not official definitions. Group sizes follow the results.</p><div class="table-wrap"><table><thead><tr><th scope="col">Label</th><th scope="col">Average Democratic support</th></tr></thead><tbody id="dotBandRows"></tbody></table></div><p>“Swing / competitive” means close between the parties on average, not necessarily changing winners. At exactly 50%, two- and four-band views place a county in the Democratic half as a boundary rule; this does not declare an election winner.</p><button id="dotBandDownload" type="button">Download political bands</button></details>
+        <details class="panel dot-about"><summary>What’s included?</summary><p>Population mode uses 2020–2024 ACS five-year resident population estimates. It includes children and people who did not vote. The full view always has 3,103 equally sized dots. Each represents about the same number of residents; groups receive dots in proportion to their total population, with whole-dot rounding. Clicking a population dot shows a county contributing to that group. Some small counties receive no dot at this scale; all remain available on the map and in the county picker. Filters keep the same people-per-dot scale and show only matching dots. Political group assignments and county voting averages do not change.</p><p>3,103 comparable county reporting areas across 48 states, using the presidential elections of 2008, 2012, 2016, 2020 and 2024. Connecticut is excluded because its reporting areas changed. Alaska only has statewide totals in these files. Washington, DC is also excluded. Some source areas combine neighbouring places.</p><p>Voting-similarity groups compare the Democratic percentage of votes for Democrats and Republicans across all five elections. Each county has equal weight. Filtering changes the counties shown, not their nationwide group assignments. Group descriptions and colours use the group average, not every county’s own result. These are past results, not predictions.</p><a href="../docs/us_county_clusters.md">Sources and details</a></details>
+      </div>
+    </main>
+  </div>
+  <div id="dotTooltip" class="dot-tooltip" role="tooltip" hidden></div>
+</body>
+</html>
