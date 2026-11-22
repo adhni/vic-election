@@ -1,0 +1,3958 @@
+{
+  "method": "Ward agglomerative hierarchical clustering",
+  "distance": "Euclidean",
+  "feature": "Democratic share of Democratic + Republican presidential votes, percent",
+  "years": [
+    2008,
+    2012,
+    2016,
+    2020,
+    2024
+  ],
+  "state_count": 50,
+  "default_k": 4,
+  "candidate_k": [
+    2,
+    3,
+    4,
+    5,
+    7
+  ],
+  "weighting": "Each state and each election have equal weight. No population weighting or per-state standardization.",
+  "excluded": [
+    "District of Columbia",
+    "Third-party votes",
+    "Provisional 2026 results"
+  ],
+  "stability_method": "Refit after omitting each election. Adjusted Rand measures whole-partition agreement; per-state peer stability is mean Jaccard overlap of co-clustered states across the five refits.",
+  "source_sha256": {
+    "data/us_2008_president_state_fpp.csv": "5c919939392d8bc534fe5c674c092b702d5adbe66727d3f453a65a546b9fc0dd",
+    "data/us_2012_president_state_fpp.csv": "40207187036dfa01fe50f13fbb66a396b28f5f11073cb4c203435b1baa6a5ca0",
+    "data/us_2016_president_state_fpp.csv": "bb5897c9bc8468198f506bd6a6809689cabf2bac995816df5440474f758195d8",
+    "data/us_2020_president_state_fpp.csv": "9d3a0fffc91a014ad8631708827a8f65e7879d1a18cd1dae4b218856b9f5ea1b",
+    "data/us_2024_president_state_fpp.csv": "dd528def177bdb3fe8a5536caa5bd47af680ad1e0dcdbcbda26ee71256fb3066"
+  },
+  "software": {
+    "scikit_learn": "1.6.1",
+    "numpy": "2.0.2"
+  },
+  "states": {
+    "Alabama": {
+      "democratic_share": [
+        39.10909725,
+        38.78377147,
+        35.62585641,
+        37.08862517,
+        34.55938807
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 813479,
+          "republican": 1266546
+        },
+        "2012": {
+          "democratic": 795696,
+          "republican": 1255925
+        },
+        "2016": {
+          "democratic": 729547,
+          "republican": 1318255
+        },
+        "2020": {
+          "democratic": 849624,
+          "republican": 1441170
+        },
+        "2024": {
+          "democratic": 772412,
+          "republican": 1462616
+        }
+      }
+    },
+    "Alaska": {
+      "democratic_share": [
+        38.93521508,
+        42.68470952,
+        41.61434529,
+        44.73815128,
+        43.15343746
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 123594,
+          "republican": 193841
+        },
+        "2012": {
+          "democratic": 122640,
+          "republican": 164676
+        },
+        "2016": {
+          "democratic": 116454,
+          "republican": 163387
+        },
+        "2020": {
+          "democratic": 153778,
+          "republican": 189951
+        },
+        "2024": {
+          "democratic": 140026,
+          "republican": 184458
+        }
+      }
+    },
+    "Arizona": {
+      "democratic_share": [
+        45.68609928,
+        45.38661978,
+        48.1099766,
+        50.15683168,
+        47.20584104
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1034707,
+          "republican": 1230111
+        },
+        "2012": {
+          "democratic": 1025232,
+          "republican": 1233654
+        },
+        "2016": {
+          "democratic": 1161167,
+          "republican": 1252401
+        },
+        "2020": {
+          "democratic": 1672143,
+          "republican": 1661686
+        },
+        "2024": {
+          "democratic": 1582860,
+          "republican": 1770242
+        }
+      }
+    },
+    "Arkansas": {
+      "democratic_share": [
+        39.82827939,
+        37.84559465,
+        35.71486231,
+        35.78756672,
+        34.33000676
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 422310,
+          "republican": 638017
+        },
+        "2012": {
+          "democratic": 394409,
+          "republican": 647744
+        },
+        "2016": {
+          "democratic": 380494,
+          "republican": 684872
+        },
+        "2020": {
+          "democratic": 423932,
+          "republican": 760647
+        },
+        "2024": {
+          "democratic": 396905,
+          "republican": 759241
+        }
+      }
+    },
+    "California": {
+      "democratic_share": [
+        62.27844959,
+        61.87281116,
+        66.1282108,
+        64.90937134,
+        60.40014257
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 8274473,
+          "republican": 5011781
+        },
+        "2012": {
+          "democratic": 7854285,
+          "republican": 4839958
+        },
+        "2016": {
+          "democratic": 8753792,
+          "republican": 4483814
+        },
+        "2020": {
+          "democratic": 11110639,
+          "republican": 6006518
+        },
+        "2024": {
+          "democratic": 9276179,
+          "republican": 6081697
+        }
+      }
+    },
+    "Colorado": {
+      "democratic_share": [
+        54.55080766,
+        52.74800715,
+        52.68333337,
+        56.93831949,
+        55.64654173
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1288633,
+          "republican": 1073629
+        },
+        "2012": {
+          "democratic": 1323102,
+          "republican": 1185243
+        },
+        "2016": {
+          "democratic": 1338870,
+          "republican": 1202484
+        },
+        "2020": {
+          "democratic": 1804352,
+          "republican": 1364607
+        },
+        "2024": {
+          "democratic": 1728159,
+          "republican": 1377441
+        }
+      }
+    },
+    "Connecticut": {
+      "democratic_share": [
+        61.31833825,
+        58.77257748,
+        57.14154752,
+        60.19504909,
+        57.37823249
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 997772,
+          "republican": 629428
+        },
+        "2012": {
+          "democratic": 905083,
+          "republican": 634892
+        },
+        "2016": {
+          "democratic": 897572,
+          "republican": 673215
+        },
+        "2020": {
+          "democratic": 1080831,
+          "republican": 714717
+        },
+        "2024": {
+          "democratic": 992053,
+          "republican": 736918
+        }
+      }
+    },
+    "Delaware": {
+      "democratic_share": [
+        62.63813865,
+        59.44695492,
+        55.99862144,
+        59.62674416,
+        57.47923564
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 255459,
+          "republican": 152374
+        },
+        "2012": {
+          "democratic": 242584,
+          "republican": 165484
+        },
+        "2016": {
+          "democratic": 235603,
+          "republican": 185127
+        },
+        "2020": {
+          "democratic": 296268,
+          "republican": 200603
+        },
+        "2024": {
+          "democratic": 289758,
+          "republican": 214351
+        }
+      }
+    },
+    "Florida": {
+      "democratic_share": [
+        51.41966003,
+        50.44225214,
+        49.38116453,
+        48.30524534,
+        43.38893057
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 4282074,
+          "republican": 4045624
+        },
+        "2012": {
+          "democratic": 4237756,
+          "republican": 4163447
+        },
+        "2016": {
+          "democratic": 4504975,
+          "republican": 4617886
+        },
+        "2020": {
+          "democratic": 5297045,
+          "republican": 5668731
+        },
+        "2024": {
+          "democratic": 4683038,
+          "republican": 6110125
+        }
+      }
+    },
+    "Georgia": {
+      "democratic_share": [
+        47.37166449,
+        46.0433509,
+        47.3388274,
+        50.11932966,
+        48.89563385
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1844123,
+          "republican": 2048759
+        },
+        "2012": {
+          "democratic": 1773827,
+          "republican": 2078688
+        },
+        "2016": {
+          "democratic": 1877963,
+          "republican": 2089104
+        },
+        "2020": {
+          "democratic": 2473633,
+          "republican": 2461854
+        },
+        "2024": {
+          "democratic": 2548017,
+          "republican": 2663117
+        }
+      }
+    },
+    "Hawaii": {
+      "democratic_share": [
+        72.99372588,
+        71.7038485,
+        67.44133745,
+        65.03266465,
+        61.78032583
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 325871,
+          "republican": 120566
+        },
+        "2012": {
+          "democratic": 306658,
+          "republican": 121015
+        },
+        "2016": {
+          "democratic": 266891,
+          "republican": 128847
+        },
+        "2020": {
+          "democratic": 366130,
+          "republican": 196864
+        },
+        "2024": {
+          "democratic": 313044,
+          "republican": 193661
+        }
+      }
+    },
+    "Idaho": {
+      "democratic_share": [
+        36.97541019,
+        33.57861316,
+        31.68982332,
+        34.12285707,
+        31.23907941
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 236440,
+          "republican": 403012
+        },
+        "2012": {
+          "democratic": 212787,
+          "republican": 420911
+        },
+        "2016": {
+          "democratic": 189765,
+          "republican": 409055
+        },
+        "2020": {
+          "democratic": 287021,
+          "republican": 554119
+        },
+        "2024": {
+          "democratic": 274972,
+          "republican": 605246
+        }
+      }
+    },
+    "Illinois": {
+      "democratic_share": [
+        62.73426404,
+        58.57752339,
+        59.02005139,
+        58.65904373,
+        55.56776541
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 3419348,
+          "republican": 2031179
+        },
+        "2012": {
+          "democratic": 3019512,
+          "republican": 2135216
+        },
+        "2016": {
+          "democratic": 3090729,
+          "republican": 2146015
+        },
+        "2020": {
+          "democratic": 3471915,
+          "republican": 2446891
+        },
+        "2024": {
+          "democratic": 3062863,
+          "republican": 2449079
+        }
+      }
+    },
+    "Indiana": {
+      "democratic_share": [
+        50.52195345,
+        44.7996254,
+        39.88269048,
+        41.80180362,
+        40.34754417
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1374039,
+          "republican": 1345648
+        },
+        "2012": {
+          "democratic": 1152887,
+          "republican": 1420543
+        },
+        "2016": {
+          "democratic": 1033126,
+          "republican": 1557286
+        },
+        "2020": {
+          "democratic": 1242498,
+          "republican": 1729857
+        },
+        "2024": {
+          "democratic": 1163603,
+          "republican": 1720347
+        }
+      }
+    },
+    "Iowa": {
+      "democratic_share": [
+        54.84877779,
+        52.95935193,
+        44.93645215,
+        45.81673692,
+        43.27720115
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 828940,
+          "republican": 682379
+        },
+        "2012": {
+          "democratic": 822544,
+          "republican": 730617
+        },
+        "2016": {
+          "democratic": 653669,
+          "republican": 800983
+        },
+        "2020": {
+          "democratic": 759061,
+          "republican": 897672
+        },
+        "2024": {
+          "democratic": 707278,
+          "republican": 927019
+        }
+      }
+    },
+    "Kansas": {
+      "democratic_share": [
+        42.38772418,
+        38.88667325,
+        38.88852966,
+        42.50657174,
+        41.79426305
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 514765,
+          "republican": 699655
+        },
+        "2012": {
+          "democratic": 440726,
+          "republican": 692634
+        },
+        "2016": {
+          "democratic": 427005,
+          "republican": 671018
+        },
+        "2020": {
+          "democratic": 570323,
+          "republican": 771406
+        },
+        "2024": {
+          "democratic": 544853,
+          "republican": 758802
+        }
+      }
+    },
+    "Kentucky": {
+      "democratic_share": [
+        41.76657241,
+        38.45722761,
+        34.32937098,
+        36.7998971,
+        34.48592898
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 751985,
+          "republican": 1048462
+        },
+        "2012": {
+          "democratic": 679370,
+          "republican": 1087190
+        },
+        "2016": {
+          "democratic": 628854,
+          "republican": 1202971
+        },
+        "2020": {
+          "democratic": 772474,
+          "republican": 1326646
+        },
+        "2024": {
+          "democratic": 704043,
+          "republican": 1337494
+        }
+      }
+    },
+    "Louisiana": {
+      "democratic_share": [
+        40.54282584,
+        41.25317439,
+        39.82832276,
+        40.53555954,
+        38.82148959
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 782989,
+          "republican": 1148275
+        },
+        "2012": {
+          "democratic": 809141,
+          "republican": 1152262
+        },
+        "2016": {
+          "democratic": 780154,
+          "republican": 1178638
+        },
+        "2020": {
+          "democratic": 856034,
+          "republican": 1255776
+        },
+        "2024": {
+          "democratic": 766870,
+          "republican": 1208505
+        }
+      }
+    },
+    "Maine": {
+      "democratic_share": [
+        58.82952498,
+        57.85992139,
+        51.59679113,
+        54.67040458,
+        53.54430582
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 421923,
+          "republican": 295273
+        },
+        "2012": {
+          "democratic": 401306,
+          "republican": 292276
+        },
+        "2016": {
+          "democratic": 357735,
+          "republican": 335593
+        },
+        "2020": {
+          "democratic": 435072,
+          "republican": 360737
+        },
+        "2024": {
+          "democratic": 435652,
+          "republican": 377977
+        }
+      }
+    },
+    "Maryland": {
+      "democratic_share": [
+        62.93008729,
+        63.32172579,
+        64.01624968,
+        67.02904705,
+        64.75475703
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1629467,
+          "republican": 959862
+        },
+        "2012": {
+          "democratic": 1677844,
+          "republican": 971869
+        },
+        "2016": {
+          "democratic": 1677928,
+          "republican": 943169
+        },
+        "2020": {
+          "democratic": 1985023,
+          "republican": 976414
+        },
+        "2024": {
+          "democratic": 1902577,
+          "republican": 1035550
+        }
+      }
+    },
+    "Massachusetts": {
+      "democratic_share": [
+        63.19707821,
+        61.78568075,
+        64.65127869,
+        67.11554954,
+        62.95531942
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1904097,
+          "republican": 1108854
+        },
+        "2012": {
+          "democratic": 1921290,
+          "republican": 1188314
+        },
+        "2016": {
+          "democratic": 1995196,
+          "republican": 1090893
+        },
+        "2020": {
+          "democratic": 2382202,
+          "republican": 1167202
+        },
+        "2024": {
+          "democratic": 2126518,
+          "republican": 1251303
+        }
+      }
+    },
+    "Michigan": {
+      "democratic_share": [
+        58.37130158,
+        54.80053207,
+        49.88233178,
+        51.41355934,
+        49.27876317
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 2872579,
+          "republican": 2048639
+        },
+        "2012": {
+          "democratic": 2564569,
+          "republican": 2115256
+        },
+        "2016": {
+          "democratic": 2268839,
+          "republican": 2279543
+        },
+        "2020": {
+          "democratic": 2804040,
+          "republican": 2649852
+        },
+        "2024": {
+          "democratic": 2736533,
+          "republican": 2816636
+        }
+      }
+    },
+    "Minnesota": {
+      "democratic_share": [
+        55.229375,
+        53.94122646,
+        50.83185693,
+        53.63951365,
+        52.17170218
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1573354,
+          "republican": 1275409
+        },
+        "2012": {
+          "democratic": 1546167,
+          "republican": 1320225
+        },
+        "2016": {
+          "democratic": 1367716,
+          "republican": 1322951
+        },
+        "2020": {
+          "democratic": 1717077,
+          "republican": 1484065
+        },
+        "2024": {
+          "democratic": 1656979,
+          "republican": 1519032
+        }
+      }
+    },
+    "Mississippi": {
+      "democratic_share": [
+        43.35806901,
+        44.1981008,
+        40.91015268,
+        41.61501417,
+        38.42748589
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 554662,
+          "republican": 724597
+        },
+        "2012": {
+          "democratic": 562949,
+          "republican": 710746
+        },
+        "2016": {
+          "democratic": 485131,
+          "republican": 700714
+        },
+        "2020": {
+          "democratic": 539398,
+          "republican": 756764
+        },
+        "2024": {
+          "democratic": 466668,
+          "republican": 747744
+        }
+      }
+    },
+    "Missouri": {
+      "democratic_share": [
+        49.93242085,
+        45.22133325,
+        40.181439,
+        42.16417936,
+        40.66263969
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1441911,
+          "republican": 1445814
+        },
+        "2012": {
+          "democratic": 1223796,
+          "republican": 1482440
+        },
+        "2016": {
+          "democratic": 1071068,
+          "republican": 1594511
+        },
+        "2020": {
+          "democratic": 1253014,
+          "republican": 1718736
+        },
+        "2024": {
+          "democratic": 1200599,
+          "republican": 1751986
+        }
+      }
+    },
+    "Montana": {
+      "democratic_share": [
+        48.83059672,
+        42.96576814,
+        38.89033568,
+        41.60281991,
+        39.71095148
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 231667,
+          "republican": 242763
+        },
+        "2012": {
+          "democratic": 201839,
+          "republican": 267928
+        },
+        "2016": {
+          "democratic": 177709,
+          "republican": 279240
+        },
+        "2020": {
+          "democratic": 244786,
+          "republican": 343602
+        },
+        "2024": {
+          "democratic": 231906,
+          "republican": 352079
+        }
+      }
+    },
+    "Nebraska": {
+      "democratic_share": [
+        42.39092558,
+        38.87060973,
+        36.45232589,
+        40.21594775,
+        39.57965835
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 333319,
+          "republican": 452979
+        },
+        "2012": {
+          "democratic": 302081,
+          "republican": 475064
+        },
+        "2016": {
+          "democratic": 284494,
+          "republican": 495961
+        },
+        "2020": {
+          "democratic": 374583,
+          "republican": 556846
+        },
+        "2024": {
+          "democratic": 369995,
+          "republican": 564816
+        }
+      }
+    },
+    "Nevada": {
+      "democratic_share": [
+        56.38673813,
+        53.40754216,
+        51.29370942,
+        51.22311734,
+        48.42049105
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 533736,
+          "republican": 412827
+        },
+        "2012": {
+          "democratic": 531373,
+          "republican": 463567
+        },
+        "2016": {
+          "democratic": 539260,
+          "republican": 512058
+        },
+        "2020": {
+          "democratic": 703486,
+          "republican": 669890
+        },
+        "2024": {
+          "democratic": 705197,
+          "republican": 751205
+        }
+      }
+    },
+    "New Hampshire": {
+      "democratic_share": [
+        54.86854112,
+        52.83375198,
+        50.19702844,
+        53.74887585,
+        51.41060747
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 384826,
+          "republican": 316534
+        },
+        "2012": {
+          "democratic": 369561,
+          "republican": 329918
+        },
+        "2016": {
+          "democratic": 348526,
+          "republican": 345790
+        },
+        "2020": {
+          "democratic": 424937,
+          "republican": 365660
+        },
+        "2024": {
+          "democratic": 418488,
+          "republican": 395523
+        }
+      }
+    },
+    "New Jersey": {
+      "democratic_share": [
+        57.86462987,
+        58.98685114,
+        57.28419014,
+        58.07138613,
+        53.01387372
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 2215422,
+          "republican": 1613207
+        },
+        "2012": {
+          "democratic": 2125101,
+          "republican": 1477568
+        },
+        "2016": {
+          "democratic": 2148278,
+          "republican": 1601933
+        },
+        "2020": {
+          "democratic": 2608400,
+          "republican": 1883313
+        },
+        "2024": {
+          "democratic": 2220713,
+          "republican": 1968215
+        }
+      }
+    },
+    "New Mexico": {
+      "democratic_share": [
+        57.66490002,
+        55.29520465,
+        54.65079493,
+        55.51849015,
+        53.07090611
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 472422,
+          "republican": 346832
+        },
+        "2012": {
+          "democratic": 415335,
+          "republican": 335788
+        },
+        "2016": {
+          "democratic": 385234,
+          "republican": 319667
+        },
+        "2020": {
+          "democratic": 501614,
+          "republican": 401894
+        },
+        "2024": {
+          "democratic": 478802,
+          "republican": 423391
+        }
+      }
+    },
+    "New York": {
+      "democratic_share": [
+        63.5766811,
+        64.30089453,
+        61.77241846,
+        61.7271769,
+        56.34474306
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 4804945,
+          "republican": 2752771
+        },
+        "2012": {
+          "democratic": 4485741,
+          "republican": 2490431
+        },
+        "2016": {
+          "democratic": 4556118,
+          "republican": 2819533
+        },
+        "2020": {
+          "democratic": 5244886,
+          "republican": 3251997
+        },
+        "2024": {
+          "democratic": 4619195,
+          "republican": 3578899
+        }
+      }
+    },
+    "North Carolina": {
+      "democratic_share": [
+        50.1659633,
+        48.9659651,
+        48.0962542,
+        49.31579935,
+        48.3696599
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 2142651,
+          "republican": 2128474
+        },
+        "2012": {
+          "democratic": 2178391,
+          "republican": 2270395
+        },
+        "2016": {
+          "democratic": 2189316,
+          "republican": 2362631
+        },
+        "2020": {
+          "democratic": 2684292,
+          "republican": 2758775
+        },
+        "2024": {
+          "democratic": 2715375,
+          "republican": 2898423
+        }
+      }
+    },
+    "North Dakota": {
+      "democratic_share": [
+        45.59134372,
+        39.88210486,
+        30.1907571,
+        32.79483912,
+        31.30350693
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 141278,
+          "republican": 168601
+        },
+        "2012": {
+          "democratic": 124827,
+          "republican": 188163
+        },
+        "2016": {
+          "democratic": 93758,
+          "republican": 216794
+        },
+        "2020": {
+          "democratic": 115042,
+          "republican": 235751
+        },
+        "2024": {
+          "democratic": 112327,
+          "republican": 246505
+        }
+      }
+    },
+    "Ohio": {
+      "democratic_share": [
+        52.33384076,
+        51.51455254,
+        45.73231542,
+        45.92330235,
+        44.34338529
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 2940044,
+          "republican": 2677820
+        },
+        "2012": {
+          "democratic": 2827709,
+          "republican": 2661437
+        },
+        "2016": {
+          "democratic": 2394164,
+          "republican": 2841005
+        },
+        "2020": {
+          "democratic": 2679165,
+          "republican": 3154834
+        },
+        "2024": {
+          "democratic": 2533699,
+          "republican": 3180116
+        }
+      }
+    },
+    "Oklahoma": {
+      "democratic_share": [
+        34.35491888,
+        33.22768026,
+        30.69526276,
+        33.0599605,
+        32.52995809
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 502496,
+          "republican": 960165
+        },
+        "2012": {
+          "democratic": 443547,
+          "republican": 891325
+        },
+        "2016": {
+          "democratic": 420375,
+          "republican": 949136
+        },
+        "2020": {
+          "democratic": 503890,
+          "republican": 1020280
+        },
+        "2024": {
+          "democratic": 499599,
+          "republican": 1036213
+        }
+      }
+    },
+    "Oregon": {
+      "democratic_share": [
+        58.41372118,
+        56.27116718,
+        56.15583895,
+        58.30715699,
+        57.43305803
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1037291,
+          "republican": 738475
+        },
+        "2012": {
+          "democratic": 970488,
+          "republican": 754175
+        },
+        "2016": {
+          "democratic": 1002106,
+          "republican": 782403
+        },
+        "2020": {
+          "democratic": 1340383,
+          "republican": 958448
+        },
+        "2024": {
+          "democratic": 1240600,
+          "republican": 919480
+        }
+      }
+    },
+    "Pennsylvania": {
+      "democratic_share": [
+        55.22970382,
+        52.731934,
+        49.62446419,
+        50.58920526,
+        49.13680765
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 3276363,
+          "republican": 2655885
+        },
+        "2012": {
+          "democratic": 2990274,
+          "republican": 2680434
+        },
+        "2016": {
+          "democratic": 2926441,
+          "republican": 2970733
+        },
+        "2020": {
+          "democratic": 3458229,
+          "republican": 3377674
+        },
+        "2024": {
+          "democratic": 3423042,
+          "republican": 3543308
+        }
+      }
+    },
+    "Rhode Island": {
+      "democratic_share": [
+        64.19813751,
+        64.01674598,
+        58.31070409,
+        60.59935988,
+        57.08120313
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 296571,
+          "republican": 165391
+        },
+        "2012": {
+          "democratic": 279677,
+          "republican": 157204
+        },
+        "2016": {
+          "democratic": 252525,
+          "republican": 180543
+        },
+        "2020": {
+          "democratic": 307486,
+          "republican": 199922
+        },
+        "2024": {
+          "democratic": 285156,
+          "republican": 214406
+        }
+      }
+    },
+    "South Carolina": {
+      "democratic_share": [
+        45.45557081,
+        44.6917453,
+        42.53974364,
+        44.07339125,
+        40.93831739
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 862449,
+          "republican": 1034896
+        },
+        "2012": {
+          "democratic": 865941,
+          "republican": 1071645
+        },
+        "2016": {
+          "democratic": 855373,
+          "republican": 1155389
+        },
+        "2020": {
+          "democratic": 1091541,
+          "republican": 1385103
+        },
+        "2024": {
+          "democratic": 1028452,
+          "republican": 1483747
+        }
+      }
+    },
+    "South Dakota": {
+      "democratic_share": [
+        45.70429277,
+        40.78150086,
+        34.02814192,
+        36.56522014,
+        35.05490046
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 170924,
+          "republican": 203054
+        },
+        "2012": {
+          "democratic": 145039,
+          "republican": 210610
+        },
+        "2016": {
+          "democratic": 117458,
+          "republican": 227721
+        },
+        "2020": {
+          "democratic": 150471,
+          "republican": 261043
+        },
+        "2024": {
+          "democratic": 146859,
+          "republican": 272081
+        }
+      }
+    },
+    "Tennessee": {
+      "democratic_share": [
+        42.3685282,
+        39.64892847,
+        36.37565695,
+        38.17222963,
+        34.93945017
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1087437,
+          "republican": 1479178
+        },
+        "2012": {
+          "democratic": 960709,
+          "republican": 1462330
+        },
+        "2016": {
+          "democratic": 870695,
+          "republican": 1522925
+        },
+        "2020": {
+          "democratic": 1143711,
+          "republican": 1852475
+        },
+        "2024": {
+          "democratic": 1056265,
+          "republican": 1966865
+        }
+      }
+    },
+    "Texas": {
+      "democratic_share": [
+        44.06406325,
+        41.99210278,
+        45.28677442,
+        47.16927876,
+        43.0609661
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 3528633,
+          "republican": 4479328
+        },
+        "2012": {
+          "democratic": 3308124,
+          "republican": 4569843
+        },
+        "2016": {
+          "democratic": 3877868,
+          "republican": 4685047
+        },
+        "2020": {
+          "democratic": 5259126,
+          "republican": 5890347
+        },
+        "2024": {
+          "democratic": 4835250,
+          "republican": 6393597
+        }
+      }
+    },
+    "Utah": {
+      "democratic_share": [
+        35.47363863,
+        25.3738111,
+        37.61634179,
+        39.30639488,
+        38.89465038
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 327670,
+          "republican": 596030
+        },
+        "2012": {
+          "democratic": 251813,
+          "republican": 740600
+        },
+        "2016": {
+          "democratic": 310676,
+          "republican": 515231
+        },
+        "2020": {
+          "democratic": 560282,
+          "republican": 865140
+        },
+        "2024": {
+          "democratic": 562566,
+          "republican": 883818
+        }
+      }
+    },
+    "Vermont": {
+      "democratic_share": [
+        68.89918174,
+        68.24725883,
+        65.18642632,
+        68.29918655,
+        66.38521789
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 219262,
+          "republican": 98974
+        },
+        "2012": {
+          "democratic": 199239,
+          "republican": 92698
+        },
+        "2016": {
+          "democratic": 178573,
+          "republican": 95369
+        },
+        "2020": {
+          "democratic": 242820,
+          "republican": 112704
+        },
+        "2024": {
+          "democratic": 235791,
+          "republican": 119395
+        }
+      }
+    },
+    "Virginia": {
+      "democratic_share": [
+        53.18258441,
+        51.96737669,
+        52.82637628,
+        55.154687,
+        52.94564841
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1959532,
+          "republican": 1725005
+        },
+        "2012": {
+          "democratic": 1971820,
+          "republican": 1822522
+        },
+        "2016": {
+          "democratic": 1981473,
+          "republican": 1769443
+        },
+        "2020": {
+          "democratic": 2413568,
+          "republican": 1962430
+        },
+        "2024": {
+          "democratic": 2333778,
+          "republican": 2074097
+        }
+      }
+    },
+    "Washington": {
+      "democratic_share": [
+        58.7520268,
+        57.62829827,
+        58.7869312,
+        59.92550318,
+        59.46477574
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1750848,
+          "republican": 1229216
+        },
+        "2012": {
+          "democratic": 1755396,
+          "republican": 1290670
+        },
+        "2016": {
+          "democratic": 1742718,
+          "republican": 1221747
+        },
+        "2020": {
+          "democratic": 2369612,
+          "republican": 1584651
+        },
+        "2024": {
+          "democratic": 2245849,
+          "republican": 1530923
+        }
+      }
+    },
+    "West Virginia": {
+      "democratic_share": [
+        43.32625623,
+        36.32570237,
+        27.83894775,
+        30.20146769,
+        28.65610772
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 303857,
+          "republican": 397466
+        },
+        "2012": {
+          "democratic": 238269,
+          "republican": 417655
+        },
+        "2016": {
+          "democratic": 188794,
+          "republican": 489371
+        },
+        "2020": {
+          "democratic": 235984,
+          "republican": 545382
+        },
+        "2024": {
+          "democratic": 214309,
+          "republican": 533556
+        }
+      }
+    },
+    "Wisconsin": {
+      "democratic_share": [
+        57.05567825,
+        53.5163824,
+        49.59201096,
+        50.31906327,
+        49.56330561
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 1677211,
+          "republican": 1262393
+        },
+        "2012": {
+          "democratic": 1620985,
+          "republican": 1407966
+        },
+        "2016": {
+          "democratic": 1382536,
+          "republican": 1405284
+        },
+        "2020": {
+          "democratic": 1630866,
+          "republican": 1610184
+        },
+        "2024": {
+          "democratic": 1668229,
+          "republican": 1697626
+        }
+      }
+    },
+    "Wyoming": {
+      "democratic_share": [
+        33.43797664,
+        28.83936599,
+        24.29468037,
+        27.51956562,
+        26.52082698
+      ],
+      "votes": {
+        "2008": {
+          "democratic": 82868,
+          "republican": 164958
+        },
+        "2012": {
+          "democratic": 69286,
+          "republican": 170962
+        },
+        "2016": {
+          "democratic": 55973,
+          "republican": 174419
+        },
+        "2020": {
+          "democratic": 73491,
+          "republican": 193559
+        },
+        "2024": {
+          "democratic": 69527,
+          "republican": 192633
+        }
+      }
+    }
+  },
+  "models": {
+    "2": {
+      "k": 2,
+      "silhouette": 0.57018338,
+      "mean_adjusted_rand": 0.91380275,
+      "min_adjusted_rand": 0.56901377,
+      "leave_one_election_out": [
+        {
+          "omitted_year": 2008,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2012,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2016,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2020,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2024,
+          "adjusted_rand": 0.56901377
+        }
+      ],
+      "groups": [
+        {
+          "id": 1,
+          "color": "#7851a9",
+          "size": 21,
+          "states": [
+            "Alabama",
+            "Alaska",
+            "Arkansas",
+            "Idaho",
+            "Indiana",
+            "Kansas",
+            "Kentucky",
+            "Louisiana",
+            "Mississippi",
+            "Missouri",
+            "Montana",
+            "Nebraska",
+            "North Dakota",
+            "Oklahoma",
+            "South Carolina",
+            "South Dakota",
+            "Tennessee",
+            "Texas",
+            "Utah",
+            "West Virginia",
+            "Wyoming"
+          ],
+          "centroid": [
+            42.11217519,
+            38.96705445,
+            36.32735053,
+            38.46863529,
+            36.61955034
+          ],
+          "mean_democratic_share": 38.49895316,
+          "change_2008_2024_pp": -5.49262485,
+          "mean_silhouette": 0.6345902
+        },
+        {
+          "id": 2,
+          "color": "#c57928",
+          "size": 29,
+          "states": [
+            "Arizona",
+            "California",
+            "Colorado",
+            "Connecticut",
+            "Delaware",
+            "Florida",
+            "Georgia",
+            "Hawaii",
+            "Illinois",
+            "Iowa",
+            "Maine",
+            "Maryland",
+            "Massachusetts",
+            "Michigan",
+            "Minnesota",
+            "Nevada",
+            "New Hampshire",
+            "New Jersey",
+            "New Mexico",
+            "New York",
+            "North Carolina",
+            "Ohio",
+            "Oregon",
+            "Pennsylvania",
+            "Rhode Island",
+            "Vermont",
+            "Virginia",
+            "Washington",
+            "Wisconsin"
+          ],
+          "centroid": [
+            58.03412485,
+            56.52918308,
+            54.78163772,
+            56.28792139,
+            53.81753038
+          ],
+          "mean_democratic_share": 55.89007948,
+          "change_2008_2024_pp": -4.21659447,
+          "mean_silhouette": 0.52354395
+        }
+      ],
+      "assignments": {
+        "Alabama": {
+          "group": 1,
+          "silhouette": 0.74487709,
+          "peer_stability": 0.95384615
+        },
+        "Alaska": {
+          "group": 1,
+          "silhouette": 0.53789833,
+          "peer_stability": 0.95384615
+        },
+        "Arizona": {
+          "group": 2,
+          "silhouette": -0.00726248,
+          "peer_stability": 0.82040816
+        },
+        "Arkansas": {
+          "group": 1,
+          "silhouette": 0.74609241,
+          "peer_stability": 0.95384615
+        },
+        "California": {
+          "group": 2,
+          "silhouette": 0.63859415,
+          "peer_stability": 0.95714286
+        },
+        "Colorado": {
+          "group": 2,
+          "silhouette": 0.62863602,
+          "peer_stability": 0.95714286
+        },
+        "Connecticut": {
+          "group": 2,
+          "silhouette": 0.69723893,
+          "peer_stability": 0.95714286
+        },
+        "Delaware": {
+          "group": 2,
+          "silhouette": 0.6916332,
+          "peer_stability": 0.95714286
+        },
+        "Florida": {
+          "group": 2,
+          "silhouette": 0.19691536,
+          "peer_stability": 0.82040816
+        },
+        "Georgia": {
+          "group": 2,
+          "silhouette": 0.09838994,
+          "peer_stability": 0.82040816
+        },
+        "Hawaii": {
+          "group": 2,
+          "silhouette": 0.55721902,
+          "peer_stability": 0.95714286
+        },
+        "Idaho": {
+          "group": 1,
+          "silhouette": 0.70545132,
+          "peer_stability": 0.95384615
+        },
+        "Illinois": {
+          "group": 2,
+          "silhouette": 0.69060938,
+          "peer_stability": 0.95714286
+        },
+        "Indiana": {
+          "group": 1,
+          "silhouette": 0.49961891,
+          "peer_stability": 0.95384615
+        },
+        "Iowa": {
+          "group": 2,
+          "silhouette": 0.13459222,
+          "peer_stability": 0.82040816
+        },
+        "Kansas": {
+          "group": 1,
+          "silhouette": 0.65431294,
+          "peer_stability": 0.95384615
+        },
+        "Kentucky": {
+          "group": 1,
+          "silhouette": 0.74939832,
+          "peer_stability": 0.95384615
+        },
+        "Louisiana": {
+          "group": 1,
+          "silhouette": 0.68959187,
+          "peer_stability": 0.95384615
+        },
+        "Maine": {
+          "group": 2,
+          "silhouette": 0.65797311,
+          "peer_stability": 0.95714286
+        },
+        "Maryland": {
+          "group": 2,
+          "silhouette": 0.62192255,
+          "peer_stability": 0.95714286
+        },
+        "Massachusetts": {
+          "group": 2,
+          "silhouette": 0.62932945,
+          "peer_stability": 0.95714286
+        },
+        "Michigan": {
+          "group": 2,
+          "silhouette": 0.56756473,
+          "peer_stability": 0.95714286
+        },
+        "Minnesota": {
+          "group": 2,
+          "silhouette": 0.60968419,
+          "peer_stability": 0.95714286
+        },
+        "Mississippi": {
+          "group": 1,
+          "silhouette": 0.62855071,
+          "peer_stability": 0.95384615
+        },
+        "Missouri": {
+          "group": 1,
+          "silhouette": 0.49062069,
+          "peer_stability": 0.95384615
+        },
+        "Montana": {
+          "group": 1,
+          "silhouette": 0.58893945,
+          "peer_stability": 0.95384615
+        },
+        "Nebraska": {
+          "group": 1,
+          "silhouette": 0.71602201,
+          "peer_stability": 0.95384615
+        },
+        "Nevada": {
+          "group": 2,
+          "silhouette": 0.54983455,
+          "peer_stability": 0.95714286
+        },
+        "New Hampshire": {
+          "group": 2,
+          "silhouette": 0.58255792,
+          "peer_stability": 0.95714286
+        },
+        "New Jersey": {
+          "group": 2,
+          "silhouette": 0.68418667,
+          "peer_stability": 0.95714286
+        },
+        "New Mexico": {
+          "group": 2,
+          "silhouette": 0.67169849,
+          "peer_stability": 0.95714286
+        },
+        "New York": {
+          "group": 2,
+          "silhouette": 0.66302603,
+          "peer_stability": 0.95714286
+        },
+        "North Carolina": {
+          "group": 2,
+          "silhouette": 0.25982356,
+          "peer_stability": 0.82040816
+        },
+        "North Dakota": {
+          "group": 1,
+          "silhouette": 0.68245798,
+          "peer_stability": 0.95384615
+        },
+        "Ohio": {
+          "group": 2,
+          "silhouette": 0.09536784,
+          "peer_stability": 0.82040816
+        },
+        "Oklahoma": {
+          "group": 1,
+          "silhouette": 0.68658584,
+          "peer_stability": 0.95384615
+        },
+        "Oregon": {
+          "group": 2,
+          "silhouette": 0.68950708,
+          "peer_stability": 0.95714286
+        },
+        "Pennsylvania": {
+          "group": 2,
+          "silhouette": 0.51090296,
+          "peer_stability": 0.95714286
+        },
+        "Rhode Island": {
+          "group": 2,
+          "silhouette": 0.67105148,
+          "peer_stability": 0.95714286
+        },
+        "South Carolina": {
+          "group": 1,
+          "silhouette": 0.50181116,
+          "peer_stability": 0.95384615
+        },
+        "South Dakota": {
+          "group": 1,
+          "silhouette": 0.71423673,
+          "peer_stability": 0.95384615
+        },
+        "Tennessee": {
+          "group": 1,
+          "silhouette": 0.74338288,
+          "peer_stability": 0.95384615
+        },
+        "Texas": {
+          "group": 1,
+          "silhouette": 0.38246045,
+          "peer_stability": 0.95384615
+        },
+        "Utah": {
+          "group": 1,
+          "silhouette": 0.60651629,
+          "peer_stability": 0.95384615
+        },
+        "Vermont": {
+          "group": 2,
+          "silhouette": 0.5774205,
+          "peer_stability": 0.95714286
+        },
+        "Virginia": {
+          "group": 2,
+          "silhouette": 0.5940487,
+          "peer_stability": 0.95714286
+        },
+        "Washington": {
+          "group": 2,
+          "silhouette": 0.68419831,
+          "peer_stability": 0.95714286
+        },
+        "West Virginia": {
+          "group": 1,
+          "silhouette": 0.66162798,
+          "peer_stability": 0.95384615
+        },
+        "Wisconsin": {
+          "group": 2,
+          "silhouette": 0.53611071,
+          "peer_stability": 0.95714286
+        },
+        "Wyoming": {
+          "group": 1,
+          "silhouette": 0.59594083,
+          "peer_stability": 0.95384615
+        }
+      }
+    },
+    "3": {
+      "k": 3,
+      "silhouette": 0.49634609,
+      "mean_adjusted_rand": 0.83822859,
+      "min_adjusted_rand": 0.38561139,
+      "leave_one_election_out": [
+        {
+          "omitted_year": 2008,
+          "adjusted_rand": 0.94867636
+        },
+        {
+          "omitted_year": 2012,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2016,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2020,
+          "adjusted_rand": 0.85685522
+        },
+        {
+          "omitted_year": 2024,
+          "adjusted_rand": 0.38561139
+        }
+      ],
+      "groups": [
+        {
+          "id": 1,
+          "color": "#7851a9",
+          "size": 21,
+          "states": [
+            "Alabama",
+            "Alaska",
+            "Arkansas",
+            "Idaho",
+            "Indiana",
+            "Kansas",
+            "Kentucky",
+            "Louisiana",
+            "Mississippi",
+            "Missouri",
+            "Montana",
+            "Nebraska",
+            "North Dakota",
+            "Oklahoma",
+            "South Carolina",
+            "South Dakota",
+            "Tennessee",
+            "Texas",
+            "Utah",
+            "West Virginia",
+            "Wyoming"
+          ],
+          "centroid": [
+            42.11217519,
+            38.96705445,
+            36.32735053,
+            38.46863529,
+            36.61955034
+          ],
+          "mean_democratic_share": 38.49895316,
+          "change_2008_2024_pp": -5.49262485,
+          "mean_silhouette": 0.50633302
+        },
+        {
+          "id": 2,
+          "color": "#c57928",
+          "size": 17,
+          "states": [
+            "Arizona",
+            "Colorado",
+            "Florida",
+            "Georgia",
+            "Iowa",
+            "Maine",
+            "Michigan",
+            "Minnesota",
+            "Nevada",
+            "New Hampshire",
+            "New Jersey",
+            "New Mexico",
+            "North Carolina",
+            "Ohio",
+            "Pennsylvania",
+            "Virginia",
+            "Wisconsin"
+          ],
+          "centroid": [
+            54.17998767,
+            52.55298956,
+            50.2386987,
+            51.81905102,
+            49.62844734
+          ],
+          "mean_democratic_share": 51.68383486,
+          "change_2008_2024_pp": -4.55154034,
+          "mean_silhouette": 0.48780262
+        },
+        {
+          "id": 3,
+          "color": "#288b87",
+          "size": 12,
+          "states": [
+            "California",
+            "Connecticut",
+            "Delaware",
+            "Hawaii",
+            "Illinois",
+            "Maryland",
+            "Massachusetts",
+            "New York",
+            "Oregon",
+            "Rhode Island",
+            "Vermont",
+            "Washington"
+          ],
+          "centroid": [
+            63.49415252,
+            62.1621239,
+            61.217468,
+            62.61882109,
+            59.75206469
+          ],
+          "mean_democratic_share": 61.84892604,
+          "change_2008_2024_pp": -3.74208783,
+          "mean_silhouette": 0.49097218
+        }
+      ],
+      "assignments": {
+        "Alabama": {
+          "group": 1,
+          "silhouette": 0.67267807,
+          "peer_stability": 0.93
+        },
+        "Alaska": {
+          "group": 1,
+          "silhouette": 0.35550272,
+          "peer_stability": 0.84615385
+        },
+        "Arizona": {
+          "group": 2,
+          "silhouette": 0.37794395,
+          "peer_stability": 0.79347826
+        },
+        "Arkansas": {
+          "group": 1,
+          "silhouette": 0.67577435,
+          "peer_stability": 0.93
+        },
+        "California": {
+          "group": 3,
+          "silhouette": 0.61933269,
+          "peer_stability": 0.84047619
+        },
+        "Colorado": {
+          "group": 2,
+          "silhouette": 0.38967314,
+          "peer_stability": 0.82142857
+        },
+        "Connecticut": {
+          "group": 3,
+          "silhouette": 0.4394989,
+          "peer_stability": 0.84047619
+        },
+        "Delaware": {
+          "group": 3,
+          "silhouette": 0.42340201,
+          "peer_stability": 0.84047619
+        },
+        "Florida": {
+          "group": 2,
+          "silhouette": 0.54958437,
+          "peer_stability": 0.79347826
+        },
+        "Georgia": {
+          "group": 2,
+          "silhouette": 0.4650642,
+          "peer_stability": 0.79347826
+        },
+        "Hawaii": {
+          "group": 3,
+          "silhouette": 0.52412398,
+          "peer_stability": 0.84047619
+        },
+        "Idaho": {
+          "group": 1,
+          "silhouette": 0.6378962,
+          "peer_stability": 0.93
+        },
+        "Illinois": {
+          "group": 3,
+          "silhouette": 0.40597403,
+          "peer_stability": 0.84047619
+        },
+        "Indiana": {
+          "group": 1,
+          "silhouette": 0.26858616,
+          "peer_stability": 0.84615385
+        },
+        "Iowa": {
+          "group": 2,
+          "silhouette": 0.47974223,
+          "peer_stability": 0.79347826
+        },
+        "Kansas": {
+          "group": 1,
+          "silhouette": 0.52696926,
+          "peer_stability": 0.93
+        },
+        "Kentucky": {
+          "group": 1,
+          "silhouette": 0.67801041,
+          "peer_stability": 0.93
+        },
+        "Louisiana": {
+          "group": 1,
+          "silhouette": 0.57955681,
+          "peer_stability": 0.93
+        },
+        "Maine": {
+          "group": 2,
+          "silhouette": 0.32392332,
+          "peer_stability": 0.67321429
+        },
+        "Maryland": {
+          "group": 3,
+          "silhouette": 0.62281554,
+          "peer_stability": 0.84047619
+        },
+        "Massachusetts": {
+          "group": 3,
+          "silhouette": 0.62947328,
+          "peer_stability": 0.84047619
+        },
+        "Michigan": {
+          "group": 2,
+          "silhouette": 0.60678987,
+          "peer_stability": 0.82142857
+        },
+        "Minnesota": {
+          "group": 2,
+          "silhouette": 0.60973976,
+          "peer_stability": 0.82142857
+        },
+        "Mississippi": {
+          "group": 1,
+          "silhouette": 0.4779741,
+          "peer_stability": 0.84615385
+        },
+        "Missouri": {
+          "group": 1,
+          "silhouette": 0.24807271,
+          "peer_stability": 0.84615385
+        },
+        "Montana": {
+          "group": 1,
+          "silhouette": 0.41506837,
+          "peer_stability": 0.84615385
+        },
+        "Nebraska": {
+          "group": 1,
+          "silhouette": 0.62099768,
+          "peer_stability": 0.93
+        },
+        "Nevada": {
+          "group": 2,
+          "silhouette": 0.65578868,
+          "peer_stability": 0.82142857
+        },
+        "New Hampshire": {
+          "group": 2,
+          "silhouette": 0.64112085,
+          "peer_stability": 0.82142857
+        },
+        "New Jersey": {
+          "group": 2,
+          "silhouette": -0.12292399,
+          "peer_stability": 0.48571429
+        },
+        "New Mexico": {
+          "group": 2,
+          "silhouette": 0.33413252,
+          "peer_stability": 0.67321429
+        },
+        "New York": {
+          "group": 3,
+          "silhouette": 0.58718186,
+          "peer_stability": 0.84047619
+        },
+        "North Carolina": {
+          "group": 2,
+          "silhouette": 0.60349068,
+          "peer_stability": 0.79347826
+        },
+        "North Dakota": {
+          "group": 1,
+          "silhouette": 0.60274833,
+          "peer_stability": 0.93
+        },
+        "Ohio": {
+          "group": 2,
+          "silhouette": 0.48403016,
+          "peer_stability": 0.79347826
+        },
+        "Oklahoma": {
+          "group": 1,
+          "silhouette": 0.61762418,
+          "peer_stability": 0.93
+        },
+        "Oregon": {
+          "group": 3,
+          "silhouette": 0.11136655,
+          "peer_stability": 0.84047619
+        },
+        "Pennsylvania": {
+          "group": 2,
+          "silhouette": 0.68741063,
+          "peer_stability": 0.82142857
+        },
+        "Rhode Island": {
+          "group": 3,
+          "silhouette": 0.5501043,
+          "peer_stability": 0.84047619
+        },
+        "South Carolina": {
+          "group": 1,
+          "silhouette": 0.25736827,
+          "peer_stability": 0.84615385
+        },
+        "South Dakota": {
+          "group": 1,
+          "silhouette": 0.62758191,
+          "peer_stability": 0.93
+        },
+        "Tennessee": {
+          "group": 1,
+          "silhouette": 0.66425458,
+          "peer_stability": 0.93
+        },
+        "Texas": {
+          "group": 1,
+          "silhouette": 0.07688949,
+          "peer_stability": 0.84615385
+        },
+        "Utah": {
+          "group": 1,
+          "silhouette": 0.51739527,
+          "peer_stability": 0.93
+        },
+        "Vermont": {
+          "group": 3,
+          "silhouette": 0.57439337,
+          "peer_stability": 0.84047619
+        },
+        "Virginia": {
+          "group": 2,
+          "silhouette": 0.54986326,
+          "peer_stability": 0.82142857
+        },
+        "Washington": {
+          "group": 3,
+          "silhouette": 0.4039997,
+          "peer_stability": 0.84047619
+        },
+        "West Virginia": {
+          "group": 1,
+          "silhouette": 0.58773642,
+          "peer_stability": 0.93
+        },
+        "Wisconsin": {
+          "group": 2,
+          "silhouette": 0.65727095,
+          "peer_stability": 0.82142857
+        },
+        "Wyoming": {
+          "group": 1,
+          "silhouette": 0.52430819,
+          "peer_stability": 0.93
+        }
+      }
+    },
+    "4": {
+      "k": 4,
+      "silhouette": 0.42381397,
+      "mean_adjusted_rand": 0.83457349,
+      "min_adjusted_rand": 0.45116097,
+      "leave_one_election_out": [
+        {
+          "omitted_year": 2008,
+          "adjusted_rand": 0.93819909
+        },
+        {
+          "omitted_year": 2012,
+          "adjusted_rand": 0.95605318
+        },
+        {
+          "omitted_year": 2016,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2020,
+          "adjusted_rand": 0.8274542
+        },
+        {
+          "omitted_year": 2024,
+          "adjusted_rand": 0.45116097
+        }
+      ],
+      "groups": [
+        {
+          "id": 1,
+          "color": "#7851a9",
+          "size": 11,
+          "states": [
+            "Alabama",
+            "Arkansas",
+            "Idaho",
+            "Kentucky",
+            "North Dakota",
+            "Oklahoma",
+            "South Dakota",
+            "Tennessee",
+            "Utah",
+            "West Virginia",
+            "Wyoming"
+          ],
+          "centroid": [
+            39.81239221,
+            35.70402734,
+            32.58179106,
+            34.67442033,
+            32.95580036
+          ],
+          "mean_democratic_share": 35.14568626,
+          "change_2008_2024_pp": -6.85659185,
+          "mean_silhouette": 0.30430841
+        },
+        {
+          "id": 2,
+          "color": "#c57928",
+          "size": 10,
+          "states": [
+            "Alaska",
+            "Indiana",
+            "Kansas",
+            "Louisiana",
+            "Mississippi",
+            "Missouri",
+            "Montana",
+            "Nebraska",
+            "South Carolina",
+            "Texas"
+          ],
+          "centroid": [
+            44.64193648,
+            42.55638426,
+            40.44746595,
+            42.64227174,
+            40.64967532
+          ],
+          "mean_democratic_share": 42.18754675,
+          "change_2008_2024_pp": -3.99226116,
+          "mean_silhouette": 0.5315016
+        },
+        {
+          "id": 3,
+          "color": "#288b87",
+          "size": 17,
+          "states": [
+            "Arizona",
+            "Colorado",
+            "Florida",
+            "Georgia",
+            "Iowa",
+            "Maine",
+            "Michigan",
+            "Minnesota",
+            "Nevada",
+            "New Hampshire",
+            "New Jersey",
+            "New Mexico",
+            "North Carolina",
+            "Ohio",
+            "Pennsylvania",
+            "Virginia",
+            "Wisconsin"
+          ],
+          "centroid": [
+            54.17998767,
+            52.55298956,
+            50.2386987,
+            51.81905102,
+            49.62844734
+          ],
+          "mean_democratic_share": 51.68383486,
+          "change_2008_2024_pp": -4.55154034,
+          "mean_silhouette": 0.39038964
+        },
+        {
+          "id": 4,
+          "color": "#4267b2",
+          "size": 12,
+          "states": [
+            "California",
+            "Connecticut",
+            "Delaware",
+            "Hawaii",
+            "Illinois",
+            "Maryland",
+            "Massachusetts",
+            "New York",
+            "Oregon",
+            "Rhode Island",
+            "Vermont",
+            "Washington"
+          ],
+          "centroid": [
+            63.49415252,
+            62.1621239,
+            61.217468,
+            62.61882109,
+            59.75206469
+          ],
+          "mean_democratic_share": 61.84892604,
+          "change_2008_2024_pp": -3.74208783,
+          "mean_silhouette": 0.49097218
+        }
+      ],
+      "assignments": {
+        "Alabama": {
+          "group": 1,
+          "silhouette": 0.26258824,
+          "peer_stability": 0.93384615
+        },
+        "Alaska": {
+          "group": 2,
+          "silhouette": 0.54553708,
+          "peer_stability": 0.86
+        },
+        "Arizona": {
+          "group": 3,
+          "silhouette": 0.01145534,
+          "peer_stability": 0.79347826
+        },
+        "Arkansas": {
+          "group": 1,
+          "silhouette": 0.33873545,
+          "peer_stability": 0.93384615
+        },
+        "California": {
+          "group": 4,
+          "silhouette": 0.61933269,
+          "peer_stability": 0.8495671
+        },
+        "Colorado": {
+          "group": 3,
+          "silhouette": 0.38967314,
+          "peer_stability": 0.8452381
+        },
+        "Connecticut": {
+          "group": 4,
+          "silhouette": 0.4394989,
+          "peer_stability": 0.77683983
+        },
+        "Delaware": {
+          "group": 4,
+          "silhouette": 0.42340201,
+          "peer_stability": 0.77683983
+        },
+        "Florida": {
+          "group": 3,
+          "silhouette": 0.32038394,
+          "peer_stability": 0.79347826
+        },
+        "Georgia": {
+          "group": 3,
+          "silhouette": 0.16552627,
+          "peer_stability": 0.79347826
+        },
+        "Hawaii": {
+          "group": 4,
+          "silhouette": 0.52412398,
+          "peer_stability": 0.8495671
+        },
+        "Idaho": {
+          "group": 1,
+          "silhouette": 0.51285914,
+          "peer_stability": 0.93384615
+        },
+        "Illinois": {
+          "group": 4,
+          "silhouette": 0.40597403,
+          "peer_stability": 0.77683983
+        },
+        "Indiana": {
+          "group": 2,
+          "silhouette": 0.59161167,
+          "peer_stability": 0.86
+        },
+        "Iowa": {
+          "group": 3,
+          "silhouette": 0.24112965,
+          "peer_stability": 0.79347826
+        },
+        "Kansas": {
+          "group": 2,
+          "silhouette": 0.52063127,
+          "peer_stability": 0.8
+        },
+        "Kentucky": {
+          "group": 1,
+          "silhouette": 0.2985809,
+          "peer_stability": 0.93384615
+        },
+        "Louisiana": {
+          "group": 2,
+          "silhouette": 0.45067634,
+          "peer_stability": 0.8
+        },
+        "Maine": {
+          "group": 3,
+          "silhouette": 0.32392332,
+          "peer_stability": 0.69702381
+        },
+        "Maryland": {
+          "group": 4,
+          "silhouette": 0.62281554,
+          "peer_stability": 0.8495671
+        },
+        "Massachusetts": {
+          "group": 4,
+          "silhouette": 0.62947328,
+          "peer_stability": 0.8495671
+        },
+        "Michigan": {
+          "group": 3,
+          "silhouette": 0.60678987,
+          "peer_stability": 0.8452381
+        },
+        "Minnesota": {
+          "group": 3,
+          "silhouette": 0.60973976,
+          "peer_stability": 0.8452381
+        },
+        "Mississippi": {
+          "group": 2,
+          "silhouette": 0.59373245,
+          "peer_stability": 0.86
+        },
+        "Missouri": {
+          "group": 2,
+          "silhouette": 0.59722756,
+          "peer_stability": 0.86
+        },
+        "Montana": {
+          "group": 2,
+          "silhouette": 0.58888338,
+          "peer_stability": 0.86
+        },
+        "Nebraska": {
+          "group": 2,
+          "silhouette": 0.29596651,
+          "peer_stability": 0.8
+        },
+        "Nevada": {
+          "group": 3,
+          "silhouette": 0.65578868,
+          "peer_stability": 0.8452381
+        },
+        "New Hampshire": {
+          "group": 3,
+          "silhouette": 0.64112085,
+          "peer_stability": 0.8452381
+        },
+        "New Jersey": {
+          "group": 3,
+          "silhouette": -0.12292399,
+          "peer_stability": 0.50952381
+        },
+        "New Mexico": {
+          "group": 3,
+          "silhouette": 0.33413252,
+          "peer_stability": 0.69702381
+        },
+        "New York": {
+          "group": 4,
+          "silhouette": 0.58718186,
+          "peer_stability": 0.8495671
+        },
+        "North Carolina": {
+          "group": 3,
+          "silhouette": 0.39814167,
+          "peer_stability": 0.79347826
+        },
+        "North Dakota": {
+          "group": 1,
+          "silhouette": 0.36269479,
+          "peer_stability": 0.93384615
+        },
+        "Ohio": {
+          "group": 3,
+          "silhouette": 0.2060413,
+          "peer_stability": 0.79347826
+        },
+        "Oklahoma": {
+          "group": 1,
+          "silhouette": 0.48844221,
+          "peer_stability": 0.93384615
+        },
+        "Oregon": {
+          "group": 4,
+          "silhouette": 0.11136655,
+          "peer_stability": 0.77683983
+        },
+        "Pennsylvania": {
+          "group": 3,
+          "silhouette": 0.65141642,
+          "peer_stability": 0.8452381
+        },
+        "Rhode Island": {
+          "group": 4,
+          "silhouette": 0.5501043,
+          "peer_stability": 0.8495671
+        },
+        "South Carolina": {
+          "group": 2,
+          "silhouette": 0.64496447,
+          "peer_stability": 0.86
+        },
+        "South Dakota": {
+          "group": 1,
+          "silhouette": 0.04266277,
+          "peer_stability": 0.93384615
+        },
+        "Tennessee": {
+          "group": 1,
+          "silhouette": 0.00507257,
+          "peer_stability": 0.93384615
+        },
+        "Texas": {
+          "group": 2,
+          "silhouette": 0.48578528,
+          "peer_stability": 0.86
+        },
+        "Utah": {
+          "group": 1,
+          "silhouette": 0.15277293,
+          "peer_stability": 0.75384615
+        },
+        "Vermont": {
+          "group": 4,
+          "silhouette": 0.57439337,
+          "peer_stability": 0.8495671
+        },
+        "Virginia": {
+          "group": 3,
+          "silhouette": 0.54986326,
+          "peer_stability": 0.8452381
+        },
+        "Washington": {
+          "group": 4,
+          "silhouette": 0.4039997,
+          "peer_stability": 0.77683983
+        },
+        "West Virginia": {
+          "group": 1,
+          "silhouette": 0.46010258,
+          "peer_stability": 0.93384615
+        },
+        "Wisconsin": {
+          "group": 3,
+          "silhouette": 0.65442187,
+          "peer_stability": 0.8452381
+        },
+        "Wyoming": {
+          "group": 1,
+          "silhouette": 0.42288096,
+          "peer_stability": 0.93384615
+        }
+      }
+    },
+    "5": {
+      "k": 5,
+      "silhouette": 0.38867296,
+      "mean_adjusted_rand": 0.76860976,
+      "min_adjusted_rand": 0.49747162,
+      "leave_one_election_out": [
+        {
+          "omitted_year": 2008,
+          "adjusted_rand": 0.71616181
+        },
+        {
+          "omitted_year": 2012,
+          "adjusted_rand": 0.9475159
+        },
+        {
+          "omitted_year": 2016,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2020,
+          "adjusted_rand": 0.68189945
+        },
+        {
+          "omitted_year": 2024,
+          "adjusted_rand": 0.49747162
+        }
+      ],
+      "groups": [
+        {
+          "id": 1,
+          "color": "#7851a9",
+          "size": 11,
+          "states": [
+            "Alabama",
+            "Arkansas",
+            "Idaho",
+            "Kentucky",
+            "North Dakota",
+            "Oklahoma",
+            "South Dakota",
+            "Tennessee",
+            "Utah",
+            "West Virginia",
+            "Wyoming"
+          ],
+          "centroid": [
+            39.81239221,
+            35.70402734,
+            32.58179106,
+            34.67442033,
+            32.95580036
+          ],
+          "mean_democratic_share": 35.14568626,
+          "change_2008_2024_pp": -6.85659185,
+          "mean_silhouette": 0.30430841
+        },
+        {
+          "id": 2,
+          "color": "#c57928",
+          "size": 10,
+          "states": [
+            "Alaska",
+            "Indiana",
+            "Kansas",
+            "Louisiana",
+            "Mississippi",
+            "Missouri",
+            "Montana",
+            "Nebraska",
+            "South Carolina",
+            "Texas"
+          ],
+          "centroid": [
+            44.64193648,
+            42.55638426,
+            40.44746595,
+            42.64227174,
+            40.64967532
+          ],
+          "mean_democratic_share": 42.18754675,
+          "change_2008_2024_pp": -3.99226116,
+          "mean_silhouette": 0.41622415
+        },
+        {
+          "id": 3,
+          "color": "#288b87",
+          "size": 6,
+          "states": [
+            "Arizona",
+            "Florida",
+            "Georgia",
+            "Iowa",
+            "North Carolina",
+            "Ohio"
+          ],
+          "centroid": [
+            50.30433428,
+            49.21868206,
+            47.26583172,
+            48.27287422,
+            45.91344196
+          ],
+          "mean_democratic_share": 48.19503285,
+          "change_2008_2024_pp": -4.39089231,
+          "mean_silhouette": 0.42928366
+        },
+        {
+          "id": 4,
+          "color": "#4267b2",
+          "size": 11,
+          "states": [
+            "Colorado",
+            "Maine",
+            "Michigan",
+            "Minnesota",
+            "Nevada",
+            "New Hampshire",
+            "New Jersey",
+            "New Mexico",
+            "Pennsylvania",
+            "Virginia",
+            "Wisconsin"
+          ],
+          "centroid": [
+            56.29398044,
+            54.37170274,
+            51.86026251,
+            53.75332928,
+            51.6548139
+          ],
+          "mean_democratic_share": 53.58681777,
+          "change_2008_2024_pp": -4.63916654,
+          "mean_silhouette": 0.46011054
+        },
+        {
+          "id": 5,
+          "color": "#bd4c71",
+          "size": 12,
+          "states": [
+            "California",
+            "Connecticut",
+            "Delaware",
+            "Hawaii",
+            "Illinois",
+            "Maryland",
+            "Massachusetts",
+            "New York",
+            "Oregon",
+            "Rhode Island",
+            "Vermont",
+            "Washington"
+          ],
+          "centroid": [
+            63.49415252,
+            62.1621239,
+            61.217468,
+            62.61882109,
+            59.75206469
+          ],
+          "mean_democratic_share": 61.84892604,
+          "change_2008_2024_pp": -3.74208783,
+          "mean_silhouette": 0.35725802
+        }
+      ],
+      "assignments": {
+        "Alabama": {
+          "group": 1,
+          "silhouette": 0.26258824,
+          "peer_stability": 0.87230769
+        },
+        "Alaska": {
+          "group": 2,
+          "silhouette": 0.43645974,
+          "peer_stability": 0.86
+        },
+        "Arizona": {
+          "group": 3,
+          "silhouette": 0.39316124,
+          "peer_stability": 0.62692308
+        },
+        "Arkansas": {
+          "group": 1,
+          "silhouette": 0.33873545,
+          "peer_stability": 0.87230769
+        },
+        "California": {
+          "group": 5,
+          "silhouette": 0.54925094,
+          "peer_stability": 0.69090909
+        },
+        "Colorado": {
+          "group": 4,
+          "silhouette": 0.52745541,
+          "peer_stability": 0.73333333
+        },
+        "Connecticut": {
+          "group": 5,
+          "silhouette": 0.2497235,
+          "peer_stability": 0.59350649
+        },
+        "Delaware": {
+          "group": 5,
+          "silhouette": 0.23174554,
+          "peer_stability": 0.59350649
+        },
+        "Florida": {
+          "group": 3,
+          "silhouette": 0.44820717,
+          "peer_stability": 0.62692308
+        },
+        "Georgia": {
+          "group": 3,
+          "silhouette": 0.47045412,
+          "peer_stability": 0.62692308
+        },
+        "Hawaii": {
+          "group": 5,
+          "silhouette": 0.46256724,
+          "peer_stability": 0.69090909
+        },
+        "Idaho": {
+          "group": 1,
+          "silhouette": 0.51285914,
+          "peer_stability": 0.84
+        },
+        "Illinois": {
+          "group": 5,
+          "silhouette": 0.21054967,
+          "peer_stability": 0.59350649
+        },
+        "Indiana": {
+          "group": 2,
+          "silhouette": 0.38721618,
+          "peer_stability": 0.86
+        },
+        "Iowa": {
+          "group": 3,
+          "silhouette": 0.34789882,
+          "peer_stability": 0.62692308
+        },
+        "Kansas": {
+          "group": 2,
+          "silhouette": 0.52063127,
+          "peer_stability": 0.805
+        },
+        "Kentucky": {
+          "group": 1,
+          "silhouette": 0.2985809,
+          "peer_stability": 0.87230769
+        },
+        "Louisiana": {
+          "group": 2,
+          "silhouette": 0.45067634,
+          "peer_stability": 0.805
+        },
+        "Maine": {
+          "group": 4,
+          "silhouette": 0.55846968,
+          "peer_stability": 0.6725
+        },
+        "Maryland": {
+          "group": 5,
+          "silhouette": 0.55940691,
+          "peer_stability": 0.69090909
+        },
+        "Massachusetts": {
+          "group": 5,
+          "silhouette": 0.56497492,
+          "peer_stability": 0.69090909
+        },
+        "Michigan": {
+          "group": 4,
+          "silhouette": 0.48332186,
+          "peer_stability": 0.73333333
+        },
+        "Minnesota": {
+          "group": 4,
+          "silhouette": 0.59305502,
+          "peer_stability": 0.73333333
+        },
+        "Mississippi": {
+          "group": 2,
+          "silhouette": 0.57365382,
+          "peer_stability": 0.86
+        },
+        "Missouri": {
+          "group": 2,
+          "silhouette": 0.3817813,
+          "peer_stability": 0.86
+        },
+        "Montana": {
+          "group": 2,
+          "silhouette": 0.52083562,
+          "peer_stability": 0.86
+        },
+        "Nebraska": {
+          "group": 2,
+          "silhouette": 0.29596651,
+          "peer_stability": 0.805
+        },
+        "Nevada": {
+          "group": 4,
+          "silhouette": 0.42195524,
+          "peer_stability": 0.73333333
+        },
+        "New Hampshire": {
+          "group": 4,
+          "silhouette": 0.52845645,
+          "peer_stability": 0.73333333
+        },
+        "New Jersey": {
+          "group": 4,
+          "silhouette": 0.18182275,
+          "peer_stability": 0.56
+        },
+        "New Mexico": {
+          "group": 4,
+          "silhouette": 0.58233608,
+          "peer_stability": 0.6725
+        },
+        "New York": {
+          "group": 5,
+          "silhouette": 0.49400641,
+          "peer_stability": 0.71818182
+        },
+        "North Carolina": {
+          "group": 3,
+          "silhouette": 0.43020757,
+          "peer_stability": 0.62692308
+        },
+        "North Dakota": {
+          "group": 1,
+          "silhouette": 0.36269479,
+          "peer_stability": 0.87230769
+        },
+        "Ohio": {
+          "group": 3,
+          "silhouette": 0.48577306,
+          "peer_stability": 0.62692308
+        },
+        "Oklahoma": {
+          "group": 1,
+          "silhouette": 0.48844221,
+          "peer_stability": 0.84
+        },
+        "Oregon": {
+          "group": 5,
+          "silhouette": -0.20664301,
+          "peer_stability": 0.59350649
+        },
+        "Pennsylvania": {
+          "group": 4,
+          "silhouette": 0.28864044,
+          "peer_stability": 0.73333333
+        },
+        "Rhode Island": {
+          "group": 5,
+          "silhouette": 0.43695469,
+          "peer_stability": 0.71818182
+        },
+        "South Carolina": {
+          "group": 2,
+          "silhouette": 0.42638237,
+          "peer_stability": 0.86
+        },
+        "South Dakota": {
+          "group": 1,
+          "silhouette": 0.04266277,
+          "peer_stability": 0.87230769
+        },
+        "Tennessee": {
+          "group": 1,
+          "silhouette": 0.00507257,
+          "peer_stability": 0.87230769
+        },
+        "Texas": {
+          "group": 2,
+          "silhouette": 0.16863835,
+          "peer_stability": 0.86
+        },
+        "Utah": {
+          "group": 1,
+          "silhouette": 0.15277293,
+          "peer_stability": 0.66
+        },
+        "Vermont": {
+          "group": 5,
+          "silhouette": 0.5155142,
+          "peer_stability": 0.69090909
+        },
+        "Virginia": {
+          "group": 4,
+          "silhouette": 0.49023916,
+          "peer_stability": 0.73333333
+        },
+        "Washington": {
+          "group": 5,
+          "silhouette": 0.21904523,
+          "peer_stability": 0.59350649
+        },
+        "West Virginia": {
+          "group": 1,
+          "silhouette": 0.46010258,
+          "peer_stability": 0.87230769
+        },
+        "Wisconsin": {
+          "group": 4,
+          "silhouette": 0.40546387,
+          "peer_stability": 0.73333333
+        },
+        "Wyoming": {
+          "group": 1,
+          "silhouette": 0.42288096,
+          "peer_stability": 0.84
+        }
+      }
+    },
+    "7": {
+      "k": 7,
+      "silhouette": 0.37647485,
+      "mean_adjusted_rand": 0.85963049,
+      "min_adjusted_rand": 0.73769247,
+      "leave_one_election_out": [
+        {
+          "omitted_year": 2008,
+          "adjusted_rand": 0.86032976
+        },
+        {
+          "omitted_year": 2012,
+          "adjusted_rand": 0.90310368
+        },
+        {
+          "omitted_year": 2016,
+          "adjusted_rand": 1.0
+        },
+        {
+          "omitted_year": 2020,
+          "adjusted_rand": 0.79702652
+        },
+        {
+          "omitted_year": 2024,
+          "adjusted_rand": 0.73769247
+        }
+      ],
+      "groups": [
+        {
+          "id": 1,
+          "color": "#7851a9",
+          "size": 4,
+          "states": [
+            "Idaho",
+            "Oklahoma",
+            "Utah",
+            "Wyoming"
+          ],
+          "centroid": [
+            35.06048609,
+            30.25486763,
+            31.07402706,
+            33.50219452,
+            32.29612872
+          ],
+          "mean_democratic_share": 32.4375408,
+          "change_2008_2024_pp": -2.76435737,
+          "mean_silhouette": 0.11590538
+        },
+        {
+          "id": 2,
+          "color": "#c57928",
+          "size": 7,
+          "states": [
+            "Alabama",
+            "Arkansas",
+            "Kentucky",
+            "North Dakota",
+            "South Dakota",
+            "Tennessee",
+            "West Virginia"
+          ],
+          "centroid": [
+            42.52776714,
+            38.8178329,
+            33.44337049,
+            35.34426365,
+            33.33275559
+          ],
+          "mean_democratic_share": 36.69319795,
+          "change_2008_2024_pp": -9.19501155,
+          "mean_silhouette": 0.43188096
+        },
+        {
+          "id": 3,
+          "color": "#288b87",
+          "size": 10,
+          "states": [
+            "Alaska",
+            "Indiana",
+            "Kansas",
+            "Louisiana",
+            "Mississippi",
+            "Missouri",
+            "Montana",
+            "Nebraska",
+            "South Carolina",
+            "Texas"
+          ],
+          "centroid": [
+            44.64193648,
+            42.55638426,
+            40.44746595,
+            42.64227174,
+            40.64967532
+          ],
+          "mean_democratic_share": 42.18754675,
+          "change_2008_2024_pp": -3.99226116,
+          "mean_silhouette": 0.35230549
+        },
+        {
+          "id": 4,
+          "color": "#4267b2",
+          "size": 6,
+          "states": [
+            "Arizona",
+            "Florida",
+            "Georgia",
+            "Iowa",
+            "North Carolina",
+            "Ohio"
+          ],
+          "centroid": [
+            50.30433428,
+            49.21868206,
+            47.26583172,
+            48.27287422,
+            45.91344196
+          ],
+          "mean_democratic_share": 48.19503285,
+          "change_2008_2024_pp": -4.39089231,
+          "mean_silhouette": 0.42928366
+        },
+        {
+          "id": 5,
+          "color": "#bd4c71",
+          "size": 11,
+          "states": [
+            "Colorado",
+            "Maine",
+            "Michigan",
+            "Minnesota",
+            "Nevada",
+            "New Hampshire",
+            "New Jersey",
+            "New Mexico",
+            "Pennsylvania",
+            "Virginia",
+            "Wisconsin"
+          ],
+          "centroid": [
+            56.29398044,
+            54.37170274,
+            51.86026251,
+            53.75332928,
+            51.6548139
+          ],
+          "mean_democratic_share": 53.58681777,
+          "change_2008_2024_pp": -4.63916654,
+          "mean_silhouette": 0.36185452
+        },
+        {
+          "id": 6,
+          "color": "#6b7f30",
+          "size": 7,
+          "states": [
+            "Connecticut",
+            "Delaware",
+            "Illinois",
+            "New York",
+            "Oregon",
+            "Rhode Island",
+            "Washington"
+          ],
+          "centroid": [
+            61.66161536,
+            59.85916596,
+            58.16944472,
+            59.86286199,
+            57.24985907
+          ],
+          "mean_democratic_share": 59.36058942,
+          "change_2008_2024_pp": -4.41175629,
+          "mean_silhouette": 0.48605156
+        },
+        {
+          "id": 7,
+          "color": "#8c564b",
+          "size": 5,
+          "states": [
+            "California",
+            "Hawaii",
+            "Maryland",
+            "Massachusetts",
+            "Vermont"
+          ],
+          "centroid": [
+            66.05970454,
+            65.38626501,
+            65.48470059,
+            66.47716383,
+            63.25515255
+          ],
+          "mean_democratic_share": 65.3325973,
+          "change_2008_2024_pp": -2.804552,
+          "mean_silhouette": 0.37108733
+        }
+      ],
+      "assignments": {
+        "Alabama": {
+          "group": 2,
+          "silhouette": 0.48460129,
+          "peer_stability": 0.78095238
+        },
+        "Alaska": {
+          "group": 3,
+          "silhouette": 0.43645974,
+          "peer_stability": 0.91333333
+        },
+        "Arizona": {
+          "group": 4,
+          "silhouette": 0.39316124,
+          "peer_stability": 1.0
+        },
+        "Arkansas": {
+          "group": 2,
+          "silhouette": 0.52204786,
+          "peer_stability": 0.78095238
+        },
+        "California": {
+          "group": 7,
+          "silhouette": 0.18320433,
+          "peer_stability": 0.86666667
+        },
+        "Colorado": {
+          "group": 5,
+          "silhouette": 0.38140147,
+          "peer_stability": 0.9
+        },
+        "Connecticut": {
+          "group": 6,
+          "silhouette": 0.63681078,
+          "peer_stability": 0.77460317
+        },
+        "Delaware": {
+          "group": 6,
+          "silhouette": 0.60885595,
+          "peer_stability": 0.77460317
+        },
+        "Florida": {
+          "group": 4,
+          "silhouette": 0.44820717,
+          "peer_stability": 1.0
+        },
+        "Georgia": {
+          "group": 4,
+          "silhouette": 0.47045412,
+          "peer_stability": 1.0
+        },
+        "Hawaii": {
+          "group": 7,
+          "silhouette": 0.36721909,
+          "peer_stability": 0.86666667
+        },
+        "Idaho": {
+          "group": 1,
+          "silhouette": -0.02250115,
+          "peer_stability": 0.76
+        },
+        "Illinois": {
+          "group": 6,
+          "silhouette": 0.57832092,
+          "peer_stability": 0.77460317
+        },
+        "Indiana": {
+          "group": 3,
+          "silhouette": 0.38721618,
+          "peer_stability": 0.91333333
+        },
+        "Iowa": {
+          "group": 4,
+          "silhouette": 0.34789882,
+          "peer_stability": 1.0
+        },
+        "Kansas": {
+          "group": 3,
+          "silhouette": 0.41969471,
+          "peer_stability": 0.805
+        },
+        "Kentucky": {
+          "group": 2,
+          "silhouette": 0.56966243,
+          "peer_stability": 0.78095238
+        },
+        "Louisiana": {
+          "group": 3,
+          "silhouette": 0.2938229,
+          "peer_stability": 0.805
+        },
+        "Maine": {
+          "group": 5,
+          "silhouette": 0.32303109,
+          "peer_stability": 0.78666667
+        },
+        "Maryland": {
+          "group": 7,
+          "silhouette": 0.42475911,
+          "peer_stability": 0.86666667
+        },
+        "Massachusetts": {
+          "group": 7,
+          "silhouette": 0.38440402,
+          "peer_stability": 0.86666667
+        },
+        "Michigan": {
+          "group": 5,
+          "silhouette": 0.48332186,
+          "peer_stability": 0.9
+        },
+        "Minnesota": {
+          "group": 5,
+          "silhouette": 0.59305502,
+          "peer_stability": 0.9
+        },
+        "Mississippi": {
+          "group": 3,
+          "silhouette": 0.47758651,
+          "peer_stability": 0.91333333
+        },
+        "Missouri": {
+          "group": 3,
+          "silhouette": 0.3817813,
+          "peer_stability": 0.91333333
+        },
+        "Montana": {
+          "group": 3,
+          "silhouette": 0.46936477,
+          "peer_stability": 0.91333333
+        },
+        "Nebraska": {
+          "group": 3,
+          "silhouette": 0.06210801,
+          "peer_stability": 0.805
+        },
+        "Nevada": {
+          "group": 5,
+          "silhouette": 0.42195524,
+          "peer_stability": 0.9
+        },
+        "New Hampshire": {
+          "group": 5,
+          "silhouette": 0.52845645,
+          "peer_stability": 0.9
+        },
+        "New Jersey": {
+          "group": 5,
+          "silhouette": -0.2792995,
+          "peer_stability": 0.42666667
+        },
+        "New Mexico": {
+          "group": 5,
+          "silhouette": 0.34413464,
+          "peer_stability": 0.78666667
+        },
+        "New York": {
+          "group": 6,
+          "silhouette": 0.28547631,
+          "peer_stability": 0.60779221
+        },
+        "North Carolina": {
+          "group": 4,
+          "silhouette": 0.43020757,
+          "peer_stability": 1.0
+        },
+        "North Dakota": {
+          "group": 2,
+          "silhouette": 0.48974276,
+          "peer_stability": 0.57777778
+        },
+        "Ohio": {
+          "group": 4,
+          "silhouette": 0.48577306,
+          "peer_stability": 1.0
+        },
+        "Oklahoma": {
+          "group": 1,
+          "silhouette": 0.18968824,
+          "peer_stability": 0.76
+        },
+        "Oregon": {
+          "group": 6,
+          "silhouette": 0.28895283,
+          "peer_stability": 0.77460317
+        },
+        "Pennsylvania": {
+          "group": 5,
+          "silhouette": 0.28864044,
+          "peer_stability": 0.9
+        },
+        "Rhode Island": {
+          "group": 6,
+          "silhouette": 0.47381399,
+          "peer_stability": 0.60779221
+        },
+        "South Carolina": {
+          "group": 3,
+          "silhouette": 0.42638237,
+          "peer_stability": 0.91333333
+        },
+        "South Dakota": {
+          "group": 2,
+          "silhouette": 0.40241855,
+          "peer_stability": 0.78095238
+        },
+        "Tennessee": {
+          "group": 2,
+          "silhouette": 0.37500691,
+          "peer_stability": 0.78095238
+        },
+        "Texas": {
+          "group": 3,
+          "silhouette": 0.16863835,
+          "peer_stability": 0.91333333
+        },
+        "Utah": {
+          "group": 1,
+          "silhouette": 0.0674151,
+          "peer_stability": 0.6
+        },
+        "Vermont": {
+          "group": 7,
+          "silhouette": 0.49585009,
+          "peer_stability": 0.86666667
+        },
+        "Virginia": {
+          "group": 5,
+          "silhouette": 0.49023916,
+          "peer_stability": 0.9
+        },
+        "Washington": {
+          "group": 6,
+          "silhouette": 0.53013012,
+          "peer_stability": 0.77460317
+        },
+        "West Virginia": {
+          "group": 2,
+          "silhouette": 0.17968695,
+          "peer_stability": 0.57777778
+        },
+        "Wisconsin": {
+          "group": 5,
+          "silhouette": 0.40546387,
+          "peer_stability": 0.9
+        },
+        "Wyoming": {
+          "group": 1,
+          "silhouette": 0.22901932,
+          "peer_stability": 0.76
+        }
+      }
+    }
+  },
+  "ward_leaf_order": [
+    "Alabama",
+    "Alaska",
+    "Arizona",
+    "Arkansas",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "Delaware",
+    "Florida",
+    "Georgia",
+    "Hawaii",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Iowa",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Maine",
+    "Maryland",
+    "Massachusetts",
+    "Michigan",
+    "Minnesota",
+    "Mississippi",
+    "Missouri",
+    "Montana",
+    "Nebraska",
+    "Nevada",
+    "New Hampshire",
+    "New Jersey",
+    "New Mexico",
+    "New York",
+    "North Carolina",
+    "North Dakota",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Pennsylvania",
+    "Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Vermont",
+    "Virginia",
+    "Washington",
+    "West Virginia",
+    "Wisconsin",
+    "Wyoming"
+  ],
+  "ward_linkage": [
+    [
+      13.0,
+      24.0,
+      0.91936839,
+      2.0
+    ],
+    [
+      22.0,
+      28.0,
+      1.53327534,
+      2.0
+    ],
+    [
+      0.0,
+      3.0,
+      1.7750182,
+      2.0
+    ],
+    [
+      6.0,
+      7.0,
+      1.95859903,
+      2.0
+    ],
+    [
+      37.0,
+      48.0,
+      2.05072483,
+      2.0
+    ],
+    [
+      27.0,
+      54.0,
+      2.43203836,
+      3.0
+    ],
+    [
+      19.0,
+      20.0,
+      2.46565179,
+      2.0
+    ],
+    [
+      2.0,
+      9.0,
+      2.59304899,
+      2.0
+    ],
+    [
+      16.0,
+      41.0,
+      2.83879658,
+      2.0
+    ],
+    [
+      14.0,
+      34.0,
+      3.19278197,
+      2.0
+    ],
+    [
+      11.0,
+      35.0,
+      3.28258987,
+      2.0
+    ],
+    [
+      25.0,
+      50.0,
+      3.30858346,
+      3.0
+    ],
+    [
+      21.0,
+      55.0,
+      3.40893503,
+      4.0
+    ],
+    [
+      5.0,
+      45.0,
+      3.60250602,
+      2.0
+    ],
+    [
+      31.0,
+      38.0,
+      3.77687165,
+      2.0
+    ],
+    [
+      36.0,
+      46.0,
+      3.9529512,
+      2.0
+    ],
+    [
+      12.0,
+      53.0,
+      3.9812117,
+      3.0
+    ],
+    [
+      15.0,
+      26.0,
+      4.010834,
+      2.0
+    ],
+    [
+      52.0,
+      58.0,
+      4.14014299,
+      4.0
+    ],
+    [
+      18.0,
+      30.0,
+      4.26666368,
+      2.0
+    ],
+    [
+      17.0,
+      23.0,
+      4.36909634,
+      2.0
+    ],
+    [
+      4.0,
+      56.0,
+      5.28073779,
+      3.0
+    ],
+    [
+      39.0,
+      42.0,
+      5.5552406,
+      2.0
+    ],
+    [
+      8.0,
+      32.0,
+      5.58847542,
+      2.0
+    ],
+    [
+      33.0,
+      47.0,
+      6.08637209,
+      2.0
+    ],
+    [
+      51.0,
+      63.0,
+      6.21059634,
+      4.0
+    ],
+    [
+      29.0,
+      69.0,
+      6.55320643,
+      3.0
+    ],
+    [
+      65.0,
+      66.0,
+      6.94115972,
+      5.0
+    ],
+    [
+      40.0,
+      68.0,
+      7.08240108,
+      5.0
+    ],
+    [
+      67.0,
+      70.0,
+      7.29536055,
+      4.0
+    ],
+    [
+      1.0,
+      72.0,
+      7.46138336,
+      3.0
+    ],
+    [
+      10.0,
+      44.0,
+      8.10389562,
+      2.0
+    ],
+    [
+      59.0,
+      73.0,
+      8.80495812,
+      4.0
+    ],
+    [
+      75.0,
+      76.0,
+      12.21383346,
+      7.0
+    ],
+    [
+      79.0,
+      80.0,
+      12.71649635,
+      7.0
+    ],
+    [
+      64.0,
+      77.0,
+      12.72720444,
+      7.0
+    ],
+    [
+      49.0,
+      60.0,
+      13.6139849,
+      3.0
+    ],
+    [
+      57.0,
+      82.0,
+      14.4472652,
+      6.0
+    ],
+    [
+      62.0,
+      83.0,
+      15.31000485,
+      11.0
+    ],
+    [
+      61.0,
+      84.0,
+      16.24076582,
+      10.0
+    ],
+    [
+      74.0,
+      78.0,
+      16.71397662,
+      7.0
+    ],
+    [
+      71.0,
+      81.0,
+      17.5783987,
+      5.0
+    ],
+    [
+      43.0,
+      86.0,
+      19.5977223,
+      4.0
+    ],
+    [
+      90.0,
+      92.0,
+      26.61734007,
+      11.0
+    ],
+    [
+      85.0,
+      91.0,
+      32.69203055,
+      12.0
+    ],
+    [
+      87.0,
+      88.0,
+      33.73154069,
+      17.0
+    ],
+    [
+      89.0,
+      93.0,
+      51.66868377,
+      21.0
+    ],
+    [
+      94.0,
+      95.0,
+      85.42954912,
+      29.0
+    ],
+    [
+      96.0,
+      97.0,
+      192.15818227,
+      50.0
+    ]
+  ]
+}

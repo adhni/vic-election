@@ -1,0 +1,709 @@
+{
+  "purpose": "Diagnostic only; not a vote allocation or verified exact crosswalk.",
+  "projection": "EPSG:32618 (metres)",
+  "numerical_overlap_floor_m2": 0.01,
+  "source_sha256": {
+    "data/nyc_2017_mayor_ed_boundaries.geojson": "f21a6bc45b6a6333d902c298969b2bd0a8ebeb5b4e18be34df3fd9638407c541",
+    "data/nyc_2021_mayor_ed_boundaries.geojson": "07b176e072ca71b29176acbfad60a786be92abd77a4809d8a356ef4aed251f2b",
+    "data/nyc_2025_mayor_ed_boundaries.geojson": "ba04ff081f5f54b1c1b93d1773d8370491c707ab4d42cd93be37cd399eda3d07",
+    "data/nyc_precinct_dots.json": "b1d0524781a177401da11de9afd37d2033d7032f09c846d5899934b7e8b475d1"
+  },
+  "mapped_areas": {
+    "2017": 5720,
+    "2021": 5697,
+    "2025": 4102
+  },
+  "pairwise": {
+    "2017-2021": {
+      "intersections_over_0_01_m2": 15742,
+      "unmatched_source_areas": [
+        "Queens \u00b7 AD 23 ED 074",
+        "Queens \u00b7 AD 23 ED 075",
+        "Queens \u00b7 AD 23 ED 079",
+        "Queens \u00b7 AD 27 ED 069",
+        "Queens \u00b7 AD 27 ED 070",
+        "Queens \u00b7 AD 40 ED 055",
+        "Brooklyn \u00b7 AD 41 ED 099",
+        "Brooklyn \u00b7 AD 47 ED 073",
+        "Brooklyn \u00b7 AD 49 ED 071",
+        "Brooklyn \u00b7 AD 51 ED 087",
+        "Brooklyn \u00b7 AD 52 ED 122",
+        "Brooklyn \u00b7 AD 52 ED 123",
+        "Brooklyn \u00b7 AD 59 ED 087",
+        "Brooklyn \u00b7 AD 60 ED 025",
+        "Brooklyn \u00b7 AD 64 ED 094",
+        "Brooklyn \u00b7 AD 64 ED 096",
+        "Brooklyn \u00b7 AD 64 ED 097",
+        "Bronx \u00b7 AD 81 ED 016",
+        "Bronx \u00b7 AD 82 ED 026"
+      ],
+      "same_name_count": 5671,
+      "same_name_overlap_over_99pct": 5549,
+      "same_name_median_intersection_over_union": 1.0
+    },
+    "2017-2025": {
+      "intersections_over_0_01_m2": 19026,
+      "unmatched_source_areas": [
+        "Queens \u00b7 AD 23 ED 074",
+        "Queens \u00b7 AD 23 ED 075"
+      ],
+      "same_name_count": 4053,
+      "same_name_overlap_over_99pct": 1,
+      "same_name_median_intersection_over_union": 0.0
+    },
+    "2021-2025": {
+      "intersections_over_0_01_m2": 18893,
+      "unmatched_source_areas": [],
+      "same_name_count": 4043,
+      "same_name_overlap_over_99pct": 1,
+      "same_name_median_intersection_over_union": 0.0
+    }
+  },
+  "connected_components": [
+    {
+      "minimum_overlap_fraction_of_smaller_polygon": 0,
+      "components_total": 42,
+      "components_with_all_three_years": 31,
+      "largest_components": [
+        {
+          "areas_by_year": {
+            "2017": 4325,
+            "2021": 4303,
+            "2025": 3156
+          },
+          "votes_by_year": {
+            "2017": 876402,
+            "2021": 868209,
+            "2025": 1764664
+          },
+          "boroughs": [
+            "Brooklyn",
+            "Manhattan",
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 961,
+            "2021": 963,
+            "2025": 619
+          },
+          "votes_by_year": {
+            "2017": 146902,
+            "2021": 125673,
+            "2025": 235509
+          },
+          "boroughs": [
+            "Bronx"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 321,
+            "2021": 322,
+            "2025": 230
+          },
+          "votes_by_year": {
+            "2017": 99580,
+            "2021": 105334,
+            "2025": 152645
+          },
+          "boroughs": [
+            "Staten Island"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 47,
+            "2021": 46,
+            "2025": 37
+          },
+          "votes_by_year": {
+            "2017": 12494,
+            "2021": 13202,
+            "2025": 18618
+          },
+          "boroughs": [
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 27,
+            "2021": 27,
+            "2025": 22
+          },
+          "votes_by_year": {
+            "2017": 5468,
+            "2021": 5603,
+            "2025": 10058
+          },
+          "boroughs": [
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 5,
+            "2021": 5,
+            "2025": 3
+          },
+          "votes_by_year": {
+            "2017": 924,
+            "2021": 795,
+            "2025": 1290
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 3,
+            "2021": 3,
+            "2025": 2
+          },
+          "votes_by_year": {
+            "2017": 683,
+            "2021": 615,
+            "2025": 977
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 2,
+            "2021": 2,
+            "2025": 1
+          },
+          "votes_by_year": {
+            "2017": 669,
+            "2021": 565,
+            "2025": 739
+          },
+          "boroughs": [
+            "Bronx"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 2,
+            "2021": 2,
+            "2025": 1
+          },
+          "votes_by_year": {
+            "2017": 491,
+            "2021": 509,
+            "2025": 729
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 1,
+            "2021": 1,
+            "2025": 1
+          },
+          "votes_by_year": {
+            "2017": 335,
+            "2021": 368,
+            "2025": 753
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        }
+      ],
+      "ignored_intersections": 0,
+      "ignored_overlap_area_m2": 0
+    },
+    {
+      "minimum_overlap_fraction_of_smaller_polygon": 0.001,
+      "components_total": 309,
+      "components_with_all_three_years": 296,
+      "largest_components": [
+        {
+          "areas_by_year": {
+            "2017": 3020,
+            "2021": 2998,
+            "2025": 2233
+          },
+          "votes_by_year": {
+            "2017": 604215,
+            "2021": 597745,
+            "2025": 1213140
+          },
+          "boroughs": [
+            "Brooklyn",
+            "Manhattan",
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 931,
+            "2021": 933,
+            "2025": 596
+          },
+          "votes_by_year": {
+            "2017": 142587,
+            "2021": 121884,
+            "2025": 228130
+          },
+          "boroughs": [
+            "Bronx"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 294,
+            "2021": 295,
+            "2025": 210
+          },
+          "votes_by_year": {
+            "2017": 91943,
+            "2021": 97841,
+            "2025": 142062
+          },
+          "boroughs": [
+            "Staten Island"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 222,
+            "2021": 222,
+            "2025": 153
+          },
+          "votes_by_year": {
+            "2017": 45740,
+            "2021": 45304,
+            "2025": 101186
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 152,
+            "2021": 153,
+            "2025": 101
+          },
+          "votes_by_year": {
+            "2017": 29216,
+            "2021": 26829,
+            "2025": 50768
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 101,
+            "2021": 101,
+            "2025": 65
+          },
+          "votes_by_year": {
+            "2017": 19912,
+            "2021": 18425,
+            "2025": 34777
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 67,
+            "2021": 66,
+            "2025": 46
+          },
+          "votes_by_year": {
+            "2017": 12927,
+            "2021": 14602,
+            "2025": 33263
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 39,
+            "2021": 38,
+            "2025": 29
+          },
+          "votes_by_year": {
+            "2017": 10971,
+            "2021": 11639,
+            "2025": 16478
+          },
+          "boroughs": [
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 36,
+            "2021": 36,
+            "2025": 26
+          },
+          "votes_by_year": {
+            "2017": 6133,
+            "2021": 7293,
+            "2025": 17265
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 19,
+            "2021": 19,
+            "2025": 13
+          },
+          "votes_by_year": {
+            "2017": 4803,
+            "2021": 5470,
+            "2025": 11894
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        }
+      ],
+      "ignored_intersections": 22078,
+      "ignored_overlap_area_m2": 495257.7482806452
+    },
+    {
+      "minimum_overlap_fraction_of_smaller_polygon": 0.01,
+      "components_total": 692,
+      "components_with_all_three_years": 677,
+      "largest_components": [
+        {
+          "areas_by_year": {
+            "2017": 507,
+            "2021": 501,
+            "2025": 382
+          },
+          "votes_by_year": {
+            "2017": 107395,
+            "2021": 105216,
+            "2025": 183555
+          },
+          "boroughs": [
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 278,
+            "2021": 279,
+            "2025": 196
+          },
+          "votes_by_year": {
+            "2017": 87079,
+            "2021": 93089,
+            "2025": 134422
+          },
+          "boroughs": [
+            "Staten Island"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 534,
+            "2021": 537,
+            "2025": 331
+          },
+          "votes_by_year": {
+            "2017": 90905,
+            "2021": 77491,
+            "2025": 143276
+          },
+          "boroughs": [
+            "Bronx"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 358,
+            "2021": 351,
+            "2025": 266
+          },
+          "votes_by_year": {
+            "2017": 68893,
+            "2021": 68948,
+            "2025": 156604
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 339,
+            "2021": 333,
+            "2025": 273
+          },
+          "votes_by_year": {
+            "2017": 60548,
+            "2021": 62069,
+            "2025": 141531
+          },
+          "boroughs": [
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 219,
+            "2021": 221,
+            "2025": 148
+          },
+          "votes_by_year": {
+            "2017": 28817,
+            "2021": 24915,
+            "2025": 47731
+          },
+          "boroughs": [
+            "Bronx"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 110,
+            "2021": 110,
+            "2025": 80
+          },
+          "votes_by_year": {
+            "2017": 22256,
+            "2021": 24047,
+            "2025": 45661
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 94,
+            "2021": 94,
+            "2025": 60
+          },
+          "votes_by_year": {
+            "2017": 18670,
+            "2021": 17297,
+            "2025": 32628
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 60,
+            "2021": 59,
+            "2025": 41
+          },
+          "votes_by_year": {
+            "2017": 15253,
+            "2021": 14652,
+            "2025": 29348
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 60,
+            "2021": 60,
+            "2025": 42
+          },
+          "votes_by_year": {
+            "2017": 11553,
+            "2021": 12125,
+            "2025": 31119
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        }
+      ],
+      "ignored_intersections": 26266,
+      "ignored_overlap_area_m2": 1433800.566281953
+    },
+    {
+      "minimum_overlap_fraction_of_smaller_polygon": 0.05,
+      "components_total": 834,
+      "components_with_all_three_years": 815,
+      "largest_components": [
+        {
+          "areas_by_year": {
+            "2017": 390,
+            "2021": 392,
+            "2025": 243
+          },
+          "votes_by_year": {
+            "2017": 64628,
+            "2021": 54202,
+            "2025": 99134
+          },
+          "boroughs": [
+            "Bronx"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 167,
+            "2021": 168,
+            "2025": 116
+          },
+          "votes_by_year": {
+            "2017": 54379,
+            "2021": 59560,
+            "2025": 85970
+          },
+          "boroughs": [
+            "Staten Island"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 246,
+            "2021": 242,
+            "2025": 191
+          },
+          "votes_by_year": {
+            "2017": 44769,
+            "2021": 45961,
+            "2025": 100616
+          },
+          "boroughs": [
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 249,
+            "2021": 247,
+            "2025": 201
+          },
+          "votes_by_year": {
+            "2017": 54282,
+            "2021": 49565,
+            "2025": 86144
+          },
+          "boroughs": [
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 145,
+            "2021": 143,
+            "2025": 105
+          },
+          "votes_by_year": {
+            "2017": 27607,
+            "2021": 27093,
+            "2025": 72437
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 141,
+            "2021": 139,
+            "2025": 101
+          },
+          "votes_by_year": {
+            "2017": 23378,
+            "2021": 25366,
+            "2025": 47066
+          },
+          "boroughs": [
+            "Queens"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 109,
+            "2021": 109,
+            "2025": 79
+          },
+          "votes_by_year": {
+            "2017": 22032,
+            "2021": 23768,
+            "2025": 45197
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 122,
+            "2021": 118,
+            "2025": 88
+          },
+          "votes_by_year": {
+            "2017": 19762,
+            "2021": 19581,
+            "2025": 37471
+          },
+          "boroughs": [
+            "Brooklyn"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 93,
+            "2021": 93,
+            "2025": 59
+          },
+          "votes_by_year": {
+            "2017": 18434,
+            "2021": 17074,
+            "2025": 32136
+          },
+          "boroughs": [
+            "Manhattan"
+          ]
+        },
+        {
+          "areas_by_year": {
+            "2017": 113,
+            "2021": 114,
+            "2025": 78
+          },
+          "votes_by_year": {
+            "2017": 15900,
+            "2021": 14038,
+            "2025": 26014
+          },
+          "boroughs": [
+            "Bronx"
+          ]
+        }
+      ],
+      "ignored_intersections": 27209,
+      "ignored_overlap_area_m2": 5538757.809605641
+    }
+  ],
+  "known_source_limits": [
+    "Historical extracts have unavailable combined-component polygons, so some reporting geometries do not cover the entire vote reporting area.",
+    "Historical boundaries are archive snapshots; the 2017 release identifier is unrecorded.",
+    "Displayed maps are simplified and different releases have differing shorelines. Geometric intersection alone cannot establish an exact electoral crosswalk."
+  ]
+}

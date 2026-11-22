@@ -14,3 +14,4 @@ pyogrio>=0.10.0
 pypdf>=6.0.0
 py7zr==0.20.8
 svg.path==7.0
+scikit-learn==1.6.1

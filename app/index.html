@@ -653,6 +653,10 @@
       white-space: nowrap;
     }
 
+    .margin-swatches { display: inline-flex; gap: 2px; }
+    .margin-swatches i { display: block; width: 10px; height: 10px; border-radius: 2px; }
+    .margin-scale-note { flex-basis: 100%; font-size: 12px; color: var(--muted); }
+
     .legend-more { display: inline-flex; align-items: flex-start; }
     .legend-more summary {
       cursor: pointer;
@@ -1541,6 +1545,7 @@
         </div>
       </section>
       <section id="stateSummary" class="state-summary" aria-label="Election summary"></section>
+      <p id="stateClusteringEntry" class="hidden"><a href="state-clusters.html">Compare states</a> · <a href="county-clusters.html">Compare counties</a> · <a href="county-dots.html">County dots</a> · voting histories, 2008–2024</p>
 
       <div id="houseViewControls" class="house-view-controls hidden" role="group" aria-label="Election analysis view">
         <button id="houseResultsView" type="button" aria-pressed="true">Results</button>
@@ -2646,6 +2651,337 @@
           ["Jokowi–Kalla", 53.15],
           ["Prabowo–Hatta", 46.85]
         ]
+      },
+      {
+        "key": "nyc-mayor-2025",
+        "label": "New York City Mayor 2025",
+        "type": "local",
+        "jurisdiction": "United States",
+        "year": 2025,
+        "source": "NYC Board of Elections / NYC Planning (25C)",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Citywide mayoral general election · plurality",
+        "methodNote": "New York City elects one mayor citywide. These maps show local candidate leads, not separate elected mayors. This general election used plurality, not ranked-choice voting. Votes on multiple ballot lines for the same candidate are combined; Write-ins groups all write-in votes. Jointly reported election districts are mapped together. Boundaries use NYC Planning’s August 2025 release. <a href=\"../docs/nyc_mayor_2025.md\">Sources and methods</a>.",
+        "candidateVoteLabel": "Mayoral candidate vote",
+        "candidateFilterLabel": "Any locally leading candidate",
+        "localVoteLabel": "mayoral vote",
+        "mapModeLabel": "Local lead margin",
+        "candidateMarginScale": true,
+        "localWinsLabel": "local leads",
+        "validVotesLabel": "Recorded mayoral votes",
+        "resultScopeLabel": "citywide",
+        "showBallotTotals": true,
+        "noVotesLabel": "No mayoral votes",
+        "localLeaderLabel": "Local vote leader",
+        "candidateColors": {
+          "Zohran Mamdani": "#2367b0",
+          "Andrew Cuomo": "#d78623",
+          "Curtis Sliwa": "#bf3e48",
+          "Eric Adams": "#74549c",
+          "Irene Estrada": "#54713a",
+          "Jim Walden": "#337e78",
+          "Joseph Hernandez": "#93633d",
+          "Write-ins": "#7a7f87",
+          "Tied local leaders": "#8b9098",
+          "No mayoral votes": "#8b9098"
+        },
+        "csv": "data/nyc_2025_mayor_ed_fpp.csv",
+        "boundaries": "data/nyc_2025_mayor_ed_boundaries.geojson",
+        "defaultGeography": "ed",
+        "geographyLabels": {
+          "borough": "Boroughs",
+          "assembly": "Assembly districts",
+          "ed": "Election districts (precincts)"
+        },
+        "geographies": {
+          "borough": {
+            "label": "Borough",
+            "districtLabel": "Borough",
+            "unitSingular": "borough",
+            "unitPlural": "boroughs",
+            "areaLabel": "City",
+            "csv": "data/nyc_2025_mayor_borough_fpp.csv",
+            "boundaries": "data/nyc_2025_mayor_borough_boundaries.geojson"
+          },
+          "assembly": {
+            "label": "Assembly district",
+            "districtLabel": "Assembly district",
+            "unitSingular": "Assembly district",
+            "unitPlural": "Assembly districts",
+            "areaLabel": "Borough",
+            "csv": "data/nyc_2025_mayor_assembly_fpp.csv",
+            "boundaries": "data/nyc_2025_mayor_assembly_boundaries.geojson"
+          },
+          "ed": {
+            "label": "Election district",
+            "districtLabel": "Election district",
+            "unitSingular": "election district",
+            "unitPlural": "reporting areas",
+            "areaLabel": "Borough",
+            "csv": "data/nyc_2025_mayor_ed_fpp.csv",
+            "boundaries": "data/nyc_2025_mayor_ed_boundaries.geojson"
+          }
+        },
+        "nationalResults": [
+          [
+            "Zohran Mamdani",
+            50.7785
+          ],
+          [
+            "Andrew Cuomo",
+            41.3186
+          ],
+          [
+            "Curtis Sliwa",
+            7.0071
+          ],
+          [
+            "Eric Adams",
+            0.3143
+          ],
+          [
+            "Irene Estrada",
+            0.1302
+          ],
+          [
+            "Jim Walden",
+            0.1057
+          ],
+          [
+            "Joseph Hernandez",
+            0.0628
+          ],
+          [
+            "Write-ins",
+            0.2828
+          ]
+        ],
+        "dataNotice": "Certified general election · 4 November 2025. Precincts are NYC election districts (EDs), not police precincts. Some EDs report jointly; turnout is unavailable without an election-specific registration denominator."
+      },
+      {
+        "key": "nyc-mayor-2021",
+        "label": "New York City Mayor 2021",
+        "type": "local",
+        "jurisdiction": "United States",
+        "year": 2021,
+        "source": "NYC Board of Elections / archived NYC Planning geometry",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Citywide mayoral general election · plurality",
+        "methodNote": "New York City elects one mayor citywide by plurality. These maps show local candidate leads. Votes on multiple ballot lines are combined; Write-ins groups write-in votes. Joint reporting is labelled. Historical geometry is used; some combined component polygons are unavailable. <a href=\"../docs/nyc_mayor_history.md\">Historical sources and coverage</a>.",
+        "candidateVoteLabel": "Mayoral candidate vote",
+        "candidateFilterLabel": "Any locally leading candidate",
+        "localVoteLabel": "mayoral vote",
+        "mapModeLabel": "Local lead margin",
+        "candidateMarginScale": true,
+        "localWinsLabel": "local leads",
+        "validVotesLabel": "Recorded mayoral votes",
+        "resultScopeLabel": "citywide",
+        "showBallotTotals": true,
+        "noVotesLabel": "No mayoral votes",
+        "localLeaderLabel": "Local vote leader",
+        "candidateColors": {
+          "Eric Adams": "#74549c",
+          "Curtis Sliwa": "#bf3e48",
+          "Catherine Rojas": "#b34e82",
+          "William Pepitone": "#54713a",
+          "Quanda Francis": "#247f89",
+          "Stacey Prussman": "#b28b24",
+          "Raja Michael Flores": "#93633d",
+          "Fernando Mateo": "#426177",
+          "Skiboky Stora": "#7e7491",
+          "Write-ins": "#7a7f87",
+          "Tied local leaders": "#8b9098",
+          "No mayoral votes": "#8b9098"
+        },
+        "csv": "data/nyc_2021_mayor_ed_fpp.csv",
+        "boundaries": "data/nyc_2021_mayor_ed_boundaries.geojson",
+        "defaultGeography": "ed",
+        "geographyLabels": {
+          "borough": "Boroughs",
+          "assembly": "Assembly districts",
+          "ed": "Election districts (precincts)"
+        },
+        "geographies": {
+          "borough": {
+            "label": "Borough",
+            "districtLabel": "Borough",
+            "unitSingular": "borough",
+            "unitPlural": "boroughs",
+            "areaLabel": "City",
+            "csv": "data/nyc_2021_mayor_borough_fpp.csv",
+            "boundaries": "data/nyc_2021_mayor_borough_boundaries.geojson"
+          },
+          "assembly": {
+            "label": "Assembly district",
+            "districtLabel": "Assembly district",
+            "unitSingular": "Assembly district",
+            "unitPlural": "Assembly districts",
+            "areaLabel": "Borough",
+            "csv": "data/nyc_2021_mayor_assembly_fpp.csv",
+            "boundaries": "data/nyc_2021_mayor_assembly_boundaries.geojson"
+          },
+          "ed": {
+            "label": "Election district",
+            "districtLabel": "Election district",
+            "unitSingular": "election district",
+            "unitPlural": "reporting areas",
+            "areaLabel": "Borough",
+            "csv": "data/nyc_2021_mayor_ed_fpp.csv",
+            "boundaries": "data/nyc_2021_mayor_ed_boundaries.geojson"
+          }
+        },
+        "nationalResults": [
+          [
+            "Eric Adams",
+            66.9892
+          ],
+          [
+            "Curtis Sliwa",
+            27.7612
+          ],
+          [
+            "Catherine Rojas",
+            2.4867
+          ],
+          [
+            "William Pepitone",
+            1.1175
+          ],
+          [
+            "Quanda Francis",
+            0.337
+          ],
+          [
+            "Stacey Prussman",
+            0.2834
+          ],
+          [
+            "Raja Michael Flores",
+            0.2121
+          ],
+          [
+            "Fernando Mateo",
+            0.1662
+          ],
+          [
+            "Skiboky Stora",
+            0.0235
+          ],
+          [
+            "Write-ins",
+            0.6232
+          ]
+        ],
+        "dataNotice": "Certified general election · 2 November 2021. Historical precinct map; jointly reported votes are labelled. Some component polygons are unavailable."
+      },
+      {
+        "key": "nyc-mayor-2017",
+        "label": "New York City Mayor 2017",
+        "type": "local",
+        "jurisdiction": "United States",
+        "year": 2017,
+        "source": "NYC Board of Elections / archived NYC Planning geometry",
+        "system": "fpp",
+        "contestType": "presidential",
+        "systemLabel": "Citywide mayoral general election · plurality",
+        "methodNote": "New York City elects one mayor citywide by plurality. These maps show local candidate leads. Votes on multiple ballot lines are combined; Write-ins groups write-in votes. Joint reporting is labelled. Historical geometry is used; some combined component polygons are unavailable. The original boundary release is not recorded by the archive. <a href=\"../docs/nyc_mayor_history.md\">Historical sources and coverage</a>.",
+        "candidateVoteLabel": "Mayoral candidate vote",
+        "candidateFilterLabel": "Any locally leading candidate",
+        "localVoteLabel": "mayoral vote",
+        "mapModeLabel": "Local lead margin",
+        "candidateMarginScale": true,
+        "localWinsLabel": "local leads",
+        "validVotesLabel": "Recorded mayoral votes",
+        "resultScopeLabel": "citywide",
+        "showBallotTotals": true,
+        "noVotesLabel": "No mayoral votes",
+        "localLeaderLabel": "Local vote leader",
+        "candidateColors": {
+          "Bill de Blasio": "#2367b0",
+          "Nicole Malliotakis": "#bf3e48",
+          "Sal Albanese": "#9859a0",
+          "Akeem Browder": "#398154",
+          "Michael Tolkin": "#247f89",
+          "Bo Dietl": "#d78623",
+          "Aaron Commey": "#b28b24",
+          "Write-ins": "#7a7f87",
+          "Tied local leaders": "#8b9098",
+          "No mayoral votes": "#8b9098"
+        },
+        "csv": "data/nyc_2017_mayor_ed_fpp.csv",
+        "boundaries": "data/nyc_2017_mayor_ed_boundaries.geojson",
+        "defaultGeography": "ed",
+        "geographyLabels": {
+          "borough": "Boroughs",
+          "assembly": "Assembly districts",
+          "ed": "Election districts (precincts)"
+        },
+        "geographies": {
+          "borough": {
+            "label": "Borough",
+            "districtLabel": "Borough",
+            "unitSingular": "borough",
+            "unitPlural": "boroughs",
+            "areaLabel": "City",
+            "csv": "data/nyc_2017_mayor_borough_fpp.csv",
+            "boundaries": "data/nyc_2017_mayor_borough_boundaries.geojson"
+          },
+          "assembly": {
+            "label": "Assembly district",
+            "districtLabel": "Assembly district",
+            "unitSingular": "Assembly district",
+            "unitPlural": "Assembly districts",
+            "areaLabel": "Borough",
+            "csv": "data/nyc_2017_mayor_assembly_fpp.csv",
+            "boundaries": "data/nyc_2017_mayor_assembly_boundaries.geojson"
+          },
+          "ed": {
+            "label": "Election district",
+            "districtLabel": "Election district",
+            "unitSingular": "election district",
+            "unitPlural": "reporting areas",
+            "areaLabel": "Borough",
+            "csv": "data/nyc_2017_mayor_ed_fpp.csv",
+            "boundaries": "data/nyc_2017_mayor_ed_boundaries.geojson"
+          }
+        },
+        "nationalResults": [
+          [
+            "Bill de Blasio",
+            66.1735
+          ],
+          [
+            "Nicole Malliotakis",
+            27.5927
+          ],
+          [
+            "Sal Albanese",
+            2.1315
+          ],
+          [
+            "Akeem Browder",
+            1.4396
+          ],
+          [
+            "Michael Tolkin",
+            0.9845
+          ],
+          [
+            "Bo Dietl",
+            0.9718
+          ],
+          [
+            "Aaron Commey",
+            0.2411
+          ],
+          [
+            "Write-ins",
+            0.4651
+          ]
+        ],
+        "dataNotice": "Certified general election · 7 November 2017. Historical precinct map; jointly reported votes are labelled. Some component polygons are unavailable. The archive does not record the original boundary release."
       },
       {
         "key": "us-governor-2026",
@@ -5223,6 +5559,8 @@
 
     function partyColor(raw) {
       const p = partyLabel(raw).toLowerCase();
+      const candidateColor = activeElection().candidateColors?.[partyLabel(raw)];
+      if (candidateColor) return candidateColor;
       if (activeElection().contestType === "referendum") {
         if (activeElection().key === "uk-eu-referendum-2016") {
           if (p === "leave") return "#2f61a8";
@@ -6267,6 +6605,8 @@
     }
 
     function winningParty(d) {
+      if (d.contest_status === "tied-local") return "Tied local leaders";
+      if (d.contest_status === "no-votes") return activeElection().noVotesLabel || "No recorded votes";
       if (d.contest_status === "provisional-local-unresolved") return "Local leader unavailable";
       if (d.contest_status === "provisional-uncalled") return "Not called";
       if (d.contest_status === "void") return "No certified winner";
@@ -6608,7 +6948,12 @@
       return (["us-house-2016", "us-house-2018", "us-house-2020", "us-house-2022", "us-house-2024", "us-house-2026"].includes(activeElectionYear) || ((activeElectionYear.startsWith("us-president-") || activeElectionYear.startsWith("us-senate-") || ["us-governor-2018", "us-governor-2020", "us-governor-2022", "us-governor-2024", "us-governor-2026"].includes(activeElectionYear)) && ["state", "county"].includes(activeGeography))) && datasetMeta.kind === "official";
     }
 
+    function candidateMarginColor(candidate, strength) {
+      return tintHex(partyColor(candidate), [.88, .68, .46, .23, 0][strength]);
+    }
+
     function mapVisual(d, context = {}) {
+      if (["tied-local", "no-votes"].includes(d.contest_status)) return { color: "#8b9098", fill: hexToRgba("#8b9098", .45), label: winningParty(d) };
       if (d.contest_status === "provisional-local-unresolved" && activeMapMode !== "house-swing") return { color: "#8b9098", fill: hexToRgba("#8b9098", .65), label: "Local leader unavailable" };
       if (activeMapMode === "house-swing" && houseSwingSupported()) return houseDemographics.swingVisual(d.district);
       if (geographyMapModes.has(activeMapMode) && geographyAnalysisSupported()) {
@@ -6647,6 +6992,11 @@
       }
       const winnerParty = winningParty(d);
       const marginPct = d.formal_votes ? finalMargin(d) / d.formal_votes : 1;
+      if (activeElection().candidateMarginScale && activeMapMode === "party") {
+        const strength = marginPct <= .02 ? 0 : marginPct <= .05 ? 1 : marginPct <= .10 ? 2 : marginPct <= .20 ? 3 : 4;
+        const color = candidateMarginColor(winnerParty, strength);
+        return { color, fill: hexToRgba(color, .88), label: `${winnerParty} +${(marginPct * 100).toFixed(1)} pp` };
+      }
       if (activeElection().bipartisanMarginScale && activeMapMode === "party") {
         const strength = marginPct <= .02 ? 0 : marginPct <= .05 ? 1 : marginPct <= .10 ? 2 : marginPct <= .20 ? 3 : 4;
         const palette = winnerParty === "Democratic"
@@ -6694,6 +7044,7 @@
     }
 
     function tooltipHtml(d) {
+      if (["tied-local", "no-votes"].includes(d.contest_status)) return `<strong>${d.district}</strong><div>${winningParty(d)}</div><span>${d.formal_votes ? localLeaderNames(d).join(" / ") + " · " + fmt.format(localResultState(d).topVotes) + " votes each" : d.total_votes ? fmt.format(d.total_votes) + " ballot(s); no recorded mayoral votes." : "BOE reports zero ballots and zero mayoral votes."}</span>`;
       if (d.contest_status === "provisional-local-unresolved" && activeMapMode !== "house-swing") return `<strong>${d.district}</strong><div>Local leader unavailable</div><span>Grouped Other votes prevent identifying an individual candidate leader.</span>`;
       if (d.contest_status === "provisional-uncalled" && activeMapMode !== "house-swing") {
         const [leader] = getWinnerFromFinal(d);
@@ -6827,6 +7178,22 @@
 
     function renderMapLegend(context = {}) {
       const legend = document.getElementById("mapLegend");
+      if (activeElection().candidateMarginScale && activeMapMode === "party") {
+        const bands = ["≤2 pp", "2–5 pp", "5–10 pp", "10–20 pp", ">20 pp"];
+        const counts = new Map();
+        allDistricts.forEach(d => {
+          const candidate = winningParty(d);
+          counts.set(candidate, (counts.get(candidate) || 0) + 1);
+        });
+        legend.innerHTML = [...counts].sort((a, b) => b[1] - a[1]).map(([candidate]) => {
+          const neutral = candidate === "Tied local leaders" || candidate === activeElection().noVotesLabel;
+          const swatches = neutral
+            ? `<span class="dot" style="background:#8b9098"></span>`
+            : `<span class="margin-swatches" aria-label="Lighter to darker: ${bands.join(", ")}">${bands.map((band, index) => `<i style="background:${candidateMarginColor(candidate, index)}" title="${candidate}: ${band}"></i>`).join("")}</span>`;
+          return `<span class="legend-item">${swatches}${candidate}</span>`;
+        }).join("") + `<span class="margin-scale-note">Local lead margin: ${bands.join(" · ")}. Darker means a larger lead; pp = percentage points.</span>`;
+        return;
+      }
       if (activeMapMode === "house-swing" && houseSwingSupported()) {
         legend.innerHTML = houseDemographics.swingLegend().map(([color, label]) => `<span class="legend-item"><span class="dot" style="background:${color}"></span>${label}</span>`).join("");
         return;
@@ -7127,6 +7494,8 @@
     }
 
     function mapDistrictTitle(d, visual) {
+      if (["tied-local", "no-votes"].includes(d.contest_status)) return `${d.district} · ${winningParty(d)}${d.formal_votes ? " · " + localLeaderNames(d).join(" / ") : ""}`;
+      if (activeElection().candidateMarginScale && activeMapMode === "party") return `${d.district} · ${visual.label}`;
       if (d.contest_status === "provisional-local-unresolved" && activeMapMode !== "house-swing") return `${d.district} · Local leader unavailable · grouped Other votes`;
       if (d.contest_status === "provisional-uncalled" && activeMapMode !== "house-swing") return `${d.district} · Not called · provisional`;
       if (activeMapMode === "house-swing" && houseSwingSupported()) return `${d.district} · ${visual.label} · ${visual.detail}`;
@@ -7532,11 +7901,11 @@
         [...winnerCounts.entries()]
           .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
           .forEach(([ticket, areas]) => {
-            const winsLabel = activeElection().provisionalStatewide
+            const winsLabel = activeElection().localWinsLabel && ["Tied local leaders", activeElection().noVotesLabel].includes(ticket) ? "areas" : activeElection().provisionalStatewide
               ? (ticket === "Local leader unavailable" ? "unresolved" : ticket === "Not called" ? "uncalled" : activeGeography === "state" ? "reported wins" : "local leads")
               : activeElection().contestType === "governor" && activeGeography === "state"
               ? "race wins"
-              : activeElection().contestType === "referendum" ? "local leads" : "area wins";
+              : activeElection().contestType === "referendum" ? "local leads" : activeElection().localWinsLabel || "area wins";
             chips.push(`<span class="summary-chip"><span class="dot" style="background:${partyColor(ticket)}"></span>${ticket} <strong>${fmt.format(areas)}</strong> ${winsLabel}</span>`);
           });
         setSummaryChips(target, chips);
@@ -7931,6 +8300,7 @@
     }
 
     function updateElectionSpecificUi() {
+      document.getElementById("stateClusteringEntry").classList.toggle("hidden", !/^us-president-(2008|2012|2016|2020|2024)$/.test(activeElectionYear));
       const fpp = isFppElection();
       const mmp = isMmpElection();
       const senateStv = isSenateStvElection();
@@ -8437,6 +8807,7 @@
           const reported = d.formal_votes > 0;
           const provisionalStatewide = activeElection().provisionalStatewide;
           const localLeaderUnavailable = d.contest_status === "provisional-local-unresolved";
+          const tiedLocal = d.contest_status === "tied-local";
           const localLeaderLabel = localLeaderUnavailable ? "Local leader unavailable" : provisionalStatewide
             ? (d.contest_status === "provisional-uncalled" ? "Current leader · not called" : activeGeography === "state" ? "Reported winner · provisional" : "Current local vote leader")
             : activeElection().localLeaderLabel || "Local vote leader";
@@ -8448,9 +8819,10 @@
             <div class="result-facts">
               <div class="fact-item"><span class="fact-label">${activeDataset().areaLabel}</span><span class="fact-value">${d.electorate_type}</span></div>
               <div class="fact-item"><span class="fact-label">System</span><span class="fact-value">${activeElection().systemLabel}</span></div>
-              <div class="fact-item"><span class="fact-label">${localLeaderLabel}</span><span class="fact-value">${localLeaderUnavailable ? "Grouped Other votes prevent identifying a candidate leader" : reported ? badgeHtml(winnerTicket) + (provisionalStatewide ? " " + shortName(winner) : "") : "No digitised vote"}</span></div>
-              <div class="fact-item"><span class="fact-label">${provisionalStatewide && activeGeography === "county" ? "Named-candidate margin" : activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
+              <div class="fact-item"><span class="fact-label">${localLeaderLabel}</span><span class="fact-value">${localLeaderUnavailable ? "Grouped Other votes prevent identifying a candidate leader" : tiedLocal ? "Tied: " + localLeaderNames(d).join(" / ") : reported ? badgeHtml(winnerTicket) + (provisionalStatewide ? " " + shortName(winner) : "") : activeElection().noVotesLabel || "No digitised vote"}</span></div>
+              <div class="fact-item"><span class="fact-label">${provisionalStatewide && activeGeography === "county" ? "Named-candidate margin" : activeElection().localMarginLabel || "Local margin"}</span><span class="fact-value">${tiedLocal ? "0 · tied local vote" : reported ? `${fmt.format(finalMargin(d))} (${pct(finalMargin(d), d.formal_votes)}) over ${shortName(runnerUp)}` : "—"}</span></div>
               <div class="fact-item"><span class="fact-label">${activeElection().validVotesLabel || "Valid votes"}</span><span class="fact-value">${fmt.format(d.formal_votes)}</span></div>
+              ${activeElection().showBallotTotals ? `<div class="fact-item"><span class="fact-label">Ballots cast</span><span class="fact-value">${fmt.format(d.total_votes)}</span></div><div class="fact-item"><span class="fact-label">Unrecorded mayoral votes</span><span class="fact-value">${d.informal_votes < 0 ? "Source counts inconsistent" : fmt.format(d.informal_votes)}</span></div>` : ""}
               <div class="fact-item"><span class="fact-label">Turnout</span><span class="fact-value">${Number(d.enrolment || 0) > 0 ? `${Number(d.turnout_pct).toFixed(1)}%` : "Not available"}</span></div>
             </div>
             <p class="pref-impact">${activeElection().methodNote}</p>
@@ -8678,7 +9050,7 @@
           <div class="bar-row" title="${partyLabel(party)} · ${candidate}: ${votesUnavailable ? "vote total not published" : fmt.format(votes)}${status}">
             <div class="bar-label">
               <div class="party-line"><span class="dot" style="background:${color}"></span>${partyLabel(party)}</div>
-              <div class="candidate-line">${shortName(candidate)}${status ? ` · elected ${d.electedOrder?.[candidate]}` : ""}</div>
+              ${partyLabel(party) !== shortName(candidate) || status ? `<div class="candidate-line">${shortName(candidate)}${status ? ` · elected ${d.electedOrder?.[candidate]}` : ""}</div>` : ""}
             </div>
             <div class="track"><div class="fill" style="width:${votesUnavailable ? 100 : denominator > 0 ? Math.max(0, Math.min(100, votes / denominator * 100)) : 0}%; background:${color}; opacity:${votesUnavailable ? .28 : isHighlight ? 1 : .72};"></div></div>
             <div class="bar-value">${votesUnavailable ? "—" : fmt.format(votes)}<br><span class="metric-subvalue">${votesUnavailable ? "not published" : pct(votes, denominator)}</span></div>
