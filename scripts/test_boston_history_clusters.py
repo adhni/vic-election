@@ -44,7 +44,9 @@ for year, filename in [('2012_2016','ma_2012_2016_boston.geojson'),('2020','ma_2
         if code in other:
             a,b = city[code],other[code]
             expected = a.intersection(b).area / max(a.area,b.area)
-            assert abs(check['minimum_coverage']-expected) < 1e-12
+            # PROJ/GEOS versions differ across macOS and Linux. Allow a tiny
+            # area-ratio tolerance while checking the 99% decision exactly.
+            assert abs(check['minimum_coverage']-expected) < 1e-7, (code, year, check['minimum_coverage'], expected)
             assert check['passes'] == (expected >= .99)
         else:
             assert check['minimum_coverage'] is None and not check['passes']
