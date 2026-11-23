@@ -1,0 +1,706 @@
+{
+  "id" : "d6x4-hefw",
+  "name" : "Election Precincts - Current, Defined 2022",
+  "assetType" : "dataset",
+  "averageRating" : 0,
+  "category" : "Geographic Locations and Boundaries",
+  "createdAt" : 1692983209,
+  "description" : "<strong>A. SUMMARY</strong>\nVoting Precincts as determined by the Department of Elections. Redefined in 2022. Precincts are components of other Election districts.\n\n<strong>B. HOW THE DATASET IS CREATED</strong>\nBased on Census 2020 geography with some exceptions.\n\n<strong>C. UPDATE PROCESS</strong>\nVoting precincts are redefined following every US Decennial Census.",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "domainCName" : "data.sf.gov",
+  "downloadCount" : 1746,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 39907023,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1692983510,
+  "publicationGroup" : 19267915,
+  "publicationStage" : "published",
+  "rowsUpdatedAt" : 1694624769,
+  "tableId" : 19267922,
+  "totalTimesRated" : 0,
+  "viewCount" : 2600,
+  "viewLastModified" : 1710355258,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1694811362,
+    "reviewedAutomatically" : false,
+    "state" : "approved",
+    "submissionId" : 5772228,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1694807247,
+    "targetAudience" : "public",
+    "workflowId" : 2546,
+    "reviewer" : {
+      "id" : "7zrh-3i2w",
+      "displayName" : "Dan Tonkovich"
+    },
+    "submissionDetails" : {
+      "permissionType" : "read"
+    },
+    "submissionOutcomeApplication" : {
+      "endedAt" : 1694811363,
+      "failureCount" : 0,
+      "startedAt" : 1694811362,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "cgap-msg6",
+      "displayName" : "Jonathan Aaberg"
+    }
+  }, {
+    "message" : "The `strict_permissions` flag must be on to enable internal approvals.",
+    "state" : "unsubmittable",
+    "targetAudience" : "internal",
+    "workflowId" : 5264
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 580183893,
+    "name" : "the_geom",
+    "dataTypeName" : "multipolygon",
+    "description" : "",
+    "fieldName" : "the_geom",
+    "position" : 1,
+    "renderTypeName" : "multipolygon",
+    "tableColumnId" : 148176749,
+    "format" : { }
+  }, {
+    "id" : 580183894,
+    "name" : "Supe22",
+    "dataTypeName" : "number",
+    "description" : "Supervisorial District",
+    "fieldName" : "supe22",
+    "position" : 2,
+    "renderTypeName" : "number",
+    "tableColumnId" : 148176750,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "11",
+      "null" : "0",
+      "top" : [ {
+        "item" : "8",
+        "count" : "58"
+      }, {
+        "item" : "10",
+        "count" : "51"
+      }, {
+        "item" : "7",
+        "count" : "50"
+      }, {
+        "item" : "4",
+        "count" : "47"
+      }, {
+        "item" : "2",
+        "count" : "47"
+      }, {
+        "item" : "9",
+        "count" : "46"
+      }, {
+        "item" : "11",
+        "count" : "45"
+      }, {
+        "item" : "5",
+        "count" : "43"
+      }, {
+        "item" : "1",
+        "count" : "43"
+      }, {
+        "item" : "6",
+        "count" : "43"
+      }, {
+        "item" : "3",
+        "count" : "41"
+      } ],
+      "smallest" : "1",
+      "count" : "514",
+      "cardinality" : "11"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183895,
+    "name" : "Assemb22",
+    "dataTypeName" : "number",
+    "description" : "Assembly District",
+    "fieldName" : "assemb22",
+    "position" : 3,
+    "renderTypeName" : "number",
+    "tableColumnId" : 148176751,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "19",
+      "null" : "0",
+      "top" : [ {
+        "item" : "17",
+        "count" : "298"
+      }, {
+        "item" : "19",
+        "count" : "214"
+      }, {
+        "item" : "12",
+        "count" : "1"
+      }, {
+        "item" : "18",
+        "count" : "1"
+      } ],
+      "smallest" : "12",
+      "count" : "514",
+      "cardinality" : "4"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183896,
+    "name" : "Cong22",
+    "dataTypeName" : "number",
+    "description" : "Congressional District",
+    "fieldName" : "cong22",
+    "position" : 4,
+    "renderTypeName" : "number",
+    "tableColumnId" : 148176752,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "15",
+      "null" : "0",
+      "top" : [ {
+        "item" : "11",
+        "count" : "451"
+      }, {
+        "item" : "15",
+        "count" : "61"
+      }, {
+        "item" : "2",
+        "count" : "1"
+      }, {
+        "item" : "12",
+        "count" : "1"
+      } ],
+      "smallest" : "2",
+      "count" : "514",
+      "cardinality" : "4"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183897,
+    "name" : "BART22",
+    "dataTypeName" : "number",
+    "description" : "BART District",
+    "fieldName" : "bart22",
+    "position" : 5,
+    "renderTypeName" : "number",
+    "tableColumnId" : 148176753,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "9",
+      "null" : "0",
+      "top" : [ {
+        "item" : "8",
+        "count" : "244"
+      }, {
+        "item" : "9",
+        "count" : "239"
+      }, {
+        "item" : "7",
+        "count" : "31"
+      } ],
+      "smallest" : "7",
+      "count" : "514",
+      "cardinality" : "3"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183898,
+    "name" : "BOE22",
+    "dataTypeName" : "number",
+    "description" : "Board of Equalization District",
+    "fieldName" : "boe22",
+    "position" : 6,
+    "renderTypeName" : "number",
+    "tableColumnId" : 148176754,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "2",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2",
+        "count" : "514"
+      } ],
+      "smallest" : "2",
+      "count" : "514",
+      "cardinality" : "1"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183899,
+    "name" : "Sen22",
+    "dataTypeName" : "number",
+    "description" : "Senate District",
+    "fieldName" : "sen22",
+    "position" : 7,
+    "renderTypeName" : "number",
+    "tableColumnId" : 148176755,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "11",
+      "null" : "0",
+      "top" : [ {
+        "item" : "11",
+        "count" : "512"
+      }, {
+        "item" : "2",
+        "count" : "1"
+      }, {
+        "item" : "7",
+        "count" : "1"
+      } ],
+      "smallest" : "2",
+      "count" : "514",
+      "cardinality" : "3"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183900,
+    "name" : "Neigh22",
+    "dataTypeName" : "text",
+    "description" : "Neighborhood",
+    "fieldName" : "neigh22",
+    "position" : 8,
+    "renderTypeName" : "text",
+    "tableColumnId" : 148176756,
+    "cachedContents" : {
+      "non_null" : "512",
+      "largest" : "West of Twin Peaks",
+      "null" : "2",
+      "top" : [ {
+        "item" : "Sunset/Parkside",
+        "count" : "47"
+      }, {
+        "item" : "Mission",
+        "count" : "29"
+      }, {
+        "item" : "West of Twin Peaks",
+        "count" : "27"
+      }, {
+        "item" : "Bayview Hunters Point",
+        "count" : "27"
+      }, {
+        "item" : "Outer Richmond",
+        "count" : "24"
+      }, {
+        "item" : "Pacific Heights",
+        "count" : "18"
+      }, {
+        "item" : "South of Market",
+        "count" : "18"
+      }, {
+        "item" : "Inner Sunset",
+        "count" : "18"
+      }, {
+        "item" : "Excelsior",
+        "count" : "17"
+      }, {
+        "item" : "Castro/Upper Market",
+        "count" : "16"
+      }, {
+        "item" : "Bernal Heights",
+        "count" : "16"
+      }, {
+        "item" : "Oceanview/Merced/Ingleside",
+        "count" : "16"
+      }, {
+        "item" : "Financial District/South Beach",
+        "count" : "15"
+      }, {
+        "item" : "Marina",
+        "count" : "15"
+      }, {
+        "item" : "Noe Valley",
+        "count" : "15"
+      }, {
+        "item" : "Outer Mission",
+        "count" : "14"
+      }, {
+        "item" : "Nob Hill",
+        "count" : "13"
+      }, {
+        "item" : "Tenderloin",
+        "count" : "13"
+      }, {
+        "item" : "Inner Richmond",
+        "count" : "13"
+      }, {
+        "item" : "Hayes Valley",
+        "count" : "13"
+      } ],
+      "smallest" : "Bayview Hunters Point",
+      "count" : "514",
+      "cardinality" : "40"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183901,
+    "name" : "HistNHood",
+    "dataTypeName" : "text",
+    "description" : "Historical Neighborhood Name",
+    "fieldName" : "histnhood",
+    "position" : 9,
+    "renderTypeName" : "text",
+    "tableColumnId" : 148176757,
+    "cachedContents" : {
+      "non_null" : "512",
+      "largest" : "W TWIN PKS",
+      "null" : "2",
+      "top" : [ {
+        "item" : "SUNSET",
+        "count" : "44"
+      }, {
+        "item" : "MAR/PAC HTS",
+        "count" : "37"
+      }, {
+        "item" : "W TWIN PKS",
+        "count" : "35"
+      }, {
+        "item" : "RICHMOND",
+        "count" : "34"
+      }, {
+        "item" : "SOMA",
+        "count" : "30"
+      }, {
+        "item" : "WST ADDITION",
+        "count" : "29"
+      }, {
+        "item" : "EXCELSIOR",
+        "count" : "29"
+      }, {
+        "item" : "MISSION",
+        "count" : "28"
+      }, {
+        "item" : "BAYVW/HTRSPT",
+        "count" : "27"
+      }, {
+        "item" : "CVC CTR/DWTN",
+        "count" : "25"
+      }, {
+        "item" : "POTRERO HILL",
+        "count" : "21"
+      }, {
+        "item" : "UPRMKT/EURKA",
+        "count" : "20"
+      }, {
+        "item" : "CHINA",
+        "count" : "17"
+      }, {
+        "item" : "INGLESIDE",
+        "count" : "15"
+      }, {
+        "item" : "HAIGHT ASH",
+        "count" : "14"
+      }, {
+        "item" : "NOE VALLEY",
+        "count" : "13"
+      }, {
+        "item" : "S BERNAL HTS",
+        "count" : "12"
+      }, {
+        "item" : "VISITA VLY",
+        "count" : "11"
+      }, {
+        "item" : "PORTOLA",
+        "count" : "10"
+      }, {
+        "item" : "LRL HTS/ANZA",
+        "count" : "9"
+      } ],
+      "smallest" : "BAYVW/HTRSPT",
+      "count" : "514",
+      "cardinality" : "26"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183902,
+    "name" : "Shape_Leng",
+    "dataTypeName" : "number",
+    "description" : "",
+    "fieldName" : "shape_leng",
+    "position" : 10,
+    "renderTypeName" : "number",
+    "tableColumnId" : 148176758,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "21365.4810078",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1771.53396092",
+        "count" : "1"
+      }, {
+        "item" : "2580.41315844",
+        "count" : "1"
+      }, {
+        "item" : "2453.46127171",
+        "count" : "1"
+      }, {
+        "item" : "1796.13111126",
+        "count" : "1"
+      }, {
+        "item" : "8525.46342567",
+        "count" : "1"
+      }, {
+        "item" : "1649.1291537",
+        "count" : "1"
+      }, {
+        "item" : "1806.38305773",
+        "count" : "1"
+      }, {
+        "item" : "5314.70420519",
+        "count" : "1"
+      }, {
+        "item" : "2382.94554426",
+        "count" : "1"
+      }, {
+        "item" : "2506.107749",
+        "count" : "1"
+      }, {
+        "item" : "2173.06775861",
+        "count" : "1"
+      }, {
+        "item" : "2437.19426705",
+        "count" : "1"
+      }, {
+        "item" : "2042.50686488",
+        "count" : "1"
+      }, {
+        "item" : "2293.74194887",
+        "count" : "1"
+      }, {
+        "item" : "2325.7682288",
+        "count" : "1"
+      }, {
+        "item" : "1466.42557484",
+        "count" : "1"
+      }, {
+        "item" : "1376.10252191",
+        "count" : "1"
+      }, {
+        "item" : "1396.0254563",
+        "count" : "1"
+      }, {
+        "item" : "4040.81522154",
+        "count" : "1"
+      }, {
+        "item" : "1643.67780431",
+        "count" : "1"
+      } ],
+      "smallest" : "634.115248686",
+      "count" : "514",
+      "cardinality" : "514"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183903,
+    "name" : "Shape_Area",
+    "dataTypeName" : "number",
+    "description" : "",
+    "fieldName" : "shape_area",
+    "position" : 11,
+    "renderTypeName" : "number",
+    "tableColumnId" : 148176759,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "7631881.7821",
+      "null" : "0",
+      "top" : [ {
+        "item" : "282571.447353",
+        "count" : "1"
+      }, {
+        "item" : "93374.7215076",
+        "count" : "1"
+      }, {
+        "item" : "246530.802728",
+        "count" : "1"
+      }, {
+        "item" : "313613.081208",
+        "count" : "1"
+      }, {
+        "item" : "268531.289176",
+        "count" : "1"
+      }, {
+        "item" : "192020.233",
+        "count" : "1"
+      }, {
+        "item" : "219416.979583",
+        "count" : "1"
+      }, {
+        "item" : "102193.857356",
+        "count" : "1"
+      }, {
+        "item" : "156562.346299",
+        "count" : "1"
+      }, {
+        "item" : "291751.054369",
+        "count" : "1"
+      }, {
+        "item" : "368589.38829",
+        "count" : "1"
+      }, {
+        "item" : "146332.55602",
+        "count" : "1"
+      }, {
+        "item" : "305863.621489",
+        "count" : "1"
+      }, {
+        "item" : "197695.125562",
+        "count" : "1"
+      }, {
+        "item" : "836257.413361",
+        "count" : "1"
+      }, {
+        "item" : "106341.367785",
+        "count" : "1"
+      }, {
+        "item" : "340016.78507",
+        "count" : "1"
+      }, {
+        "item" : "221397.981668",
+        "count" : "1"
+      }, {
+        "item" : "147715.186785",
+        "count" : "1"
+      }, {
+        "item" : "350453.03626",
+        "count" : "1"
+      } ],
+      "smallest" : "23970.4344101",
+      "count" : "514",
+      "cardinality" : "514"
+    },
+    "format" : { }
+  }, {
+    "id" : 580183905,
+    "name" : "Prec_2022",
+    "dataTypeName" : "text",
+    "description" : "Voting Precinct",
+    "fieldName" : "prec_2022",
+    "position" : 12,
+    "renderTypeName" : "text",
+    "tableColumnId" : 148176786,
+    "cachedContents" : {
+      "non_null" : "514",
+      "largest" : "9904",
+      "null" : "0",
+      "top" : [ {
+        "item" : "9217",
+        "count" : "1"
+      }, {
+        "item" : "7325",
+        "count" : "1"
+      }, {
+        "item" : "9423",
+        "count" : "1"
+      }, {
+        "item" : "7629",
+        "count" : "1"
+      }, {
+        "item" : "7715",
+        "count" : "1"
+      }, {
+        "item" : "9223",
+        "count" : "1"
+      }, {
+        "item" : "9413",
+        "count" : "1"
+      }, {
+        "item" : "9427",
+        "count" : "1"
+      }, {
+        "item" : "7048",
+        "count" : "1"
+      }, {
+        "item" : "9133",
+        "count" : "1"
+      }, {
+        "item" : "1145",
+        "count" : "1"
+      }, {
+        "item" : "7305",
+        "count" : "1"
+      }, {
+        "item" : "9139",
+        "count" : "1"
+      }, {
+        "item" : "7924",
+        "count" : "1"
+      }, {
+        "item" : "9205",
+        "count" : "1"
+      }, {
+        "item" : "9116",
+        "count" : "1"
+      }, {
+        "item" : "9141",
+        "count" : "1"
+      }, {
+        "item" : "7832",
+        "count" : "1"
+      }, {
+        "item" : "1105",
+        "count" : "1"
+      }, {
+        "item" : "1124",
+        "count" : "1"
+      } ],
+      "smallest" : "1101",
+      "count" : "514",
+      "cardinality" : "514"
+    },
+    "format" : { }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "metadata" : {
+    "custom_fields" : {
+      "Department Metrics" : {
+        "Publishing Department" : "Elections"
+      },
+      "Internal Management" : {
+        "Inventory ID" : ""
+      },
+      "Publishing Details" : {
+        "Data change frequency" : "Not updated (historical only)",
+        "Program link" : "",
+        "Publishing frequency" : "Not updated (historical only)",
+        "Geographic unit" : ""
+      }
+    },
+    "rowLabel" : "Election precinct",
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "dbag-6qd9",
+    "displayName" : "OpenData",
+    "screenName" : "OpenData",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula" ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "dbag-6qd9",
+    "displayName" : "OpenData",
+    "screenName" : "OpenData",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula" ]
+  },
+  "tags" : [ "election", "precincts" ],
+  "flags" : [ "default", "federated", "internalToPublicFederatedView", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

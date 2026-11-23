@@ -1,0 +1,26 @@
+{
+  "purpose": "Cross-source geometry agreement screen, not election-day boundary verification",
+  "extract_crs": "EPSG:26986 (NAD83 / Massachusetts Mainland, metres)",
+  "sources": [
+    {
+      "extract": "ma_2012_2016_boston.geojson",
+      "url": "https://raw.githubusercontent.com/mggg-states/MA-shapefiles/master/MA_precincts_12_16.zip",
+      "documentation": "https://github.com/mggg-states/MA-shapefiles",
+      "archive_sha256": "3724a33ae9eeaebd4562d6990a7d70a0f21180f8c3d925b01a156a04da204aed",
+      "extract_sha256": "72ce83e07ee996c0dd7cc2f97406c3aca349d3aac11e0051e4e8324b7efd1b75",
+      "extraction": "GeoPandas 1.0.1: read archive; retain TOWN == Boston; code = two-digit WARD + two-digit PRECINCT; retain code and geometry; to_crs(26986); GeoJSON driver. 254 processed reporting areas; Ward 5 Precinct 2A is not separate.",
+      "attribution": "Metric Geometry and Gerrymandering Group (MGGG), Radcliffe Research Partners and Voting Rights Data Institute. Original 2012–2016 precinct data from the Massachusetts Secretary of the Commonwealth; processed boundaries are not an unmodified 2013 election map.",
+      "licence": "Open Database License 1.0; individual contents under Database Contents License. This extracted geometry database is distributed under the same terms; see mggg_LICENSE.md."
+    },
+    {
+      "extract": "ma_2020_vtd_boston.geojson",
+      "url": "https://www2.census.gov/geo/tiger/TIGER2020PL/LAYER/VTD/2020/tl_2020_25_vtd20.zip",
+      "documentation": "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
+      "archive_sha256": "3397fbef02d76de9ea0141c4987e882330f247a1fd16439982576eb7d9dd15a8",
+      "extract_sha256": "4938bb7a73d6ea260175fe3dee217e7fc74afbafb0d097abee718805b4317515",
+      "extraction": "GeoPandas 1.0.1: retain COUNTYFP20 == 025 and NAME20 matching four digits with optional A suffix; code = NAME20; retain code and geometry; to_crs(26986); GeoJSON driver. 255 features. Code 2023 is present and 1823 absent; no inferred renaming applied.",
+      "attribution": "U.S. Census Bureau, 2020 TIGER/Line voting districts. A Census snapshot, not an independently verified 2021 municipal election map.",
+      "licence": "U.S. Census Bureau public data"
+    }
+  ]
+}

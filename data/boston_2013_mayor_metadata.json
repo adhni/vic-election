@@ -1,0 +1,30 @@
+{
+  "year": 2013,
+  "election_date": "2013-11-05",
+  "results_page": "https://www.boston.gov/departments/elections/state-and-city-boston-election-results",
+  "results_url": "https://documents.boston.gov/images_documents/2013%20-%2011-05-13%20-%20Mayor%20Ward%20%26%20Precinct%20Results%20%281%29_tcm3-41970.pdf",
+  "boundary_url": "https://services.arcgis.com/sFnw0xNflSi8J0uh/arcgis/rest/services/Precincts_2017/FeatureServer",
+  "boundary_snapshot": "October 2017 City of Boston GIS",
+  "boundary_caveat": "October 2017 historical reference. Identifier coverage matches all 255 reporting precincts in 2013; this does not establish election-day geometry equivalence for other years.",
+  "source_sha256": {
+    "data/sources/boston/2013_mayor.pdf": "19433624be31130ef1501cd3ea474db5324e4aa641275634456c14d26373b028",
+    "data/sources/boston/precincts_2017.geojson": "00af69941be217a73b1fc9956b20c1441c9d2ada684d1433f74ee15dd8ae88d6",
+    "data/sources/boston/precincts_2017_metadata.json": "8f9ae76b784ec903066d38728f6a1c6c6c422c29fa6f34984ed700c76f8e448c"
+  },
+  "candidate_totals": {
+    "John Connolly": 67694,
+    "Marty Walsh": 72583,
+    "Lee Buckley (write-in)": 1,
+    "David James Wyatt (write-in)": 4,
+    "Other / write-in votes": 555
+  },
+  "recorded_votes": 140837,
+  "ballots": 142007,
+  "blanks": 1170,
+  "precinct_count": 255,
+  "ward_count": 22,
+  "geometry_repairs": [
+    "1713",
+    "0511"
+  ]
+}

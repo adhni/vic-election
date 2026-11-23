@@ -1,0 +1,1814 @@
+{
+  "raceId": "mayor",
+  "title": "MAYOR",
+  "totalRounds": 14,
+  "rounds": [
+    {
+      "round": 1,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 102720,
+          "percentage": 0.2633,
+          "transfer": 1,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95117,
+          "percentage": 0.2438,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 89215,
+          "percentage": 0.2286,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 72115,
+          "percentage": 0.1848,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 11425,
+          "percentage": 0.0293,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 8665,
+          "percentage": 0.0222,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 2897,
+          "percentage": 0.0074,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 2079,
+          "percentage": 0.0053,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 1791,
+          "percentage": 0.0046,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 1613,
+          "percentage": 0.0041,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 1319,
+          "percentage": 0.0034,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 812,
+          "percentage": 0.0021,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 412,
+          "percentage": 0.0011,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 3,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 1,
+          "percentage": 0,
+          "transfer": -1,
+          "isEliminated": true,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 390184,
+      "exhausted": 0,
+      "overvotes": 1381,
+      "blanks": 18540
+    },
+    {
+      "round": 2,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 102721,
+          "percentage": 0.2633,
+          "transfer": 1,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95117,
+          "percentage": 0.2438,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 89215,
+          "percentage": 0.2286,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 72115,
+          "percentage": 0.1848,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 11425,
+          "percentage": 0.0293,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 8665,
+          "percentage": 0.0222,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 2897,
+          "percentage": 0.0074,
+          "transfer": 1,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 2079,
+          "percentage": 0.0053,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 1791,
+          "percentage": 0.0046,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 1613,
+          "percentage": 0.0041,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 1319,
+          "percentage": 0.0034,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 812,
+          "percentage": 0.0021,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 412,
+          "percentage": 0.0011,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 3,
+          "percentage": 0,
+          "transfer": -3,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 390184,
+      "exhausted": 0,
+      "overvotes": 1381,
+      "blanks": 18540
+    },
+    {
+      "round": 3,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 102722,
+          "percentage": 0.2633,
+          "transfer": 29,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95117,
+          "percentage": 0.2438,
+          "transfer": 21,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 89215,
+          "percentage": 0.2286,
+          "transfer": 25,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 72115,
+          "percentage": 0.1848,
+          "transfer": 41,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 11425,
+          "percentage": 0.0293,
+          "transfer": 29,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 8665,
+          "percentage": 0.0222,
+          "transfer": 49,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 2898,
+          "percentage": 0.0074,
+          "transfer": 27,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 2079,
+          "percentage": 0.0053,
+          "transfer": 42,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 1791,
+          "percentage": 0.0046,
+          "transfer": 18,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 1613,
+          "percentage": 0.0041,
+          "transfer": 11,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 1319,
+          "percentage": 0.0034,
+          "transfer": 34,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 812,
+          "percentage": 0.0021,
+          "transfer": 26,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 412,
+          "percentage": 0.0011,
+          "transfer": -412,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 390183,
+      "exhausted": 1,
+      "overvotes": 1381,
+      "blanks": 18540
+    },
+    {
+      "round": 4,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 102751,
+          "percentage": 0.2634,
+          "transfer": 62,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95138,
+          "percentage": 0.2439,
+          "transfer": 64,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 89240,
+          "percentage": 0.2287,
+          "transfer": 133,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 72156,
+          "percentage": 0.185,
+          "transfer": 103,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 11454,
+          "percentage": 0.0294,
+          "transfer": 36,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 8714,
+          "percentage": 0.0223,
+          "transfer": 56,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 2925,
+          "percentage": 0.0075,
+          "transfer": 41,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 2121,
+          "percentage": 0.0054,
+          "transfer": 59,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 1809,
+          "percentage": 0.0046,
+          "transfer": 65,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 1624,
+          "percentage": 0.0042,
+          "transfer": 43,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 1353,
+          "percentage": 0.0035,
+          "transfer": 32,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 838,
+          "percentage": 0.0021,
+          "transfer": -838,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 390123,
+      "exhausted": 53,
+      "overvotes": 1389,
+      "blanks": 18540
+    },
+    {
+      "round": 5,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 102813,
+          "percentage": 0.2636,
+          "transfer": 138,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95202,
+          "percentage": 0.2441,
+          "transfer": 91,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 89373,
+          "percentage": 0.2292,
+          "transfer": 125,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 72259,
+          "percentage": 0.1853,
+          "transfer": 309,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 11490,
+          "percentage": 0.0295,
+          "transfer": 64,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 8770,
+          "percentage": 0.0225,
+          "transfer": 103,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 2966,
+          "percentage": 0.0076,
+          "transfer": 86,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 2180,
+          "percentage": 0.0056,
+          "transfer": 149,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 1874,
+          "percentage": 0.0048,
+          "transfer": 74,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 1667,
+          "percentage": 0.0043,
+          "transfer": 64,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 1385,
+          "percentage": 0.0036,
+          "transfer": -1385,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 389979,
+      "exhausted": 186,
+      "overvotes": 1400,
+      "blanks": 18540
+    },
+    {
+      "round": 6,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 102951,
+          "percentage": 0.2641,
+          "transfer": 163,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95293,
+          "percentage": 0.2445,
+          "transfer": 221,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 89498,
+          "percentage": 0.2296,
+          "transfer": 150,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 72568,
+          "percentage": 0.1862,
+          "transfer": 148,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 11554,
+          "percentage": 0.0296,
+          "transfer": 390,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 8873,
+          "percentage": 0.0228,
+          "transfer": 188,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 3052,
+          "percentage": 0.0078,
+          "transfer": 133,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 2329,
+          "percentage": 0.006,
+          "transfer": 77,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 1948,
+          "percentage": 0.005,
+          "transfer": 95,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 1731,
+          "percentage": 0.0044,
+          "transfer": -1731,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 389797,
+      "exhausted": 356,
+      "overvotes": 1412,
+      "blanks": 18540
+    },
+    {
+      "round": 7,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 103114,
+          "percentage": 0.2646,
+          "transfer": 148,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95514,
+          "percentage": 0.2451,
+          "transfer": 147,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 89648,
+          "percentage": 0.2301,
+          "transfer": 216,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 72716,
+          "percentage": 0.1866,
+          "transfer": 189,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 11944,
+          "percentage": 0.0307,
+          "transfer": 98,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 9061,
+          "percentage": 0.0233,
+          "transfer": 389,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 3185,
+          "percentage": 0.0082,
+          "transfer": 440,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 2406,
+          "percentage": 0.0062,
+          "transfer": 133,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 2043,
+          "percentage": 0.0052,
+          "transfer": -2043,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 389631,
+      "exhausted": 508,
+      "overvotes": 1426,
+      "blanks": 18540
+    },
+    {
+      "round": 8,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 103262,
+          "percentage": 0.2652,
+          "transfer": 439,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95661,
+          "percentage": 0.2457,
+          "transfer": 236,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 89864,
+          "percentage": 0.2308,
+          "transfer": 234,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 72905,
+          "percentage": 0.1872,
+          "transfer": 533,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 12042,
+          "percentage": 0.0309,
+          "transfer": 150,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 9450,
+          "percentage": 0.0243,
+          "transfer": 299,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 3625,
+          "percentage": 0.0093,
+          "transfer": 314,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 2539,
+          "percentage": 0.0065,
+          "transfer": -2539,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 389348,
+      "exhausted": 768,
+      "overvotes": 1449,
+      "blanks": 18540
+    },
+    {
+      "round": 9,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 103701,
+          "percentage": 0.2666,
+          "transfer": 754,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 95897,
+          "percentage": 0.2465,
+          "transfer": 570,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 90098,
+          "percentage": 0.2316,
+          "transfer": 712,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 73438,
+          "percentage": 0.1888,
+          "transfer": 608,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 12192,
+          "percentage": 0.0313,
+          "transfer": 364,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 9749,
+          "percentage": 0.0251,
+          "transfer": 345,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 3939,
+          "percentage": 0.0101,
+          "transfer": -3939,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 389014,
+      "exhausted": 1082,
+      "overvotes": 1469,
+      "blanks": 18540
+    },
+    {
+      "round": 10,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 104455,
+          "percentage": 0.2689,
+          "transfer": 2291,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 96467,
+          "percentage": 0.2484,
+          "transfer": 854,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 90810,
+          "percentage": 0.2338,
+          "transfer": 1209,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 74046,
+          "percentage": 0.1906,
+          "transfer": 2292,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 12556,
+          "percentage": 0.0323,
+          "transfer": 1062,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 10094,
+          "percentage": 0.026,
+          "transfer": -10094,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 388428,
+      "exhausted": 1628,
+      "overvotes": 1509,
+      "blanks": 18540
+    },
+    {
+      "round": 11,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 106746,
+          "percentage": 0.2765,
+          "transfer": 2616,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 97321,
+          "percentage": 0.2521,
+          "transfer": 2591,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 92019,
+          "percentage": 0.2384,
+          "transfer": 4054,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 76338,
+          "percentage": 0.1977,
+          "transfer": 2540,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 13618,
+          "percentage": 0.0353,
+          "transfer": -13618,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 386042,
+      "exhausted": 3956,
+      "overvotes": 1567,
+      "blanks": 18540
+    },
+    {
+      "round": 12,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 109362,
+          "percentage": 0.2846,
+          "transfer": 41233,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 99912,
+          "percentage": 0.26,
+          "transfer": 13953,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 96073,
+          "percentage": 0.25,
+          "transfer": 8206,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 78878,
+          "percentage": 0.2053,
+          "transfer": -78878,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 384225,
+      "exhausted": 5690,
+      "overvotes": 1650,
+      "blanks": 18540
+    },
+    {
+      "round": 13,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 150595,
+          "percentage": 0.4084,
+          "transfer": 31769,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 113865,
+          "percentage": 0.3088,
+          "transfer": 35248,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 104279,
+          "percentage": 0.2828,
+          "transfer": -104279,
+          "isEliminated": true,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 368739,
+      "exhausted": 20925,
+      "overvotes": 1901,
+      "blanks": 18540
+    },
+    {
+      "round": 14,
+      "candidates": [
+        {
+          "name": "DANIEL LURIE",
+          "votes": 182364,
+          "percentage": 0.5502,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": true
+        },
+        {
+          "name": "LONDON BREED",
+          "votes": 149113,
+          "percentage": 0.4498,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AARON PESKIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARK FARRELL",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "AHSHA SAFAÍ",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "ELLEN LEE ZHOU",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "DYLAN HIRSCH-SHELL",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "KEITH FREEDMAN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "NELSON MEI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "SHAHRAM SHARIATI",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "HENRY FLYNN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "PAUL YBARRA ROBERTSON",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "JON SODERSTROM",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MARC ROTH",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        },
+        {
+          "name": "MICHAEL LIN",
+          "votes": 0,
+          "percentage": 0,
+          "transfer": 0,
+          "isEliminated": false,
+          "isLeader": false
+        }
+      ],
+      "continuingTotal": 331477,
+      "exhausted": 57859,
+      "overvotes": 2229,
+      "blanks": 18540
+    }
+  ],
+  "winner": "DANIEL LURIE"
+}
