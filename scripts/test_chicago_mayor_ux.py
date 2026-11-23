@@ -60,7 +60,9 @@ try:
         # The main explorer offers exactly these round/geometry combinations.
         page.goto(f'{base}/app/?year=chicago-mayor-2023-{round_name}&geo={level}',wait_until='networkidle')
         expect(page.locator('#explorerGrid')).to_have_attribute('aria-busy','false')
-        expect(page.locator('#electionYear')).to_have_value(f'chicago-mayor-2023-{round_name}')
+        expect(page.locator('#electionYear')).to_have_value('chicago-mayor-2023-runoff')
+        expect(page.locator('#electionStage')).to_have_value(f'chicago-mayor-2023-{round_name}')
+        expect(page.locator('#electionYear option').filter(has_text='Chicago Mayor 2023')).to_have_count(1)
         expect(page.locator('.district-shape')).to_have_count(count)
         expect(page.locator('#stateSummary')).to_contain_text('Brandon Johnson');expect(page.locator('#stateSummary')).to_contain_text('Paul Vallas')
         if round_name=='first-round':expect(page.locator('#stateSummary')).to_contain_text('Lori Lightfoot')
