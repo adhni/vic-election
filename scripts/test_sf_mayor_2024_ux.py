@@ -78,10 +78,16 @@ try:
     for number in range(1,15):
         page.goto(f'{base}/app/?year=sf-mayor-2024-round-{number}',wait_until='networkidle')
         expect(page.locator('#explorerGrid')).to_have_attribute('aria-busy','false')
-        expect(page.locator('#electionYear')).to_have_value(f'sf-mayor-2024-round-{number}')
+        expect(page.locator('#electionYear')).to_have_value('sf-mayor-2024-round-14')
+        expect(page.locator('#electionStage')).to_have_value(f'sf-mayor-2024-round-{number}')
+        expect(page.locator('#electionYear option').filter(has_text='San Francisco Mayor 2024')).to_have_count(1)
         expect(page.locator('.district-shape')).to_have_count(514)
         expect(page.locator('#stateSummary')).to_contain_text('Daniel Lurie');expect(page.locator('#stateSummary')).to_contain_text('London Breed')
         expect(page.locator('#mapLegend')).to_contain_text('Darker means a larger lead')
+    page.select_option('#electionStage','sf-mayor-2024-round-1')
+    expect(page.locator('#electionHeading')).to_contain_text('Count 1 of 14')
+    page.select_option('#electionStage','sf-mayor-2024-round-14')
+    expect(page.locator('#electionHeading')).to_contain_text('Count 14 of 14')
     page.locator('.district-shape[data-district="Precinct 9901"]').dispatch_event('pointerover',{'clientX':200,'clientY':200})
     expect(page.locator('#mapTooltip')).to_contain_text('No mayoral CVR records')
     for width in [320,390,768]:

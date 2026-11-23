@@ -178,6 +178,8 @@
       min-width: 0;
     }
 
+    #electionStageControl { grid-column: 1 / -1; }
+
     label.ctrl-label {
       font-size: 13px;
       font-weight: 600;
@@ -1498,6 +1500,10 @@
           <div class="ctrl-group">
             <label class="ctrl-label" for="electionYear">Election</label>
             <select id="electionYear"></select>
+          </div>
+          <div id="electionStageControl" class="ctrl-group hidden">
+            <label class="ctrl-label" for="electionStage">Round</label>
+            <select id="electionStage"></select>
           </div>
         </div>
         <div class="ctrl-group search-control">
@@ -7197,6 +7203,25 @@
       return election.label.startsWith(prefix) ? election.label.slice(prefix.length) : election.label;
     };
 
+    const cityElectionSeries = [
+      {prefix: "sf-mayor-2024-round-", key: "sf-mayor-2024-round-14", label: "San Francisco Mayor 2024",
+        stages: Array.from({length: 14}, (_, i) => ({key: `sf-mayor-2024-round-${i + 1}`,
+          label: i === 0 ? "Round 1 · First preferences" : i === 13 ? "Round 14 · Final result" : `Round ${i + 1}`}))},
+      {prefix: "chicago-mayor-2023-", key: "chicago-mayor-2023-runoff", label: "Chicago Mayor 2023",
+        stages: [{key: "chicago-mayor-2023-first-round", label: "First round · February 28"},
+          {key: "chicago-mayor-2023-runoff", label: "Runoff · April 4 · Final result"}]}
+    ];
+    const citySeriesFor = key => cityElectionSeries.find(series => key.startsWith(series.prefix));
+    const pickerElectionKey = key => citySeriesFor(key)?.key || key;
+    function syncElectionStage() {
+      const series = citySeriesFor(activeElectionYear);
+      document.getElementById("electionStageControl").classList.toggle("hidden", !series);
+      const select = document.getElementById("electionStage");
+      select.innerHTML = series ? series.stages.map(stage => `<option value="${stage.key}">${stage.label}</option>`).join("") : "";
+      select.value = activeElectionYear;
+      select.onchange = () => loadElection(select.value, false, activeGeography);
+    }
+
     let activeElectionYear = "2022";
     let activeGeography = "";
     let allDistricts = structuredClone(sampleDistricts);
@@ -10094,13 +10119,13 @@
     function populateElectionOptions(country) {
       const electionYear = document.getElementById("electionYear");
       if (!electionYear) return;
-      const elections = electionDefinitions.filter(election => electionCountry(election) === country);
+      const elections = electionDefinitions.filter(election => electionCountry(election) === country && pickerElectionKey(election.key) === election.key);
       if (country === "Australia") {
         electionYear.innerHTML = australianJurisdictionOrder
           .map(jurisdiction => {
             const options = elections
               .filter(election => election.jurisdiction === jurisdiction)
-              .map(election => `<option value="${election.key}">${electionPickerLabel(election)}</option>`)
+              .map(election => `<option value="${election.key}">${citySeriesFor(election.key)?.label || electionPickerLabel(election)}</option>`)
               .join("");
             if (!options) return "";
             const label = jurisdiction === "Australia" ? "Federal — Australia" : jurisdiction;
@@ -10109,10 +10134,11 @@
           .join("");
       } else {
         electionYear.innerHTML = elections
-          .map(election => `<option value="${election.key}">${electionPickerLabel(election)}</option>`)
+          .map(election => `<option value="${election.key}">${citySeriesFor(election.key)?.label || electionPickerLabel(election)}</option>`)
           .join("");
       }
-      electionYear.value = activeElectionYear;
+      electionYear.value = pickerElectionKey(activeElectionYear);
+      syncElectionStage();
     }
 
     function syncElectionPicker() {
@@ -10136,7 +10162,7 @@
       countrySelect.onchange = () => {
         const elections = electionDefinitions.filter(election => electionCountry(election) === countrySelect.value);
         const preferred = elections.find(election => election.jurisdiction === "Australia") || elections[0];
-        if (preferred) loadElection(preferred.key);
+        if (preferred) loadElection(pickerElectionKey(preferred.key));
       };
       electionYear.onchange = () => loadElection(electionYear.value);
     }
@@ -10306,7 +10332,8 @@
       document.getElementById("csvUpload").onchange = handleUpload;
       document.getElementById("downloadSample").onclick = downloadSchema;
       const electionYear = document.getElementById("electionYear");
-      electionYear.value = activeElectionYear;
+      electionYear.value = pickerElectionKey(activeElectionYear);
+      syncElectionStage();
       electionYear.onchange = () => loadElection(electionYear.value);
       updateFilterSummary();
       updateDataStatus();
