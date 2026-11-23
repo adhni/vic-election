@@ -68,7 +68,7 @@ try:
             for n,text in [(tied,'Tied:'),(zero,'No mayoral votes')]:
                 page.goto(f'{base}/app/?year=boston-mayor-2017&district={quote(n)}',wait_until='networkidle');expect(page.locator('#districtSummary')).to_contain_text(text)
             page.locator(f'.district-shape[data-district={json.dumps(zero,ensure_ascii=False)}]').hover();expect(page.locator('#mapTooltip')).not_to_contain_text('BOE reports')
-    out=ROOT/'tmp/boston/preview';out.mkdir(exist_ok=True)
+    out=ROOT/'tmp/boston/preview';out.mkdir(parents=True,exist_ok=True)
     page.goto(f'{base}/app/boston-precinct-dots.html?year=2013',wait_until='networkidle');page.screenshot(path=str(out/'dots-desktop.png'),full_page=True)
     for width in [320,390,768]:
         page.set_viewport_size({'width':width,'height':900});page.wait_for_timeout(300)
