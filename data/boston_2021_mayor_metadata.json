@@ -1,0 +1,28 @@
+{
+  "year": 2021,
+  "election_date": "2021-11-02",
+  "results_page": "https://www.boston.gov/departments/elections/state-and-city-boston-election-results",
+  "results_url": "https://www.boston.gov/sites/default/files/file/2021/11/2021-11-02-21-Mayor.pdf",
+  "boundary_url": "https://services.arcgis.com/sFnw0xNflSi8J0uh/arcgis/rest/services/Precincts_2017/FeatureServer",
+  "boundary_snapshot": "October 2017 City of Boston GIS",
+  "boundary_caveat": "October 2017 historical reference. Identifier coverage matches all 255 reporting precincts in 2021; this does not establish election-day geometry equivalence for other years.",
+  "source_sha256": {
+    "data/sources/boston/2021_mayor.pdf": "284fee4e10d2367cf4d1121a1d3260e508dacc721c6400aedbaeeb0cda21ed77",
+    "data/sources/boston/precincts_2017.geojson": "00af69941be217a73b1fc9956b20c1441c9d2ada684d1433f74ee15dd8ae88d6",
+    "data/sources/boston/precincts_2017_metadata.json": "8f9ae76b784ec903066d38728f6a1c6c6c422c29fa6f34984ed700c76f8e448c"
+  },
+  "candidate_totals": {
+    "Michelle Wu": 91794,
+    "Annissa Essaibi George": 51125,
+    "Other / write-in votes": 595
+  },
+  "recorded_votes": 143514,
+  "ballots": 144380,
+  "blanks": 866,
+  "precinct_count": 255,
+  "ward_count": 22,
+  "geometry_repairs": [
+    "1713",
+    "0511"
+  ]
+}

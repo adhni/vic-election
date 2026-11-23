@@ -1,4 +1,4 @@
-name: Voting groups and NYC elections
+name: Voting groups and city elections
 
 on:
   pull_request:
@@ -21,11 +21,17 @@ jobs:
         with:
           node-version: '22'
       - name: Install numerical validation dependencies
-        run: pip install numpy==2.0.2 scipy==1.13.1 scikit-learn==1.6.1 'shapely>=2.0.0'
+        run: pip install numpy==2.0.2 scipy==1.13.1 scikit-learn==1.6.1 'shapely>=2.0.0' 'pyproj>=3.6.0' pdfplumber==0.11.8
       - name: Verify certified NYC returns and map joins
         run: |
           python scripts/validate_nyc_mayor_2025.py
           python scripts/validate_nyc_mayor_history.py
+      - name: Verify city mayoral results and Boston history groups
+        run: |
+          python scripts/validate_boston_mayor.py
+          python scripts/validate_chicago_mayor.py
+          python scripts/validate_sf_mayor_2024.py
+          python scripts/test_boston_history_clusters.py
       - name: Verify state and county voting models
         run: |
           python scripts/test_us_state_clusters.py
@@ -54,6 +60,10 @@ jobs:
           - test_political_bands_ux
           - test_population_dots_ux
           - test_county_demographic_scatter_ux
+          - test_boston_mayor_ux
+          - test_chicago_mayor_ux
+          - test_sf_mayor_2024_ux
+          - test_boston_history_dots_ux
           - test_nyc_mayor_2025_ux
           - test_nyc_precinct_dots
           - test_nyc_history_dots_ux

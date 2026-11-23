@@ -1,0 +1,29 @@
+{
+  "year": 2017,
+  "election_date": "2017-11-07",
+  "results_page": "https://www.boston.gov/departments/elections/state-and-city-boston-election-results",
+  "results_url": "https://www.boston.gov/sites/default/files/embed/2/2017_-_11-07-17_-_mayor_ward_precinct_results.pdf",
+  "boundary_url": "https://services.arcgis.com/sFnw0xNflSi8J0uh/arcgis/rest/services/Precincts_2017/FeatureServer",
+  "boundary_snapshot": "October 2017 City of Boston GIS",
+  "boundary_caveat": "October 2017 historical reference. Identifier coverage matches all 255 reporting precincts in 2017; this does not establish election-day geometry equivalence for other years.",
+  "source_sha256": {
+    "data/sources/boston/2017_mayor.pdf": "8f26c5e4ce3d94cd2fff31802f55da8807618c964ce00b53130b0ab089f8d3a5",
+    "data/sources/boston/precincts_2017.geojson": "00af69941be217a73b1fc9956b20c1441c9d2ada684d1433f74ee15dd8ae88d6",
+    "data/sources/boston/precincts_2017_metadata.json": "8f9ae76b784ec903066d38728f6a1c6c6c422c29fa6f34984ed700c76f8e448c"
+  },
+  "candidate_totals": {
+    "Tito Jackson": 36472,
+    "Marty Walsh": 70197,
+    "Donald Osgood Sr. (write-in)": 38,
+    "Other / write-in votes": 670
+  },
+  "recorded_votes": 107377,
+  "ballots": 109034,
+  "blanks": 1657,
+  "precinct_count": 255,
+  "ward_count": 22,
+  "geometry_repairs": [
+    "1713",
+    "0511"
+  ]
+}

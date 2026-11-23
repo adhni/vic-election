@@ -1,0 +1,510 @@
+{
+  "id" : "6piy-vbxa",
+  "name" : "Boundaries - Ward Precincts (2023-2024)",
+  "assetType" : "dataset",
+  "attribution" : "Chicago Board of Election Commissioners",
+  "attributionLink" : "http://www.chicagoelections.gov",
+  "averageRating" : 0,
+  "category" : "Facilities & Geographic Boundaries",
+  "createdAt" : 1675362146,
+  "description" : "Ward precincts, which function as local election districts to determine the polling places for voters, based on their addresses. Precincts are based on U.S. Census Bureau blocks.\n\nOn January 10, 2023, the Chicago Board of Election Commissioners approved the following precinct change: Ward 24 precinct 16 was split in two, creating the precincts 16 and 20 seen in this dataset.  That change is the only change in any precincts, in any wards, from the immediately preceding precinct set (which was approved in 2022).  The number of precincts therefore increased from 1290 in the previous dataset, to 1291 in this dataset.  All other precincts in all other wards retained their geometries and numbering.  \n\nThe first election to which this dataset applies was the Feb 28, 2023 Municipal General election. The last election to which this dataset applies  was the November 5, 2024 General election.\n\nNeither this description nor the dataset should be relied upon in situations where legal precision is required.\n\n​​​​​This dataset is in a forma​​t for spatial datasets that is inherently tabular but allows for a map as a derived view. Please click the indicated link below for such a map.\n\nTo export the data in either tabular or geographic format, please use the Export button on this dataset.",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "downloadCount" : 3452,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "licenseId" : "SEE_TERMS_OF_USE",
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 42010193,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1773772940,
+  "publicationGroup" : 19039813,
+  "publicationStage" : "published",
+  "rowIdentifierColumnId" : 628715043,
+  "rowsUpdatedAt" : 1773772922,
+  "rowsUpdatedBy" : "vewm-vupz",
+  "tableId" : 20310303,
+  "totalTimesRated" : 0,
+  "viewCount" : 15263,
+  "viewLastModified" : 1774467021,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1675437227,
+    "reviewedAutomatically" : false,
+    "state" : "approved",
+    "submissionId" : 7391895,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1675437159,
+    "targetAudience" : "public",
+    "workflowId" : 2226,
+    "reviewer" : {
+      "id" : "vewm-vupz",
+      "displayName" : "Jonathan Levy"
+    },
+    "submissionDetails" : {
+      "permissionType" : "read"
+    },
+    "submissionOutcomeApplication" : {
+      "endedAt" : 1675437227,
+      "failureCount" : 0,
+      "startedAt" : 1675437227,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "vewm-vupz",
+      "displayName" : "Jonathan Levy"
+    }
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 628715040,
+    "name" : "the_geom",
+    "dataTypeName" : "multipolygon",
+    "description" : "",
+    "fieldName" : "the_geom",
+    "position" : 1,
+    "renderTypeName" : "multipolygon",
+    "tableColumnId" : 145553531,
+    "format" : { }
+  }, {
+    "id" : 628715041,
+    "name" : "Shape_Leng",
+    "dataTypeName" : "number",
+    "description" : "Miles",
+    "fieldName" : "shape_leng",
+    "position" : 2,
+    "renderTypeName" : "number",
+    "tableColumnId" : 145553532,
+    "cachedContents" : {
+      "non_null" : "1291",
+      "largest" : "24.3125900177",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1.86407634824",
+        "count" : "1"
+      }, {
+        "item" : "1.52496271827",
+        "count" : "1"
+      }, {
+        "item" : "1.00431848626",
+        "count" : "1"
+      }, {
+        "item" : "1.63538813857",
+        "count" : "1"
+      }, {
+        "item" : "0.86868935918",
+        "count" : "1"
+      }, {
+        "item" : "1.87160661708",
+        "count" : "1"
+      }, {
+        "item" : "3.00174475343",
+        "count" : "1"
+      }, {
+        "item" : "2.03969414488",
+        "count" : "1"
+      }, {
+        "item" : "1.62693576896",
+        "count" : "1"
+      }, {
+        "item" : "1.25937795978",
+        "count" : "1"
+      }, {
+        "item" : "1.23196592792",
+        "count" : "1"
+      }, {
+        "item" : "1.59037081308",
+        "count" : "1"
+      }, {
+        "item" : "4.69712097714",
+        "count" : "1"
+      }, {
+        "item" : "1.44169457582",
+        "count" : "1"
+      }, {
+        "item" : "1.77359808154",
+        "count" : "1"
+      }, {
+        "item" : "0.759064404278",
+        "count" : "1"
+      }, {
+        "item" : "1.45565234898",
+        "count" : "1"
+      }, {
+        "item" : "0.802043192044",
+        "count" : "1"
+      }, {
+        "item" : "1.28383403327",
+        "count" : "1"
+      }, {
+        "item" : "0.993519684429",
+        "count" : "1"
+      } ],
+      "smallest" : "0.153041625581",
+      "count" : "1291",
+      "cardinality" : "1291"
+    },
+    "format" : { }
+  }, {
+    "id" : 628715042,
+    "name" : "Shape_Area",
+    "dataTypeName" : "number",
+    "description" : "Square Miles",
+    "fieldName" : "shape_area",
+    "position" : 3,
+    "renderTypeName" : "number",
+    "tableColumnId" : 145553533,
+    "cachedContents" : {
+      "non_null" : "1291",
+      "largest" : "11.2038608881",
+      "null" : "0",
+      "top" : [ {
+        "item" : "0.134461588444",
+        "count" : "1"
+      }, {
+        "item" : "0.0624682824196",
+        "count" : "1"
+      }, {
+        "item" : "0.026665482546",
+        "count" : "1"
+      }, {
+        "item" : "0.0314681347433",
+        "count" : "1"
+      }, {
+        "item" : "0.135436183441",
+        "count" : "1"
+      }, {
+        "item" : "0.240938494893",
+        "count" : "1"
+      }, {
+        "item" : "0.252789306744",
+        "count" : "1"
+      }, {
+        "item" : "0.0807964516934",
+        "count" : "1"
+      }, {
+        "item" : "0.06378272968",
+        "count" : "1"
+      }, {
+        "item" : "0.114575064536",
+        "count" : "1"
+      }, {
+        "item" : "0.120437327825",
+        "count" : "1"
+      }, {
+        "item" : "0.238608765232",
+        "count" : "1"
+      }, {
+        "item" : "0.22282730674",
+        "count" : "1"
+      }, {
+        "item" : "0.102833371978",
+        "count" : "1"
+      }, {
+        "item" : "0.17704449513",
+        "count" : "1"
+      }, {
+        "item" : "0.0630241756711",
+        "count" : "1"
+      }, {
+        "item" : "0.126754952469",
+        "count" : "1"
+      }, {
+        "item" : "0.314069335495",
+        "count" : "1"
+      }, {
+        "item" : "0.533963681905",
+        "count" : "1"
+      }, {
+        "item" : "0.129663630774",
+        "count" : "1"
+      } ],
+      "smallest" : "0.00149640839198",
+      "count" : "1291",
+      "cardinality" : "1291"
+    },
+    "format" : { }
+  }, {
+    "id" : 628715043,
+    "name" : "Ward_Precinct",
+    "dataTypeName" : "text",
+    "description" : "The combination of ward (first two characters) and precinct within that ward (last three characters).that uniquely identifies the precinct.",
+    "fieldName" : "ward_precinct",
+    "position" : 4,
+    "renderTypeName" : "text",
+    "tableColumnId" : 145553530,
+    "cachedContents" : {
+      "non_null" : "1291",
+      "largest" : "50028",
+      "null" : "0",
+      "top" : [ {
+        "item" : "03017",
+        "count" : "1"
+      }, {
+        "item" : "31007",
+        "count" : "1"
+      }, {
+        "item" : "47026",
+        "count" : "1"
+      }, {
+        "item" : "48029",
+        "count" : "1"
+      }, {
+        "item" : "07029",
+        "count" : "1"
+      }, {
+        "item" : "02023",
+        "count" : "1"
+      }, {
+        "item" : "33003",
+        "count" : "1"
+      }, {
+        "item" : "13023",
+        "count" : "1"
+      }, {
+        "item" : "39024",
+        "count" : "1"
+      }, {
+        "item" : "11005",
+        "count" : "1"
+      }, {
+        "item" : "17015",
+        "count" : "1"
+      }, {
+        "item" : "28017",
+        "count" : "1"
+      }, {
+        "item" : "13032",
+        "count" : "1"
+      }, {
+        "item" : "40001",
+        "count" : "1"
+      }, {
+        "item" : "27017",
+        "count" : "1"
+      }, {
+        "item" : "05008",
+        "count" : "1"
+      }, {
+        "item" : "36023",
+        "count" : "1"
+      }, {
+        "item" : "09007",
+        "count" : "1"
+      }, {
+        "item" : "01025",
+        "count" : "1"
+      }, {
+        "item" : "41030",
+        "count" : "1"
+      } ],
+      "smallest" : "01001",
+      "count" : "1291",
+      "cardinality" : "1291"
+    },
+    "format" : { }
+  }, {
+    "id" : 628715044,
+    "name" : "Ward",
+    "dataTypeName" : "number",
+    "description" : "The ward (City Council district) in which the precinct falls.",
+    "fieldName" : "ward",
+    "position" : 5,
+    "renderTypeName" : "number",
+    "tableColumnId" : 145553529,
+    "cachedContents" : {
+      "non_null" : "1291",
+      "largest" : "50.0",
+      "null" : "0",
+      "top" : [ {
+        "item" : "13.0",
+        "count" : "40"
+      }, {
+        "item" : "19.0",
+        "count" : "36"
+      }, {
+        "item" : "39.0",
+        "count" : "35"
+      }, {
+        "item" : "48.0",
+        "count" : "35"
+      }, {
+        "item" : "23.0",
+        "count" : "33"
+      }, {
+        "item" : "26.0",
+        "count" : "32"
+      }, {
+        "item" : "7.0",
+        "count" : "31"
+      }, {
+        "item" : "41.0",
+        "count" : "31"
+      }, {
+        "item" : "8.0",
+        "count" : "30"
+      }, {
+        "item" : "9.0",
+        "count" : "30"
+      }, {
+        "item" : "32.0",
+        "count" : "30"
+      }, {
+        "item" : "17.0",
+        "count" : "29"
+      }, {
+        "item" : "27.0",
+        "count" : "29"
+      }, {
+        "item" : "45.0",
+        "count" : "29"
+      }, {
+        "item" : "21.0",
+        "count" : "29"
+      }, {
+        "item" : "50.0",
+        "count" : "28"
+      }, {
+        "item" : "4.0",
+        "count" : "28"
+      }, {
+        "item" : "47.0",
+        "count" : "28"
+      }, {
+        "item" : "36.0",
+        "count" : "27"
+      }, {
+        "item" : "6.0",
+        "count" : "27"
+      } ],
+      "smallest" : "1.0",
+      "count" : "1291",
+      "cardinality" : "1291"
+    },
+    "format" : { }
+  }, {
+    "id" : 628715045,
+    "name" : "Precinct",
+    "dataTypeName" : "number",
+    "description" : "The precinct number within the ward.",
+    "fieldName" : "precinct",
+    "position" : 6,
+    "renderTypeName" : "number",
+    "tableColumnId" : 145553528,
+    "cachedContents" : {
+      "non_null" : "1291",
+      "largest" : "40.0",
+      "null" : "0",
+      "top" : [ {
+        "item" : "10.0",
+        "count" : "50"
+      }, {
+        "item" : "7.0",
+        "count" : "50"
+      }, {
+        "item" : "12.0",
+        "count" : "50"
+      }, {
+        "item" : "15.0",
+        "count" : "50"
+      }, {
+        "item" : "1.0",
+        "count" : "50"
+      }, {
+        "item" : "11.0",
+        "count" : "50"
+      }, {
+        "item" : "4.0",
+        "count" : "50"
+      }, {
+        "item" : "8.0",
+        "count" : "50"
+      }, {
+        "item" : "2.0",
+        "count" : "50"
+      }, {
+        "item" : "5.0",
+        "count" : "50"
+      }, {
+        "item" : "9.0",
+        "count" : "50"
+      }, {
+        "item" : "13.0",
+        "count" : "50"
+      }, {
+        "item" : "6.0",
+        "count" : "50"
+      }, {
+        "item" : "14.0",
+        "count" : "50"
+      }, {
+        "item" : "3.0",
+        "count" : "50"
+      }, {
+        "item" : "16.0",
+        "count" : "49"
+      }, {
+        "item" : "17.0",
+        "count" : "49"
+      }, {
+        "item" : "19.0",
+        "count" : "46"
+      }, {
+        "item" : "18.0",
+        "count" : "46"
+      }, {
+        "item" : "20.0",
+        "count" : "45"
+      } ],
+      "smallest" : "1.0",
+      "count" : "1291",
+      "cardinality" : "1291"
+    },
+    "format" : { }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "See Terms of Use"
+  },
+  "metadata" : {
+    "custom_fields" : {
+      "Metadata" : {
+        "Time Period" : "January 2023 - November 2025",
+        "Changes and Other Historical Information Useful to Understanding This Dataset" : "https://www.google.com/search?q=site:data.cityofchicago.org/stories+\"Related+dataset+ID+s\"+\"6piy-vbxa\"",
+        "Data Owner" : "Chicago Board of Election Commissioners"
+      }
+    },
+    "rowIdentifier" : 628715043,
+    "rowLabel" : "Precinct",
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "vewm-vupz",
+    "displayName" : "Jonathan Levy",
+    "screenName" : "Jonathan Levy",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "vewm-vupz",
+    "displayName" : "Jonathan Levy",
+    "screenName" : "Jonathan Levy",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "tags" : [ "geo_layer", "boundaries", "gis", "elections", "historical" ],
+  "flags" : [ "default", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

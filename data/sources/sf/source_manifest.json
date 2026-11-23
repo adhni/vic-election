@@ -1,0 +1,37 @@
+{
+  "archive_commit": "647b2beb42f7d1b63cccd9d962cdef65024344c9",
+  "sources": {
+    "cvr_mayor.json": {
+      "url": "https://raw.githubusercontent.com/sfbay/datadiver/647b2beb42f7d1b63cccd9d962cdef65024344c9/public/data/elections/results/20241105/cvr/mayor.json",
+      "sha256": "b4d311a563f249b5d857cedff3300deab6b1479615f78617688d1efdc1062c31"
+    },
+    "rcv_mayor.json": {
+      "url": "https://raw.githubusercontent.com/sfbay/datadiver/647b2beb42f7d1b63cccd9d962cdef65024344c9/public/data/elections/results/20241105/rcv/mayor.json",
+      "sha256": "97816b12466221e44083e1022bc17bdd55bba778bae8017b723041f96b7c35e1"
+    },
+    "sov_mayor.json": {
+      "url": "https://raw.githubusercontent.com/sfbay/datadiver/647b2beb42f7d1b63cccd9d962cdef65024344c9/public/data/elections/results/20241105/precincts/mayor.json",
+      "sha256": "a677f0b020ef39bf2611f64fa2621093f57b4bcbf244f5f85b42aad202fca3dc"
+    },
+    "turnout.json": {
+      "url": "https://raw.githubusercontent.com/sfbay/datadiver/647b2beb42f7d1b63cccd9d962cdef65024344c9/public/data/elections/results/20241105/precincts/_turnout.json",
+      "sha256": "8b4a2ca7e99635a29201784768b3fd85ff411bfb2c03d00746b02a28a3c6f022"
+    },
+    "datadiver_cvr_manifest.json": {
+      "url": "https://raw.githubusercontent.com/sfbay/datadiver/647b2beb42f7d1b63cccd9d962cdef65024344c9/public/data/elections/results/20241105/cvr/_manifest.json",
+      "sha256": "7882c8bc249b5e3ae4b7a21d1c469833d6f7ef4572710af15c9895e457f232b0"
+    },
+    "precincts_2022.geojson": {
+      "url": "https://data.sfgov.org/resource/d6x4-hefw.geojson?$limit=2000",
+      "sha256": "76d3a8105b8f5057235bbefdb626f19bc82cbeabbf6430637b58c582c036ef6c"
+    },
+    "precincts_2022_metadata.json": {
+      "url": "https://data.sfgov.org/api/views/d6x4-hefw.json",
+      "sha256": "90262189dcae13e1286672134d12074e906a9db56d0d3fbf46fffa868290cb5e"
+    }
+  },
+  "upstream_cvr": "https://www.sfelections.org/results/20241105/data/20241203/CVR_Export_20241202143051.zip",
+  "upstream_round_report": "https://www.sfelections.org/results/20241105/final/round-pages/mayor_short-rounds-en.html",
+  "access_note": "Original SF result archive inaccessible (HTTP 403 / TLS failure) during import. Ballot patterns and the official-round transcription are pinned from DataDiver; precinct rounds are reconstructed, not certified native precinct round reports.",
+  "attribution": "DataDiver by Jesse Garnier (SF State Journalism), https://datadiver.jlabsf.org, CC BY 4.0. Source data: San Francisco Department of Elections. See retained LICENSE-CONTENT.md."
+}

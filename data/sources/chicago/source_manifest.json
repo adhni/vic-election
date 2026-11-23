@@ -1,0 +1,31 @@
+{
+  "sources": {
+    "2023_first_round.pdf": {
+      "url": "https://app.chicagoelections.gov/documents/proclamations/Proc-2023-02-28.pdf",
+      "sha256": "906992cd346215e6bca912054d7c7e1226ad5ffad8994a7763d08a645d785f5b"
+    },
+    "2023_runoff.pdf": {
+      "url": "https://app.chicagoelections.gov/documents/general/Proc%202023%2004%2004.pdf",
+      "sha256": "0e0fb387f2441cd20ef5ce3c0cd916ef95d12257dd7000a751504baeff3d7b38"
+    },
+    "precincts_2023.geojson": {
+      "url": "https://data.cityofchicago.org/resource/6piy-vbxa.geojson?$limit=5000",
+      "sha256": "f08f597741ab3bd804f004c0c28a9c5ea1863bdc28874c6c39f1b8790c3c9eda"
+    },
+    "precincts_2023_metadata.json": {
+      "url": "https://data.cityofchicago.org/api/views/6piy-vbxa.json",
+      "sha256": "edd3c86286cad3f5e4324bd2307f2a17bf6ca4e295757f22ba247c5ea65888fb"
+    },
+    "municipal_general_2023.csv": {
+      "url": "https://raw.githubusercontent.com/datamade/chicago-municipal-elections/master/data/municipal_general_2023.csv",
+      "sha256": "198754ff35a6af023630a9a45d2fbea22b42a7a93f70d01ab97d5fe4c83d4018"
+    },
+    "municipal_runoff_2023.csv": {
+      "url": "https://raw.githubusercontent.com/datamade/chicago-municipal-elections/master/data/municipal_runoff_2023.csv",
+      "sha256": "196e27cce2ce416e3802e4e47d6f51e1ae7294a1f67bc5122fabb307468d5f1c"
+    }
+  },
+  "returns_provenance": "DataMade preservation of Chicago Board of Election Commissioners precinct returns; candidate city totals, ward ballot totals, precinct counts and city registration reconcile to certified official proclamations. Official historical precinct export endpoint returned 403 during import. Each archived precinct cell is preserved, but not independently certified from a precinct PDF.",
+  "boundary_provenance": "City of Chicago 6piy-vbxa: first applicable election Feb 28 2023, last Nov 5 2024. Both 2023 mayoral rounds use this map; 1291 precincts.",
+  "attribution": "Chicago Board of Election Commissioners (results); City of Chicago (boundaries); DataMade (archival CSVs, MIT licence retained)."
+}

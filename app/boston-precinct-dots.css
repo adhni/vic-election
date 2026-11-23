@@ -1,0 +1,5 @@
+/* Keep long candidate names readable without sideways scrolling. */
+#votes table{table-layout:fixed}
+#votes th[scope="col"]:first-child{width:55%}
+#votes th[scope="row"]{white-space:normal;overflow-wrap:anywhere}
+#votes th[scope="col"]:not(:first-child),#votes td{text-align:right}
